@@ -169,6 +169,24 @@ class Chat:
         begin_idx = max(0, current_max_len - max_length)
         embs = embs[:, begin_idx:]
 
+
+
+
+        early_exit_layers = [0,2,4,6,8,10,12,14,32]
+
+        mature_layer = early_exit_layers[-1]
+        premature_layer = None
+        candidate_premature_layers = early_exit_layers[:-1]
+        premature_layer_dist = {l:0 for l in candidate_premature_layers}
+        
+        # mode = "dola-static"
+        # mature_layer = early_exit_layers[1]
+        # premature_layer = None #early_exit_layers[0]
+        # # candidate_premature_layers = None
+        # candidate_premature_layers = early_exit_layers[:-1]
+        # # if args.repetition_penalty is None:
+        # #     args.repetition_penalty = 1.2
+
         generation_kwargs = dict(
             inputs_embeds=embs,
             max_new_tokens=max_new_tokens,
@@ -180,12 +198,21 @@ class Chat:
             repetition_penalty=repetition_penalty,
             length_penalty=length_penalty,
             temperature=float(temperature),
+            dola_decoding=True, 
+            num_return_sequences=1,
+            output_scores=True, 
+            premature_layer=premature_layer, 
+            candidate_premature_layers = candidate_premature_layers,
+            mature_layer=mature_layer, 
+            return_dict_in_generate=True
         )
         return generation_kwargs
 
     def answer(self, conv, img_list, **kargs):
         generation_dict = self.answer_prepare(conv, img_list, **kargs)
         output_token = self.model_generate(**generation_dict)[0]
+        print("output_token: ", output_token)
+        output_token = output_token[0]
         output_text = self.model.llama_tokenizer.decode(output_token, skip_special_tokens=True)
 
         output_text = output_text.split('###')[0]  # remove the stop sign '###'
@@ -204,7 +231,11 @@ class Chat:
 
     def model_generate(self, *args, **kwargs):
         # for 8 bit and 16 bit compatibility
+
         with self.model.maybe_autocast():
+
+            # print("**kwargs", kwargs)
+            
             output = self.model.llama_model.generate(*args, **kwargs)
         return output
 

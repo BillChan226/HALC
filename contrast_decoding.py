@@ -83,7 +83,7 @@ print('Initialization Finished')
 img_list = []
 img = "/data/xyq/bill/MiniGPT-4/hallucinatory_image/clock_on_a_beach.png"
 chat.upload_img(img, CONV_VISION, img_list)
-chat.encode_img(img_list)
+chat.encode_img(img_list) 
 # chat.ask("describe the man in the image.", CONV_VISION)
 chat.ask("What is the man holding in his hand?", CONV_VISION)
 

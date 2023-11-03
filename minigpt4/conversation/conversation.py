@@ -159,6 +159,7 @@ class Chat:
                        repetition_penalty=1.05, length_penalty=1, temperature=1.0, max_length=2000):
         conv.append_message(conv.roles[1], None)
         prompt = conv.get_prompt()
+        print("prompt: ", prompt)
         embs = self.model.get_context_emb(prompt, img_list)
 
         current_max_len = embs.shape[1] + max_new_tokens

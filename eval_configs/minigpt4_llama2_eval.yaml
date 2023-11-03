@@ -5,7 +5,7 @@ model:
   end_sym: "</s>"
   low_resource: True
   prompt_template: '[INST] {} [/INST] '
-  ckpt: 'please set this value to the path of pretrained checkpoint'
+  ckpt: '/data/xyq/bill/models/pretrained_minigpt4_llama2_7b.pth'
 
 
 datasets:

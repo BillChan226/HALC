@@ -2715,7 +2715,11 @@ class GenerationMixin:
                 premature_layer = candidate_premature_layers[int(js_divs.argmax().cpu().item())]
                 print("premature_layer", premature_layer)
                 premature_layer_dist[premature_layer] += 1
-                # input()
+
+
+                input()
+
+                
                 base_logits = dict_outputs[premature_layer][:, -1, :]
                 final_logits = dict_outputs[mature_layer][:, -1, :]
                 if relative_top > 0.0:
@@ -3577,7 +3581,7 @@ class GenerationMixin:
 
             print("base_layer: ", base_layer)
             print("candidate_premature_layers: ", candidate_premature_layers)
-            input()
+            # input()
 
             if synced_gpus and this_peer_finished:
                 continue  # don't waste resources running the code we don't need

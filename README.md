@@ -1,3 +1,35 @@
+
+# Contrastive Decoding for LVLMs
+
+### Test DoLa with their given example in the paper
+
+run
+```
+python ./MiniGPT-4/DoLa/toy_eval.py --model-name ./models/models--meta-llama--Llama-2-7b-chat-hf/snapshots/94b07a6e30c3292b8265ed32ffdeccfdadf434a8 --output-path output-path.json --num-gpus 1 --early-exit-layers 0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30
+```
+
+JSD for each candidate layer is printed and input at line 2720 of file ```./MiniGPT-4/DoLa/transformers-4.28.1/src/transformers/generation/utils.py```
+
+
+### Test DoLa layer-wise contrast with miniGPT4-v for object hallucination
+
+run a toy example: 
+```
+python ./MiniGPT-4/contrast_decoding.py --cfg-path eval_configs/minigpt4_llama2_eval.yaml  --gpu-id 0
+```
+
+The image in ```./MiniGPT-4/hallucinatory_image/clock_on_a_beach.png``` is projected into the prefix of the language model as a context.
+
+
+### Installation
+
+make sure you don't install the default transformers package indicate in ```environment.yml```. Instead, `cd` into DoLa folder, and install the DoLa included post version:
+
+```
+pip install -e transformers-4.28.1
+pip install datasets
+```
+
 # MiniGPT-V
 
 <font size='5'>**MiniGPT-v2: Large Language Model as a Unified Interface for Vision-Language Multi-task Learning**</font>

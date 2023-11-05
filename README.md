@@ -5,7 +5,7 @@
 
 run
 ```
-python ./MiniGPT-4/DoLa/toy_eval.py --model-name ./models/models--meta-llama--Llama-2-7b-chat-hf/snapshots/94b07a6e30c3292b8265ed32ffdeccfdadf434a8 --output-path output-path.json --num-gpus 1 --early-exit-layers 0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30
+python ./MiniGPT-4/toy_dola_eval.py --model-name ./models/models--meta-llama--Llama-2-7b-chat-hf/snapshots/94b07a6e30c3292b8265ed32ffdeccfdadf434a8 --output-path output-path.json --num-gpus 1 --early-exit-layers 0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30
 ```
 
 JSD for each candidate layer is printed and input at line 2720 of file ```./MiniGPT-4/DoLa/transformers-4.28.1/src/transformers/generation/utils.py```

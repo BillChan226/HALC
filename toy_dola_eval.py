@@ -7,6 +7,8 @@ import json
 import random
 import torch
 import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
 
 # define pre-trained model download path by setting the environment variable
 os.environ["TRANSFORMERS_CACHE"] = "./model_checkpoints/"
@@ -126,7 +128,15 @@ if __name__ == "__main__":
         candidate_premature_layers=candidate_premature_layers,
         relative_top=args.relative_top,
     )
-    model_completion, c_dist = llm.generate(input_text, **generate_kwargs)
+    model_completion, c_dist, info = llm.generate(input_text, **generate_kwargs)
+
+    # print("info: ", info)
+    JSD_matrix = info["jsd_matrix"].permute(1,0)
+    # print("JSD_matrix", JSD_matrix)
+    JSD_matrix = JSD_matrix.flip(dims=[0]).cpu().numpy()*10000
+
+    # print("JSD_matrix", JSD_matrix)
+
     if mode == "dola":
         for k, v in c_dist.items():
             premature_layer_dist[k] += v
@@ -148,14 +158,25 @@ if __name__ == "__main__":
                         round(premature_layer_dist[l] / total_tokens * 100, 2),
                     )
                 )
-    # save results to a json file
-    model_tag = (
-        model_name.split("/")[-1]
-        if model_name[-1] != "/"
-        else model_name.split("/")[-2]
-    )
-    output_file = (
-        args.output_path
-        if args.shard_id is None
-        else (args.output_path + "_" + str(args.shard_id) + ".json")
-    )
+    output_tokens = info["output_tokens"]
+    decoded_tokens = info["decoded_tokens"]
+    print("len of ", len(decoded_tokens))
+    column_labels = decoded_tokens
+
+    y_axis = np.arange(np.shape(JSD_matrix)[0])[::-1] * 2
+
+    
+    #set figure size
+    plt.figure(figsize=(24, 12))
+    # Create the heatmap
+    ax = sns.heatmap(JSD_matrix, annot=True, fmt=".2f", cmap="Blues", xticklabels=column_labels)
+
+    ax.set_yticklabels(y_axis)
+
+    # Add labels, title, etc.
+    plt.title('Jensen-Shannon Divergence')
+    plt.xlabel('output tokens')
+    plt.ylabel('premature layers')
+    plt.show()
+
+    plt.savefig("figures/JSD_matrix.png")

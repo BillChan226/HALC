@@ -81,16 +81,23 @@ class DoLa:
             elif mode == 'dola':
                 assert mature_layer is not None, "mature_layer must be specified"
                 assert candidate_premature_layers is not None, "candidate_premature_layers must be specified"
-                outputs = self.model.generate(input_ids, max_length=max_len, num_return_sequences=1,
+                outputs, info = self.model.generate(input_ids, max_length=max_len, num_return_sequences=1,
                                         output_scores=True, return_dict_in_generate=True, dola_decoding=True,
                                         top_p=top_p, top_k=top_k, temperature=temperature, stopping_criteria=self.stopping_criteria, relative_top=relative_top, 
                                         mature_layer=mature_layer, premature_layer=None, candidate_premature_layers=candidate_premature_layers, **kwargs,)
                 premature_layer_dist = outputs.premature_layer_dist
+
+
+
             sequences, scores = outputs.sequences, outputs.scores
 
             # skip the tokens in the input prompt
             gen_sequences = sequences[:, input_ids.shape[-1]:][0, :]
             gen_arr = gen_sequences.cpu().numpy()
+
+            info["output_tokens"] = gen_arr
+            decoded_tokens = [self.tokenizer.decode([token_id]) for token_id in gen_arr]
+            info["decoded_tokens"] = decoded_tokens
 
             output_str = self.tokenizer.decode(gen_sequences, skip_special_tokens=True)
 
@@ -107,7 +114,7 @@ class DoLa:
         if self.device:
             torch.cuda.empty_cache()
 
-        return output_str, (premature_layer_dist if mode == 'dola' else None)
+        return output_str, (premature_layer_dist if mode == 'dola' else None), info
 
     def get_relative_top_filter(self, scores: torch.FloatTensor, relative_top: float = 0.1, min_tokens_to_keep: int = 1):
         scores_normalized = scores.log_softmax(dim=-1) 

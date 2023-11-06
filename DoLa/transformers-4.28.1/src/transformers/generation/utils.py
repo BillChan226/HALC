@@ -2584,6 +2584,8 @@ class GenerationMixin:
         >>> tokenizer.batch_decode(outputs, skip_special_tokens=True)
         ["It might be possible to get a better understanding of the nature of the problem, but it's not"]
         ```"""
+        # print("input_ids", input_ids)
+        # input()
         # init values
         logits_processor = logits_processor if logits_processor is not None else LogitsProcessorList()
         stopping_criteria = stopping_criteria if stopping_criteria is not None else StoppingCriteriaList()
@@ -2645,7 +2647,11 @@ class GenerationMixin:
         info_dict = {}
 
         JSD_matrix = []
+        clock_matrix = []
+        surf_matrix = []
         premature_layer_list = []
+        all_layer_matrix = []
+
 
         while True:
             if synced_gpus:
@@ -2724,9 +2730,29 @@ class GenerationMixin:
                 premature_layer_list.append(premature_layer)
                 # print("premature_layer", premature_layer)
                 premature_layer_dist[premature_layer] += 1
+                # record_data = candidate_premature_layers + mature_layer
+                all_layer_logits = []
+                for layer in candidate_premature_layers + [mature_layer]:
+                    selected_logits = dict_outputs[layer][:, -1, :].log_softmax(dim=-1)
+                    all_layer_logits.append(selected_logits.cpu().numpy().tolist())
 
+                # "▁clock": 12006
+                # "▁sur": 1190
+                all_layer_matrix.append(all_layer_logits)
+                all_layer_logits = np.array(all_layer_logits)
+                
+                # print("all_layer_logits", all_layer_logits)
+
+                # print("all_layer_logits", np.shape(all_layer_logits))
+                clock_logits = all_layer_logits[:,:,12006]
+                clock_matrix.append(clock_logits)
+                # print("clock_logits", clock_logits)
+                surf_logits = all_layer_logits[:,:,1190]
+                surf_matrix.append(surf_logits)
+                # print("clock_logits", np.shape(clock_logits))
+                # print("all_layer_logits", np.shape(all_layer_logits))
                 # input()
-
+                # print("mature_layer", mature_layer)
                 base_logits = dict_outputs[premature_layer][:, -1, :]
                 final_logits = dict_outputs[mature_layer][:, -1, :]
                 if relative_top > 0.0:
@@ -2767,6 +2793,10 @@ class GenerationMixin:
                     raise ValueError("If `eos_token_id` is defined, make sure that `pad_token_id` is defined.")
                 next_tokens = next_tokens * unfinished_sequences + pad_token_id * (1 - unfinished_sequences)
 
+
+
+            # print("input_ids", input_ids)
+
             # update generated ids, model inputs, and length for next step
             input_ids = torch.cat([input_ids, next_tokens[:, None]], dim=-1)
             if streamer is not None:
@@ -2791,6 +2821,9 @@ class GenerationMixin:
 
         
         info_dict["jsd_matrix"] = torch.stack(JSD_matrix, dim=0)
+        info_dict["clock_matrix"] = clock_matrix
+        info_dict["surf_matrix"] = surf_matrix
+        info_dict["all_layer_matrix"] = all_layer_matrix    
         # print("return_dict_in_generate", return_dict_in_generate)
         # print("self.config.is_encoder_decoder", self.config.is_encoder_decoder)
 

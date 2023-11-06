@@ -82,12 +82,18 @@ chat = Chat(model, vis_processor, device='cuda:{}'.format(args.gpu_id), stopping
 print('Initialization Finished')
 
 img_list = []
-img = "/data/xyq/bill/MiniGPT-4/hallucinatory_image/clock_on_a_beach.png"
+# img = "/data/xyq/bill/MiniGPT-4/hallucinatory_image/clock_on_a_beach.png"
+img = "/data/xyq/bill/MiniGPT-4/hallucinatory_image/zoom_in_4.png"
+
 chat.upload_img(img, CONV_VISION, img_list)
 chat.encode_img(img_list) 
 # chat.ask("describe the man in the image.", CONV_VISION)
 chat.ask("What is the man holding in his hand?", CONV_VISION)
 
+# useful token id
+# "▁clock": 12006
+# "▁sur": 1190
+# "f": 29888
 
 output_text, output_token, info = chat.answer(CONV_VISION, img_list)
 
@@ -99,12 +105,59 @@ JSD_matrix = JSD_matrix.flip(dims=[0]).cpu().numpy()*10000
 
 output_tokens = info["output_tokens"]
 decoded_tokens = info["decoded_tokens"]
+clock_matrix = np.array(info["clock_matrix"]).reshape(-1,np.shape(JSD_matrix)[0] + 1).T
+clock_matrix = np.flip(clock_matrix, axis=0)
+surf_matrix = np.array(info["surf_matrix"]).reshape(-1,np.shape(JSD_matrix)[0] + 1).T
+surf_matrix = np.flip(surf_matrix, axis=0)
+all_layer_matrix = info["all_layer_matrix"]
+print("output_tokens: ", output_tokens)
+print("decoded_tokens: ", decoded_tokens)
 print("len of ", len(decoded_tokens))
 column_labels = decoded_tokens
+all_layer_matrix = np.array(all_layer_matrix)
+print("shape of all: ", np.shape(all_layer_matrix))
+all_layer_matrix_dim = np.shape(all_layer_matrix)
+# all_layer_matrix.reshape(all_layer_matrix_dim[0], all_layer_matrix_dim[1], all_layer_matrix_dim[3])
+all_layer_matrix = all_layer_matrix.reshape(all_layer_matrix_dim[0], all_layer_matrix_dim[1], all_layer_matrix_dim[3])
+
+
+top_3 = np.argsort(all_layer_matrix, axis=2)[:,:,:3]
+top_1 = np.argsort(all_layer_matrix, axis=2)[:,:,0]
+print("top_3: ", np.shape(top_3))
+# print("top_1", top_1)
+
+# sur_idx = output_tokens.tolist().index(1190)
+# f_idx = output_tokens.tolist().index(29888)
+# clock_idx = output_tokens.tolist().index(12006) #12006
+
+# sur_matrix = top_3[sur_idx,:,:]
+# f_matrix = top_3[f_idx,:,:]
+
+# sur_token_matrix = []
+# f_token_matrix = []
+# for i, value in enumerate(sur_matrix):
+#     line_word_vector = []
+#     # print("value", value)
+#     for j, j_value in enumerate(value):
+#         # print("j_value", j_value)
+#         line_word_vector.append(chat.model.llama_tokenizer.decode([j_value]))
+#     sur_token_matrix.append(line_word_vector)
+
+# for i, value in enumerate(f_matrix):
+#     line_word_vector = []
+#     # print("value", value)
+#     for j, j_value in enumerate(value):
+#         # print("j_value", j_value)
+#         line_word_vector.append(chat.model.llama_tokenizer.decode([j_value]))
+#     f_token_matrix.append(line_word_vector)
+
+# print("f_token_matrix", f_token_matrix)
+# print("sur_token_matrix", sur_token_matrix)
+
 
 y_axis = np.arange(np.shape(JSD_matrix)[0])[::-1] * 2
 
-
+full_y_axis = np.arange(np.shape(JSD_matrix)[0]+1)[::-1] * 2
 #set figure size
 plt.figure(figsize=(20, 10))
 # Create the heatmap
@@ -116,7 +169,57 @@ ax.set_yticklabels(y_axis)
 plt.title('Jensen-Shannon Divergence')
 plt.xlabel('output tokens')
 plt.ylabel('premature layers')
-plt.show()
 
 plt.savefig("figures/OH_JSD_matrix.png")
 
+
+# Set figure size
+plt.figure(figsize=(24, 10))
+
+# Create a subplot for the first heatmap
+plt.subplot(1, 2, 1)  # 1 row, 2 columns, subplot 1
+ax1 = sns.heatmap(clock_matrix, annot=True, fmt=".2f", cmap="Purples", xticklabels=column_labels)
+# ax1.set_yticklabels(y_axis)
+ax1.set_yticklabels(full_y_axis)
+ax1.set_title('Probability Matrix for "clock"')
+ax1.set_xlabel('output tokens')
+ax1.set_ylabel('Log likelihood')
+
+# Create a subplot for the second heatmap
+plt.subplot(1, 2, 2)  # 1 row, 2 columns, subplot 2
+ax2 = sns.heatmap(surf_matrix, annot=True, fmt=".2f", cmap="Purples", xticklabels=column_labels)
+# ax2.set_yticklabels(y_axis)
+ax1.set_yticklabels(full_y_axis)
+ax2.set_title('Probability Matrix for "surf"')
+ax2.set_xlabel('output tokens')
+ax2.set_ylabel('Log likelihood')
+
+# Adjust layout so heatmaps do not overlap
+plt.tight_layout()
+
+# Save the figure
+plt.savefig("figures/probs_matrix.png")
+
+plt.clf()
+
+# # Insert the header at the beginning of the data (if not already present)
+# header = ['top 1', 'top 2', 'top 3']
+# f_token_matrix.insert(0, header)
+
+# # Set figure size
+# plt.figure(figsize=(8, 6))  # Adjust the size as needed
+
+# # Create a table and remove the axes
+# ax = plt.gca()
+# ax.table(cellText=f_token_matrix, loc='center', cellLoc='center', colWidths=[0.3]*len(f_token_matrix[0]))
+# ax.axis('off')
+
+# # Optionally adjust the scale of the plot area for a large table
+# ax.set_position([0, 0, 1, 1])
+
+# # Save the figure
+# plt.savefig("f_token_matrix.png", bbox_inches='tight')
+
+
+# # # Save the figure
+# plt.savefig("figures/hallucination_matrix.png")

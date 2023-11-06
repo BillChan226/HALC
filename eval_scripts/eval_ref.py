@@ -42,7 +42,6 @@ model.eval()
 save_path = cfg.run_cfg.save_path
 
 
-
 for dataset in args.dataset:
     for split in eval_dict[dataset]:
 

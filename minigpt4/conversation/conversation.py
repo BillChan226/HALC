@@ -215,7 +215,7 @@ class Chat:
         # print("inputs_embeds.shape[-1]", inputs_embeds.shape[-1])
         # skip the tokens in the input prompt
         # gen_sequences = sequences[:, inputs_embeds.shape[-1]:][0, :]
-        gen_sequences = sequences[0, :]
+        gen_sequences = sequences[:, 1:][0, :]
 
         gen_arr = gen_sequences.cpu().numpy()
 

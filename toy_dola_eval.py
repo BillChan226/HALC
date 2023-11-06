@@ -167,7 +167,7 @@ if __name__ == "__main__":
 
     
     #set figure size
-    plt.figure(figsize=(24, 12))
+    plt.figure(figsize=(20, 10))
     # Create the heatmap
     ax = sns.heatmap(JSD_matrix, annot=True, fmt=".2f", cmap="Blues", xticklabels=column_labels)
 

@@ -179,4 +179,4 @@ if __name__ == "__main__":
     plt.ylabel('premature layers')
     plt.show()
 
-    plt.savefig("figures/JSD_matrix.png")
+    plt.savefig("figures/toy_text_JSD_matrix.png")

@@ -87,7 +87,7 @@ class DoLa:
                                         mature_layer=mature_layer, premature_layer=None, candidate_premature_layers=candidate_premature_layers, **kwargs,)
                 premature_layer_dist = outputs.premature_layer_dist
 
-
+            print("outputs", outputs)
 
             sequences, scores = outputs.sequences, outputs.scores
 

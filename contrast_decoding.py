@@ -9,7 +9,8 @@ sys.path.append("/data/xyq/bill/MiniGPT-4/DoLa/transformers-4.28.1/src/transform
 import numpy as np
 import torch
 import torch.backends.cudnn as cudnn
-import gradio as gr
+import seaborn as sns
+import matplotlib.pyplot as plt
 
 from transformers import StoppingCriteriaList
 
@@ -84,11 +85,38 @@ img_list = []
 img = "/data/xyq/bill/MiniGPT-4/hallucinatory_image/clock_on_a_beach.png"
 chat.upload_img(img, CONV_VISION, img_list)
 chat.encode_img(img_list) 
-chat.ask("describe the man in the image.", CONV_VISION)
-# chat.ask("What is the man holding in his hand?", CONV_VISION)
+# chat.ask("describe the man in the image.", CONV_VISION)
+chat.ask("What is the man holding in his hand?", CONV_VISION)
 
 
-output_text, output_token = chat.answer(CONV_VISION, img_list)
+output_text, output_token, info = chat.answer(CONV_VISION, img_list)
 
 print("output_text: ", output_text)
+
+JSD_matrix = info["jsd_matrix"].permute(1,0)
+# print("JSD_matrix", JSD_matrix)
+JSD_matrix = JSD_matrix.flip(dims=[0]).cpu().numpy()*10000
+
+output_tokens = info["output_tokens"]
+decoded_tokens = info["decoded_tokens"]
+print("len of ", len(decoded_tokens))
+column_labels = decoded_tokens
+
+y_axis = np.arange(np.shape(JSD_matrix)[0])[::-1] * 2
+
+
+#set figure size
+plt.figure(figsize=(20, 10))
+# Create the heatmap
+ax = sns.heatmap(JSD_matrix, annot=True, fmt=".2f", cmap="Blues", xticklabels=column_labels)
+
+ax.set_yticklabels(y_axis)
+
+# Add labels, title, etc.
+plt.title('Jensen-Shannon Divergence')
+plt.xlabel('output tokens')
+plt.ylabel('premature layers')
+plt.show()
+
+plt.savefig("figures/OH_JSD_matrix.png")
 

@@ -1,10 +1,10 @@
 import argparse
 import os, sys
 import random
-sys.path.append("/data/xyq/bill/MiniGPT-4/DoLa")
-sys.path.append("/data/xyq/bill/MiniGPT-4/DoLa/transformers-4.28.1")
-sys.path.append("/data/xyq/bill/MiniGPT-4/DoLa/transformers-4.28.1/src")
-sys.path.append("/data/xyq/bill/MiniGPT-4/DoLa/transformers-4.28.1/src/transformers")
+sys.path.append("./MiniGPT-4/DoLa")
+sys.path.append("./MiniGPT-4/DoLa/transformers-4.28.1")
+sys.path.append("./MiniGPT-4/DoLa/transformers-4.28.1/src")
+sys.path.append("./MiniGPT-4/DoLa/transformers-4.28.1/src/transformers")
 import csv
 import numpy as np
 import torch

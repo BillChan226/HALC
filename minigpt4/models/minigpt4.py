@@ -58,7 +58,7 @@ class MiniGPT4(MiniGPTBase):
             early_exit_layers=early_exit_layers,
         )
 
-        print("early_exit_layers", early_exit_layers)
+        # print("early_exit_layers", early_exit_layers)
 
         self.has_qformer = has_qformer
         

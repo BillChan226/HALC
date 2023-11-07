@@ -1,10 +1,10 @@
 import argparse
 import os, sys
 import random
-sys.path.append("/data/xyq/bill/MiniGPT-4/DoLa")
-sys.path.append("/data/xyq/bill/MiniGPT-4/DoLa/transformers-4.28.1")
-sys.path.append("/data/xyq/bill/MiniGPT-4/DoLa/transformers-4.28.1/src")
-sys.path.append("/data/xyq/bill/MiniGPT-4/DoLa/transformers-4.28.1/src/transformers")
+sys.path.append("./MiniGPT-4/DoLa")
+sys.path.append("./MiniGPT-4/DoLa/transformers-4.28.1")
+sys.path.append("./MiniGPT-4/DoLa/transformers-4.28.1/src")
+sys.path.append("./MiniGPT-4/DoLa/transformers-4.28.1/src/transformers")
 
 import numpy as np
 import torch
@@ -84,7 +84,7 @@ print('Initialization Finished')
 img_list = []
 # img = "/data/xyq/bill/MiniGPT-4/hallucinatory_image/clock_on_a_beach.png"
 # img = "/data/xyq/bill/MiniGPT-4/hallucinatory_image/zoom_in_5.png"
-img = "/data/xyq/bill/MiniGPT-4/hallucinatory_image/mask_irrelevant.png"
+img = "/data/xyq/bill/MiniGPT-4/hallucinatory_image/inject.png"
 
 
 chat.upload_img(img, CONV_VISION, img_list)
@@ -172,7 +172,7 @@ plt.title('Jensen-Shannon Divergence')
 plt.xlabel('output tokens')
 plt.ylabel('premature layers')
 
-# plt.savefig("figures/OH_JSD_matrix.png")
+plt.savefig("figures/OH_JSD_matrix.png")
 
 
 # Set figure size
@@ -200,7 +200,7 @@ ax2.set_ylabel('Log likelihood')
 plt.tight_layout()
 
 # Save the figure
-# plt.savefig("figures/probs_matrix.png")
+plt.savefig("figures/probs_matrix.png")
 
 plt.clf()
 

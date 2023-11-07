@@ -35,6 +35,7 @@ class MiniGPTBase(BaseModel):
         lora_target_modules=["q_proj", "v_proj"],
         lora_alpha=16,
         lora_dropout=0.05,
+        early_exit_layers=None,
     ):
         super().__init__()
 
@@ -49,7 +50,7 @@ class MiniGPTBase(BaseModel):
         )
 
         self.visual_encoder, self.ln_vision = self.init_vision_encoder(
-            vit_model, img_size, drop_path_rate, use_grad_checkpoint, vit_precision, freeze_vit
+            vit_model, img_size, drop_path_rate, use_grad_checkpoint, vit_precision, freeze_vit, early_exit_layers
         )
 
         self.max_txt_len = max_txt_len
@@ -68,6 +69,8 @@ class MiniGPTBase(BaseModel):
     def get_context_emb(self, prompt, img_list):
         device = img_list[0].device
         prompt_segs = prompt.split('<ImageHere>')
+        # print("prompt_segs", prompt_segs)
+        # print("img_list",  len(img_list))
         assert len(prompt_segs) == len(img_list) + 1, "Unmatched numbers of image placeholders and images."
         seg_tokens = [
             self.llama_tokenizer(
@@ -271,6 +274,7 @@ class MiniGPTBase(BaseModel):
         return cond_embeds, cond_atts, regress_embeds, regress_atts, part_targets
 
     def forward(self, samples, reduction='mean'):
+
         # prepare the embedding to condition and the embedding to regress
         cond_embeds, cond_atts, regress_embeds, regress_atts, part_targets = \
             self.preparing_embedding(samples)

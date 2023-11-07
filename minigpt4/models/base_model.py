@@ -141,7 +141,7 @@ class BaseModel(nn.Module):
 
     @classmethod
     def init_vision_encoder(
-        cls, model_name, img_size, drop_path_rate, use_grad_checkpoint, precision, freeze
+        cls, model_name, img_size, drop_path_rate, use_grad_checkpoint, precision, freeze, early_exit_layers
     ):
         logging.info('Loading VIT')
 
@@ -150,8 +150,11 @@ class BaseModel(nn.Module):
             precision = "fp32"  # fp16 is not for training
 
         visual_encoder = create_eva_vit_g(
-            img_size, drop_path_rate, use_grad_checkpoint, precision
+            img_size, drop_path_rate, use_grad_checkpoint, precision, early_exit_layers
         )
+
+        # print("visual_encoder", visual_encoder)
+        # input()
 
         ln_vision = LayerNorm(visual_encoder.num_features)
 

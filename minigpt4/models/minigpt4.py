@@ -41,6 +41,7 @@ class MiniGPT4(MiniGPTBase):
             end_sym='\n',
             low_resource=False,  # use 8 bit and put vit in cpu
             device_8bit=0,  # the device of 8bit model should be set when loading and cannot be changed anymore.
+            early_exit_layers=None,
     ):
         super().__init__(
             vit_model=vit_model,
@@ -54,9 +55,17 @@ class MiniGPT4(MiniGPTBase):
             end_sym=end_sym,
             low_resource=low_resource,
             device_8bit=device_8bit,
+            early_exit_layers=early_exit_layers,
         )
 
+        print("early_exit_layers", early_exit_layers)
+
         self.has_qformer = has_qformer
+        
+        print("self.has_qformer", self.has_qformer)
+        print("self.visual_encoder.num_features", self.visual_encoder.num_features)
+        # input()
+
         if self.has_qformer:
             print('Loading Q-Former')
             self.Qformer, self.query_tokens = self.init_Qformer(
@@ -69,6 +78,9 @@ class MiniGPT4(MiniGPTBase):
         else:
             img_f_dim = self.visual_encoder.num_features * 4
             print('Do not use Q-Former here.')
+
+        print("self.llama_model.config.hidden_size", self.llama_model.config.hidden_size)
+
 
         self.llama_proj = nn.Linear(
             img_f_dim, self.llama_model.config.hidden_size
@@ -115,14 +127,22 @@ class MiniGPT4(MiniGPTBase):
 
         return Qformer, query_tokens
 
-    def encode_img(self, image):
+    def encode_img(self, image, early_exit_layer_idx):
         device = image.device
 
         if len(image.shape) > 4:
             image = image.reshape(-1, *image.shape[-3:])
 
         with self.maybe_autocast():
-            image_embeds = self.ln_vision(self.visual_encoder(image)).to(device)
+            final_layer_features, early_exit_features = self.visual_encoder(image, early_exit_layer_idx)
+            # early_exit_layers not activated
+            if early_exit_features == None:
+                image_embeds = self.ln_vision(final_layer_features).to(device)
+            else:
+                # print("early_exit_features", len(early_exit_features))
+                # image_embeds = self.ln_vision(early_exit_features[early_exit_layer_idx]).to(device)
+                image_embeds = self.ln_vision(early_exit_features[0]).to(device)
+
             if self.has_qformer:
                 image_atts = torch.ones(image_embeds.size()[:-1], dtype=torch.long).to(device)
 
@@ -166,6 +186,8 @@ class MiniGPT4(MiniGPTBase):
         max_txt_len = cfg.get("max_txt_len", 32)
         end_sym = cfg.get("end_sym", '\n')
 
+        early_exit_layers =  cfg.get("early_exit_layers", None)
+
         model = cls(
             vit_model=vit_model,
             q_former_model=q_former_model,
@@ -184,6 +206,7 @@ class MiniGPT4(MiniGPTBase):
             end_sym=end_sym,
             low_resource=low_resource,
             device_8bit=device_8bit,
+            early_exit_layers=early_exit_layers
         )
 
         ckpt_path = cfg.get("ckpt", "")  # load weights of MiniGPT-4

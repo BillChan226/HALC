@@ -159,7 +159,7 @@ class Chat:
                        repetition_penalty=1.05, length_penalty=1, temperature=1.0, max_length=2000):
         conv.append_message(conv.roles[1], None)
         prompt = conv.get_prompt()
-        print("prompt: ", prompt)
+        # print("prompt: ", prompt)
         embs = self.model.get_context_emb(prompt, img_list)
 
         current_max_len = embs.shape[1] + max_new_tokens
@@ -206,10 +206,12 @@ class Chat:
         return generation_kwargs
 
     def answer(self, conv, img_list, **kargs):
+        # print("conv", conv)
         generation_dict = self.answer_prepare(conv, img_list, **kargs)
         output_token, info  = self.model_generate(**generation_dict)
         # print("output_token: ", output_token)
         # print("info", info)
+        # print("output_token", output_token)
         sequences, scores = output_token.sequences, output_token.scores
         inputs_embeds = generation_dict['inputs_embeds']
         # print("inputs_embeds.shape[-1]", inputs_embeds.shape[-1])
@@ -248,12 +250,11 @@ class Chat:
 
         with self.model.maybe_autocast():
 
-            # print("**kwargs", kwargs)
-            
             output = self.model.llama_model.generate(*args, **kwargs)
+
         return output
 
-    def encode_img(self, img_list):
+    def encode_img(self, img_list, early_exit_layer_idx=-1):
         image = img_list[0]
         img_list.pop(0)
         if isinstance(image, str):  # is a image path
@@ -267,7 +268,7 @@ class Chat:
                 image = image.unsqueeze(0)
             image = image.to(self.device)
 
-        image_emb, _ = self.model.encode_img(image)
+        image_emb, _ = self.model.encode_img(image, early_exit_layer_idx)
         img_list.append(image_emb)
 
     def upload_img(self, image, conv, img_list):

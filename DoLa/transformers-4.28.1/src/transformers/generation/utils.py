@@ -1238,13 +1238,14 @@ class GenerationMixin:
                     self.generation_config = new_generation_config
             generation_config = self.generation_config
 
-        # input(kwargs)
+        
         generation_config = copy.deepcopy(generation_config)
         model_kwargs = generation_config.update(**kwargs)  # All unused kwargs must be model kwargs
         # print("model_kwargs", model_kwargs)
         generation_config.validate()
         self._validate_model_kwargs(model_kwargs.copy())
-
+        # input(kwargs)
+        # input(inputs)
         # 2. Set generation parameters if not already defined
         logits_processor = logits_processor if logits_processor is not None else LogitsProcessorList()
         stopping_criteria = stopping_criteria if stopping_criteria is not None else StoppingCriteriaList()
@@ -2440,6 +2441,7 @@ class GenerationMixin:
         if streamer is not None:
             streamer.end()
 
+        info_dict = {}
         if return_dict_in_generate:
             if self.config.is_encoder_decoder:
                 return GreedySearchEncoderDecoderOutput(
@@ -2450,16 +2452,16 @@ class GenerationMixin:
                     decoder_attentions=decoder_attentions,
                     cross_attentions=cross_attentions,
                     decoder_hidden_states=decoder_hidden_states,
-                )
+                ), info_dict
             else:
                 return GreedySearchDecoderOnlyOutput(
                     sequences=input_ids,
                     scores=scores,
                     attentions=decoder_attentions,
                     hidden_states=decoder_hidden_states,
-                )
+                ), info_dict
         else:
-            return input_ids
+            return input_ids, info_dict
 
     def relative_top_filter(self, scores: torch.FloatTensor, relative_top: float = 0.1, filter_value: float = -float("Inf"), min_tokens_to_keep: int = 1) -> torch.FloatTensor:
         scores_normalized = scores.log_softmax(dim=-1) 

@@ -83,10 +83,12 @@ print('Initialization Finished')
 
 img_list = []
 # img = "/data/xyq/bill/MiniGPT-4/hallucinatory_image/clock_on_a_beach.png"
-img = "/data/xyq/bill/MiniGPT-4/hallucinatory_image/zoom_in_4.png"
+# img = "/data/xyq/bill/MiniGPT-4/hallucinatory_image/zoom_in_5.png"
+img = "/data/xyq/bill/MiniGPT-4/hallucinatory_image/mask_irrelevant.png"
+
 
 chat.upload_img(img, CONV_VISION, img_list)
-chat.encode_img(img_list) 
+chat.encode_img(img_list, 38) 
 # chat.ask("describe the man in the image.", CONV_VISION)
 chat.ask("What is the man holding in his hand?", CONV_VISION)
 
@@ -110,7 +112,7 @@ clock_matrix = np.flip(clock_matrix, axis=0)
 surf_matrix = np.array(info["surf_matrix"]).reshape(-1,np.shape(JSD_matrix)[0] + 1).T
 surf_matrix = np.flip(surf_matrix, axis=0)
 all_layer_matrix = info["all_layer_matrix"]
-print("output_tokens: ", output_tokens)
+# print("output_tokens: ", output_tokens)
 print("decoded_tokens: ", decoded_tokens)
 print("len of ", len(decoded_tokens))
 column_labels = decoded_tokens
@@ -123,7 +125,7 @@ all_layer_matrix = all_layer_matrix.reshape(all_layer_matrix_dim[0], all_layer_m
 
 top_3 = np.argsort(all_layer_matrix, axis=2)[:,:,:3]
 top_1 = np.argsort(all_layer_matrix, axis=2)[:,:,0]
-print("top_3: ", np.shape(top_3))
+# print("top_3: ", np.shape(top_3))
 # print("top_1", top_1)
 
 # sur_idx = output_tokens.tolist().index(1190)
@@ -170,7 +172,7 @@ plt.title('Jensen-Shannon Divergence')
 plt.xlabel('output tokens')
 plt.ylabel('premature layers')
 
-plt.savefig("figures/OH_JSD_matrix.png")
+# plt.savefig("figures/OH_JSD_matrix.png")
 
 
 # Set figure size
@@ -198,7 +200,7 @@ ax2.set_ylabel('Log likelihood')
 plt.tight_layout()
 
 # Save the figure
-plt.savefig("figures/probs_matrix.png")
+# plt.savefig("figures/probs_matrix.png")
 
 plt.clf()
 

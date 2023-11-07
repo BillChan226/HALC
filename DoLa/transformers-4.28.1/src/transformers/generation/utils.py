@@ -1132,7 +1132,7 @@ class GenerationMixin:
         candidate_premature_layers: Optional[List[int]] = None,
         relative_top: Optional[float] = 0.1,
         contrastive_decoding: Optional[bool] = None,
-        student_model = None,
+        student_model=None,
         streamer: Optional["BaseStreamer"] = None,
         **kwargs,
     ) -> Union[GenerateOutput, torch.LongTensor]:
@@ -1479,9 +1479,7 @@ class GenerationMixin:
                     " greedy search."
                 )
             if student_model is None:
-                raise ValueError(
-                    f"student_model has to be provided when doing contrastive decoding."
-                )
+                raise ValueError(f"student_model has to be provided when doing contrastive decoding.")
             # 11. run greedy search
             return self.contrastive_greedy_decode(
                 input_ids,
@@ -1540,7 +1538,7 @@ class GenerationMixin:
                 streamer=streamer,
                 **model_kwargs,
             )
-        
+
         elif is_sample_gen_mode and dola_decoding:
             # 11. prepare logits warper
             logits_warper = self._get_logits_warper(generation_config)
@@ -2463,10 +2461,16 @@ class GenerationMixin:
         else:
             return input_ids, info_dict
 
-    def relative_top_filter(self, scores: torch.FloatTensor, relative_top: float = 0.1, filter_value: float = -float("Inf"), min_tokens_to_keep: int = 1) -> torch.FloatTensor:
-        scores_normalized = scores.log_softmax(dim=-1) 
+    def relative_top_filter(
+        self,
+        scores: torch.FloatTensor,
+        relative_top: float = 0.1,
+        filter_value: float = -float("Inf"),
+        min_tokens_to_keep: int = 1,
+    ) -> torch.FloatTensor:
+        scores_normalized = scores.log_softmax(dim=-1)
         sorted_logits, sorted_indices = torch.sort(scores_normalized, descending=True)
-        min_thresh = sorted_logits[..., min_tokens_to_keep-1] 
+        min_thresh = sorted_logits[..., min_tokens_to_keep - 1]
         probs_max = torch.max(scores_normalized, dim=-1).values
         probs_thresh = probs_max + np.log(relative_top)
         probs_thresh = torch.min(min_thresh, probs_thresh)
@@ -2641,10 +2645,12 @@ class GenerationMixin:
         elif candidate_premature_layers is not None:
             early_exit_layers = candidate_premature_layers + [mature_layer]
             num_base_layers = len(candidate_premature_layers)
-            premature_layer_dist = {l:0 for l in candidate_premature_layers}
+            premature_layer_dist = {l: 0 for l in candidate_premature_layers}
         else:
             raise ValueError("You must specify either `base_layer` or `candidate_premature_layers`")
 
+<<<<<<< HEAD
+=======
         # info to go back to main for debug
         info_dict = {}
 
@@ -2655,6 +2661,7 @@ class GenerationMixin:
         all_layer_matrix = []
 
 
+>>>>>>> 50769dd891d8e03678c3bff2c2af49668e3fdd76
         while True:
             if synced_gpus:
                 # Under synced_gpus the `forward` call must continue until all gpus complete their sequence.
@@ -2669,7 +2676,6 @@ class GenerationMixin:
             # prepare model inputs
             model_inputs = self.prepare_inputs_for_generation(input_ids, **model_kwargs)
 
-            
             # forward pass to get next token
             dict_outputs, outputs = self(
                 **model_inputs,
@@ -2698,20 +2704,45 @@ class GenerationMixin:
                 next_token_logits = logits
             else:
                 # 1. Stacking all premature_layers into a new dimension
-                stacked_premature_layers = torch.stack([dict_outputs[i][:, -1, :] for i in candidate_premature_layers], dim=0)
+                stacked_premature_layers = torch.stack(
+                    [dict_outputs[i][:, -1, :] for i in candidate_premature_layers], dim=0
+                )
 
                 # 2. Calculate the softmax values for mature_layer and all premature_layers
-                softmax_mature_layer = F.softmax(dict_outputs[mature_layer][:, -1, :], dim=-1)  # shape: (batch_size, num_features)
-                softmax_premature_layers = F.softmax(stacked_premature_layers, dim=-1)  # shape: (num_premature_layers, batch_size, num_features)
+                softmax_mature_layer = F.softmax(
+                    dict_outputs[mature_layer][:, -1, :], dim=-1
+                )  # shape: (batch_size, num_features)
+                softmax_premature_layers = F.softmax(
+                    stacked_premature_layers, dim=-1
+                )  # shape: (num_premature_layers, batch_size, num_features)
 
                 # 3. Calculate M, the average distribution
-                M = 0.5 * (softmax_mature_layer[None, :, :] + softmax_premature_layers)  # shape: (num_premature_layers, batch_size, num_features)
+                M = 0.5 * (
+                    softmax_mature_layer[None, :, :] + softmax_premature_layers
+                )  # shape: (num_premature_layers, batch_size, num_features)
 
                 # 4. Calculate log-softmax for the KL divergence
-                log_softmax_mature_layer = F.log_softmax(dict_outputs[mature_layer][:, -1, :], dim=-1)  # shape: (batch_size, num_features)
-                log_softmax_premature_layers = F.log_softmax(stacked_premature_layers, dim=-1)  # shape: (num_premature_layers, batch_size, num_features)
+                log_softmax_mature_layer = F.log_softmax(
+                    dict_outputs[mature_layer][:, -1, :], dim=-1
+                )  # shape: (batch_size, num_features)
+                log_softmax_premature_layers = F.log_softmax(
+                    stacked_premature_layers, dim=-1
+                )  # shape: (num_premature_layers, batch_size, num_features)
 
                 # 5. Calculate the KL divergences and then the JS divergences
+<<<<<<< HEAD
+                kl1 = F.kl_div(log_softmax_mature_layer[None, :, :], M, reduction="none").mean(
+                    -1
+                )  # shape: (num_premature_layers, batch_size)
+                kl2 = F.kl_div(log_softmax_premature_layers, M, reduction="none").mean(
+                    -1
+                )  # shape: (num_premature_layers, batch_size)
+                js_divs = 0.5 * (kl1 + kl2)  # shape: (num_premature_layers, batch_size)
+                print("here")
+                print("kl1: ", kl1)
+                print("kl2: ", kl2)
+                print("js_divs ", js_divs)
+=======
                 kl1 = F.kl_div(log_softmax_mature_layer[None, :, :], M, reduction='none').mean(-1)  # shape: (num_premature_layers, batch_size)
                 kl2 = F.kl_div(log_softmax_premature_layers, M, reduction='none').mean(-1)  # shape: (num_premature_layers, batch_size)
                 js_divs = 0.5 * (kl1 + kl2) # shape: (num_premature_layers, batch_size)
@@ -2719,12 +2750,22 @@ class GenerationMixin:
                 # print("kl1: ", kl1)
                 # print("kl2: ", kl2)
                 # print("js_divs ", js_divs)
+>>>>>>> 50769dd891d8e03678c3bff2c2af49668e3fdd76
 
                 # input()
 
                 # 6. Reduce the batchmean
                 js_divs = js_divs.mean(-1)  # shape: (num_premature_layers,)
 
+<<<<<<< HEAD
+                print("js_divs ", js_divs)
+                premature_layer = candidate_premature_layers[int(js_divs.argmax().cpu().item())]
+                print("premature_layer", premature_layer)
+                premature_layer_dist[premature_layer] += 1
+
+                # input()
+
+=======
                 # print("js_divs ", js_divs*10000)
                 JSD_matrix.append(js_divs)
                 
@@ -2755,6 +2796,7 @@ class GenerationMixin:
                 # print("all_layer_logits", np.shape(all_layer_logits))
                 # input()
                 # print("mature_layer", mature_layer)
+>>>>>>> 50769dd891d8e03678c3bff2c2af49668e3fdd76
                 base_logits = dict_outputs[premature_layer][:, -1, :]
                 final_logits = dict_outputs[mature_layer][:, -1, :]
                 if relative_top > 0.0:
@@ -2853,7 +2895,6 @@ class GenerationMixin:
                 ), info_dict
         else:
             return input_ids, info_dict
-
 
     def contrastive_greedy_decode(
         self,
@@ -3010,7 +3051,7 @@ class GenerationMixin:
         unfinished_sequences = torch.ones(input_ids.shape[0], dtype=torch.long, device=input_ids.device)
 
         this_peer_finished = False  # used by synced_gpus only
-        
+
         student_model_kwargs = copy.deepcopy(model_kwargs)
         while True:
             if synced_gpus:
@@ -3027,7 +3068,6 @@ class GenerationMixin:
             model_inputs = self.prepare_inputs_for_generation(input_ids, **model_kwargs)
             student_model_inputs = self.prepare_inputs_for_generation(input_ids, **student_model_kwargs)
 
-            
             # forward pass to get next token
             outputs = self(
                 **model_inputs,
@@ -3044,7 +3084,7 @@ class GenerationMixin:
 
             if synced_gpus and this_peer_finished:
                 continue  # don't waste resources running the code we don't need
-            
+
             base_logits = student_outputs[0][:, -1, :]
             final_logits = outputs[0][:, -1, :]
             if relative_top > 0.0:
@@ -3411,7 +3451,6 @@ class GenerationMixin:
         else:
             return input_ids
 
-
     def dola_sample(
         self,
         input_ids: torch.LongTensor,
@@ -3585,8 +3624,6 @@ class GenerationMixin:
                 model_kwargs["encoder_outputs"].get("hidden_states") if output_hidden_states else None
             )
 
-
-
         # keep track of which sequences are already finished
         unfinished_sequences = torch.ones(input_ids.shape[0], dtype=torch.long, device=input_ids.device)
 
@@ -3613,10 +3650,9 @@ class GenerationMixin:
             elif candidate_premature_layers is not None:
                 early_exit_layers = candidate_premature_layers + [mature_layer]
                 num_base_layers = len(candidate_premature_layers)
-                premature_layer_dist = {l:0 for l in candidate_premature_layers}
+                premature_layer_dist = {l: 0 for l in candidate_premature_layers}
             else:
                 raise ValueError("You must specify either `base_layer` or `candidate_premature_layers`")
-            
 
             # forward pass to get next token
             dict_outputs, outputs = self(
@@ -3645,16 +3681,45 @@ class GenerationMixin:
                 next_token_logits = logits[:, -1, :]
             else:
                 # 1. Stacking all premature_layers into a new dimension
-                stacked_premature_layers = torch.stack([dict_outputs[i][:, -1, :] for i in candidate_premature_layers], dim=0)
+                stacked_premature_layers = torch.stack(
+                    [dict_outputs[i][:, -1, :] for i in candidate_premature_layers], dim=0
+                )
 
                 # 2. Calculate the softmax values for mature_layer and all premature_layers
-                softmax_mature_layer = F.softmax(dict_outputs[mature_layer][:, -1, :], dim=-1)  # shape: (batch_size, num_features)
-                softmax_premature_layers = F.softmax(stacked_premature_layers, dim=-1)  # shape: (num_premature_layers, batch_size, num_features)
+                softmax_mature_layer = F.softmax(
+                    dict_outputs[mature_layer][:, -1, :], dim=-1
+                )  # shape: (batch_size, num_features)
+                softmax_premature_layers = F.softmax(
+                    stacked_premature_layers, dim=-1
+                )  # shape: (num_premature_layers, batch_size, num_features)
 
                 # 3. Calculate M, the average distribution
-                M = 0.5 * (softmax_mature_layer[None, :, :] + softmax_premature_layers)  # shape: (num_premature_layers, batch_size, num_features)
+                M = 0.5 * (
+                    softmax_mature_layer[None, :, :] + softmax_premature_layers
+                )  # shape: (num_premature_layers, batch_size, num_features)
                 print("M: ", M)
                 # 4. Calculate log-softmax for the KL divergence
+<<<<<<< HEAD
+                log_softmax_mature_layer = F.log_softmax(
+                    dict_outputs[mature_layer][:, -1, :], dim=-1
+                )  # shape: (batch_size, num_features)
+                log_softmax_premature_layers = F.log_softmax(
+                    stacked_premature_layers, dim=-1
+                )  # shape: (num_premature_layers, batch_size, num_features)
+                print("log_softmax_premature_layers: ", log_softmax_premature_layers)
+                print("log_softmax_premature_layers: ", np.shape(log_softmax_premature_layers))
+                # 5. Calculate the KL divergences and then the JS divergences
+                kl1 = F.kl_div(log_softmax_mature_layer[None, :, :], M, reduction="none").mean(
+                    -1
+                )  # shape: (num_premature_layers, batch_size)
+                kl2 = F.kl_div(log_softmax_premature_layers, M, reduction="none").mean(
+                    -1
+                )  # shape: (num_premature_layers, batch_size)
+
+                js_divs = 0.5 * (kl1 + kl2)  # shape: (num_premature_layers, batch_size)
+                print("js_divs ", js_divs)
+                print("js_divs ", np.shape(js_divs))
+=======
                 log_softmax_mature_layer = F.log_softmax(dict_outputs[mature_layer][:, -1, :], dim=-1)  # shape: (batch_size, num_features)
                 log_softmax_premature_layers = F.log_softmax(stacked_premature_layers, dim=-1)  # shape: (num_premature_layers, batch_size, num_features)
                 # print("log_softmax_premature_layers: ", log_softmax_premature_layers)
@@ -3666,13 +3731,14 @@ class GenerationMixin:
                 js_divs = 0.5 * (kl1 + kl2)# shape: (num_premature_layers, batch_size)
                 # print("js_divs ", js_divs)
                 # print("js_divs ", np.shape(js_divs))
+>>>>>>> 50769dd891d8e03678c3bff2c2af49668e3fdd76
                 # 6. Reduce the batchmean
                 js_divs = js_divs.mean(-1)  # shape: (num_premature_layers,)
                 print("js_divs", js_divs)
                 # input()
                 premature_layer = candidate_premature_layers[int(js_divs.argmax().cpu().item())]
                 premature_layer_dist[premature_layer] += 1
-                
+
                 base_logits = dict_outputs[premature_layer][:, -1, :]
                 final_logits = dict_outputs[mature_layer][:, -1, :]
                 if relative_top > 0.0:
@@ -3762,7 +3828,6 @@ class GenerationMixin:
                 )
         else:
             return input_ids
-
 
     def contrastive_decoding_sample(
         self,
@@ -3980,7 +4045,6 @@ class GenerationMixin:
                 base_logits[0][mask] = -1e3
             logits = final_logits - base_logits
             next_token_logits = logits[:, -1, :]
-            
 
             # pre-process distribution
             next_token_scores = logits_processor(input_ids, next_token_logits)
@@ -4061,7 +4125,6 @@ class GenerationMixin:
                 )
         else:
             return input_ids
-
 
     def beam_search(
         self,

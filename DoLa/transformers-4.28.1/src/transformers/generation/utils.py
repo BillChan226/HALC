@@ -2588,6 +2588,8 @@ class GenerationMixin:
         >>> tokenizer.batch_decode(outputs, skip_special_tokens=True)
         ["It might be possible to get a better understanding of the nature of the problem, but it's not"]
         ```"""
+        # print("input_ids", input_ids)
+        # input()
         # init values
         logits_processor = logits_processor if logits_processor is not None else LogitsProcessorList()
         stopping_criteria = stopping_criteria if stopping_criteria is not None else StoppingCriteriaList()
@@ -2645,6 +2647,19 @@ class GenerationMixin:
         else:
             raise ValueError("You must specify either `base_layer` or `candidate_premature_layers`")
 
+<<<<<<< HEAD
+=======
+        # info to go back to main for debug
+        info_dict = {}
+
+        JSD_matrix = []
+        clock_matrix = []
+        surf_matrix = []
+        premature_layer_list = []
+        all_layer_matrix = []
+
+
+>>>>>>> 50769dd891d8e03678c3bff2c2af49668e3fdd76
         while True:
             if synced_gpus:
                 # Under synced_gpus the `forward` call must continue until all gpus complete their sequence.
@@ -2713,6 +2728,7 @@ class GenerationMixin:
                 )  # shape: (num_premature_layers, batch_size, num_features)
 
                 # 5. Calculate the KL divergences and then the JS divergences
+<<<<<<< HEAD
                 kl1 = F.kl_div(log_softmax_mature_layer[None, :, :], M, reduction="none").mean(
                     -1
                 )  # shape: (num_premature_layers, batch_size)
@@ -2724,12 +2740,22 @@ class GenerationMixin:
                 print("kl1: ", kl1)
                 print("kl2: ", kl2)
                 print("js_divs ", js_divs)
+=======
+                kl1 = F.kl_div(log_softmax_mature_layer[None, :, :], M, reduction='none').mean(-1)  # shape: (num_premature_layers, batch_size)
+                kl2 = F.kl_div(log_softmax_premature_layers, M, reduction='none').mean(-1)  # shape: (num_premature_layers, batch_size)
+                js_divs = 0.5 * (kl1 + kl2) # shape: (num_premature_layers, batch_size)
+                # print("here")
+                # print("kl1: ", kl1)
+                # print("kl2: ", kl2)
+                # print("js_divs ", js_divs)
+>>>>>>> 50769dd891d8e03678c3bff2c2af49668e3fdd76
 
                 # input()
 
                 # 6. Reduce the batchmean
                 js_divs = js_divs.mean(-1)  # shape: (num_premature_layers,)
 
+<<<<<<< HEAD
                 print("js_divs ", js_divs)
                 premature_layer = candidate_premature_layers[int(js_divs.argmax().cpu().item())]
                 print("premature_layer", premature_layer)
@@ -2737,6 +2763,38 @@ class GenerationMixin:
 
                 # input()
 
+=======
+                # print("js_divs ", js_divs*10000)
+                JSD_matrix.append(js_divs)
+                
+                premature_layer = candidate_premature_layers[int(js_divs.argmax().cpu().item())]
+                premature_layer_list.append(premature_layer)
+                # print("premature_layer", premature_layer)
+                premature_layer_dist[premature_layer] += 1
+                # record_data = candidate_premature_layers + mature_layer
+                all_layer_logits = []
+                for layer in candidate_premature_layers + [mature_layer]:
+                    selected_logits = dict_outputs[layer][:, -1, :].log_softmax(dim=-1)
+                    all_layer_logits.append(selected_logits.cpu().numpy().tolist())
+
+                # "▁clock": 12006
+                # "▁sur": 1190
+                all_layer_matrix.append(all_layer_logits)
+                all_layer_logits = np.array(all_layer_logits)
+                
+                # print("all_layer_logits", all_layer_logits)
+
+                # print("all_layer_logits", np.shape(all_layer_logits))
+                clock_logits = all_layer_logits[:,:,12006]
+                clock_matrix.append(clock_logits)
+                # print("clock_logits", clock_logits)
+                surf_logits = all_layer_logits[:,:,1190]
+                surf_matrix.append(surf_logits)
+                # print("clock_logits", np.shape(clock_logits))
+                # print("all_layer_logits", np.shape(all_layer_logits))
+                # input()
+                # print("mature_layer", mature_layer)
+>>>>>>> 50769dd891d8e03678c3bff2c2af49668e3fdd76
                 base_logits = dict_outputs[premature_layer][:, -1, :]
                 final_logits = dict_outputs[mature_layer][:, -1, :]
                 if relative_top > 0.0:
@@ -2777,6 +2835,10 @@ class GenerationMixin:
                     raise ValueError("If `eos_token_id` is defined, make sure that `pad_token_id` is defined.")
                 next_tokens = next_tokens * unfinished_sequences + pad_token_id * (1 - unfinished_sequences)
 
+
+
+            # print("input_ids", input_ids)
+
             # update generated ids, model inputs, and length for next step
             input_ids = torch.cat([input_ids, next_tokens[:, None]], dim=-1)
             if streamer is not None:
@@ -2784,6 +2846,7 @@ class GenerationMixin:
             model_kwargs = self._update_model_kwargs_for_generation(
                 outputs, model_kwargs, is_encoder_decoder=self.config.is_encoder_decoder
             )
+            # print("input_ids", input_ids)
 
             # if eos_token was found in one sentence, set sentence to finished
             if eos_token_id_tensor is not None:
@@ -2798,6 +2861,14 @@ class GenerationMixin:
                 else:
                     this_peer_finished = True
 
+        
+        info_dict["jsd_matrix"] = torch.stack(JSD_matrix, dim=0)
+        info_dict["clock_matrix"] = clock_matrix
+        info_dict["surf_matrix"] = surf_matrix
+        info_dict["all_layer_matrix"] = all_layer_matrix    
+        # print("return_dict_in_generate", return_dict_in_generate)
+        # print("self.config.is_encoder_decoder", self.config.is_encoder_decoder)
+
         if streamer is not None:
             streamer.end()
 
@@ -2811,7 +2882,7 @@ class GenerationMixin:
                     decoder_attentions=decoder_attentions,
                     cross_attentions=cross_attentions,
                     decoder_hidden_states=decoder_hidden_states,
-                )
+                ), info_dict
             else:
                 return GreedySearchDecoderOnlyOutput(
                     sequences=input_ids,
@@ -2819,9 +2890,9 @@ class GenerationMixin:
                     attentions=decoder_attentions,
                     hidden_states=decoder_hidden_states,
                     premature_layer_dist=premature_layer_dist,
-                )
+                ), info_dict
         else:
-            return input_ids
+            return input_ids, info_dict
 
     def contrastive_greedy_decode(
         self,
@@ -3626,6 +3697,7 @@ class GenerationMixin:
                 )  # shape: (num_premature_layers, batch_size, num_features)
                 print("M: ", M)
                 # 4. Calculate log-softmax for the KL divergence
+<<<<<<< HEAD
                 log_softmax_mature_layer = F.log_softmax(
                     dict_outputs[mature_layer][:, -1, :], dim=-1
                 )  # shape: (batch_size, num_features)
@@ -3645,6 +3717,19 @@ class GenerationMixin:
                 js_divs = 0.5 * (kl1 + kl2)  # shape: (num_premature_layers, batch_size)
                 print("js_divs ", js_divs)
                 print("js_divs ", np.shape(js_divs))
+=======
+                log_softmax_mature_layer = F.log_softmax(dict_outputs[mature_layer][:, -1, :], dim=-1)  # shape: (batch_size, num_features)
+                log_softmax_premature_layers = F.log_softmax(stacked_premature_layers, dim=-1)  # shape: (num_premature_layers, batch_size, num_features)
+                # print("log_softmax_premature_layers: ", log_softmax_premature_layers)
+                # print("log_softmax_premature_layers: ", np.shape(log_softmax_premature_layers))
+                # 5. Calculate the KL divergences and then the JS divergences
+                kl1 = F.kl_div(log_softmax_mature_layer[None, :, :], M, reduction='none').mean(-1)  # shape: (num_premature_layers, batch_size)
+                kl2 = F.kl_div(log_softmax_premature_layers, M, reduction='none').mean(-1)  # shape: (num_premature_layers, batch_size)
+                
+                js_divs = 0.5 * (kl1 + kl2)# shape: (num_premature_layers, batch_size)
+                # print("js_divs ", js_divs)
+                # print("js_divs ", np.shape(js_divs))
+>>>>>>> 50769dd891d8e03678c3bff2c2af49668e3fdd76
                 # 6. Reduce the batchmean
                 js_divs = js_divs.mean(-1)  # shape: (num_premature_layers,)
                 print("js_divs", js_divs)
@@ -3701,6 +3786,8 @@ class GenerationMixin:
             model_kwargs = self._update_model_kwargs_for_generation(
                 outputs, model_kwargs, is_encoder_decoder=self.config.is_encoder_decoder
             )
+
+            print("input_ids", input_ids)
 
             # if eos_token was found in one sentence, set sentence to finished
             if eos_token_id_tensor is not None:

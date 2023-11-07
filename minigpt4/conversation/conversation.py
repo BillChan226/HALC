@@ -169,10 +169,7 @@ class Chat:
         begin_idx = max(0, current_max_len - max_length)
         embs = embs[:, begin_idx:]
 
-
-
-
-        early_exit_layers = [0,2,4,6,8,10,12,14,32]
+        early_exit_layers = [0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32]
 
         mature_layer = early_exit_layers[-1]
         premature_layer = None
@@ -192,7 +189,7 @@ class Chat:
             max_new_tokens=max_new_tokens,
             stopping_criteria=self.stopping_criteria,
             num_beams=num_beams,
-            do_sample=True,
+            do_sample=False,
             min_length=min_length,
             top_p=top_p,
             repetition_penalty=repetition_penalty,
@@ -210,16 +207,33 @@ class Chat:
 
     def answer(self, conv, img_list, **kargs):
         generation_dict = self.answer_prepare(conv, img_list, **kargs)
-        output_token = self.model_generate(**generation_dict)[0]
-        print("output_token: ", output_token)
+        output_token, info  = self.model_generate(**generation_dict)
+        # print("output_token: ", output_token)
+        # print("info", info)
+        sequences, scores = output_token.sequences, output_token.scores
+        inputs_embeds = generation_dict['inputs_embeds']
+        # print("inputs_embeds.shape[-1]", inputs_embeds.shape[-1])
+        # skip the tokens in the input prompt
+        # gen_sequences = sequences[:, inputs_embeds.shape[-1]:][0, :]
+        gen_sequences = sequences[:, 1:][0, :]
+
+        gen_arr = gen_sequences.cpu().numpy()
+
+        # print("gen_sequences", gen_sequences)
+
+        info["output_tokens"] = gen_arr
+        decoded_tokens = [self.model.llama_tokenizer.decode([token_id]) for token_id in gen_arr]
+        info["decoded_tokens"] = decoded_tokens
+        
         output_token = output_token[0]
-        output_text = self.model.llama_tokenizer.decode(output_token, skip_special_tokens=True)
+        output_text = self.model.llama_tokenizer.decode(gen_sequences, skip_special_tokens=True)
+        # print("output_text", output_text)
 
         output_text = output_text.split('###')[0]  # remove the stop sign '###'
         output_text = output_text.split('Assistant:')[-1].strip()
 
         conv.messages[-1][1] = output_text
-        return output_text, output_token.cpu().numpy()
+        return output_text, output_token.cpu().numpy(), info
 
     def stream_answer(self, conv, img_list, **kargs):
         generation_kwargs = self.answer_prepare(conv, img_list, **kargs)

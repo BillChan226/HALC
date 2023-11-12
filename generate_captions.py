@@ -6,14 +6,6 @@ import numpy as np
 import random
 import torchvision
 from tqdm import tqdm
-from minigpt4.common.dist_utils import get_rank
-import torch.backends.cudnn as cudnn
-from minigpt4.conversation.conversation import (
-    Chat,
-    CONV_VISION_Vicuna0,
-    CONV_VISION_LLama2,
-    StoppingCriteriaSub,
-)
 from pycocotools.coco import COCO
 import json
 
@@ -226,6 +218,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-# xinxin birthday
-# 2021.8.16

@@ -7,6 +7,7 @@ import random
 import torchvision
 from tqdm import tqdm
 from pycocotools.coco import COCO
+from pycocoevalcap.eval import COCOEvalCap
 import json
 
 
@@ -171,58 +172,112 @@ def main():
     if verbosity:
         print(f"\n{model_name} model initialized successfully.")
 
-    # with the coco api
-    coco_caps = COCO(os.path.join(data_dir, "annotations/captions_val2014.json"))
-    # all the image ids
-    img_ids = coco_caps.getImgIds()
-    # sample image ids
-    sampled_img_ids = random.sample(img_ids, num_samples)
-
-    # generate captions
-    all_generated_captions = []
-    for i, cur_img_id in enumerate(tqdm(sampled_img_ids, desc="Generating Captions")):
-        # current image
-        cur_img = coco_caps.loadImgs(cur_img_id)[0]
-        # current image path in the data dir
-        cur_img_path = os.path.join(data_dir, cur_img["file_name"])
-
-        # construct the conversation
-        img_list = []
-        model.upload_img(cur_img_path, CONV_VISION, img_list)
-        model.encode_img(img_list, 38)  # -1 means the last layer
-        # question taken from https://arxiv.org/pdf/2305.10355.pdf
-        model.ask("Generate a short caption of the image.", CONV_VISION)
-        output_text, _, _ = model.answer(CONV_VISION, img_list)
-
-        # append the generated caption to the list
-        all_generated_captions.append(
-            {
-                "image_id": cur_img_id,
-                "caption": output_text,
-            }
+    # prepare data
+    if dataset_name == "coco":
+        annotation_file_path = os.path.join(
+            data_dir, "annotations/captions_val2014.json"
         )
+        # with the coco api
+        coco = COCO(annotation_file_path)
+        # all the image ids
+        img_ids = coco.getImgIds()
+        # sample image ids
+        sampled_img_ids = random.sample(img_ids, num_samples)
 
-        # clear the chat
-        CONV_VISION.messages = []
+        # generate captions
+        all_generated_captions = []
+        for i, cur_img_id in enumerate(
+            tqdm(sampled_img_ids, desc="Generating Captions")
+        ):
+            # current image
+            cur_img = coco.loadImgs(cur_img_id)[0]
+            # current image path in the data dir
+            cur_img_path = os.path.join(data_dir, cur_img["file_name"])
 
-    # add data name to output dir
-    model_type = cfg.model_cfg.model_type.replace("_", "-")
-    output_dir = os.path.join(output_dir, f"{model_name}_{model_type}", dataset_name)
-    if not os.path.exists(output_dir):
-        os.makedirs(output_dir)
+            # construct the conversation
+            img_list = []
+            model.upload_img(cur_img_path, CONV_VISION, img_list)
+            model.encode_img(img_list, 38)  # -1 means the last layer
+            # question taken from https://arxiv.org/pdf/2305.10355.pdf
+            model.ask("Generate a short caption of the image.", CONV_VISION)
+            output_text, _, _ = model.answer(CONV_VISION, img_list)
 
-    # save all the generated caption as json
-    with open(
-        os.path.join(
+            # append the generated caption to the list
+            # format follows https://github.com/tylin/coco-caption/tree/master
+            all_generated_captions.append(
+                {
+                    "image_id": cur_img_id,
+                    "caption": output_text,
+                }
+            )
+
+            # clear the chat
+            CONV_VISION.messages = []
+
+        # add data name to output dir
+        model_type = cfg.model_cfg.model_type.replace("_", "-")
+        output_dir = os.path.join(
+            output_dir, f"{model_name}_{model_type}", dataset_name
+        )
+        if not os.path.exists(output_dir):
+            os.makedirs(output_dir)
+
+        # save all the generated caption as json
+        generated_captions_path = os.path.join(
             output_dir,
             f"{model_name}_{model_type}_{dataset_name}_{num_samples}_generated_captions.json",
-        ),
-        "w",
-    ) as f:
-        json.dump(all_generated_captions, f)
+        )
+        with open(
+            generated_captions_path,
+            "w",
+        ) as f:
+            json.dump(all_generated_captions, f)
 
-    if verbosity:
-        print(f"\nGenerated captions saved to {output_dir}.")
+        if verbosity:
+            print(f"\nGenerated captions saved to {output_dir}.")
+
+        # evaluate all the generated captions using coco-caption
+        if verbosity:
+            print("\nEvaluating generated captions...")
+
+        coco_res = coco.loadRes(generated_captions_path)
+        coco_eval = COCOEvalCap(coco, coco_res)
+        coco_eval.params["image_id"] = coco_res.getImgIds()
+        coco_eval.evaluate()
+
+        # construct the results
+        assert len(coco_eval.evalImgs) == num_samples
+        if verbosity:
+            print(f"\nEvaluated {len(coco_eval.evalImgs)} samples")
+
+        # construct output file as input to CHAIR evaluation
+        # output format follows https://github.com/ruotianluo/self-critical.pytorch
+        formulated_output_dict = {}
+        # overall result
+        overall_dict = {}
+        for metric, score in coco_eval.eval.items():
+            overall_dict[metric] = score
+        formulated_output_dict["overall"] = overall_dict
+        # imgToEval per image result
+        img_to_eval_dict = {}
+        for i, cur_img_id in enumerate(coco_res.getImgIds()):
+            cur_eval_dict = coco_eval.evalImgs[i]
+            # add caption to the eval dict
+            cur_eval_dict["caption"] = coco_res.imgToAnns[cur_img_id][0]["caption"]
+            img_to_eval_dict[cur_img_id] = cur_eval_dict
+        formulated_output_dict["imgToEval"] = img_to_eval_dict
+
+        # save the formulated output dict
+        formulated_output_path = os.path.join(
+            output_dir,
+            f"{model_name}_{model_type}_{dataset_name}_{num_samples}_chair.json",
+        )
+        with open(formulated_output_path, "w") as f:
+            json.dump(formulated_output_dict, f)
+        if verbosity:
+            print(
+                f"\nFormulated output matching CHAIR input format saved to {output_dir}."
+            )
 
 
 if __name__ == "__main__":

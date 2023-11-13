@@ -206,9 +206,8 @@ def main():
         CONV_VISION.messages = []
 
     # add data name to output dir
-    output_dir = os.path.join(
-        output_dir, f"{model_name}_{cfg.model_cfg.model_type}", dataset_name
-    )
+    model_type = cfg.model_cfg.model_type.replace("_", "-")
+    output_dir = os.path.join(output_dir, f"{model_name}_{model_type}", dataset_name)
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 

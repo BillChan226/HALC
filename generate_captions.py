@@ -10,7 +10,7 @@ from pycocotools.coco import COCO
 import json
 
 
-def initialize_mini_gpt_4(parent_parser):
+def initialize_mini_gpt_4(parser):
     from transformers import StoppingCriteriaList
     from minigpt4.conversation.conversation import (
         Chat,
@@ -22,7 +22,7 @@ def initialize_mini_gpt_4(parent_parser):
     from minigpt4.common.registry import registry
 
     # model specific parser
-    parser_group = parent_parser.add_argument_group("MiniGPT4")
+    parser_group = parser.add_argument_group("MiniGPT4")
     parser_group.add_argument(
         "--cfg-path",
         default="./eval_configs/minigpt4_llama2_eval_hallucination.yaml",
@@ -42,7 +42,7 @@ def initialize_mini_gpt_4(parent_parser):
         "change to --cfg-options instead.",
     )
 
-    args = parent_parser.parse_args()
+    args = parser.parse_args()
 
     # load config
     cfg = Config(args)
@@ -79,7 +79,7 @@ def initialize_mini_gpt_4(parent_parser):
         stopping_criteria=stopping_criteria,
     )
 
-    return chat, CONV_VISION
+    return chat, CONV_VISION, cfg
 
 
 # main function
@@ -142,11 +142,8 @@ def main():
     model_name = args.model_name
     dataset_name = args.dataset_name
     data_dir = args.data_dir
-    output_dir = args.output_dir
     # add model and data dir to output dir
-    output_dir = os.path.join(output_dir, model_name, dataset_name)
-    if not os.path.exists(output_dir):
-        os.makedirs(output_dir)
+    output_dir = args.output_dir
     batch_size = args.batch_size
     num_samples = args.num_samples
     seed = args.seed
@@ -169,7 +166,7 @@ def main():
 
     # load model
     if model_name == "minigpt4":
-        model, CONV_VISION = initialize_mini_gpt_4(parser)
+        model, CONV_VISION, cfg = initialize_mini_gpt_4(parser)
 
     if verbosity:
         print(f"\n{model_name} model initialized successfully.")
@@ -205,15 +202,28 @@ def main():
             }
         )
 
+        # clear the chat
+        CONV_VISION.messages = []
+
+    # add data name to output dir
+    output_dir = os.path.join(
+        output_dir, f"{model_name}_{cfg.model_cfg.model_type}", dataset_name
+    )
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+
     # save all the generated caption as json
     with open(
         os.path.join(
             output_dir,
-            f"{model_name}_{dataset_name}_{num_samples}_generated_captions.json",
+            f"{model_name}_{cfg.model_cfg.model_type}_{dataset_name}_{num_samples}_generated_captions.json",
         ),
         "w",
     ) as f:
         json.dump(all_generated_captions, f)
+
+    if verbosity:
+        print(f"\nGenerated captions saved to {output_dir}.")
 
 
 if __name__ == "__main__":

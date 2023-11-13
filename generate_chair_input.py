@@ -163,69 +163,79 @@ def main():
     if verbosity:
         print(f"\n{model_name} model initialized successfully.")
 
-    # prepare data
+    # set output dir
+    model_type = cfg.model_cfg.model_type.replace("_", "-")
+    output_dir = os.path.join(output_dir, f"{model_name}_{model_type}", dataset_name)
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+
+    # generated caption file path
+    generated_captions_path = os.path.join(
+        output_dir,
+        f"{model_name}_{model_type}_{dataset_name}_{num_samples}_generated_captions.json",
+    )
+
+    # chair input varies by dataset
     if dataset_name == "coco":
         annotation_file_path = os.path.join(
-            data_dir, "annotations/captions_val2014.json"
+            data_dir,
+            "annotations/captions_val2014.json",
         )
         # with the coco api
         coco = COCO(annotation_file_path)
-        # all the image ids
-        img_ids = coco.getImgIds()
-        # sample image ids
-        sampled_img_ids = random.sample(img_ids, num_samples)
 
-        # generate captions
-        all_generated_captions = []
-        for i, cur_img_id in enumerate(
-            tqdm(sampled_img_ids, desc="Generating Captions")
-        ):
-            # current image
-            cur_img = coco.loadImgs(cur_img_id)[0]
-            # current image path in the data dir
-            cur_img_path = os.path.join(data_dir, cur_img["file_name"])
+        # if generated captions already exist
+        if os.path.exists(generated_captions_path):
+            # load the generated captions
+            with open(generated_captions_path, "r") as f:
+                all_generated_captions = json.load(f)
+            if verbosity:
+                print(f"\nLoaded generated captions from {generated_captions_path}.")
+        else:
+            # prepare data
+            # all the image ids
+            img_ids = coco.getImgIds()
+            # sample image ids
+            sampled_img_ids = random.sample(img_ids, num_samples)
 
-            # construct the conversation
-            img_list = []
-            model.upload_img(cur_img_path, CONV_VISION, img_list)
-            model.encode_img(img_list, 38)  # -1 means the last layer
-            # question taken from https://arxiv.org/pdf/2305.10355.pdf
-            model.ask("Generate a short caption of the image.", CONV_VISION)
-            output_text, _, _ = model.answer(CONV_VISION, img_list)
+            # generate captions
+            all_generated_captions = []
+            for i, cur_img_id in enumerate(
+                tqdm(sampled_img_ids, desc="Generating Captions")
+            ):
+                # current image
+                cur_img = coco.loadImgs(cur_img_id)[0]
+                # current image path in the data dir
+                cur_img_path = os.path.join(data_dir, cur_img["file_name"])
 
-            # append the generated caption to the list
-            # format follows https://github.com/tylin/coco-caption/tree/master
-            all_generated_captions.append(
-                {
-                    "image_id": cur_img_id,
-                    "caption": output_text,
-                }
-            )
+                # construct the conversation
+                img_list = []
+                model.upload_img(cur_img_path, CONV_VISION, img_list)
+                model.encode_img(img_list, 38)  # -1 means the last layer
+                # question taken from https://arxiv.org/pdf/2305.10355.pdf
+                model.ask("Generate a short caption of the image.", CONV_VISION)
+                output_text, _, _ = model.answer(CONV_VISION, img_list)
 
-            # clear the chat
-            CONV_VISION.messages = []
+                # append the generated caption to the list
+                # format follows https://github.com/tylin/coco-caption/tree/master
+                all_generated_captions.append(
+                    {
+                        "image_id": cur_img_id,
+                        "caption": output_text,
+                    }
+                )
 
-        # add data name to output dir
-        model_type = cfg.model_cfg.model_type.replace("_", "-")
-        output_dir = os.path.join(
-            output_dir, f"{model_name}_{model_type}", dataset_name
-        )
-        if not os.path.exists(output_dir):
-            os.makedirs(output_dir)
+                # clear the chat
+                CONV_VISION.messages = []
 
-        # save all the generated caption as json
-        generated_captions_path = os.path.join(
-            output_dir,
-            f"{model_name}_{model_type}_{dataset_name}_{num_samples}_generated_captions.json",
-        )
-        with open(
-            generated_captions_path,
-            "w",
-        ) as f:
-            json.dump(all_generated_captions, f)
+            with open(
+                generated_captions_path,
+                "w",
+            ) as f:
+                json.dump(all_generated_captions, f)
 
-        if verbosity:
-            print(f"\nGenerated captions saved to {output_dir}.")
+            if verbosity:
+                print(f"\nGenerated captions saved to {output_dir}.")
 
         # evaluate all the generated captions using coco-caption
         if verbosity:

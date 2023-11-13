@@ -112,12 +112,6 @@ def main():
         help="Output ditectory for saving test results. Default is './generated_captions/'.",
     )
     parser.add_argument(
-        "--batch_size",
-        type=int,
-        default=64,
-        help="Batch size when generating captions. Default is 64.",
-    )
-    parser.add_argument(
         "--num_samples",
         type=int,
         default=2000,
@@ -143,9 +137,7 @@ def main():
     model_name = args.model_name
     dataset_name = args.dataset_name
     data_dir = args.data_dir
-    # add model and data dir to output dir
     output_dir = args.output_dir
-    batch_size = args.batch_size
     num_samples = args.num_samples
     seed = args.seed
     verbosity = args.verbosity
@@ -156,7 +148,6 @@ def main():
         print("dataset_name: ", dataset_name)
         print("data_dir: ", data_dir)
         print("output_dir: ", output_dir)
-        print("batch_size: ", batch_size)
         print("num_samples: ", num_samples)
         print("seed: ", seed)
 

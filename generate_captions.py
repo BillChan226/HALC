@@ -215,7 +215,7 @@ def main():
     with open(
         os.path.join(
             output_dir,
-            f"{model_name}_{cfg.model_cfg.model_type}_{dataset_name}_{num_samples}_generated_captions.json",
+            f"{model_name}_{model_type}_{dataset_name}_{num_samples}_generated_captions.json",
         ),
         "w",
     ) as f:

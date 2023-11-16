@@ -107,7 +107,7 @@ stopping_criteria = StoppingCriteriaList([StoppingCriteriaSub(stops=stop_words_i
 
 # initialize corrector
 args_dict = {
-        'api_key': "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",
+        'api_key': "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",
         'api_base': "https://api.openai.com/v1",
         'val_model_path': "Salesforce/blip2-flan-t5-xxl",
         'qa2c_model_path': "khhuang/zerofec-qa2claim-t5-base",
@@ -211,8 +211,9 @@ def model_predict(image_path, question, box_threshold, area_threshold):
 
 # raw_image = Image.open(img).convert('RGB')
             
-my_model_function(img, "What is the man holding in his hand?", 0.35, 0.02)
-
+# my_model_function(img, "What is the man holding in his hand?", 0.35, 0.02)
+# my_model_function(img, "What is the man holding in his hand?", 0.05, 0.005)
+my_model_function(img, "Describe this image with as many details as possible.", 0.05, 0.005)
 
 
 # def create_multi_modal_demo():

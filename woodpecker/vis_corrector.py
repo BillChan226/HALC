@@ -32,10 +32,14 @@ class Corrector:
             'input_desc': A passage that contains a description of the image.
             'input_img': Path to a local image 
         '''
-
+        print("\n pre sample:", sample)
         sample = self.preprocessor.generate_sentences(sample)
+        print("\n generate_sentences", sample)
         sample = self.entity_extractor.extract_entity(sample)
+        print("\n extract_entity", sample)
+        # sample['named_entity'] = ['man.book']
         sample = self.detector.detect_objects(sample)
+        print("\n detect_objects", sample)
         sample = self.questioner.generate_questions(sample)
         sample = self.answerer.generate_answers(sample)
         sample = self.claim_generator.generate_claim(sample)

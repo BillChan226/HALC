@@ -135,79 +135,49 @@ print('Initialization Finished')
 
 img_list = []
 # img = "/data/xyq/bill/MiniGPT-4/hallucinatory_image/clock_on_a_beach.png"
+img = '/data/xyq/bill/MiniGPT-4/beach_on_a_clock.png'
 # img = "/data/xyq/bill/MiniGPT-4/hallucinatory_image/zoom_in_5.png"
-img = "/data/xyq/bill/MiniGPT-4/hallucinatory_image/inject.png"
+# img = "/data/xyq/bill/MiniGPT-4/hallucinatory_image/inject.png"
 
 
 @torch.no_grad()
-def my_model_function(image, question, box_threshold, area_threshold):
+def my_model_function(image_path, question, box_threshold, area_threshold):
     # create a temp dir to save uploaded imgs
     temp_dir = "temp"
     os.makedirs(temp_dir, exist_ok=True)
     
     unique_filename = str(uuid.uuid4()) + ".png"
     
-    temp_file_path = os.path.join(temp_dir, unique_filename)
+    # temp_file_path = os.path.join(temp_dir, unique_filename)
     
-    success = cv2.imwrite(temp_file_path, cv2.cvtColor(image, cv2.COLOR_RGB2BGR))
-    
-    try:
-        output_text, output_image = model_predict(temp_file_path, question, box_threshold, area_threshold) # 你的模型预测函数
-    finally:
-        # remove temporary files.
-        if os.path.exists(temp_file_path):
-            os.remove(temp_file_path)
+    # success = cv2.imwrite(temp_file_path, cv2.cvtColor(image, cv2.COLOR_RGB2BGR))
+    temp_file_path = image_path
+
+    # try:
+    output_text, output_image = model_predict(temp_file_path, question, box_threshold, area_threshold) # 你的模型预测函数
+    # finally:
+    #     # remove temporary files.
+    #     if os.path.exists(temp_file_path):
+    #         os.remove(temp_file_path)
     
     return output_text, output_image
 
-# def get_owl_output(img_path, question):
-#     prompts = [PROMPT_TEMPLATE.format(question=question)]
-#     image_list = [img_path]
-
-#     # get response
-#     generate_kwargs = {
-#         'do_sample': False,
-#         'top_k': 5,
-#         'max_length': 512
-#     }
-#     images = [Image.open(_) for _ in image_list]
-#     inputs = processor(text=prompts, images=images, return_tensors='pt')
-#     inputs = {k: v.bfloat16() if v.dtype == torch.float else v for k, v in inputs.items()}
-#     inputs = {k: v.to(model.device) for k, v in inputs.items()}
-#     with torch.no_grad():
-#         res = model.generate(**inputs, **generate_kwargs)
-#     sentence = tokenizer.decode(res.tolist()[0], skip_special_tokens=True)
-#     return sentence
 
 def get_minigpt_output(img_path, question):
     prompts = [PROMPT_TEMPLATE.format(question=question)]
-    image_list = [img_path]
+    # image_list = [img_path]
+    image_list = []
 
-
-    chat.upload_img(img, CONV_VISION, image_list)
-    chat.encode_img(img_list, 38) 
+    print("input img_path: ", img_path)
+    chat.upload_img(img_path, CONV_VISION, image_list)
+    chat.encode_img(image_list, 38) 
     # chat.ask("describe the man in the image.", CONV_VISION)
     chat.ask(question, CONV_VISION)
 
-    output_text, output_token, info = chat.answer(CONV_VISION, img_list)
+    output_text, output_token, info = chat.answer(CONV_VISION, image_list)
 
     print("output_text: ", output_text)
 
-
-
-    # get response
-    generate_kwargs = {
-        'do_sample': False,
-        'top_k': 5,
-        'max_length': 512
-    }
-    # images = [Image.open(_) for _ in image_list]
-    # inputs = processor(text=prompts, images=images, return_tensors='pt')
-    # inputs = {k: v.bfloat16() if v.dtype == torch.float else v for k, v in inputs.items()}
-    # inputs = {k: v.to(model.device) for k, v in inputs.items()}
-    # with torch.no_grad():
-    #     res = model.generate(**inputs, **generate_kwargs)
-    # sentence = tokenizer.decode(res.tolist()[0], skip_special_tokens=True)
     return output_text
 
 
@@ -239,56 +209,62 @@ def model_predict(image_path, question, box_threshold, area_threshold):
         if os.path.exists(temp_output_filepath):
             os.remove(temp_output_filepath)
 
-def create_multi_modal_demo():
-    with gr.Blocks() as instruct_demo:
-        with gr.Row():
-            with gr.Column():
-                img = gr.Image(label='Upload Image')
-                question = gr.Textbox(lines=2, label="Prompt")
-                
-                with gr.Accordion(label='Detector parameters', open=True):
-                    box_threshold = gr.Slider(minimum=0, maximum=1,
-                                     value=0.35, label="Box threshold")
-                    area_threshold = gr.Slider(minimum=0, maximum=1,
-                                     value=0.02, label="Area threshold")
+# raw_image = Image.open(img).convert('RGB')
+            
+my_model_function(img, "What is the man holding in his hand?", 0.35, 0.02)
 
-                run_botton = gr.Button("Run")
 
-            with gr.Column():
-                output_text = gr.Textbox(lines=10, label="Output")
-                output_img = gr.Image(label="Output Image", type='pil')
+
+# def create_multi_modal_demo():
+#     with gr.Blocks() as instruct_demo:
+#         with gr.Row():
+#             with gr.Column():
+#                 img = gr.Image(label='Upload Image')
+#                 question = gr.Textbox(lines=2, label="Prompt")
                 
-        inputs = [img, question, box_threshold, area_threshold]
-        outputs = [output_text, output_img]
+#                 with gr.Accordion(label='Detector parameters', open=True):
+#                     box_threshold = gr.Slider(minimum=0, maximum=1,
+#                                      value=0.35, label="Box threshold")
+#                     area_threshold = gr.Slider(minimum=0, maximum=1,
+#                                      value=0.02, label="Area threshold")
+
+#                 run_botton = gr.Button("Run")
+
+#             with gr.Column():
+#                 output_text = gr.Textbox(lines=10, label="Output")
+#                 output_img = gr.Image(label="Output Image", type='pil')
+                
+#         inputs = [img, question, box_threshold, area_threshold]
+#         outputs = [output_text, output_img]
         
-        examples = [
-            ["./examples/case1.jpg", "How many people in the image?"],
-            ["./examples/case2.jpg", "Is there any car in the image?"],
-            ["./examples/case3.jpg", "Describe this image."],
-        ]
+#         examples = [
+#             ["/data/xyq/bill/MiniGPT-4/woodpecker/examples/case1.jpg", "How many people in the image?"],
+#             ["/data/xyq/bill/MiniGPT-4/woodpecker/examples/case2.jpg", "Is there any car in the image?"],
+#             ["/data/xyq/bill/MiniGPT-4/woodpecker/examples/case3.jpg", "Describe this image."],
+#         ]
 
-        gr.Examples(
-            examples=examples,
-            inputs=inputs,
-            outputs=outputs,
-            fn=my_model_function,
-            cache_examples=False,
-            run_on_click=True
-        )
-        run_botton.click(fn=my_model_function,
-                         inputs=inputs, outputs=outputs)
-    return instruct_demo
+#         gr.Examples(
+#             examples=examples,
+#             inputs=inputs,
+#             outputs=outputs,
+#             fn=my_model_function,
+#             cache_examples=False,
+#             run_on_click=True
+#         )
+#         run_botton.click(fn=my_model_function,
+#                          inputs=inputs, outputs=outputs)
+#     return instruct_demo
 
-description = """
-# Woodpecker: Hallucination Correction for MLLMs🔧
-**Note**: Due to network restrictions, it is recommended that the size of the uploaded image be less than **1M**.
+# description = """
+# # Woodpecker: Hallucination Correction for MLLMs🔧
+# **Note**: Due to network restrictions, it is recommended that the size of the uploaded image be less than **1M**.
 
-Please refer to our [github](https://github.com/BradyFU/Woodpecker) for more details.
-"""
+# Please refer to our [github](https://github.com/BradyFU/Woodpecker) for more details.
+# """
 
-with gr.Blocks(css="h1,p {text-align: center;}") as demo:
-    gr.Markdown(description)
-    with gr.TabItem("Multi-Modal Interaction"):
-        create_multi_modal_demo()
+# with gr.Blocks(css="h1,p {text-align: center;}") as demo:
+#     gr.Markdown(description)
+#     with gr.TabItem("Multi-Modal Interaction"):
+#         create_multi_modal_demo()
 
-demo.queue(api_open=False).launch(share=True)
+# demo.queue(api_open=False).launch(share=True)

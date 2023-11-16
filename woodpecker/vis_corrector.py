@@ -19,9 +19,9 @@ class Corrector:
         self.entity_extractor = EntityExtractor(args)
         self.detector = Detector(args)
         self.questioner = Questioner(args)
-        self.answerer = Answerer(args)
-        self.claim_generator = ClaimGenerator(args)
-        self.refiner = Refiner(args)
+        # self.answerer = Answerer(args)
+        # self.claim_generator = ClaimGenerator(args)
+        # self.refiner = Refiner(args)
         
         print("Finish loading models.")
 

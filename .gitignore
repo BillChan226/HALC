@@ -165,7 +165,7 @@ jobs/logs/
 *.out
 *ipynb
 .history/
-*.json
+# *.json
 *.sh
 .ipynb_common
 logs/

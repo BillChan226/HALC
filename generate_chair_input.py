@@ -108,8 +108,8 @@ def main():
     parser.add_argument(
         "--output_dir",
         type=str,
-        default="./generated_captions/",
-        help="Output ditectory for saving test results. Default is './generated_captions/'.",
+        default="./generated_chair_inputs/",
+        help="Output ditectory for saving test results. Default is './generated_chair_inputs/'.",
     )
     parser.add_argument(
         "--num_samples",

@@ -1,3 +1,5 @@
+import sys
+sys.path.append("/data/xyq/bill/MiniGPT-4/woodpecker")
 from models.preprocessor import PreProcessor
 from models.entity_extractor import EntityExtractor
 from models.detector import Detector

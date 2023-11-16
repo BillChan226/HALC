@@ -1,14 +1,21 @@
 import argparse
 import os
+
 os.environ["CUDA_VISIBLE_DEVICES"]="0,1"
+
 import torch
 from transformers import AutoTokenizer
-from vis_corrector import Corrector
-from models.utils import extract_boxes, find_matching_boxes, annotate
+
 import sys
+sys.path.append("./MiniGPT-4/DoLa")
+sys.path.append("./MiniGPT-4/DoLa/transformers-4.28.1")
+sys.path.append("./MiniGPT-4/DoLa/transformers-4.28.1/src")
+sys.path.append("./MiniGPT-4/DoLa/transformers-4.28.1/src/transformers")
+sys.path.append("./MiniGPT-4/woodpecker")
 sys.path.append('/data/xyq/bill/MiniGPT-4/woodpecker/mPLUG-Owl/mPLUG-Owl')
-from mplug_owl.modeling_mplug_owl import MplugOwlForConditionalGeneration
-from mplug_owl.processing_mplug_owl import MplugOwlImageProcessor, MplugOwlProcessor
+
+from woodpecker.vis_corrector import Corrector
+from woodpecker.models.utils import extract_boxes, find_matching_boxes, annotate
 
 from PIL import Image
 from types import SimpleNamespace
@@ -16,6 +23,26 @@ import numpy as np
 import cv2
 import gradio as gr
 import uuid
+import random
+import numpy as np
+import torch
+import torch.backends.cudnn as cudnn
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+from transformers import StoppingCriteriaList
+
+from minigpt4.common.config import Config
+from minigpt4.common.dist_utils import get_rank
+from minigpt4.common.registry import registry
+from minigpt4.conversation.conversation import Chat, CONV_VISION_Vicuna0, CONV_VISION_LLama2, StoppingCriteriaSub
+
+# imports modules for registration
+from minigpt4.datasets.builders import *
+from minigpt4.models import *
+from minigpt4.processors import *
+from minigpt4.runners import *
+from minigpt4.tasks import *
 
 
 
@@ -28,6 +55,55 @@ Human: {question}
 AI: '''
 
 print('Initializing Chat')
+
+def parse_args():
+    parser = argparse.ArgumentParser(description="Demo")
+    parser.add_argument("--cfg-path", required=True, help="path to configuration file.")
+    parser.add_argument("--gpu-id", type=int, default=0, help="specify the gpu to load the model.")
+    parser.add_argument(
+        "--options",
+        nargs="+",
+        help="override some settings in the used config, the key-value pair "
+        "in xxx=yyy format will be merged into config file (deprecate), "
+        "change to --cfg-options instead.",
+    )
+    args = parser.parse_args()
+    return args
+
+
+def setup_seeds(config):
+    seed = config.run_cfg.seed + get_rank()
+
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+
+    cudnn.benchmark = False
+    cudnn.deterministic = True
+
+# ========================================
+#             Model Initialization
+# ========================================
+
+conv_dict = {'pretrain_vicuna0': CONV_VISION_Vicuna0,
+             'pretrain_llama2': CONV_VISION_LLama2}
+
+args = parse_args()
+cfg = Config(args)
+
+model_config = cfg.model_cfg
+model_config.device_8bit = args.gpu_id
+model_cls = registry.get_model_class(model_config.arch)
+model = model_cls.from_config(model_config).to('cuda:{}'.format(args.gpu_id))
+
+CONV_VISION = conv_dict[model_config.model_type]
+
+vis_processor_cfg = cfg.datasets_cfg.cc_sbu_align.vis_processor.train
+vis_processor = registry.get_processor_class(vis_processor_cfg.name).from_config(vis_processor_cfg)
+
+stop_words_ids = [[835], [2277, 29937]]
+stop_words_ids = [torch.tensor(ids).to(device='cuda:{}'.format(args.gpu_id)) for ids in stop_words_ids]
+stopping_criteria = StoppingCriteriaList([StoppingCriteriaSub(stops=stop_words_ids)])
 
 # initialize corrector
 args_dict = {
@@ -44,16 +120,24 @@ model_args = SimpleNamespace(**args_dict)
 corrector = Corrector(model_args)
 
 # initialize mplug-Owl
-pretrained_ckpt = "MAGAer13/mplug-owl-llama-7b"
-model = MplugOwlForConditionalGeneration.from_pretrained(
-    pretrained_ckpt,
-    torch_dtype=torch.bfloat16,
-).to("cuda:1")
-image_processor = MplugOwlImageProcessor.from_pretrained(pretrained_ckpt)
-tokenizer = AutoTokenizer.from_pretrained(pretrained_ckpt)
-processor = MplugOwlProcessor(image_processor, tokenizer)
+# pretrained_ckpt = "MAGAer13/mplug-owl-llama-7b"
+# model = MplugOwlForConditionalGeneration.from_pretrained(
+#     pretrained_ckpt,
+#     torch_dtype=torch.bfloat16,
+# ).to("cuda:1")
+# image_processor = MplugOwlImageProcessor.from_pretrained(pretrained_ckpt)
+# tokenizer = AutoTokenizer.from_pretrained(pretrained_ckpt)
+# processor = MplugOwlProcessor(image_processor, tokenizer)
 
+
+chat = Chat(model, vis_processor, device='cuda:{}'.format(args.gpu_id), stopping_criteria=stopping_criteria)
 print('Initialization Finished')
+
+img_list = []
+# img = "/data/xyq/bill/MiniGPT-4/hallucinatory_image/clock_on_a_beach.png"
+# img = "/data/xyq/bill/MiniGPT-4/hallucinatory_image/zoom_in_5.png"
+img = "/data/xyq/bill/MiniGPT-4/hallucinatory_image/inject.png"
+
 
 @torch.no_grad()
 def my_model_function(image, question, box_threshold, area_threshold):
@@ -76,9 +160,40 @@ def my_model_function(image, question, box_threshold, area_threshold):
     
     return output_text, output_image
 
-def get_owl_output(img_path, question):
+# def get_owl_output(img_path, question):
+#     prompts = [PROMPT_TEMPLATE.format(question=question)]
+#     image_list = [img_path]
+
+#     # get response
+#     generate_kwargs = {
+#         'do_sample': False,
+#         'top_k': 5,
+#         'max_length': 512
+#     }
+#     images = [Image.open(_) for _ in image_list]
+#     inputs = processor(text=prompts, images=images, return_tensors='pt')
+#     inputs = {k: v.bfloat16() if v.dtype == torch.float else v for k, v in inputs.items()}
+#     inputs = {k: v.to(model.device) for k, v in inputs.items()}
+#     with torch.no_grad():
+#         res = model.generate(**inputs, **generate_kwargs)
+#     sentence = tokenizer.decode(res.tolist()[0], skip_special_tokens=True)
+#     return sentence
+
+def get_minigpt_output(img_path, question):
     prompts = [PROMPT_TEMPLATE.format(question=question)]
     image_list = [img_path]
+
+
+    chat.upload_img(img, CONV_VISION, image_list)
+    chat.encode_img(img_list, 38) 
+    # chat.ask("describe the man in the image.", CONV_VISION)
+    chat.ask(question, CONV_VISION)
+
+    output_text, output_token, info = chat.answer(CONV_VISION, img_list)
+
+    print("output_text: ", output_text)
+
+
 
     # get response
     generate_kwargs = {
@@ -86,21 +201,22 @@ def get_owl_output(img_path, question):
         'top_k': 5,
         'max_length': 512
     }
-    images = [Image.open(_) for _ in image_list]
-    inputs = processor(text=prompts, images=images, return_tensors='pt')
-    inputs = {k: v.bfloat16() if v.dtype == torch.float else v for k, v in inputs.items()}
-    inputs = {k: v.to(model.device) for k, v in inputs.items()}
-    with torch.no_grad():
-        res = model.generate(**inputs, **generate_kwargs)
-    sentence = tokenizer.decode(res.tolist()[0], skip_special_tokens=True)
-    return sentence
+    # images = [Image.open(_) for _ in image_list]
+    # inputs = processor(text=prompts, images=images, return_tensors='pt')
+    # inputs = {k: v.bfloat16() if v.dtype == torch.float else v for k, v in inputs.items()}
+    # inputs = {k: v.to(model.device) for k, v in inputs.items()}
+    # with torch.no_grad():
+    #     res = model.generate(**inputs, **generate_kwargs)
+    # sentence = tokenizer.decode(res.tolist()[0], skip_special_tokens=True)
+    return output_text
+
 
 def model_predict(image_path, question, box_threshold, area_threshold):
     
     temp_output_filepath = os.path.join("temp", str(uuid.uuid4()) + ".png")
     os.makedirs("temp", exist_ok=True)
     try:
-        owl_output = get_owl_output(image_path, question)
+        owl_output = get_minigpt_output(image_path, question)
         corrector_sample = {
             'img_path': image_path,
             'input_desc': owl_output,

@@ -19,7 +19,7 @@ dependencies:
     - regex==2022.10.31
     - tokenizers==0.13.2
     - tqdm==4.64.1
-    - transformers==4.30.0
+    # - transformers==4.30.0
     - timm==0.6.13
     - webdataset==0.2.48
     - omegaconf==2.3.0

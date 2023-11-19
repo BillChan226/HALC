@@ -2649,8 +2649,6 @@ class GenerationMixin:
         else:
             raise ValueError("You must specify either `base_layer` or `candidate_premature_layers`")
 
-<<<<<<< HEAD
-=======
         # info to go back to main for debug
         info_dict = {}
 
@@ -2661,7 +2659,6 @@ class GenerationMixin:
         all_layer_matrix = []
 
 
->>>>>>> 50769dd891d8e03678c3bff2c2af49668e3fdd76
         while True:
             if synced_gpus:
                 # Under synced_gpus the `forward` call must continue until all gpus complete their sequence.
@@ -2730,19 +2727,6 @@ class GenerationMixin:
                 )  # shape: (num_premature_layers, batch_size, num_features)
 
                 # 5. Calculate the KL divergences and then the JS divergences
-<<<<<<< HEAD
-                kl1 = F.kl_div(log_softmax_mature_layer[None, :, :], M, reduction="none").mean(
-                    -1
-                )  # shape: (num_premature_layers, batch_size)
-                kl2 = F.kl_div(log_softmax_premature_layers, M, reduction="none").mean(
-                    -1
-                )  # shape: (num_premature_layers, batch_size)
-                js_divs = 0.5 * (kl1 + kl2)  # shape: (num_premature_layers, batch_size)
-                print("here")
-                print("kl1: ", kl1)
-                print("kl2: ", kl2)
-                print("js_divs ", js_divs)
-=======
                 kl1 = F.kl_div(log_softmax_mature_layer[None, :, :], M, reduction='none').mean(-1)  # shape: (num_premature_layers, batch_size)
                 kl2 = F.kl_div(log_softmax_premature_layers, M, reduction='none').mean(-1)  # shape: (num_premature_layers, batch_size)
                 js_divs = 0.5 * (kl1 + kl2) # shape: (num_premature_layers, batch_size)
@@ -2750,22 +2734,12 @@ class GenerationMixin:
                 # print("kl1: ", kl1)
                 # print("kl2: ", kl2)
                 # print("js_divs ", js_divs)
->>>>>>> 50769dd891d8e03678c3bff2c2af49668e3fdd76
 
                 # input()
 
                 # 6. Reduce the batchmean
                 js_divs = js_divs.mean(-1)  # shape: (num_premature_layers,)
 
-<<<<<<< HEAD
-                print("js_divs ", js_divs)
-                premature_layer = candidate_premature_layers[int(js_divs.argmax().cpu().item())]
-                print("premature_layer", premature_layer)
-                premature_layer_dist[premature_layer] += 1
-
-                # input()
-
-=======
                 # print("js_divs ", js_divs*10000)
                 JSD_matrix.append(js_divs)
                 
@@ -2796,7 +2770,6 @@ class GenerationMixin:
                 # print("all_layer_logits", np.shape(all_layer_logits))
                 # input()
                 # print("mature_layer", mature_layer)
->>>>>>> 50769dd891d8e03678c3bff2c2af49668e3fdd76
                 base_logits = dict_outputs[premature_layer][:, -1, :]
                 final_logits = dict_outputs[mature_layer][:, -1, :]
                 if relative_top > 0.0:
@@ -3699,27 +3672,6 @@ class GenerationMixin:
                 )  # shape: (num_premature_layers, batch_size, num_features)
                 print("M: ", M)
                 # 4. Calculate log-softmax for the KL divergence
-<<<<<<< HEAD
-                log_softmax_mature_layer = F.log_softmax(
-                    dict_outputs[mature_layer][:, -1, :], dim=-1
-                )  # shape: (batch_size, num_features)
-                log_softmax_premature_layers = F.log_softmax(
-                    stacked_premature_layers, dim=-1
-                )  # shape: (num_premature_layers, batch_size, num_features)
-                print("log_softmax_premature_layers: ", log_softmax_premature_layers)
-                print("log_softmax_premature_layers: ", np.shape(log_softmax_premature_layers))
-                # 5. Calculate the KL divergences and then the JS divergences
-                kl1 = F.kl_div(log_softmax_mature_layer[None, :, :], M, reduction="none").mean(
-                    -1
-                )  # shape: (num_premature_layers, batch_size)
-                kl2 = F.kl_div(log_softmax_premature_layers, M, reduction="none").mean(
-                    -1
-                )  # shape: (num_premature_layers, batch_size)
-
-                js_divs = 0.5 * (kl1 + kl2)  # shape: (num_premature_layers, batch_size)
-                print("js_divs ", js_divs)
-                print("js_divs ", np.shape(js_divs))
-=======
                 log_softmax_mature_layer = F.log_softmax(dict_outputs[mature_layer][:, -1, :], dim=-1)  # shape: (batch_size, num_features)
                 log_softmax_premature_layers = F.log_softmax(stacked_premature_layers, dim=-1)  # shape: (num_premature_layers, batch_size, num_features)
                 # print("log_softmax_premature_layers: ", log_softmax_premature_layers)
@@ -3731,7 +3683,6 @@ class GenerationMixin:
                 js_divs = 0.5 * (kl1 + kl2)# shape: (num_premature_layers, batch_size)
                 # print("js_divs ", js_divs)
                 # print("js_divs ", np.shape(js_divs))
->>>>>>> 50769dd891d8e03678c3bff2c2af49668e3fdd76
                 # 6. Reduce the batchmean
                 js_divs = js_divs.mean(-1)  # shape: (num_premature_layers,)
                 print("js_divs", js_divs)

@@ -27,12 +27,12 @@ def initialize_mini_gpt_4(parser):
     # model specific parser
     parser_group = parser.add_argument_group("MiniGPT4")
     parser_group.add_argument(
-        "--cfg-path",
+        "--cfg_path",
         default="./eval_configs/minigpt4_llama2_eval_hallucination.yaml",
         help="path to configuration file.",
     )
     parser_group.add_argument(
-        "--gpu-id",
+        "--gpu_id",
         type=int,
         default=0,
         help="specify the gpu to load the model.",
@@ -42,7 +42,7 @@ def initialize_mini_gpt_4(parser):
         nargs="+",
         help="override some settings in the used config, the key-value pair "
         "in xxx=yyy format will be merged into config file (deprecate), "
-        "change to --cfg-options instead.",
+        "change to --cfg_options instead.",
     )
 
     args = parser.parse_args()
@@ -167,6 +167,11 @@ def main():
 
     # set output dir
     model_type = cfg.model_cfg.model_type.replace("_", "-")
+    if cfg.model_cfg.dola_decoding is True:
+        dola_name = "dola"
+        for layer_index in cfg.model_cfg.early_exit_layers:
+            dola_name += f"_{layer_index}"
+        model_type += f"_{dola_name}"
     output_dir = os.path.join(output_dir, f"{model_name}_{model_type}", dataset_name)
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)

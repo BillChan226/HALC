@@ -8,7 +8,9 @@ import torchvision
 from tqdm import tqdm
 from pycocotools.coco import COCO
 from pycocoevalcap.eval import COCOEvalCap
+from tqdm import tqdm
 import json
+from collections import defaultdict
 
 
 def initialize_mini_gpt_4(parser):
@@ -241,32 +243,56 @@ def main():
         if verbosity:
             print("\nEvaluating generated captions...")
 
-        coco_res = coco.loadRes(generated_captions_path)
-        coco_eval = COCOEvalCap(coco, coco_res)
-        coco_eval.params["image_id"] = coco_res.getImgIds()
-        coco_eval.evaluate()
-
-        # construct the results
-        assert len(coco_eval.evalImgs) == num_samples
-        if verbosity:
-            print(f"\nEvaluated {len(coco_eval.evalImgs)} samples")
-
+        # check the length of the generated captions
+        loaded_json = json.load(open(generated_captions_path))
         # construct output file as input to CHAIR evaluation
         # output format follows https://github.com/ruotianluo/self-critical.pytorch
         formulated_output_dict = {}
         # overall result
-        overall_dict = {}
-        for metric, score in coco_eval.eval.items():
-            overall_dict[metric] = score
-        formulated_output_dict["overall"] = overall_dict
+        all_overall_scores = defaultdict(list)
         # imgToEval per image result
         img_to_eval_dict = {}
-        for i, cur_img_id in enumerate(coco_res.getImgIds()):
-            cur_eval_dict = coco_eval.evalImgs[i]
-            # add caption to the eval dict
-            cur_eval_dict["caption"] = coco_res.imgToAnns[cur_img_id][0]["caption"]
-            img_to_eval_dict[cur_img_id] = cur_eval_dict
+        # to save memory, load 100 captions at a time
+        for start_idx in tqdm(
+            range(0, len(loaded_json), 100), desc="Generating CHAIR Input"
+        ):
+            # define the current iteration end index
+            end_idx = min(start_idx + 100, len(loaded_json))
+            coco_res = coco.loadRes(
+                loaded_json[start_idx:end_idx],
+            )
+            coco_eval = COCOEvalCap(coco, coco_res)
+            coco_eval.params["image_id"] = coco_res.getImgIds()
+            coco_eval.evaluate()
+
+            # keep track of the overall scores
+            for metric, score in coco_eval.eval.items():
+                all_overall_scores[metric].append(score)
+
+            # imgToEval per image result
+            for i, cur_img_id in enumerate(coco_res.getImgIds()):
+                cur_eval_dict = coco_eval.evalImgs[i]
+                # add caption to the eval dict
+                cur_eval_dict["caption"] = coco_res.imgToAnns[cur_img_id][0]["caption"]
+                img_to_eval_dict[cur_img_id] = cur_eval_dict
+
+        # overall result
+        overall_dict = {}
+        for metric, score in all_overall_scores.items():
+            overall_dict[metric] = np.mean(score)
+        formulated_output_dict["overall"] = overall_dict
         formulated_output_dict["imgToEval"] = img_to_eval_dict
+
+        # sanity check the results
+        if len(img_to_eval_dict) != num_samples:
+            raise Exception(
+                f"Resulting output_dict has number of images {len(img_to_eval_dict)} different from num_samples {num_samples}"
+            )
+
+        if verbosity:
+            print(
+                f"\nGenerated {len(img_to_eval_dict)} samples results in CHAIR format."
+            )
 
         # save the formulated output dict
         formulated_output_path = os.path.join(

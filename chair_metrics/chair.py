@@ -339,6 +339,7 @@ class CHAIR(object):
 def load_generated_captions(cap_file):
     # Read in captions, eg.
     caps = json.load(open(cap_file))
+    # print("caps", caps)
     try:
         metrics = caps["overall"]
         caps = caps["imgToEval"].values()

@@ -13,10 +13,22 @@ import torch.backends.cudnn as cudnn
 import seaborn as sns
 import matplotlib.pyplot as plt
 import json
+from detector import Detector
+from types import SimpleNamespace
 
+# initialize detector
+args_dict = {
+    'detector_config':"/data/xyq/bill/MiniGPT-4/woodpecker/GroundingDINO/groundingdino/config/GroundingDINO_SwinT_OGC.py",
+    'detector_model_path':"/data/xyq/bill/MiniGPT-4/woodpecker/GroundingDINO/weights/groundingdino_swint_ogc.pth",
+    'cache_dir': './cache_dir',
+}
 
 class code2_assistant:
     def __init__(self, tokenizer):
+
+        model_args = SimpleNamespace(**args_dict)
+        self.detector = Detector(model_args)
+
         self.tokenizer = tokenizer
         token_vocab_dir = "/data/xyq/bill/models/models--meta-llama--Llama-2-7b-chat-hf/snapshots/94b07a6e30c3292b8265ed32ffdeccfdadf434a8/tokenizer.json"
         with open(token_vocab_dir, "r") as f:
@@ -57,3 +69,6 @@ class code2_assistant:
             last_word = "not completed yet!"
         
         return last_word_flag, last_word
+
+    def context_density_embedding(self, entity, context_window=3):
+        # context_window specifies the number of context windows

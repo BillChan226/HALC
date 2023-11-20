@@ -4298,7 +4298,7 @@ class GenerationMixin:
 
         word_complete = True
         intermediate_token_lists = torch.tensor([]).to(input_ids.device)
-        
+
         while True:
             if synced_gpus:
                 # Under synced_gpus the `forward` call must continue until all gpus complete their sequence.
@@ -4466,6 +4466,8 @@ class GenerationMixin:
                 word_complete = False
             else:
                 word_complete = True
+                entity = last_word
+                self.code2_assistant.context_density_embedding(entity, context_window=3)
 
             input()
             # update generated ids, model inputs, and length for next step

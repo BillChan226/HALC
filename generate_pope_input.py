@@ -4,11 +4,11 @@ import torch
 import argparse
 import numpy as np
 import random
-import torchvision
 from tqdm import tqdm
 from pycocotools.coco import COCO
 from pycocoevalcap.eval import COCOEvalCap
 import json
+from pope_metrics.utils import generate_ground_truth_objects, pope
 
 
 def initialize_mini_gpt_4(parser):
@@ -25,12 +25,12 @@ def initialize_mini_gpt_4(parser):
     # model specific parser
     parser_group = parser.add_argument_group("MiniGPT4")
     parser_group.add_argument(
-        "--cfg-path",
+        "--cfg_path",
         default="./eval_configs/minigpt4_llama2_eval_hallucination.yaml",
         help="path to configuration file.",
     )
     parser_group.add_argument(
-        "--gpu-id",
+        "--gpu_id",
         type=int,
         default=0,
         help="specify the gpu to load the model.",
@@ -94,10 +94,16 @@ def main():
         help="Name of the model. Default is 'minigpt4'.",
     )
     parser.add_argument(
-        "--question_path",
+        "--type",
         type=str,
-        default="./generated_pope_questions/coco/coco_pope_random.json",
-        help="Input POPE question patah. Default is './generated_pope_questions/coco/coco_pope_random.json'.",
+        default="random",
+        help="Type of POPE negative sampling, choose between random, popular or adversarial. Default is random.",
+    )
+    parser.add_argument(
+        "--dataset_name",
+        type=str,
+        default="coco",
+        help="Name of the dataset. Default is 'coco'.",
     )
     parser.add_argument(
         "--data_dir",
@@ -106,16 +112,34 @@ def main():
         help="Test data directory. Default is '/media/zhuokai/SN850X_4TB/Data/coco/val2014'.",
     )
     parser.add_argument(
-        "--output_dir",
+        "--gt_seg_path",
         type=str,
-        default="./generated_pope_inputs/",
-        help="Output ditectory for saving test results. Default is './generated_pope_inputs/'.",
+        default="./pope_metrics/segmentation/coco_ground_truth_segmentation.json",
+        help="Input json file that contains ground truth objects in the image.",
+    )
+    parser.add_argument(
+        "--num_images",
+        type=int,
+        default=2000,
+        help="Number of images to build POPE questions. Default is 2000.",
     )
     parser.add_argument(
         "--num_samples",
         type=int,
-        default=2000,
-        help="Number of evaluation samples from the dataset. Default is 2000.",
+        default=3,
+        help="Number of positive/negative objects to be sampled. Default is 3.",
+    )
+    parser.add_argument(
+        "--question_template",
+        type=str,
+        default="Is there a {} in the image?",
+        help="Prompt template. Default is 'Is there a {} in the image?'.",
+    )
+    parser.add_argument(
+        "--output_dir",
+        type=str,
+        default="./generated_pope_inputs/",
+        help="Output ditectory for saving test results. Default is './generated_pope_inputs/'.",
     )
     parser.add_argument(
         "--seed",
@@ -135,29 +159,120 @@ def main():
     # load program level arguments
     args = parser.parse_args()
     model_name = args.model_name
-    question_path = args.question_path
-    # infer dataset name from the question path
-    dataset_name = question_path.split("/")[-1].split("_")[0]
+    pope_type = args.type
+    dataset_name = args.dataset_name
     data_dir = args.data_dir
-    output_dir = args.output_dir
+    gt_seg_path = args.gt_seg_path
+    num_images = args.num_images
     num_samples = args.num_samples
+    question_template = args.question_template
+    output_dir = args.output_dir
     seed = args.seed
     verbosity = args.verbosity
 
     # print program level arguments
     if verbosity:
         print("\nmodel_name: ", model_name)
-        print("question_path: ", question_path)
-        print("dataset_name: ", dataset_name)
-        print("data_dir: ", data_dir)
-        print("output_dir: ", output_dir)
-        print("num_samples: ", num_samples)
-        print("seed: ", seed)
+        print("pope_type: ", pope_type)
+        print(f"dataset_name: {dataset_name}")
+        print(f"data_dir: {data_dir}")
+        print(f"seg_path: {gt_seg_path}")
+        print(f"num_images: {num_images}")
+        print(f"num_samples: {num_samples}")
+        print(f"question_template: {question_template}")
+        print(f"output_dir: {output_dir}")
+        print(f"seed: {seed}")
 
     # set seed
     random.seed(seed)
     torch.manual_seed(seed)
     np.random.seed(seed)
+
+    # generate pope questions
+    question_dir = os.path.join(output_dir, dataset_name)
+    if not os.path.exists(question_dir):
+        os.makedirs(question_dir)
+    question_path = os.path.join(
+        question_dir,
+        f"{dataset_name}_num_images_{num_images}_num_samples_{num_samples}_pope_{pope_type}_questions.json",
+    )
+
+    # generate pope questions if not exists
+    if not os.path.exists(question_path):
+        if verbosity:
+            print(f"\nGenerating {pope_type} POPE questions")
+
+        # load ground truth segmentation results.
+        # Must include (other keys such as image_id can exist):
+        # {"image": "COCO_val2014_000000131089.jpg", "objects": ["person", "baseball bat"]}
+        segment_results = [json.loads(q) for q in open(gt_seg_path, "r")]
+        if verbosity:
+            print(
+                f"\nGround truth segmentation results loaded successfully, contains {len(segment_results)} classes."
+            )
+
+        # process segmentation ground truth
+        processed_segment_results = []
+        # Sample images which contain more than sample_num objects
+        for cur_image in segment_results:
+            if len(cur_image["objects"]) >= num_samples:
+                processed_segment_results.append(cur_image)
+
+        assert (
+            len(processed_segment_results) >= num_images
+        ), f"The number of images that contain more than {num_samples} objects is less than {num_images}."
+
+        # Randomly sample num_images images
+        processed_segment_results = random.sample(processed_segment_results, num_images)
+
+        # Organize the ground truth objects and their co-occurring frequency
+        question_name = (
+            f"{dataset_name}_num_images_{num_images}_num_samples_{num_samples}"
+        )
+        # ground truth object summary
+        ground_truth_objects = generate_ground_truth_objects(
+            processed_segment_results,
+            question_dir,
+            question_name,
+            verbosity,
+        )
+
+        # Generate POPE questions and save to local file
+        if pope_type is None:
+            for cur_type in ["random", "popular", "adversarial"]:
+                pope(
+                    ground_truth_objects=ground_truth_objects,
+                    segment_results=processed_segment_results,
+                    num_samples=num_samples,
+                    template=question_template,
+                    neg_strategy=cur_type,
+                    output_dir=question_dir,
+                    dataset_name=question_name,
+                    verbosity=verbosity,
+                )
+        else:
+            pope(
+                ground_truth_objects=ground_truth_objects,
+                segment_results=processed_segment_results,
+                num_samples=num_samples,
+                template=question_template,
+                neg_strategy=pope_type,
+                output_dir=question_dir,
+                dataset_name=question_name,
+                verbosity=verbosity,
+            )
+
+    # load all the POPE questions
+    all_pope_questions = [json.loads(q) for q in open(question_path, "r")]
+    if verbosity:
+        print(
+            f"\nLoaded {len(all_pope_questions)} POPE questions from {question_path}."
+        )
+    # sanity check
+    if len(all_pope_questions) != num_images * num_samples * 2:
+        raise ValueError(
+            f"Number of POPE questions loaded from {question_path} is not equal to {num_images * num_samples * 2}."
+        )
 
     # load model
     if model_name == "minigpt4":
@@ -168,6 +283,11 @@ def main():
 
     # set output dir
     model_type = cfg.model_cfg.model_type.replace("_", "-")
+    if cfg.model_cfg.dola_decoding is True:
+        dola_name = "dola"
+        for layer_index in cfg.model_cfg.early_exit_layers:
+            dola_name += f"_{layer_index}"
+        model_type += f"_{dola_name}"
     output_dir = os.path.join(output_dir, f"{model_name}_{model_type}", dataset_name)
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
@@ -175,11 +295,8 @@ def main():
     # generated answers path
     generated_answers_path = os.path.join(
         output_dir,
-        f"{model_name}_{model_type}_{dataset_name}_{num_samples}_generated_pope_answers.json",
+        f"{model_name}_{model_type}_{dataset_name}_generated_pope_{pope_type}_answers.json",
     )
-
-    # load all the POPE questions
-    all_pope_questions = [json.loads(q) for q in open(question_path, "r")]
 
     # query the model for answers
     all_generated_answers = []
@@ -213,7 +330,7 @@ def main():
     # save the formulated output dict
     generated_answers_path = os.path.join(
         output_dir,
-        f"{model_name}_{model_type}_{dataset_name}_{num_samples}_pope.json",
+        f"{model_name}_{model_type}_{dataset_name}_{num_samples}_pope_{pope_type}_answers.json",
     )
     with open(generated_answers_path, "w") as f:
         json.dump(all_generated_answers, f)

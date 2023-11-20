@@ -1,11 +1,6 @@
 import os
-import sys
-import torch
 import argparse
-import numpy as np
-import warnings
 import json
-import random
 from chair_metrics import chair
 
 
@@ -54,12 +49,6 @@ def main():
         help="Output ditectory for saving test results. Default is './hallucination_eval_results/'.",
     )
     parser.add_argument(
-        "--seed",
-        type=int,
-        default=1,
-        help="Set universal seed. Default is 1.",
-    )
-    parser.add_argument(
         "-v",
         "--verbosity",
         action="store_true",
@@ -71,7 +60,6 @@ def main():
     # load program level arguments
     args = parser.parse_args()
     metric = args.metric
-    seed = args.seed
     dataset_name = args.dataset_name
     data_dir = args.data_dir
     output_dir = args.output_dir
@@ -83,7 +71,6 @@ def main():
         print("dataset_name: ", dataset_name)
         print("data_dir: ", data_dir)
         print("output_dir: ", output_dir)
-        print("seed: ", seed)
 
     # different metrics
     if metric == "chair":
@@ -127,10 +114,7 @@ def main():
             print("\npope_answer_path: ", pope_answer_path)
             print("pope_question_path: ", pope_question_path)
 
-        pope_answer_path = ""
-        pope_question_path = ""
-
-        answers = [json.loads(q) for q in open(pope_answer_path, "r")]
+        answers = [json.loads(q) for q in open(pope_answer_path, "r")][0]
         label_list = [json.loads(q)["label"] for q in open(pope_question_path, "r")]
 
         for answer in answers:

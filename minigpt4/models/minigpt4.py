@@ -218,7 +218,7 @@ class MiniGPT4(MiniGPTBase):
             end_sym=end_sym,
             low_resource=low_resource,
             device_8bit=device_8bit,
-            early_exit_layers=early_exit_layers,
+            # early_exit_layers=early_exit_layers,
         )
 
         ckpt_path = cfg.get("ckpt", "")  # load weights of MiniGPT-4

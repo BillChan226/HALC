@@ -11,6 +11,8 @@ import dataclasses
 from enum import auto, Enum
 from typing import List, Tuple, Any
 
+from context_density.utility import code2_assistant
+
 from minigpt4.common.registry import registry
 
 
@@ -176,7 +178,10 @@ class Chat:
         temperature=1.0,
         max_length=2000,
         dola_decoding=False,
+        code2_decoding=True,
+        code2_kwargs=None
     ):
+        code2_kwargs = code2_assistant(self.model.llama_tokenizer)
         conv.append_message(conv.roles[1], None)
         prompt = conv.get_prompt()
         # print("prompt: ", prompt)
@@ -236,16 +241,19 @@ class Chat:
             length_penalty=length_penalty,
             temperature=float(temperature),
             dola_decoding=dola_decoding,
+            code2_decoding=code2_decoding,
             num_return_sequences=1,
             output_scores=True,
             premature_layer=premature_layer,
             candidate_premature_layers=candidate_premature_layers,
             mature_layer=mature_layer,
             return_dict_in_generate=True,
+            code2_kwargs=code2_kwargs
         )
         return generation_kwargs
 
     def answer(self, conv, img_list, **kargs):
+        
         # print("conv", conv)
         generation_dict = self.answer_prepare(conv, img_list, **kargs)
         output_token, info = self.model_generate(**generation_dict)

@@ -1,4 +1,6 @@
-import os
+import os, sys
+sys.path.append("/data/xyq/bill/MiniGPT-4/woodpecker")
+sys.path.append("/data/xyq/bill/MiniGPT-4/woodpecker/GroundingDINO/groundingdino")
 
 from typing import Dict
 from tqdm import tqdm
@@ -8,14 +10,15 @@ from collections import defaultdict
 import shortuuid
 from torchvision.ops import box_convert
 import torch
-from models.utils import compute_iou
-from groundingdino.util.inference import load_model, load_image, predict
+from woodpecker.models.utils import compute_iou
+from woodpecker.GroundingDINO.groundingdino.util.inference import load_model, load_image, predict
 from PIL import Image
 import spacy
 
 
 BOX_TRESHOLD = 0.35     # used in detector api.
-TEXT_TRESHOLD = 0.25    # used in detector api.
+# TEXT_TRESHOLD = 0.25    # used in detector api.
+TEXT_TRESHOLD = 0.1    # used in detector api.
 AREA_THRESHOLD = 0.001   # used to filter out too small object.
 IOU_THRESHOLD = 0.95     # used to filter the same instance. greater than threshold means the same instance
 
@@ -121,6 +124,10 @@ class Detector:
                 text_threshold=TEXT_TRESHOLD,
                 device='cuda:0'
             )
+
+            print("logits", logits)
+            print("phrases", phrases)
+
             phrases = find_most_similar_strings(self.nlp, phrases, entity_list)    
             global_entity_dict = extract_detection(global_entity_dict, boxes, phrases, image_source, self.cache_dir, sample)
             

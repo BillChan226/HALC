@@ -181,7 +181,7 @@ class Chat:
         code2_decoding=True,
         code2_kwargs=None
     ):
-        code2_kwargs = code2_assistant(self.model.llama_tokenizer)
+        code2_kwargs = code2_assistant(self.model.llama_tokenizer, img_path=self.image_path)
         conv.append_message(conv.roles[1], None)
         prompt = conv.get_prompt()
         # print("prompt: ", prompt)
@@ -309,6 +309,7 @@ class Chat:
 
     def encode_img(self, img_list, early_exit_layer_idx=-1):
         image = img_list[0]
+        self.image_path = image
         img_list.pop(0)
         if isinstance(image, str):  # is a image path
             raw_image = Image.open(image).convert("RGB")

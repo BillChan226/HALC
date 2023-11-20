@@ -13,7 +13,7 @@ import torch.backends.cudnn as cudnn
 import seaborn as sns
 import matplotlib.pyplot as plt
 import json
-from detector import Detector
+from context_density.detector import Detector
 from types import SimpleNamespace
 
 # initialize detector
@@ -24,7 +24,7 @@ args_dict = {
 }
 
 class code2_assistant:
-    def __init__(self, tokenizer):
+    def __init__(self, tokenizer=None, img_path=None):
 
         model_args = SimpleNamespace(**args_dict)
         self.detector = Detector(model_args)
@@ -37,6 +37,9 @@ class code2_assistant:
         self.token_vocab = self.token_vocab["model"]["vocab"]
 
         self.token_vocab = {value: key for key, value in self.token_vocab.items()}
+
+        print("img_path", img_path)
+        self.detector_dict = {'img_path': img_path, 'box_threshold':0.1}
 
     def check_word_complete(self, input_ids):
         input_ids = input_ids[0]
@@ -56,8 +59,8 @@ class code2_assistant:
 
         print("decoded_tokens", decoded_tokens)
         print("output_text", output_text)
-
         print("final_tokens: ", final_tokens)
+
         if "▁" in final_tokens:
             last_word_flag = True
             if len(decoded_tokens) < 2:
@@ -72,3 +75,8 @@ class code2_assistant:
 
     def context_density_embedding(self, entity, context_window=3):
         # context_window specifies the number of context windows
+
+        self.detector_dict["named_entity"] = [entity]
+        sample = self.detector.detect_objects(self.detector_dict)
+
+        print("sample", sample)

@@ -120,8 +120,8 @@ def main():
     parser.add_argument(
         "--num_images",
         type=int,
-        default=2000,
-        help="Number of images to build POPE questions. Default is 2000.",
+        default=500,
+        help="Number of images to build POPE questions. Default is 500.",
     )
     parser.add_argument(
         "--num_samples",

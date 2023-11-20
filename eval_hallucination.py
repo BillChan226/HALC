@@ -43,12 +43,6 @@ def main():
         help="Test data directory. Default is '/media/zhuokai/SN850X_4TB/Data/coco/val2014'.",
     )
     parser.add_argument(
-        "--output_dir",
-        type=str,
-        default="./hallucination_eval_results/",
-        help="Output ditectory for saving test results. Default is './hallucination_eval_results/'.",
-    )
-    parser.add_argument(
         "-v",
         "--verbosity",
         action="store_true",
@@ -62,7 +56,6 @@ def main():
     metric = args.metric
     dataset_name = args.dataset_name
     data_dir = args.data_dir
-    output_dir = args.output_dir
     verbosity = args.verbosity
 
     # print program level arguments
@@ -70,7 +63,6 @@ def main():
         print("\nmetric: ", metric)
         print("dataset_name: ", dataset_name)
         print("data_dir: ", data_dir)
-        print("output_dir: ", output_dir)
 
     # different metrics
     if metric == "chair":
@@ -81,7 +73,7 @@ def main():
         # sanity check between caption file and command line arguments
         model_name = chair_input_path.split("/")[-1].split("_")[0]
         model_type = chair_input_path.split("/")[-1].split("_")[1]
-        dataset_name_identified = chair_input_path.split("/")[-1].split("_")[2]
+        dataset_name_identified = chair_input_path.split("/")[-1].split("_")[-3]
         if dataset_name_identified != dataset_name:
             raise Exception(
                 f"Dataset name in caption file {dataset_name_identified} does not match command line argument {dataset_name}."

@@ -7,7 +7,6 @@ model:
   prompt_template: '[INST] {} [/INST] '
   ckpt: './model_checkpoints/pretrained_minigpt4_llama2_7b.pth'
   dola_decoding: False
-  early_exit_layers: [2,4,6,32]
   # early_exit_layers: [2,4,6,32]
 
 datasets:

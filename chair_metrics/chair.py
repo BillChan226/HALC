@@ -371,9 +371,9 @@ def print_metrics(hallucination_cap_dict, quiet=False):
     if not quiet:
         print("SPICE\tMETEOR\tCIDEr\tCHAIRs\tCHAIRi")
         print(metric_string)
-
+        return "SPICE\tMETEOR\tCIDEr\tCHAIRs\tCHAIRi\n" + metric_string
     else:
-        return metric_string
+        return "SPICE\tMETEOR\tCIDEr\tCHAIRs\tCHAIRi\n" + metric_string
 
 
 if __name__ == "__main__":

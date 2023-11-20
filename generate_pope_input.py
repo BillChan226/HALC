@@ -290,12 +290,6 @@ def main():
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
-    # generated answers path
-    generated_answers_path = os.path.join(
-        output_dir,
-        f"{model_name}_{model_type}_{dataset_name}_generated_pope_{pope_type}_answers.json",
-    )
-
     # query the model for answers
     all_generated_answers = []
     for i, cur_question in enumerate(
@@ -329,10 +323,10 @@ def main():
         # clear the chat
         CONV_VISION.messages = []
 
-    # save the formulated output dict
+    # generated answers path
     generated_answers_path = os.path.join(
         output_dir,
-        f"{model_name}_{model_type}_{dataset_name}_{num_samples}_pope_{pope_type}_answers.json",
+        f"{model_name}_{model_type}_{dataset_name}_num_images_{num_images}_num_samples_{num_samples}_generated_pope_{pope_type}_answers.json",
     )
     with open(generated_answers_path, "w") as f:
         json.dump(all_generated_answers, f)

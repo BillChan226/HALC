@@ -39,8 +39,14 @@ def main():
     parser.add_argument(
         "--data_dir",
         type=str,
-        default="/data/xyq/bill/dataset/val2014",
+        default="/media/zhuokai/SN850X_4TB/Data/coco/val2014",
         help="Test data directory. Default is '/media/zhuokai/SN850X_4TB/Data/coco/val2014'.",
+    )
+    parser.add_argument(
+        "--output_dir",
+        type=str,
+        default="./hallucination_results",
+        help="Test data directory. Default is './hallucination_results'.",
     )
     parser.add_argument(
         "-v",
@@ -56,6 +62,7 @@ def main():
     metric = args.metric
     dataset_name = args.dataset_name
     data_dir = args.data_dir
+    output_dir = args.output_dir
     verbosity = args.verbosity
 
     # print program level arguments
@@ -63,6 +70,7 @@ def main():
         print("\nmetric: ", metric)
         print("dataset_name: ", dataset_name)
         print("data_dir: ", data_dir)
+        print("output_dir: ", output_dir)
 
     # different metrics
     if metric == "chair":
@@ -73,6 +81,9 @@ def main():
         # sanity check between caption file and command line arguments
         model_name = chair_input_path.split("/")[-1].split("_")[0]
         model_type = chair_input_path.split("/")[-1].split("_")[1]
+        if "dola" in chair_input_path:
+            model_type += "_dola"
+        num_images = chair_input_path.split("/")[-1].split("_")[-2]
         dataset_name_identified = chair_input_path.split("/")[-1].split("_")[-3]
         if dataset_name_identified != dataset_name:
             raise Exception(
@@ -96,8 +107,17 @@ def main():
         cap_dict = evaluator.compute_chair(chair_input_path)
         # print metric
         metric_string_ce = chair.print_metrics(cap_dict, quiet=False)
+        # save results
+        result_path = os.path.join(
+            output_dir,
+            f"{model_name}_{model_type}_{dataset_name}_num_images_{num_images}_chair_results.txt",
+        )
+        with open(result_path, "w") as f:
+            f.write(metric_string_ce)
+        if verbosity:
+            print(f"\nCHAIR results saved to {result_path}.")
         # save hallucinated words
-        # chair.save_hallucinated_words(input_path, cap_dict, output_dir)
+        # chair.save_hallucinated_words(chair_input_path, cap_dict, output_dir)
 
     elif metric == "pope":
         pope_answer_path = args.pope_answer_path

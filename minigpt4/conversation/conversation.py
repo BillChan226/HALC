@@ -175,6 +175,7 @@ class Chat:
         length_penalty=1,
         temperature=1.0,
         max_length=2000,
+        dola_decoding=False,
     ):
         conv.append_message(conv.roles[1], None)
         prompt = conv.get_prompt()
@@ -234,7 +235,7 @@ class Chat:
             repetition_penalty=repetition_penalty,
             length_penalty=length_penalty,
             temperature=float(temperature),
-            dola_decoding=True,
+            dola_decoding=dola_decoding,
             num_return_sequences=1,
             output_scores=True,
             premature_layer=premature_layer,

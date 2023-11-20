@@ -5,8 +5,6 @@ import argparse
 import numpy as np
 import random
 from tqdm import tqdm
-from pycocotools.coco import COCO
-from pycocoevalcap.eval import COCOEvalCap
 import json
 from pope_metrics.utils import generate_ground_truth_objects, pope
 
@@ -314,7 +312,11 @@ def main():
         model.encode_img(img_list, 38)  # -1 means the last layer
         # question taken from https://arxiv.org/pdf/2305.10355.pdf
         model.ask(cur_prompt, CONV_VISION)
-        output_text, _, _ = model.answer(CONV_VISION, img_list)
+        output_text, _, _ = model.answer(
+            CONV_VISION,
+            img_list,
+            dola_decoding=cfg.model_cfg.dola_decoding,
+        )
 
         # append the generated caption to the list
         all_generated_answers.append(

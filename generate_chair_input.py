@@ -168,8 +168,6 @@ def main():
     model_type = cfg.model_cfg.model_type.replace("_", "-")
     if cfg.model_cfg.dola_decoding is True:
         dola_name = "dola"
-        for layer_index in cfg.model_cfg.early_exit_layers:
-            dola_name += f"_{layer_index}"
         model_type += f"_{dola_name}"
     output_dir = os.path.join(output_dir, f"{model_name}_{model_type}", dataset_name)
     if not os.path.exists(output_dir):
@@ -220,7 +218,11 @@ def main():
                 model.encode_img(img_list, 38)  # -1 means the last layer
                 # question taken from https://arxiv.org/pdf/2305.10355.pdf
                 model.ask("Generate a short caption of the image.", CONV_VISION)
-                output_text, _, _ = model.answer(CONV_VISION, img_list)
+                output_text, _, _ = model.answer(
+                    CONV_VISION,
+                    img_list,
+                    dola_decoding=cfg.model_cfg.dola_decoding,
+                )
 
                 # append the generated caption to the list
                 # format follows https://github.com/tylin/coco-caption/tree/master

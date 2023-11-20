@@ -44,7 +44,7 @@ def pope(
     # question id starts at 1
     question_id = 1
     output_file = os.path.join(
-        output_dir, dataset_name + "_pope_" + neg_strategy + ".json"
+        output_dir, dataset_name + "_pope_" + neg_strategy + "_questions.json"
     )
 
     # all the ground truth objects

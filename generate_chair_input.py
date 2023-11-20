@@ -4,7 +4,6 @@ import torch
 import argparse
 import numpy as np
 import random
-import torchvision
 from tqdm import tqdm
 from pycocotools.coco import COCO
 from pycocoevalcap.eval import COCOEvalCap

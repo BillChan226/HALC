@@ -1,7 +1,7 @@
 import argparse
 import os, sys
 import random
-sys.path.append("/home/czr/contrast_decoding_LVLMs")
+sys.path.append("./contrast_decoding_LVLMs")
 sys.path.append("./contrast_decoding_LVLMs/context_density")
 sys.path.append("./contrast_decoding_LVLMs/DoLa/transformers-4.28.1")
 sys.path.append("./contrast_decoding_LVLMs/DoLa/transformers-4.28.1/src")

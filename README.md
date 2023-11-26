@@ -95,7 +95,7 @@ The [toy example](hallucinatory_image/beach_on_a_clock.png) is projected into th
 
 
 ## :hourglass: Benchmarks
-### CHAIR Evaluation of DoLa-based Contrastive Decoding LVLMs
+### :chair: CHAIR Evaluation of DoLa-based Contrastive Decoding LVLMs
 
 The evaluation pipeline includes 2 steps.
 
@@ -130,12 +130,18 @@ Upon completion, two files, `minigpt4_pretrain-llama2_coco_2000_generated_captio
 We use the generated `_chair.json` file, for example, `minigpt4_pretrain-llama2_coco_2000_chair.json` for the CHAIR evaluation. Under root directory, run
 
 ```
-python eval_hallucination.py --metric chair --input_path [PATH_TO_.JSON_FILE] -v
+python eval_hallucination.py --metric chair --chair_input_path [PATH_TO_.JSON_FILE] -v
 ```
 
 The evaluation results will be printed in terminal.
 
+## :woman_scientist: Troubleshooting
 
+Error installing `pattern`:
+
+```
+conda install -c conda-forge pattern
+```
 
 ## :key: License
 

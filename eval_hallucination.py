@@ -39,7 +39,7 @@ def main():
     parser.add_argument(
         "--data_dir",
         type=str,
-        default="/media/zhuokai/SN850X_4TB/Data/coco/val2014",
+        default="eval_dataset/val2014",
         help="Test data directory. Default is '/media/zhuokai/SN850X_4TB/Data/coco/val2014'.",
     )
     parser.add_argument(

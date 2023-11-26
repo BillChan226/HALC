@@ -46,6 +46,8 @@ def initialize_mini_gpt_4(parser):
 
     args = parser.parse_args()
 
+    decoding_strategy = args.decoder
+
     # load config
     cfg = Config(args)
     model_config = cfg.model_cfg
@@ -79,6 +81,7 @@ def initialize_mini_gpt_4(parser):
         vis_processor,
         device="cuda:{}".format(args.gpu_id),
         stopping_criteria=stopping_criteria,
+        decoding_strategy=decoding_strategy
     )
 
     return chat, CONV_VISION, cfg
@@ -132,6 +135,13 @@ def main():
         default=False,
         help="Verbosity. Default: False.",
     )
+    parser.add_argument(
+        "-d",
+        "--decoder",
+        type=str,
+        default="greedy",
+        help="Decoding strategy to use. You can choose from 'greedy', 'dola', 'halc'. Default is 'greedy'.",
+    )
 
     # load program level arguments
     args = parser.parse_args()
@@ -142,6 +152,7 @@ def main():
     num_samples = args.num_samples
     seed = args.seed
     verbosity = args.verbosity
+    decoding_strategy = args.decoder
 
     # print program level arguments
     if verbosity:
@@ -221,7 +232,7 @@ def main():
                 output_text, _, _ = model.answer(
                     CONV_VISION,
                     img_list,
-                    dola_decoding=cfg.model_cfg.dola_decoding,
+                    # dola_decoding=cfg.model_cfg.dola_decoding,
                 )
 
                 # append the generated caption to the list

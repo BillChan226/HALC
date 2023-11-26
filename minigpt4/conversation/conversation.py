@@ -164,6 +164,8 @@ class Chat:
             self.dola_decoding = False
             self.code2_decoding = True
 
+        print(f"\035[41mCurrent Decoding Strategy: {self.decoding_strategy}\035[0m")
+
         if stopping_criteria is not None:
             self.stopping_criteria = stopping_criteria
         else:
@@ -200,7 +202,7 @@ class Chat:
     ):
         dola_decoding=self.dola_decoding
         code2_decoding=self.code2_decoding
-        
+
         conv.append_message(conv.roles[1], None)
         prompt = conv.get_prompt()
         # print("prompt: ", prompt)

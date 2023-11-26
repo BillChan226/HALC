@@ -142,10 +142,27 @@ CONV_VISION_minigptv2 = Conversation(
 
 
 class Chat:
-    def __init__(self, model, vis_processor, device="cuda:0", stopping_criteria=None):
+    def __init__(self, model, vis_processor, device="cuda:0", stopping_criteria=None, decoding_strategy = "greedy"):
         self.device = device
         self.model = model
         self.vis_processor = vis_processor
+
+        valid_decoding_strategies = ["greedy", "dola", "halc"]
+        # assert decoding_strategy in valid_decoding_strategies:
+        #     raise ValueError(f"Invalid decoding strategy: {decoding_strategy}, should be in {valid_decoding_strategies}")
+        assert decoding_strategy in valid_decoding_strategies, f"Invalid decoding strategy: {decoding_strategy}, should be in {valid_decoding_strategies}"
+    
+        self.decoding_strategy = decoding_strategy
+
+        if self.decoding_strategy == "greedy":
+            self.dola_decoding = False
+            self.code2_decoding = False
+        elif self.decoding_strategy == "dola":
+            self.dola_decoding = True
+            self.code2_decoding = False
+        elif self.decoding_strategy == "halc":
+            self.dola_decoding = False
+            self.code2_decoding = True
 
         if stopping_criteria is not None:
             self.stopping_criteria = stopping_criteria
@@ -166,6 +183,8 @@ class Chat:
         else:
             conv.append_message(conv.roles[0], text)
 
+        self.code2_assistant.update_conv(conv)
+
     def answer_prepare(
         self,
         conv,
@@ -177,10 +196,11 @@ class Chat:
         repetition_penalty=1.05,
         length_penalty=1,
         temperature=1.0,
-        max_length=2000,
-        dola_decoding=False,
-        code2_decoding=False,
+        max_length=2000
     ):
+        dola_decoding=self.dola_decoding
+        code2_decoding=self.code2_decoding
+        
         conv.append_message(conv.roles[1], None)
         prompt = conv.get_prompt()
         # print("prompt: ", prompt)

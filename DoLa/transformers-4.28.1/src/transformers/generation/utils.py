@@ -3777,7 +3777,7 @@ class GenerationMixin:
                 outputs, model_kwargs, is_encoder_decoder=self.config.is_encoder_decoder
             )
 
-            print("input_ids", input_ids)
+            # print("input_ids", input_ids)
 
             # if eos_token was found in one sentence, set sentence to finished
             if eos_token_id_tensor is not None:
@@ -4425,7 +4425,7 @@ class GenerationMixin:
             # pre-process distribution
             next_tokens_scores = logits_processor(input_ids, next_token_logits)
             # print("\next_tokens_scores", next_tokens_scores)
-
+            # print("in the loop")
             # Store scores, attentions and hidden_states when required
             if return_dict_in_generate:
                 if output_scores:
@@ -4455,14 +4455,12 @@ class GenerationMixin:
                     raise ValueError("If `eos_token_id` is defined, make sure that `pad_token_id` is defined.")
                 next_tokens = next_tokens * unfinished_sequences + pad_token_id * (1 - unfinished_sequences)
 
-        
+            # print("\nnext_tokens", next_tokens)
             # last_word_flag, last_word = self.code2_assistant.check_word_complete(intermediate_token_lists)
             last_word_flag = self.code2_assistant.check_word_complete(next_tokens[:, None])
 
             # print("last_word_flag: ", last_word_flag)
-            # print("last_word", last_word)
-            # print("model_kwargs",np.shape(model_kwargs['inputs_embeds']))
-            # print("input_ids", input_ids)
+
             # input()
 
             if last_word_flag == False:
@@ -4471,7 +4469,7 @@ class GenerationMixin:
                 # intermediate_token_lists = torch.cat([intermediate_token_lists, next_tokens[:, None]], dim=-1)
 
                 current_word = self.code2_assistant.get_last_word(intermediate_token_lists)
-                print("current_word: ", current_word)
+                # print("current_word: ", current_word)
                 word_complete = True
                 entity = current_word
                 embeds_list = self.code2_assistant.context_density_embedding(entity, context_window=3)
@@ -4597,8 +4595,8 @@ class GenerationMixin:
             # input("#####\n")
 
             # update generated ids, model inputs, and length for next step
-            # input_ids = torch.cat([input_ids, next_tokens[:, None]], dim=-1)
-            input_ids = intermediate_token_lists
+            input_ids = torch.cat([input_ids, next_tokens[:, None]], dim=-1)
+            # input_ids = intermediate_token_lists
             # intermediate_token_lists = input_ids[0]
             if streamer is not None:
                 streamer.put(next_tokens.cpu())
@@ -4621,6 +4619,8 @@ class GenerationMixin:
                     break
                 else:
                     this_peer_finished = True
+
+        input_ids = intermediate_token_lists
 
         if streamer is not None:
             streamer.end()

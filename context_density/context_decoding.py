@@ -76,11 +76,14 @@ stop_words_ids = [[835], [2277, 29937]]
 stop_words_ids = [torch.tensor(ids).to(device='cuda:{}'.format(args.gpu_id)) for ids in stop_words_ids]
 stopping_criteria = StoppingCriteriaList([StoppingCriteriaSub(stops=stop_words_ids)])
 
-img = "/home/czr/contrast_decoding_LVLMs/hallucinatory_image/beach_on_a_clock.png"
+img = '/home/czr/contrast_decoding_LVLMs/eval_dataset/val2014/COCO_val2014_000000043448.jpg'
+# img = "/home/czr/contrast_decoding_LVLMs/hallucinatory_image/beach_on_a_clock.png"
 # img = "/home/czr/contrast_decoding_LVLMs/eval_dataset/val2014/COCO_val2014_000000000196.jpg"
 # img = "/home/czr/contrast_decoding_LVLMs/hallucinatory_image/zoom_in_2.png"
 # img = "/home/czr/contrast_decoding_LVLMs/hallucinatory_image/zoom_in_3.png"
-chat = Chat(model, vis_processor, device='cuda:{}'.format(args.gpu_id), stopping_criteria=stopping_criteria)
+
+decoding_strategy = "halc"
+chat = Chat(model, vis_processor, device='cuda:{}'.format(args.gpu_id), stopping_criteria=stopping_criteria, decoding_strategy=decoding_strategy)
 print('Initialization Finished')
 
 
@@ -94,10 +97,8 @@ chat.encode_img(img_list, early_exit_layer_idx)
 
 
 # chat.ask("Briefly describe the image.", CONV_VISION)
-chat.ask("Describe the man with detail.", CONV_VISION)
-# chat.ask("What is the man holding in his handx?", CONV_VISION)
-
-chat.code2_assistant.update_conv(CONV_VISION)
+# chat.ask("Describe the man with detail.", CONV_VISION)
+chat.ask("What is the man holding in his hand?", CONV_VISION)
 
 output_text, output_token, info = chat.answer(CONV_VISION, img_list)
 

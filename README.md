@@ -135,7 +135,7 @@ python eval_hallucination.py --metric chair --chair_input_path [PATH_TO_.JSON_FI
 
 The evaluation results will be printed in terminal.
 
-## :woman_scientist: Troubleshooting
+## :wrench: Troubleshooting
 
 Error installing `pattern`:
 

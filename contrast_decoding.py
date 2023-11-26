@@ -1,10 +1,6 @@
 import argparse
 import os, sys
 import random
-sys.path.append("./MiniGPT-4/DoLa")
-sys.path.append("./MiniGPT-4/DoLa/transformers-4.28.1")
-sys.path.append("./MiniGPT-4/DoLa/transformers-4.28.1/src")
-sys.path.append("./MiniGPT-4/DoLa/transformers-4.28.1/src/transformers")
 
 import numpy as np
 import torch
@@ -82,9 +78,9 @@ chat = Chat(model, vis_processor, device='cuda:{}'.format(args.gpu_id), stopping
 print('Initialization Finished')
 
 img_list = []
-# img = "/data/xyq/bill/MiniGPT-4/hallucinatory_image/clock_on_a_beach.png"
-# img = "/data/xyq/bill/MiniGPT-4/hallucinatory_image/zoom_in_5.png"
-img = "/data/xyq/bill/MiniGPT-4/hallucinatory_image/inject.png"
+img = "/home/czr/contrast_decoding_LVLMs/context_density/mnt/cropped_level_3.png"
+# img = "./hallucinatory_image/zoom_in_5.png"
+# img = "./hallucinatory_image/inject.png"
 
 
 chat.upload_img(img, CONV_VISION, img_list)

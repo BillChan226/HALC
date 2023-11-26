@@ -1,7 +1,4 @@
 import os, sys
-sys.path.append("/data/xyq/bill/MiniGPT-4/woodpecker")
-sys.path.append("/data/xyq/bill/MiniGPT-4/woodpecker/GroundingDINO/groundingdino")
-
 from typing import Dict
 from tqdm import tqdm
 from PIL import Image
@@ -16,9 +13,9 @@ from PIL import Image
 import spacy
 
 
-BOX_TRESHOLD = 0.35     # used in detector api.
+BOX_TRESHOLD = 0.5     # used in detector api.
 # TEXT_TRESHOLD = 0.25    # used in detector api.
-TEXT_TRESHOLD = 0.1    # used in detector api.
+TEXT_TRESHOLD = 0.4    # used in detector api.
 AREA_THRESHOLD = 0.001   # used to filter out too small object.
 IOU_THRESHOLD = 0.95     # used to filter the same instance. greater than threshold means the same instance
 

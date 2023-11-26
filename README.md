@@ -104,7 +104,7 @@ The evaluation pipeline includes 2 steps.
 Following [Evaluating Object Hallucination in Large Vision-Language Models](https://arxiv.org/pdf/2305.10355.pdf), we used "Generate a short caption of the image" as the prompt to query LVLM for captions of the `2,000` images randomly sampled from [COCO 2014 Val](https://cocodataset.org/#download) datast. Under root directory, run
 
 ```
-python generate_chair_input.py --num_samples 2000 --dataset_name coco --data_dir [COCO_DIR] --output_dir ./generated_captions/ -v
+python generate_chair_input.py --num_samples 2000 --dataset_name coco --data_dir [COCO_DIR] --output_dir ./generated_captions/ -v -d [Decoding Strategy]
 ```
 
 For a full list of command line input, run `python generate_chair_input.py -h`. Note that `[COCO_DIR]` is expected to contain both images and annotation files within the `annotations` subfolder. In other words, `[COCO_DIR]` should the the following structure:

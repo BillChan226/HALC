@@ -236,6 +236,8 @@ def main():
                     # dola_decoding=cfg.model_cfg.dola_decoding,
                 )
 
+                print("output_text: ", output_text)
+
                 # append the generated caption to the list
                 # format follows https://github.com/tylin/coco-caption/tree/master
                 all_generated_captions.append(

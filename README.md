@@ -18,6 +18,27 @@ pip install -e transformers-4.28.1
 pip install datasets
 ```
 
+We employ [Grounding DINO](https://github.com/IDEA-Research/GroundingDINO) as the external detector to bound hallucinatory objects. For quick installation:
+
+```
+pip install -U spacy
+python -m spacy download en_core_web_lg
+python -m spacy download en_core_web_md
+python -m spacy download en_core_web_sm
+
+cd woodpecker/GroundingDINO/
+pip install -e .
+```
+
+Then download pre-trained model weights for DINO:
+```
+mkdir weights
+cd weights
+wget -q https://github.com/IDEA-Research/GroundingDINO/releases/download/v0.1.0-alpha/groundingdino_swint_ogc.pth
+```
+
+if error `NameError: name '_C' is not defined` is reported, refer to [this issue](https://github.com/IDEA-Research/GroundingDINO/issues/8#issuecomment-1541892708) for a quick fix.
+
 To reproduce our results, we use the **Llama-2-7b** as LLM backbone, which can be downloaded from [here](https://huggingface.co/meta-llama/Llama-2-7b-chat-hf/tree/main). After downloading, modify the code accordingly [here](minigpt4/configs/models/minigpt4_llama2.yaml#L15) at Line 15.
 
 You also have to prepare the pretrained model checkpoints, which can be downloaded from [here](https://drive.google.com/file/d/11nAPjEok8eAGGEG1N2vXo3kBLCg0WgUk/view?usp=sharing). After downloading, modify the code accordingly [here](eval_configs/minigpt4_llama2_eval.yaml#L10) at Line 10.

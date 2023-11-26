@@ -37,27 +37,62 @@ cd weights
 wget -q https://github.com/IDEA-Research/GroundingDINO/releases/download/v0.1.0-alpha/groundingdino_swint_ogc.pth
 ```
 
-if error `NameError: name '_C' is not defined` is reported, refer to [this issue](https://github.com/IDEA-Research/GroundingDINO/issues/8#issuecomment-1541892708) for a quick fix.
+If error `NameError: name '_C' is not defined` is reported, refer to [this issue](https://github.com/IDEA-Research/GroundingDINO/issues/8#issuecomment-1541892708) for a quick fix.
 
 To reproduce our results, we use the **Llama-2-7b** as LLM backbone, which can be downloaded from [here](https://huggingface.co/meta-llama/Llama-2-7b-chat-hf/tree/main). After downloading, modify the code accordingly [here](minigpt4/configs/models/minigpt4_llama2.yaml#L15) at Line 15.
 
 You also have to prepare the pretrained model checkpoints, which can be downloaded from [here](https://drive.google.com/file/d/11nAPjEok8eAGGEG1N2vXo3kBLCg0WgUk/view?usp=sharing). After downloading, modify the code accordingly [here](eval_configs/minigpt4_llama2_eval.yaml#L10) at Line 10.
 
-## Get Started
 
-run CDL demo on a [toy example](hallucinatory_image/beach_on_a_clock.png)
+## Demo Playgrounds
+
+### CDL Demo
+Run CDL demo on a [toy example](hallucinatory_image/beach_on_a_clock.png):
+  
+```
+python context_density/context_decoding.py --cfg-path eval_configs/minigpt4_llama2_eval.yaml  --gpu-id 0
+```
+
+### ViT Early Exit Layers Demo 
+Specify early_exit_layer_idx then run ViT early exit layers contrastive decoding:
+  
+```
+python vit_early_exit_contrast.py --cfg-path eval_configs/minigpt4_llama2_eval.yaml  --gpu-id 0
+```
+
+
+### DoLA Demo
+
+#### Test DoLa with their textual input
+
+run
+
+```
+python toy_dola_eval.py --model-name ./models/models--meta-llama--Llama-2-7b-chat-hf/snapshots/94b07a6e30c3292b8265ed32ffdeccfdadf434a8 --output-path output-path.json --num-gpus 1 --early-exit-layers 0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32
+```
+
+Note: adding 32 in the early-exit-layers is crucial for reasonable output.
+
+JSD for each candidate layer is printed and input at line 2720 of file ```DoLa/transformers-4.28.1/src/transformers/generation/utils.py```
+
+#### Test DoLA with visual-textual input
+
+run a toy example:
+
+```
+python contrast_decoding.py --cfg-path eval_configs/minigpt4_llama2_eval.yaml  --gpu-id 0
+```
+
+The [toy example](hallucinatory_image/beach_on_a_clock.png) is projected into the prefix of the language model as a context.
 
 
 
-
-
-
-
-## CHAIR Evaluation of DoLa-based Contrastive Decoding LVLMs
+## Benchmarks
+### CHAIR Evaluation of DoLa-based Contrastive Decoding LVLMs
 
 The evaluation pipeline includes 2 steps.
 
-### Running LVLM to generate captions and result file format-ready for CHAIR
+#### Running LVLM to generate captions and result file format-ready for CHAIR
 
 Following [Evaluating Object Hallucination in Large Vision-Language Models](https://arxiv.org/pdf/2305.10355.pdf), we used "Generate a short caption of the image" as the prompt to query LVLM for captions of the `2,000` images randomly sampled from [COCO 2014 Val](https://cocodataset.org/#download) datast. Under root directory, run
 
@@ -83,7 +118,7 @@ COCO_DIR (val2024 for example)
 
 Upon completion, two files, `minigpt4_pretrain-llama2_coco_2000_generated_captions.json` and `minigpt4_pretrain-llama2_coco_2000_chair.json` should be generated under `generated_captions/minigpt4_pretrain-llama2/coco/` if `llama2` is the `model_type` used for `minigpt4`.
 
-### Evaluate with CHAIR
+#### Evaluate with CHAIR
 
 We use the generated `_chair.json` file, for example, `minigpt4_pretrain-llama2_coco_2000_chair.json` for the CHAIR evaluation. Under root directory, run
 
@@ -92,30 +127,6 @@ python eval_hallucination.py --metric chair --input_path [PATH_TO_.JSON_FILE] -v
 ```
 
 The evaluation results will be printed in terminal.
-
-## Getting Started with DoLa-based Contrastive Decoding LVLMs
-
-### Test DoLa with their given example in the paper
-
-run
-
-```
-python toy_dola_eval.py --model-name ./models/models--meta-llama--Llama-2-7b-chat-hf/snapshots/94b07a6e30c3292b8265ed32ffdeccfdadf434a8 --output-path output-path.json --num-gpus 1 --early-exit-layers 0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32
-```
-
-Note: adding 32 in the early-exit-layers is crucial for reasonable output.
-
-JSD for each candidate layer is printed and input at line 2720 of file ```DoLa/transformers-4.28.1/src/transformers/generation/utils.py```
-
-### Test DoLa layer-wise contrast with miniGPT4-v for object hallucination
-
-run a toy example:
-
-```
-python contrast_decoding.py --cfg-path eval_configs/minigpt4_llama2_eval.yaml  --gpu-id 0
-```
-
-The image in ```hallucinatory_image/clock_on_a_beach.png``` is projected into the prefix of the language model as a context.
 
 
 

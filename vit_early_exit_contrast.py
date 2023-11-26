@@ -1,10 +1,6 @@
 import argparse
 import os, sys
 import random
-sys.path.append("./MiniGPT-4/DoLa")
-sys.path.append("./MiniGPT-4/DoLa/transformers-4.28.1")
-sys.path.append("./MiniGPT-4/DoLa/transformers-4.28.1/src")
-sys.path.append("./MiniGPT-4/DoLa/transformers-4.28.1/src/transformers")
 import csv
 import numpy as np
 import torch
@@ -80,8 +76,8 @@ stopping_criteria = StoppingCriteriaList([StoppingCriteriaSub(stops=stop_words_i
 
 
 
-# img = "/data/xyq/bill/MiniGPT-4/hallucinatory_image/clock_on_a_beach.png"
-img = "/data/xyq/bill/MiniGPT-4/hallucinatory_image/zoom_in_2.png"
+# img = "hallucinatory_image/clock_on_a_beach.png"
+img = "hallucinatory_image/zoom_in_2.png"
 chat = Chat(model, vis_processor, device='cuda:{}'.format(args.gpu_id), stopping_criteria=stopping_criteria)
 print('Initialization Finished')
 

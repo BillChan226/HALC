@@ -94,7 +94,7 @@ The [toy example](hallucinatory_image/beach_on_a_clock.png) is projected into th
 
 
 
-## Benchmarks
+## :hourglass: Benchmarks
 ### CHAIR Evaluation of DoLa-based Contrastive Decoding LVLMs
 
 The evaluation pipeline includes 2 steps.
@@ -137,7 +137,7 @@ The evaluation results will be printed in terminal.
 
 
 
-## License
+## :key: License
 
 This repository is under [BSD 3-Clause License](LICENSE.md).
 Many codes are based on [Lavis](https://github.com/salesforce/LAVIS) with

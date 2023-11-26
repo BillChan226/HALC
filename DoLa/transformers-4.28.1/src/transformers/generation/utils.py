@@ -4302,6 +4302,7 @@ class GenerationMixin:
         word_complete = True
         # intermediate_token_lists = torch.tensor([]).to(input_ids.device)
         intermediate_token_lists = input_ids
+        last_tokens = []
 
         while True:
             if synced_gpus:
@@ -4414,6 +4415,7 @@ class GenerationMixin:
                 base_logits = dict_outputs[premature_layer][:, -1, :]
                 final_logits = dict_outputs[mature_layer][:, -1, :]
                 # print("\nfinal_logits first", final_logits)
+
                 if relative_top > 0.0:
                     final_logits = self.relative_top_filter(final_logits, relative_top)
                     base_logits = base_logits.log_softmax(dim=-1)
@@ -4424,8 +4426,7 @@ class GenerationMixin:
 
             # pre-process distribution
             next_tokens_scores = logits_processor(input_ids, next_token_logits)
-            # print("\next_tokens_scores", next_tokens_scores)
-            # print("in the loop")
+
             # Store scores, attentions and hidden_states when required
             if return_dict_in_generate:
                 if output_scores:
@@ -4446,7 +4447,7 @@ class GenerationMixin:
 
             # print("\next_tokens_scores", next_tokens_scores)
             next_tokens = torch.argmax(next_tokens_scores, dim=-1)
-
+            
             # print("\nnext_tokens", next_tokens)
 
             # finished sentences should have their next token be a padding token
@@ -4458,142 +4459,242 @@ class GenerationMixin:
             # print("\nnext_tokens", next_tokens)
             # last_word_flag, last_word = self.code2_assistant.check_word_complete(intermediate_token_lists)
             last_word_flag = self.code2_assistant.check_word_complete(next_tokens[:, None])
-
             # print("last_word_flag: ", last_word_flag)
-
             # input()
 
             if last_word_flag == False:
+                
+                # if once_flag == False:
+                #     once_flag = True
+                #     last_model_kwargs = copy.copy(model_kwargs)
+                #     last_outputs = copy.copy(outputs)
+
                 word_complete = False
+                token_to_append = None
+                # last_tokens = last_tokens.append(next_tokens[:, None].cpu().numpy().tolist()[0][0])
             else:
                 # intermediate_token_lists = torch.cat([intermediate_token_lists, next_tokens[:, None]], dim=-1)
+                once_flag = False
+                last_model_kwargs_2 = copy.copy(model_kwargs)
+                # current_word = self.code2_assistant.get_last_word(intermediate_token_lists) 
+                # print("last_tokens", last_tokens)
+                if len(last_tokens) == 0:
+                    contrast_logits = next_token_logits
+                    token_to_append = None
+                else:
+                    current_word = self.code2_assistant.get_last_word(last_tokens) 
+                    last_tokens = []
 
-                current_word = self.code2_assistant.get_last_word(intermediate_token_lists)
-                # print("current_word: ", current_word)
-                word_complete = True
-                entity = current_word
-                embeds_list = self.code2_assistant.context_density_embedding(entity, context_window=3)
-                context_logits_list = []
-
-                are_equal = torch.equal(embeds_list[0], embeds_list[2])
-                # print("\nif context window embedding is the same: ", are_equal)
-                clock_logits_list = []
-                for context_embed in embeds_list:
-                    # print("context_embed", np.shape(context_embed))
+                    print("current_word: ", current_word)
                     # print("intermediate_token_lists", intermediate_token_lists)
-                    # input()
-                    # sub_model_kwargs = model_kwargs
-                    # sub_model_kwargs = copy.copy(model_kwargs)
-                    sub_model_kwargs = copy.copy(initial_model_kwargs)
-                    sub_model_kwargs['inputs_embeds'] = context_embed
+                    word_complete = True
+                    entity = current_word
+                    embeds_list = self.code2_assistant.context_density_embedding(entity, context_window=3)
+                    context_logits_list = []
+                    intermediate_model_kwargs_list = []
 
-                    # print("context_embed", context_embed)
+                    are_equal = torch.equal(embeds_list[0], embeds_list[2])
+                    # print("\nif context window embedding is the same: ", are_equal)
+                    clock_logits_list = []
+                    for context_embed in embeds_list:
+                        # print("context_embed", np.shape(context_embed))
+                        # print("intermediate_token_lists", intermediate_token_lists)
+                        # input()
+                        # sub_model_kwargs = model_kwargs
+                        # sub_model_kwargs = copy.copy(model_kwargs)
+                        sub_model_kwargs = copy.copy(initial_model_kwargs)
+                        sub_model_kwargs['inputs_embeds'] = context_embed
 
-                    # print("sub_model_kwargs['inputs_embeds']", sub_model_kwargs['inputs_embeds'])
+                        # print("context_embed", context_embed)
+
+                        # print("sub_model_kwargs['inputs_embeds']", sub_model_kwargs['inputs_embeds'])
+                        
+                        # context_logits = self.get_intermediate_logits(
+                        #     intermediate_token_lists, 
+                        #     mature_layer, base_layer, 
+                        #     candidate_premature_layers, 
+                        #     relative_top, logits_processor, 
+                        #     stopping_criteria, max_length, 
+                        #     pad_token_id, eos_token_id, 
+                        #     output_attentions, output_hidden_states, 
+                        #     output_scores, return_dict_in_generate, 
+                        #     synced_gpus, streamer, **sub_model_kwargs,
+                        # )
+                        
+                        if len(intermediate_token_lists[0]) > 0:
+                            context_logits, _ = self.get_intermediate_logits(
+                                intermediate_token_lists, 
+                                initial_input_ids,
+                                logits_processor, 
+                                stopping_criteria, max_length, 
+                                pad_token_id, eos_token_id, 
+                                output_attentions, output_hidden_states, 
+                                output_scores, return_dict_in_generate, 
+                                synced_gpus, streamer, **sub_model_kwargs,
+                            )
+                        else:
+                            context_logits = next_token_logits
+                            
+
+                        # model_inputs = self.prepare_inputs_for_generation(input_ids, **sub_model_kwargs)
+                        # # print("model_inputs", model_inputs)
+                        # print("attention shape", np.shape(model_inputs['attention_mask']))
                     
-                    # context_logits = self.get_intermediate_logits(
-                    #     intermediate_token_lists, 
-                    #     mature_layer, base_layer, 
-                    #     candidate_premature_layers, 
-                    #     relative_top, logits_processor, 
-                    #     stopping_criteria, max_length, 
-                    #     pad_token_id, eos_token_id, 
-                    #     output_attentions, output_hidden_states, 
-                    #     output_scores, return_dict_in_generate, 
-                    #     synced_gpus, streamer, **sub_model_kwargs,
-                    # )
+                        # intermediate_dict_outputs, intermediate_outputs = self(
+                        #     **model_inputs,
+                        #     return_dict=True,
+                        #     output_attentions=output_attentions,
+                        #     output_hidden_states=output_hidden_states,
+                        #     early_exit_layers=early_exit_layers,
+                        # )
 
-                    if len(intermediate_token_lists[0]) > 1:
-                        context_logits = self.get_intermediate_logits(
-                            intermediate_token_lists, 
-                            initial_input_ids,
-                            logits_processor, 
-                            stopping_criteria, max_length, 
-                            pad_token_id, eos_token_id, 
-                            output_attentions, output_hidden_states, 
-                            output_scores, return_dict_in_generate, 
-                            synced_gpus, streamer, **sub_model_kwargs,
-                        )
-                    else:
-                        context_logits = next_token_logits
+                        # intermediate_final_logits = intermediate_dict_outputs[mature_layer][:, -1, :]
+                        # print("\nfinal_logits first", final_logits)
+                        # if relative_top > 0.0:
+                        #     final_logits = self.relative_top_filter(final_logits, relative_top)
+                        #     base_logits = base_logits.log_softmax(dim=-1)
+                        #     mask = final_logits[0] < -1e3
+                        #     base_logits[0][mask] = -1e3
+                        # logits = final_logits - base_logits
+                        # context_logits = logits
 
-                    # model_inputs = self.prepare_inputs_for_generation(input_ids, **sub_model_kwargs)
-                    # # print("model_inputs", model_inputs)
-                    # print("attention shape", np.shape(model_inputs['attention_mask']))
-                
-                    # intermediate_dict_outputs, intermediate_outputs = self(
-                    #     **model_inputs,
-                    #     return_dict=True,
-                    #     output_attentions=output_attentions,
-                    #     output_hidden_states=output_hidden_states,
-                    #     early_exit_layers=early_exit_layers,
-                    # )
+                        # context_logits = intermediate_final_logits
+                        # clock_logits_list.append(context_logits[0][12006])
+                        
+                        # print("context_logits", context_logits)
+                        context_logits_list.append(context_logits)
+                        # intermediate_model_kwargs_list.append(intermediate_model_kwargs)
 
-                    # intermediate_final_logits = intermediate_dict_outputs[mature_layer][:, -1, :]
-                    # print("\nfinal_logits first", final_logits)
-                    # if relative_top > 0.0:
-                    #     final_logits = self.relative_top_filter(final_logits, relative_top)
-                    #     base_logits = base_logits.log_softmax(dim=-1)
-                    #     mask = final_logits[0] < -1e3
-                    #     base_logits[0][mask] = -1e3
-                    # logits = final_logits - base_logits
-                    # context_logits = logits
+                    # print("clock logits: ", clock_logits_list)
 
-                    # context_logits = intermediate_final_logits
-                    # clock_logits_list.append(context_logits[0][12006])
-                    
-                    # print("context_logits", context_logits)
-                    context_logits_list.append(context_logits)
+                    # contrast_logits = context_logits_list[2] - context_logits_list[0]
+                    contrast_logits = context_logits_list[0]
+                    # intermediate_model_kwargs = intermediate_model_kwargs_list[0]
 
-                # print("clock logits: ", clock_logits_list)
+                    # pre-process distribution
+                    next_tokens_scores = logits_processor(intermediate_token_lists, contrast_logits)
 
-                # contrast_logits = context_logits_list[2] - context_logits_list[0]
-                contrast_logits = context_logits_list[0]
-                # print("\n\ncontrast_logits", contrast_logits)
+                    # Store scores, attentions and hidden_states when required
+                    if return_dict_in_generate:
+                        if output_scores:
+                            scores += (next_tokens_scores,)
+                        if output_attentions:
+                            decoder_attentions += (
+                                (outputs.decoder_attentions,) if self.config.is_encoder_decoder else (outputs.attentions,)
+                            )
+                            if self.config.is_encoder_decoder:
+                                cross_attentions += (outputs.cross_attentions,)
 
+                        if output_hidden_states:
+                            decoder_hidden_states += (
+                                (outputs.decoder_hidden_states,)
+                                if self.config.is_encoder_decoder
+                                else (outputs.hidden_states,)
+                            )
 
-                # pre-process distribution
-                next_tokens_scores = logits_processor(intermediate_token_lists, contrast_logits)
+                    # print("\nnext_tokens_scores", next_tokens_scores)
+                    nominate_tokens = torch.argmax(next_tokens_scores, dim=-1)
 
-                # Store scores, attentions and hidden_states when required
-                if return_dict_in_generate:
-                    if output_scores:
-                        scores += (next_tokens_scores,)
-                    if output_attentions:
-                        decoder_attentions += (
-                            (outputs.decoder_attentions,) if self.config.is_encoder_decoder else (outputs.attentions,)
-                        )
-                        if self.config.is_encoder_decoder:
-                            cross_attentions += (outputs.cross_attentions,)
+                    # print("nominate_tokens", nominate_tokens)
 
-                    if output_hidden_states:
-                        decoder_hidden_states += (
-                            (outputs.decoder_hidden_states,)
-                            if self.config.is_encoder_decoder
-                            else (outputs.hidden_states,)
-                        )
+                    # finished sentences should have their next token be a padding token
+                    if eos_token_id is not None:
+                        if pad_token_id is None:
+                            raise ValueError("If `eos_token_id` is defined, make sure that `pad_token_id` is defined.")
+                        nominate_tokens = nominate_tokens * unfinished_sequences + pad_token_id * (1 - unfinished_sequences)
 
-                # print("\nnext_tokens_scores", next_tokens_scores)
-                nominate_tokens = torch.argmax(next_tokens_scores, dim=-1)
+                    token_to_append = nominate_tokens[:, None]
 
-                # print("nominate_tokens", nominate_tokens)
+                    # print("token_to_append", token_to_append)
 
-                # finished sentences should have their next token be a padding token
-                if eos_token_id is not None:
-                    if pad_token_id is None:
-                        raise ValueError("If `eos_token_id` is defined, make sure that `pad_token_id` is defined.")
-                    nominate_tokens = nominate_tokens * unfinished_sequences + pad_token_id * (1 - unfinished_sequences)
+            if token_to_append != None:
+                intermediate_token_lists = torch.cat([intermediate_token_lists, token_to_append], dim=-1)
+                # input_ids = intermediate_token_lists
+                # last_word = self.code2_assistant.get_last_word(intermediate_token_lists)
+                last_word = self.code2_assistant.get_last_word([nominate_tokens])
 
-                intermediate_token_lists = torch.cat([intermediate_token_lists, nominate_tokens[:, None]], dim=-1)
-
-                last_word = self.code2_assistant.get_last_word(intermediate_token_lists)
                 print("contrast word: ", last_word)
-                # intermediate_token_lists = input_ids
 
-                # print("intermediate_token_lists", intermediate_token_lists)
+                if last_word != current_word:
+                    print("\033[41mHallucination Detected!\033[0m")
+                    # which means hallucination has been corrected
+                    # resample a last token
 
+                # last_model_kwargs = self._update_model_kwargs_for_generation(
+                # last_outputs, last_model_kwargs, is_encoder_decoder=self.config.is_encoder_decoder)
+                    if last_word_flag == True:
+                        last_model_kwargs = copy.copy(last_model_kwargs_2)
+
+                    model_inputs = self.prepare_inputs_for_generation(intermediate_token_lists, **last_model_kwargs)
+                
+                    intermediate_dict_outputs, intermediate_outputs = self(
+                        **model_inputs,
+                        return_dict=True,
+                        output_attentions=output_attentions,
+                        output_hidden_states=output_hidden_states,
+                        early_exit_layers=early_exit_layers,
+                    )
+
+                    intermediate_final_logits = intermediate_dict_outputs[mature_layer][:, -1, :]
+
+                    if relative_top > 0.0:
+                        final_logits = self.relative_top_filter(intermediate_final_logits, relative_top)
+                        base_logits = base_logits.log_softmax(dim=-1)
+                        mask = final_logits[0] < -1e3
+                        base_logits[0][mask] = -1e3
+                    logits = final_logits - base_logits
+                    resample_logits = logits
+
+
+
+                    # pre-process distribution
+                    next_tokens_scores = logits_processor(intermediate_token_lists, resample_logits)
+
+                    # Store scores, attentions and hidden_states when required
+                    if return_dict_in_generate:
+                        if output_scores:
+                            scores += (next_tokens_scores,)
+                        if output_attentions:
+                            decoder_attentions += (
+                                (outputs.decoder_attentions,) if self.config.is_encoder_decoder else (outputs.attentions,)
+                            )
+                            if self.config.is_encoder_decoder:
+                                cross_attentions += (outputs.cross_attentions,)
+
+                        if output_hidden_states:
+                            decoder_hidden_states += (
+                                (outputs.decoder_hidden_states,)
+                                if self.config.is_encoder_decoder
+                                else (outputs.hidden_states,)
+                            )
+
+                    # print("\next_tokens_scores", next_tokens_scores)
+                    next_tokens = torch.argmax(next_tokens_scores, dim=-1)
+                    print("resample token", next_tokens)
+                    last_tokens = []
+                    model_kwargs = copy.copy(last_model_kwargs)
+                else:
+                    model_kwargs = self._update_model_kwargs_for_generation(
+                    outputs, model_kwargs, is_encoder_decoder=self.config.is_encoder_decoder
+                    )
+            else:
+                model_kwargs = self._update_model_kwargs_for_generation(
+                outputs, model_kwargs, is_encoder_decoder=self.config.is_encoder_decoder
+            )
+
+            print("intermediate_token_lists", intermediate_token_lists)
+            # intermediate_token_lists = input_ids
+
+            # print("pre last_tokens", last_tokens)
+            # print("next_tokens[:, None].cpu().numpy().tolist()[0][0]", next_tokens[:, None].cpu().numpy().tolist()[0][0])
+            last_tokens.append(next_tokens[:, None].cpu().numpy().tolist()[0][0])
+            # print("post last_tokens", last_tokens)
+            # last_token = next_tokens[:, None]
+                
+            print("\n")
             # input("#####\n")
 
+            # print("intermediate_token_lists", intermediate_token_lists)
             # update generated ids, model inputs, and length for next step
             input_ids = torch.cat([input_ids, next_tokens[:, None]], dim=-1)
             # input_ids = intermediate_token_lists
@@ -4602,10 +4703,22 @@ class GenerationMixin:
                 streamer.put(next_tokens.cpu())
 
             # print("outputs", outputs)
-            model_kwargs = self._update_model_kwargs_for_generation(
-                outputs, model_kwargs, is_encoder_decoder=self.config.is_encoder_decoder
-            )
-            # print("input_ids", input_ids)
+            # if token_to_append != None:
+            #     if last_word != current_word:
+            #         pass
+            # else:
+            # model_kwargs = self._update_model_kwargs_for_generation(
+            #     outputs, model_kwargs, is_encoder_decoder=self.config.is_encoder_decoder
+            # )
+
+            # if last_word_flag == True:
+            #     last_model_kwargs = copy.copy(model_kwargs)
+            #     last_outputs = copy.copy(outputs)
+            if last_word_flag == False:
+                if once_flag == False:
+                    once_flag = True
+                    last_model_kwargs = copy.copy(model_kwargs)
+                    last_outputs = copy.copy(outputs)
 
             # if eos_token was found in one sentence, set sentence to finished
             if eos_token_id_tensor is not None:
@@ -4716,10 +4829,10 @@ class GenerationMixin:
 
         # print("\nteacher_forcing_tokens", teacher_forcing_tokens)
         # print("input_ids", input_ids)
+        # print("teacher_forcing_tokens", teacher_forcing_tokens)
 
         # auto-regressive generation
-        # while True:
-        for tf in range(1, len(teacher_forcing_tokens[0])):
+        for tf in range(0, len(teacher_forcing_tokens[0])):
             if synced_gpus:
                 # Under synced_gpus the `forward` call must continue until all gpus complete their sequence.
                 # The following logic allows an early break if all peers finished generating their sequence
@@ -4771,11 +4884,14 @@ class GenerationMixin:
             # sample
             probs = nn.functional.softmax(next_token_scores, dim=-1)
             next_tokens = torch.multinomial(probs, num_samples=1).squeeze(1)
+
             # print("next_tokens", next_tokens)
             # print("teacher_forcing_tokens[tf]", teacher_forcing_tokens[tf])
-            next_tokens[0] = teacher_forcing_tokens[0][tf]
-            # print("\nnext_tokens:::", next_tokens)
-            
+            if len(teacher_forcing_tokens[0])-1 == tf:
+                break
+            next_tokens[0] = teacher_forcing_tokens[0][tf+1]
+
+            # print("\nnext_tokens:::", next_tokens)            
 
             # # finished sentences should have their next token be a padding token
             # if eos_token_id is not None:
@@ -4806,20 +4922,20 @@ class GenerationMixin:
                     this_peer_finished = True
 
 
-        # prepare model inputs
-        model_inputs = self.prepare_inputs_for_generation(input_ids, **model_kwargs)
+        # # prepare model inputs
+        # model_inputs = self.prepare_inputs_for_generation(input_ids, **model_kwargs)
 
-        # forward pass to get next token
-        outputs = self(
-            **model_inputs,
-            return_dict=True,
-            output_attentions=output_attentions,
-            output_hidden_states=output_hidden_states,
-        )
+        # # forward pass to get next token
+        # outputs = self(
+        #     **model_inputs,
+        #     return_dict=True,
+        #     output_attentions=output_attentions,
+        #     output_hidden_states=output_hidden_states,
+        # )
 
-        next_token_logits = outputs.logits[:, -1, :]
-
-        return next_token_logits
+        # next_token_logits = outputs.logits[:, -1, :]
+        # print("\nnext_token_logits in get intermediate", next_tokens)
+        return next_token_logits, model_kwargs
 
 
     def beam_search(

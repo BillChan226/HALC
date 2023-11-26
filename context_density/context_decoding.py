@@ -97,8 +97,8 @@ chat.encode_img(img_list, early_exit_layer_idx)
 
 
 # chat.ask("Briefly describe the image.", CONV_VISION)
-# chat.ask("Describe the man with detail.", CONV_VISION)
-chat.ask("What is the man holding in his hand?", CONV_VISION)
+chat.ask("Describe the man with detail.", CONV_VISION)
+# chat.ask("What is the man holding in his hand?", CONV_VISION)
 
 output_text, output_token, info = chat.answer(CONV_VISION, img_list)
 

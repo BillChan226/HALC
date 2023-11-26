@@ -91,9 +91,11 @@ class code2_assistant:
 
     def get_last_word(self, input_ids):
 
-        input_ids = input_ids[0]
-        input_ids = input_ids.cpu().numpy().tolist()
-
+        # input_ids = input_ids[0]
+        # input_ids = input_ids.cpu().numpy().tolist()
+        # input_ids = input_ids.numpy().tolist()
+        # print("input_ids", input_ids)
+        input_ids = torch.tensor(input_ids)
         output_text = self.tokenizer.decode(
             input_ids, skip_special_tokens=True
         )
@@ -146,16 +148,21 @@ class code2_assistant:
         # self.detector_dict["named_entity"] = ["clock"]
         sample = self.detector.detect_objects(self.detector_dict)
 
-        print("\nDetection: ", sample)
+        print("Detection: ", sample)
 
         # Assuming the first detected bounding box is the one related to the entity
         
         original_bbox = sample['entity_info'][entity]['bbox']
-        area_list = [(bbox[2] - bbox[0]) * (bbox[3] - bbox[1]) for bbox in sample['entity_info'][entity]['bbox']]
+        if len(original_bbox) == 0:
+            target_bbox = [0.3, 0.3, 0.6, 0.6]
+        else:
+            area_list = [(bbox[2] - bbox[0]) * (bbox[3] - bbox[1]) for bbox in original_bbox]
 
-        # get the index of the smallest bbox
-        target_bbox_index = area_list.index(min(area_list))
-        target_bbox = sample['entity_info'][entity]['bbox'][target_bbox_index]
+            # get the index of the smallest bbox
+            target_bbox_index = area_list.index(min(area_list))
+            target_bbox = original_bbox[target_bbox_index]
+
+        # target_bbox = original_bbox[0]
     
         # Calculate expanded bounding boxes for the given context window
         expanded_bboxes = [target_bbox]

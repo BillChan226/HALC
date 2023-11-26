@@ -164,7 +164,7 @@ class Chat:
             self.dola_decoding = False
             self.code2_decoding = True
 
-        print(f"\035[41mCurrent Decoding Strategy: {self.decoding_strategy}\035[0m")
+        print(f"\033[42m####### Current Decoding Strategy: {self.decoding_strategy} #######\033[0m")
 
         if stopping_criteria is not None:
             self.stopping_criteria = stopping_criteria

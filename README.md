@@ -1,9 +1,9 @@
 
-# Context-Density-Layers Contrastive Decoding for LVLMs (CDL)
+# Mitigating LVLMs Object Hallucination via Context-Density-Layers Contrastive Decoding (CDL)
 
 ## Installation
 
-We use the MiniGPT-4 SOTA as the LVLM backbone for CDL. Please refer to the [Installation](#Installation) section in the [MiniGPT-4](#MiniGPT-4) README.
+We use the MiniGPT-4 SOTA as the LVLM backbone for CDL. Please refer to the [Installation](#Installation) section in the [MiniGPT-4](https://github.com/Vision-CAIR/MiniGPT-4) README.
 
 Briefly, run the following commands to install the required packages:
 
@@ -21,6 +21,10 @@ pip install datasets
 To reproduce our results, we use the **Llama-2-7b** as LLM backbone, which can be downloaded from [here](https://huggingface.co/meta-llama/Llama-2-7b-chat-hf/tree/main). After downloading, modify the code accordingly [here](minigpt4/configs/models/minigpt4_llama2.yaml#L15) at Line 15.
 
 You also have to prepare the pretrained model checkpoints, which can be downloaded from [here](https://drive.google.com/file/d/11nAPjEok8eAGGEG1N2vXo3kBLCg0WgUk/view?usp=sharing). After downloading, modify the code accordingly [here](eval_configs/minigpt4_llama2_eval.yaml#L10) at Line 10.
+
+## Get Started
+
+run CDL demo on a [toy example](hallucinatory_image/beach_on_a_clock.png)
 
 
 
@@ -75,19 +79,19 @@ The evaluation results will be printed in terminal.
 run
 
 ```
-python ./MiniGPT-4/toy_dola_eval.py --model-name ./models/models--meta-llama--Llama-2-7b-chat-hf/snapshots/94b07a6e30c3292b8265ed32ffdeccfdadf434a8 --output-path output-path.json --num-gpus 1 --early-exit-layers 0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32
+python toy_dola_eval.py --model-name ./models/models--meta-llama--Llama-2-7b-chat-hf/snapshots/94b07a6e30c3292b8265ed32ffdeccfdadf434a8 --output-path output-path.json --num-gpus 1 --early-exit-layers 0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32
 ```
 
 Note: adding 32 in the early-exit-layers is crucial for reasonable output.
 
-JSD for each candidate layer is printed and input at line 2720 of file ```./MiniGPT-4/DoLa/transformers-4.28.1/src/transformers/generation/utils.py```
+JSD for each candidate layer is printed and input at line 2720 of file ```DoLa/transformers-4.28.1/src/transformers/generation/utils.py```
 
 ### Test DoLa layer-wise contrast with miniGPT4-v for object hallucination
 
 run a toy example:
 
 ```
-python ./MiniGPT-4/contrast_decoding.py --cfg-path eval_configs/minigpt4_llama2_eval.yaml  --gpu-id 0
+python contrast_decoding.py --cfg-path eval_configs/minigpt4_llama2_eval.yaml  --gpu-id 0
 ```
 
 The image in ```hallucinatory_image/clock_on_a_beach.png``` is projected into the prefix of the language model as a context.

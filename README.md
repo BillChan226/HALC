@@ -1,9 +1,16 @@
 
-# Mitigating LVLMs Object Hallucination via Context-Density-Layers Contrastive Decoding (CDL)
+# Mitigating LVLMs Object Hallucination via Context-Density-Layers Contrastive Decoding (HALC)
 
-## Installation
+<div align="center">
+  <img src="./.asset/hawk_logo.png" width="30%">
+</div>
 
-We use the MiniGPT-4 SOTA as the LVLM backbone for CDL. Please refer to the [Installation](#Installation) section in the [MiniGPT-4](https://github.com/Vision-CAIR/MiniGPT-4) README.
+<!-- <a href='https://minigpt-v2.github.io'><img src='https://img.shields.io/badge/Project-Page-Green'></a> <a href='https://arxiv.org/abs/2310.09478.pdf'><img src='https://img.shields.io/badge/Paper-Arxiv-red'></a>  <a href='https://huggingface.co/spaces/Vision-CAIR/MiniGPT-v2'><img src='https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Spaces-blue'> <a href='https://minigpt-v2.github.io'><img src='https://img.shields.io/badge/Gradio-Demo-blue'></a> [![YouTube](https://badges.aleen42.com/src/youtube.svg)](https://www.youtube.com/watch?v=atFCwV2hSY4) -->
+
+
+## :hammer_and_wrench: Installation
+
+We use the MiniGPT-4 SOTA as the LVLM backbone for HALC. Please refer to the [Installation](#Installation) section in the [MiniGPT-4](https://github.com/Vision-CAIR/MiniGPT-4) README.
 
 Briefly, run the following commands to install the required packages:
 
@@ -44,9 +51,9 @@ To reproduce our results, we use the **Llama-2-7b** as LLM backbone, which can b
 You also have to prepare the pretrained model checkpoints, which can be downloaded from [here](https://drive.google.com/file/d/11nAPjEok8eAGGEG1N2vXo3kBLCg0WgUk/view?usp=sharing). After downloading, modify the code accordingly [here](eval_configs/minigpt4_llama2_eval.yaml#L10) at Line 10.
 
 
-## Demo Playgrounds
+## :roller_coaster: Demo Playgrounds
 
-### CDL Demo
+### :eagle: HALC Demo
 Run CDL demo on a [toy example](hallucinatory_image/beach_on_a_clock.png):
   
 ```

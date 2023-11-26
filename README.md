@@ -2,7 +2,7 @@
 # Mitigating LVLMs Object Hallucination via Context-Density-Layers Contrastive Decoding (HALC)
 
 <div align="center">
-  <img src="https://github.com/BillChan226/contrast_decoding_LVLMs/blob/main/.assets/hawk_logo.png" width="40%">
+  <img src="https://github.com/BillChan226/contrast_decoding_LVLMs/blob/main/.assets/hawk_logo.png" width="35%">
 </div>
 
 <!-- <a href='https://minigpt-v2.github.io'><img src='https://img.shields.io/badge/Project-Page-Green'></a> <a href='https://arxiv.org/abs/2310.09478.pdf'><img src='https://img.shields.io/badge/Paper-Arxiv-red'></a>  <a href='https://huggingface.co/spaces/Vision-CAIR/MiniGPT-v2'><img src='https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Spaces-blue'> <a href='https://minigpt-v2.github.io'><img src='https://img.shields.io/badge/Gradio-Demo-blue'></a> [![YouTube](https://badges.aleen42.com/src/youtube.svg)](https://www.youtube.com/watch?v=atFCwV2hSY4) -->

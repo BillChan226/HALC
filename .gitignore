@@ -1,6 +1,7 @@
 # folder systems
 
 cache_dir/
+generated_captions/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

@@ -12,7 +12,7 @@ sys.path.append("./MiniGPT-4/DoLa/transformers-4.28.1")
 sys.path.append("./MiniGPT-4/DoLa/transformers-4.28.1/src")
 sys.path.append("./MiniGPT-4/DoLa/transformers-4.28.1/src/transformers")
 sys.path.append("./MiniGPT-4/woodpecker")
-sys.path.append('/data/xyq/bill/MiniGPT-4/woodpecker/mPLUG-Owl/mPLUG-Owl')
+sys.path.append('woodpecker/mPLUG-Owl/mPLUG-Owl')
 
 from woodpecker.vis_corrector import Corrector
 from woodpecker.models.utils import extract_boxes, find_matching_boxes, annotate

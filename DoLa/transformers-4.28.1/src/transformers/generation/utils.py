@@ -4459,7 +4459,7 @@ class GenerationMixin:
             # last_word_flag, last_word = self.code2_assistant.check_word_complete(intermediate_token_lists)
             last_word_flag = self.code2_assistant.check_word_complete(next_tokens[:, None])
 
-            print("last_word_flag: ", last_word_flag)
+            # print("last_word_flag: ", last_word_flag)
             # print("last_word", last_word)
             # print("model_kwargs",np.shape(model_kwargs['inputs_embeds']))
             # print("input_ids", input_ids)
@@ -4478,11 +4478,11 @@ class GenerationMixin:
                 context_logits_list = []
 
                 are_equal = torch.equal(embeds_list[0], embeds_list[2])
-                print("\nif embeds_list[0]==embeds_list[1]", are_equal)
+                # print("\nif context window embedding is the same: ", are_equal)
                 clock_logits_list = []
                 for context_embed in embeds_list:
                     # print("context_embed", np.shape(context_embed))
-                    print("intermediate_token_lists", intermediate_token_lists)
+                    # print("intermediate_token_lists", intermediate_token_lists)
                     # input()
                     # sub_model_kwargs = model_kwargs
                     # sub_model_kwargs = copy.copy(model_kwargs)
@@ -4542,12 +4542,12 @@ class GenerationMixin:
                     # context_logits = logits
 
                     # context_logits = intermediate_final_logits
-                    clock_logits_list.append(context_logits[0][12006])
+                    # clock_logits_list.append(context_logits[0][12006])
                     
-                    print("context_logits", context_logits)
+                    # print("context_logits", context_logits)
                     context_logits_list.append(context_logits)
 
-                print("clock logits: ", clock_logits_list)
+                # print("clock logits: ", clock_logits_list)
                 # contrast_logits = context_logits_list[2] - context_logits_list[0]
                 contrast_logits = context_logits_list[0]
                 # print("\n\ncontrast_logits", contrast_logits)
@@ -4574,7 +4574,9 @@ class GenerationMixin:
 
                 # print("\nnext_tokens_scores", next_tokens_scores)
                 nominate_tokens = torch.argmax(next_tokens_scores, dim=-1)
-                print("nominate_tokens", nominate_tokens)
+
+                # print("nominate_tokens", nominate_tokens)
+
                 # finished sentences should have their next token be a padding token
                 if eos_token_id is not None:
                     if pad_token_id is None:
@@ -4584,10 +4586,10 @@ class GenerationMixin:
                 intermediate_token_lists = torch.cat([intermediate_token_lists, nominate_tokens[:, None]], dim=-1)
 
                 last_word = self.code2_assistant.get_last_word(intermediate_token_lists)
-                print("contrast word 1: ", last_word)
+                print("contrast word: ", last_word)
                 # intermediate_token_lists = input_ids
 
-                print("intermediate_token_lists", intermediate_token_lists)
+                # print("intermediate_token_lists", intermediate_token_lists)
 
             input("#####\n")
 
@@ -4709,8 +4711,8 @@ class GenerationMixin:
 
         this_peer_finished = False  # used by synced_gpus only
 
-        print("\nteacher_forcing_tokens", teacher_forcing_tokens)
-        print("input_ids", input_ids)
+        # print("\nteacher_forcing_tokens", teacher_forcing_tokens)
+        # print("input_ids", input_ids)
 
         # auto-regressive generation
         # while True:
@@ -4769,7 +4771,7 @@ class GenerationMixin:
             # print("next_tokens", next_tokens)
             # print("teacher_forcing_tokens[tf]", teacher_forcing_tokens[tf])
             next_tokens[0] = teacher_forcing_tokens[0][tf]
-            print("\nnext_tokens:::", next_tokens)
+            # print("\nnext_tokens:::", next_tokens)
             
 
             # # finished sentences should have their next token be a padding token
@@ -4780,7 +4782,7 @@ class GenerationMixin:
 
             # update generated ids, model inputs, and length for next step
             input_ids = torch.cat([input_ids, next_tokens[:, None]], dim=-1)
-            print("input_ids:::", input_ids)
+            # print("input_ids:::", input_ids)
             if streamer is not None:
                 streamer.put(next_tokens.cpu())
             model_kwargs = self._update_model_kwargs_for_generation(
@@ -4815,157 +4817,6 @@ class GenerationMixin:
         next_token_logits = outputs.logits[:, -1, :]
 
         return next_token_logits
-
-
-
-
-    # def get_intermediate_logits(
-    #     self,
-    #     input_ids: torch.LongTensor,
-    #     mature_layer: int,
-    #     base_layer: Optional[int] = None,
-    #     candidate_premature_layers: Optional[List[int]] = None,
-    #     relative_top: float = 0.1,
-    #     logits_processor: Optional[LogitsProcessorList] = None,
-    #     stopping_criteria: Optional[StoppingCriteriaList] = None,
-    #     max_length: Optional[int] = None,
-    #     pad_token_id: Optional[int] = None,
-    #     eos_token_id: Optional[Union[int, List[int]]] = None,
-    #     output_attentions: Optional[bool] = None,
-    #     output_hidden_states: Optional[bool] = None,
-    #     output_scores: Optional[bool] = None,
-    #     return_dict_in_generate: Optional[bool] = None,
-    #     synced_gpus: Optional[bool] = False,
-    #     streamer: Optional["BaseStreamer"] = None,
-    #     **model_kwargs,
-    # ) -> Union[GreedySearchOutput, torch.LongTensor]:
- 
-    #     logits_processor = logits_processor if logits_processor is not None else LogitsProcessorList()
-    #     stopping_criteria = stopping_criteria if stopping_criteria is not None else StoppingCriteriaList()
-    #     if max_length is not None:
-    #         warnings.warn(
-    #             "`max_length` is deprecated in this function, use"
-    #             " `stopping_criteria=StoppingCriteriaList([MaxLengthCriteria(max_length=max_length)])` instead.",
-    #             UserWarning,
-    #         )
-    #         stopping_criteria = validate_stopping_criteria(stopping_criteria, max_length)
-    #     pad_token_id = pad_token_id if pad_token_id is not None else self.generation_config.pad_token_id
-    #     eos_token_id = eos_token_id if eos_token_id is not None else self.generation_config.eos_token_id
-    #     if isinstance(eos_token_id, int):
-    #         eos_token_id = [eos_token_id]
-    #     eos_token_id_tensor = torch.tensor(eos_token_id).to(input_ids.device) if eos_token_id is not None else None
-    #     output_scores = output_scores if output_scores is not None else self.generation_config.output_scores
-    #     output_attentions = (
-    #         output_attentions if output_attentions is not None else self.generation_config.output_attentions
-    #     )
-    #     output_hidden_states = (
-    #         output_hidden_states if output_hidden_states is not None else self.generation_config.output_hidden_states
-    #     )
-    #     return_dict_in_generate = (
-    #         return_dict_in_generate
-    #         if return_dict_in_generate is not None
-    #         else self.generation_config.return_dict_in_generate
-    #     )
-
-    #     # init attention / hidden states / scores tuples
-    #     scores = () if (return_dict_in_generate and output_scores) else None
-    #     decoder_attentions = () if (return_dict_in_generate and output_attentions) else None
-    #     cross_attentions = () if (return_dict_in_generate and output_attentions) else None
-    #     decoder_hidden_states = () if (return_dict_in_generate and output_hidden_states) else None
-
-    #     # if model is an encoder-decoder, retrieve encoder attention weights and hidden states
-    #     if return_dict_in_generate and self.config.is_encoder_decoder:
-    #         encoder_attentions = model_kwargs["encoder_outputs"].get("attentions") if output_attentions else None
-    #         encoder_hidden_states = (
-    #             model_kwargs["encoder_outputs"].get("hidden_states") if output_hidden_states else None
-    #         )
-
-    #     # keep track of which sequences are already finished
-    #     unfinished_sequences = torch.ones(input_ids.shape[0], dtype=torch.long, device=input_ids.device)
-
-    #     this_peer_finished = False  # used by synced_gpus only
-
-    #     if base_layer is not None and candidate_premature_layers is None:
-    #         early_exit_layers = [base_layer, mature_layer]
-    #         num_base_layers = 1
-    #         premature_layer_dist = {}
-    #     elif candidate_premature_layers is not None:
-    #         early_exit_layers = candidate_premature_layers + [mature_layer]
-    #         num_base_layers = len(candidate_premature_layers)
-    #         premature_layer_dist = {l: 0 for l in candidate_premature_layers}
-    #     else:
-    #         raise ValueError("You must specify either `base_layer` or `candidate_premature_layers`")
-
-    #     # if synced_gpus:
-    #     #     # Under synced_gpus the `forward` call must continue until all gpus complete their sequence.
-    #     #     # The following logic allows an early break if all peers finished generating their sequence
-    #     #     this_peer_finished_flag = torch.tensor(0.0 if this_peer_finished else 1.0).to(input_ids.device)
-    #     #     # send 0.0 if we finished, 1.0 otherwise
-    #     #     dist.all_reduce(this_peer_finished_flag, op=dist.ReduceOp.SUM)
-    #     #     # did all peers finish? the reduced sum will be 0.0 then
-    #     #     if this_peer_finished_flag.item() == 0.0:
-    #     #         break
-
-    #     # prepare model inputs
-    #     model_inputs = self.prepare_inputs_for_generation(input_ids, **model_kwargs)
-    #     # model_inputs["past_key_values"] = None
-    #     # print("model_inputs", model_inputs)
-    #     # print("output_attentions", output_attentions)
-
-    #     input()
-
-    #     # print("early_exit_layers", early_exit_layers)
-    #     # forward pass to get next token
-    #     dict_outputs, outputs = self(
-    #         **model_inputs,
-    #         return_dict=True,
-    #         output_attentions=output_attentions,
-    #         output_hidden_states=output_hidden_states,
-    #         early_exit_layers=early_exit_layers,
-    #     )
-
-    #     # print("base_layer: ", base_layer)
-    #     # print("candidate_premature_layers: ", candidate_premature_layers)
-    #     # input()
-
-    #     # if synced_gpus and this_peer_finished:
-    #     #     continue  # don't waste resources running the code we don't need
-
-
-    #     next_token_logits = outputs.logits[:, -1, :]
-
-    #     # # pre-process distribution
-    #     # next_token_scores = logits_processor(input_ids, next_token_logits)
-    #     # # next_token_scores = logits_warper(input_ids, next_token_scores)
-
-    #     # # Store scores, attentions and hidden_states when required
-    #     # if return_dict_in_generate:
-    #     #     if output_scores:
-    #     #         scores += (next_token_scores,)
-    #     #     if output_attentions:
-    #     #         decoder_attentions += (
-    #     #             (outputs.decoder_attentions,) if self.config.is_encoder_decoder else (outputs.attentions,)
-    #     #         )
-    #     #         if self.config.is_encoder_decoder:
-    #     #             cross_attentions += (outputs.cross_attentions,)
-
-    #     #     if output_hidden_states:
-    #     #         decoder_hidden_states += (
-    #     #             (outputs.decoder_hidden_states,)
-    #     #             if self.config.is_encoder_decoder
-    #     #             else (outputs.hidden_states,)
-    #     #         )
-
-    #     # # sample
-    #     # probs = nn.functional.softmax(next_token_scores, dim=-1)
-    #     # next_tokens = torch.multinomial(probs, num_samples=1).squeeze(1)
-
-
-
-    #     # final_logits = dict_outputs[mature_layer][:, -1, :]
-
-    #     return next_token_logits #probs #final_logits
-    
 
 
     def beam_search(

@@ -1,11 +1,6 @@
 import argparse
 import os, sys
 import random
-sys.path.append("./contrast_decoding_LVLMs")
-sys.path.append("./contrast_decoding_LVLMs/context_density")
-sys.path.append("./contrast_decoding_LVLMs/DoLa/transformers-4.28.1")
-sys.path.append("./contrast_decoding_LVLMs/DoLa/transformers-4.28.1/src")
-sys.path.append("./contrast_decoding_LVLMs/DoLa/transformers-4.28.1/src/transformers")
 import csv
 import numpy as np
 import torch

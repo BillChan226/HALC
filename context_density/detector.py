@@ -122,8 +122,8 @@ class Detector:
                 device='cuda:0'
             )
 
-            print("logits", logits)
-            print("phrases", phrases)
+            # print("logits", logits)
+            # print("phrases", phrases)
 
             phrases = find_most_similar_strings(self.nlp, phrases, entity_list)    
             global_entity_dict = extract_detection(global_entity_dict, boxes, phrases, image_source, self.cache_dir, sample)

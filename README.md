@@ -1,5 +1,5 @@
 
-# HALC: Mitigating LVLMs Object Hallucination via Context-Density-Layers Contrastive Decoding
+# HaLC: Mitigating LVLMs Object Hallucination via Context-Density-Layer Contrastive Decoding
 
 <div align="center">
   <img src="https://github.com/BillChan226/contrast_decoding_LVLMs/blob/main/.assets/hawk_logo.png" width="35%">

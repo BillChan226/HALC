@@ -14,8 +14,8 @@ from PIL import Image, ImageDraw
 
 # initialize detector
 args_dict = {
-    'detector_config':"/home/czr/contrast_decoding_LVLMs/woodpecker/GroundingDINO/groundingdino/config/GroundingDINO_SwinT_OGC.py",
-    'detector_model_path':"/home/czr/contrast_decoding_LVLMs/woodpecker/GroundingDINO/weights/groundingdino_swint_ogc.pth",
+    'detector_config':"./woodpecker/GroundingDINO/groundingdino/config/GroundingDINO_SwinT_OGC.py",
+    'detector_model_path':"./woodpecker/GroundingDINO/weights/groundingdino_swint_ogc.pth",
     'cache_dir': './cache_dir',
 }
 
@@ -141,18 +141,24 @@ class code2_assistant:
 
     def context_density_embedding(self, entity, context_window=3):
         # context_window specifies the number of context windows
-
+        entity = entity.strip(".")
         self.detector_dict["named_entity"] = [entity]
         # self.detector_dict["named_entity"] = ["clock"]
         sample = self.detector.detect_objects(self.detector_dict)
 
-        # print("sample", sample)
+        print("\nDetection: ", sample)
 
         # Assuming the first detected bounding box is the one related to the entity
-        original_bbox = sample['entity_info'][entity]['bbox'][0]
+        
+        original_bbox = sample['entity_info'][entity]['bbox']
+        area_list = [(bbox[2] - bbox[0]) * (bbox[3] - bbox[1]) for bbox in sample['entity_info'][entity]['bbox']]
+
+        # get the index of the smallest bbox
+        target_bbox_index = area_list.index(min(area_list))
+        target_bbox = sample['entity_info'][entity]['bbox'][target_bbox_index]
     
         # Calculate expanded bounding boxes for the given context window
-        expanded_bboxes = [original_bbox]
+        expanded_bboxes = [target_bbox]
         for _ in range(1, context_window):
             # Each expansion is double the size of the previous level
             expanded_bboxes.append(self.expand_bbox(expanded_bboxes[-1], 1.5))
@@ -178,7 +184,7 @@ class code2_assistant:
         # Save the cropped images
         saved_paths = []
         for i, cropped_img in enumerate(cropped_images, start=1):
-            save_path = f'/home/czr/contrast_decoding_LVLMs/context_density/mnt/cropped_level_{i}.png'
+            save_path = f'./context_density/mnt/cropped_level_{i}.png'
             cropped_img.save(save_path)
             saved_paths.append(save_path)
 

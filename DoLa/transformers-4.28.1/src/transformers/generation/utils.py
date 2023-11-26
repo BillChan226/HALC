@@ -4413,7 +4413,7 @@ class GenerationMixin:
 
                 base_logits = dict_outputs[premature_layer][:, -1, :]
                 final_logits = dict_outputs[mature_layer][:, -1, :]
-                print("\nfinal_logits first", final_logits)
+                # print("\nfinal_logits first", final_logits)
                 if relative_top > 0.0:
                     final_logits = self.relative_top_filter(final_logits, relative_top)
                     base_logits = base_logits.log_softmax(dim=-1)
@@ -4548,9 +4548,12 @@ class GenerationMixin:
                     context_logits_list.append(context_logits)
 
                 # print("clock logits: ", clock_logits_list)
+
                 # contrast_logits = context_logits_list[2] - context_logits_list[0]
                 contrast_logits = context_logits_list[0]
                 # print("\n\ncontrast_logits", contrast_logits)
+
+
                 # pre-process distribution
                 next_tokens_scores = logits_processor(intermediate_token_lists, contrast_logits)
 
@@ -4591,7 +4594,7 @@ class GenerationMixin:
 
                 # print("intermediate_token_lists", intermediate_token_lists)
 
-            input("#####\n")
+            # input("#####\n")
 
             # update generated ids, model inputs, and length for next step
             # input_ids = torch.cat([input_ids, next_tokens[:, None]], dim=-1)

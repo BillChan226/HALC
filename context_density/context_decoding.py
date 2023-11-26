@@ -10,6 +10,8 @@ import matplotlib.pyplot as plt
 
 from transformers import StoppingCriteriaList
 
+sys.path.append("/home/czr/contrast_decoding_LVLMs")
+
 from minigpt4.common.config import Config
 from minigpt4.common.dist_utils import get_rank
 from minigpt4.common.registry import registry
@@ -75,13 +77,11 @@ stop_words_ids = [torch.tensor(ids).to(device='cuda:{}'.format(args.gpu_id)) for
 stopping_criteria = StoppingCriteriaList([StoppingCriteriaSub(stops=stop_words_ids)])
 
 img = "/home/czr/contrast_decoding_LVLMs/hallucinatory_image/beach_on_a_clock.png"
+# img = "/home/czr/contrast_decoding_LVLMs/eval_dataset/val2014/COCO_val2014_000000000196.jpg"
 # img = "/home/czr/contrast_decoding_LVLMs/hallucinatory_image/zoom_in_2.png"
 # img = "/home/czr/contrast_decoding_LVLMs/hallucinatory_image/zoom_in_3.png"
 chat = Chat(model, vis_processor, device='cuda:{}'.format(args.gpu_id), stopping_criteria=stopping_criteria)
 print('Initialization Finished')
-
-
-# early_exit_layers = np.arange(27,39)
 
 
 early_exit_layer_idx = 38
@@ -93,8 +93,9 @@ chat.upload_img(img, CONV_VISION, img_list)
 chat.encode_img(img_list, early_exit_layer_idx) 
 
 
-# chat.ask("describe the man in the image.", CONV_VISION)
-chat.ask("What is the man holding in his handx?", CONV_VISION)
+# chat.ask("Briefly describe the image.", CONV_VISION)
+chat.ask("Describe the man with detail.", CONV_VISION)
+# chat.ask("What is the man holding in his handx?", CONV_VISION)
 
 chat.code2_assistant.update_conv(CONV_VISION)
 

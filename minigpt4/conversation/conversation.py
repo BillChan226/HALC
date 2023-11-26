@@ -179,7 +179,7 @@ class Chat:
         temperature=1.0,
         max_length=2000,
         dola_decoding=False,
-        code2_decoding=True,
+        code2_decoding=False,
     ):
         conv.append_message(conv.roles[1], None)
         prompt = conv.get_prompt()

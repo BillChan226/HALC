@@ -154,6 +154,7 @@ class Chat:
             self.stopping_criteria = StoppingCriteriaList(
                 [StoppingCriteriaSub(stops=stop_words_ids)]
             )
+        self.code2_assistant = code2_assistant(self.model, vis_processor=self.vis_processor, device=self.device)
 
     def ask(self, text, conv):
         if (
@@ -179,9 +180,7 @@ class Chat:
         max_length=2000,
         dola_decoding=False,
         code2_decoding=True,
-        code2_kwargs=None
     ):
-        code2_kwargs = code2_assistant(self.model.llama_tokenizer, img_path=self.image_path)
         conv.append_message(conv.roles[1], None)
         prompt = conv.get_prompt()
         # print("prompt: ", prompt)
@@ -196,7 +195,7 @@ class Chat:
         begin_idx = max(0, current_max_len - max_length)
         embs = embs[:, begin_idx:]
 
-        early_exit_layers = [
+        lm_early_exit_layers = [
             0,
             2,
             4,
@@ -216,9 +215,9 @@ class Chat:
             32,
         ]
 
-        mature_layer = early_exit_layers[-1]
+        mature_layer = lm_early_exit_layers[-1]
         premature_layer = None
-        candidate_premature_layers = early_exit_layers[:-1]
+        candidate_premature_layers = lm_early_exit_layers[:-1]
         premature_layer_dist = {l: 0 for l in candidate_premature_layers}
 
         # mode = "dola-static"
@@ -248,7 +247,7 @@ class Chat:
             candidate_premature_layers=candidate_premature_layers,
             mature_layer=mature_layer,
             return_dict_in_generate=True,
-            code2_kwargs=code2_kwargs
+            code2_kwargs=self.code2_assistant
         )
         return generation_kwargs
 
@@ -312,6 +311,7 @@ class Chat:
         self.image_path = image
         img_list.pop(0)
         if isinstance(image, str):  # is a image path
+            self.code2_assistant.update_img_path(image)
             raw_image = Image.open(image).convert("RGB")
             image = self.vis_processor(raw_image).unsqueeze(0).to(self.device)
         elif isinstance(image, Image.Image):

@@ -223,7 +223,7 @@ class halc_assistant:
         # directly apply the detected box for decoding
         #
         contrast_logits = context_logits_list[0]
-        return contrast_logits
+        return False, contrast_logits
     
 
     def context_curve_contrastive_decoding(self, context_logits_list):
@@ -265,7 +265,7 @@ class halc_assistant:
 
         contrast_logits = torch.tensor(contrast_logits).to(self.device)
  
-        return contrast_logits
+        return False, contrast_logits
         
     def context_contrastive_decoding(self, context_logits_list, last_tokens):
         # 
@@ -284,12 +284,12 @@ class halc_assistant:
         upper_contrast_logits = target_logits - upper_logits
         lower_contrast_logits = target_logits - lower_logits
 
-        # if upper_contrast_logits > 0 and lower_contrast_logits > 0:
-        #     skip_flag = True
-        # else:
-        #     skip_flag = False
+        if upper_contrast_logits > -2 and lower_contrast_logits > -2:
+            skip_flag = True
+        else:
+            skip_flag = False
 
-        skip_flag = False
+        # skip_flag = False
 
         return skip_flag, target_layer
     

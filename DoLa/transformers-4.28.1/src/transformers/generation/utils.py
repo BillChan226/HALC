@@ -4525,49 +4525,48 @@ class GenerationMixin:
                             # print("context_logits", context_logits)
                             context_logits_list.append(context_logits)
 
-                        contrast_logits = self.halc_assistant.naive_focus_decoding(context_logits_list)
+                        # contrast_logits = self.halc_assistant.naive_focus_decoding(context_logits_list)
                         # contrast_logits = self.halc_assistant.context_curve_contrastive_decoding(context_logits_list)
-                        # skip_flag, candidate_logits = self.halc_assistant.context_contrastive_decoding(context_logits_list, last_tokens)
-                        # 
-                        # if skip_flag == True:
-                        #     token_to_append = torch.tensor([last_tokens]).to(input_ids.device)
-                        # else:
+                        skip_flag, candidate_logits = self.halc_assistant.context_contrastive_decoding(context_logits_list, last_tokens)
+                        
+                        if skip_flag == True:
+                            token_to_append = torch.tensor([last_tokens]).to(input_ids.device)
+                        else:
 
                             # contrast_logits = candidate_logits
 
-                        # pre-process distribution
-                        next_tokens_scores = logits_processor(intermediate_token_lists, contrast_logits)
+                            # pre-process distribution
+                            next_tokens_scores = logits_processor(intermediate_token_lists, contrast_logits)
 
-                        # Store scores, attentions and hidden_states when required
-                        if return_dict_in_generate:
-                            if output_scores:
-                                scores += (next_tokens_scores,)
-                            if output_attentions:
-                                decoder_attentions += (
-                                    (outputs.decoder_attentions,) if self.config.is_encoder_decoder else (outputs.attentions,)
-                                )
-                                if self.config.is_encoder_decoder:
-                                    cross_attentions += (outputs.cross_attentions,)
+                            # Store scores, attentions and hidden_states when required
+                            if return_dict_in_generate:
+                                if output_scores:
+                                    scores += (next_tokens_scores,)
+                                if output_attentions:
+                                    decoder_attentions += (
+                                        (outputs.decoder_attentions,) if self.config.is_encoder_decoder else (outputs.attentions,)
+                                    )
+                                    if self.config.is_encoder_decoder:
+                                        cross_attentions += (outputs.cross_attentions,)
 
-                            if output_hidden_states:
-                                decoder_hidden_states += (
-                                    (outputs.decoder_hidden_states,)
-                                    if self.config.is_encoder_decoder
-                                    else (outputs.hidden_states,)
-                                )
+                                if output_hidden_states:
+                                    decoder_hidden_states += (
+                                        (outputs.decoder_hidden_states,)
+                                        if self.config.is_encoder_decoder
+                                        else (outputs.hidden_states,)
+                                    )
 
-                        nominate_tokens = torch.argmax(next_tokens_scores, dim=-1)
+                            nominate_tokens = torch.argmax(next_tokens_scores, dim=-1)
 
-                        # print("nominate_tokens", nominate_tokens)
+                            # print("nominate_tokens", nominate_tokens)
 
-                        # finished sentences should have their next token be a padding token
-                        if eos_token_id is not None:
-                            if pad_token_id is None:
-                                raise ValueError("If `eos_token_id` is defined, make sure that `pad_token_id` is defined.")
-                            nominate_tokens = nominate_tokens * unfinished_sequences + pad_token_id * (1 - unfinished_sequences)
+                            # finished sentences should have their next token be a padding token
+                            if eos_token_id is not None:
+                                if pad_token_id is None:
+                                    raise ValueError("If `eos_token_id` is defined, make sure that `pad_token_id` is defined.")
+                                nominate_tokens = nominate_tokens * unfinished_sequences + pad_token_id * (1 - unfinished_sequences)
 
-                        token_to_append = nominate_tokens[:, None]
-
+                            token_to_append = nominate_tokens[:, None]
 
 
 

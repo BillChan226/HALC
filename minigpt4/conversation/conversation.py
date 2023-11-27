@@ -147,7 +147,7 @@ class Chat:
         self.model = model
         self.vis_processor = vis_processor
 
-        valid_decoding_strategies = ["greedy", "dola", "halc"]
+        valid_decoding_strategies = ["greedy", "dola", "halc-dola", "halc-greedy"]
         # assert decoding_strategy in valid_decoding_strategies:
         #     raise ValueError(f"Invalid decoding strategy: {decoding_strategy}, should be in {valid_decoding_strategies}")
         assert decoding_strategy in valid_decoding_strategies, f"Invalid decoding strategy: {decoding_strategy}, should be in {valid_decoding_strategies}"
@@ -156,13 +156,16 @@ class Chat:
 
         if self.decoding_strategy == "greedy":
             self.dola_decoding = False
-            self.code2_decoding = False
+            self.halc_decoding = False
         elif self.decoding_strategy == "dola":
             self.dola_decoding = True
-            self.code2_decoding = False
-        elif self.decoding_strategy == "halc":
+            self.halc_decoding = False
+        elif self.decoding_strategy == "halc-dola":
+            self.dola_decoding = True
+            self.halc_decoding = True
+        elif self.decoding_strategy == "halc-greedy":
             self.dola_decoding = False
-            self.code2_decoding = True
+            self.halc_decoding = True
 
         print(f"\033[42m####### Current Decoding Strategy: {self.decoding_strategy} #######\033[0m")
 
@@ -201,7 +204,7 @@ class Chat:
         max_length=2000
     ):
         dola_decoding=self.dola_decoding
-        code2_decoding=self.code2_decoding
+        halc_decoding=self.halc_decoding
 
         conv.append_message(conv.roles[1], None)
         prompt = conv.get_prompt()
@@ -262,7 +265,7 @@ class Chat:
             length_penalty=length_penalty,
             temperature=float(temperature),
             dola_decoding=dola_decoding,
-            code2_decoding=code2_decoding,
+            halc_decoding=halc_decoding,
             num_return_sequences=1,
             output_scores=True,
             premature_layer=premature_layer,

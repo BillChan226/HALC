@@ -158,9 +158,12 @@ class code2_assistant:
 
             # Calculate expanded bounding boxes for the given context window
             expanded_bboxes = [target_bbox]
-            for _ in range(1, context_window):
-                # Each expansion is double the size of the previous level
-                expanded_bboxes.append(self.expand_bbox(expanded_bboxes[-1], 1.5))
+            # for _ in range(1, context_window):
+            #     # Each expansion is double the size of the previous level
+            #     expanded_bboxes.append(self.expand_bbox(expanded_bboxes[-1], 1.5))
+
+            expanded_bboxes.append(self.expand_bbox(expanded_bboxes[-1], -0.5))
+            expanded_bboxes.append(self.expand_bbox(expanded_bboxes[-1], 5))
 
             # Load the original image
             image_path = sample["img_path"]
@@ -214,3 +217,97 @@ class code2_assistant:
             embeds_list = None
 
         return embeds_list, detect_info
+
+
+    def naive_focus_decoding(self, context_logits_list):
+
+        contrast_logits = context_logits_list[0]
+        return contrast_logits
+    
+
+    def context_curve_contrastive_decoding(self, context_logits_list):
+
+        
+        target_layer = context_logits_list[0]
+        lower_layer = context_logits_list[1]
+        upper_layer = context_logits_list[2]
+
+        relative_top = 0.1
+
+        # if relative_top > 0.0:
+        #     final_logits = self.relative_top_filter(target_layer, relative_top)
+        #     base_logits = upper_layer.log_softmax(dim=-1)
+        #     mask = final_logits[0] < -1e3
+        #     base_logits[0][mask] = -1e3
+        # upper_contrast_logits = final_logits - base_logits
+
+        # if relative_top > 0.0:
+        #     final_logits = self.relative_top_filter(target_layer, relative_top)
+        #     base_logits = lower_layer.log_softmax(dim=-1)
+        #     mask = final_logits[0] < -1e3
+        #     base_logits[0][mask] = -1e3
+        # lower_contrast_logits = final_logits - base_logits
+
+        upper_contrast_logits = target_layer - upper_layer
+        lower_contrast_logits = target_layer - lower_layer
+
+        # find out those tokens that are positive in both upper and lower contrast logits
+        # Step 1: Identify positive logits
+        positive_upper = upper_contrast_logits > 0
+        positive_lower = lower_contrast_logits > 0
+
+        # print("positive_lower", positive_lower)
+
+        # Step 2: Create a combined mask
+        positive_both = np.logical_and(positive_upper.cpu().numpy(), positive_lower.cpu().numpy())
+
+        # print("positive_both", positive_both)
+        # positive_indices = np.where(positive_both)[0]  
+
+        # print("positive_indices", positive_indices)
+
+        
+        # print("target_layer", target_layer)
+        contrast_logits = upper_layer.cpu().numpy() * positive_both
+        contrast_logits += -5 * (1 - positive_both)
+        # print("contrast_logits", contrast_logits)
+        contrast_logits = torch.tensor(contrast_logits).to(self.device)
+ 
+        return contrast_logits
+        
+    def context_contrastive_decoding(self, context_logits_list, last_tokens):
+
+        hallucination_index = last_tokens[0]
+        
+        # print("ontext_logits_list[0]", context_logits_list[0])
+        target_layer = context_logits_list[0][0][hallucination_index]
+        lower_layer = context_logits_list[1][0][hallucination_index]
+        upper_layer = context_logits_list[2][0][hallucination_index]
+
+        upper_contrast_logits = target_layer - upper_layer
+        lower_contrast_logits = target_layer - lower_layer
+
+        if upper_contrast_logits > 0 and lower_contrast_logits > 0:
+            verified_flag = True
+        else:
+            verified_flag = False
+
+        # return verified_flag, context_logits_list[0]
+        return False, context_logits_list[0]
+
+    def relative_top_filter(
+        self,
+        scores: torch.FloatTensor,
+        relative_top: float = 0.1,
+        filter_value: float = -float("Inf"),
+        min_tokens_to_keep: int = 1,
+    ) -> torch.FloatTensor:
+        scores_normalized = scores.log_softmax(dim=-1)
+        sorted_logits, sorted_indices = torch.sort(scores_normalized, descending=True)
+        min_thresh = sorted_logits[..., min_tokens_to_keep - 1]
+        probs_max = torch.max(scores_normalized, dim=-1).values
+        probs_thresh = probs_max + np.log(relative_top)
+        probs_thresh = torch.min(min_thresh, probs_thresh)
+        probs_thresh = probs_thresh.unsqueeze(-1)
+        scores_normalized[scores_normalized < probs_thresh] = filter_value
+        return scores_normalized

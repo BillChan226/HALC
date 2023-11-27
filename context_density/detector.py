@@ -17,7 +17,7 @@ BOX_TRESHOLD = 0.5     # used in detector api.
 # TEXT_TRESHOLD = 0.25    # used in detector api.
 TEXT_TRESHOLD = 0.4    # used in detector api.
 # AREA_THRESHOLD = 0.001   # used to filter out too small object.
-AREA_THRESHOLD = 0.05   # used to filter out too small object.
+AREA_THRESHOLD = 0.005   # used to filter out too small object.
 # IOU_THRESHOLD = 0.95     # used to filter the same instance. greater than threshold means the same instance
 IOU_THRESHOLD = 0.8     # used to filter the same instance. greater than threshold means the same instance
 

@@ -1141,7 +1141,7 @@ class GenerationMixin:
         contrastive_decoding: Optional[bool] = None,
         student_model=None,
         streamer: Optional["BaseStreamer"] = None,
-        code2_kwargs=None,
+        halc_assistant=None,
         **kwargs,
     ) -> Union[GenerateOutput, torch.LongTensor]:
         r"""
@@ -1252,7 +1252,7 @@ class GenerationMixin:
         # print("model_kwargs", model_kwargs)
         generation_config.validate()
         self._validate_model_kwargs(model_kwargs.copy())
-        self.code2_assistant = code2_kwargs
+        self.halc_assistant = halc_assistant
 
         # 2. Set generation parameters if not already defined
         logits_processor = logits_processor if logits_processor is not None else LogitsProcessorList()
@@ -4468,8 +4468,8 @@ class GenerationMixin:
                 next_tokens = next_tokens * unfinished_sequences + pad_token_id * (1 - unfinished_sequences)
 
             # print("\nnext_tokens", next_tokens)
-            # last_word_flag, last_word = self.code2_assistant.check_word_complete(intermediate_token_lists)
-            last_word_flag = self.code2_assistant.check_word_complete(next_tokens[:, None])
+            # last_word_flag, last_word = self.halc_assistant.check_word_complete(intermediate_token_lists)
+            last_word_flag = self.halc_assistant.check_word_complete(next_tokens[:, None])
             # print("last_word_flag: ", last_word_flag)
             # input()
 
@@ -4487,18 +4487,18 @@ class GenerationMixin:
                 # intermediate_token_lists = torch.cat([intermediate_token_lists, next_tokens[:, None]], dim=-1)
                 once_flag = False
                 last_model_kwargs_2 = copy.copy(model_kwargs)
-                # current_word = self.code2_assistant.get_last_word(intermediate_token_lists) 
+                # current_word = self.halc_assistant.get_last_word(intermediate_token_lists) 
                 # print("last_tokens", last_tokens)
                 if len(last_tokens) == 0:
                     contrast_logits = next_token_logits
                     token_to_append = None
                 else:
-                    current_word = self.code2_assistant.get_last_word(last_tokens) 
+                    current_word = self.halc_assistant.get_last_word(last_tokens) 
                     
                     print("current_word: ", current_word)
                     word_complete = True
                     entity = current_word
-                    embeds_list, detect_info = self.code2_assistant.context_density_embedding(entity, context_window=3)
+                    embeds_list, detect_info = self.halc_assistant.context_density_embedding(entity, context_window=3)
 
                     if detect_info["status"] == "invalid":
                         token_to_append = torch.tensor([last_tokens]).to(input_ids.device)
@@ -4546,10 +4546,10 @@ class GenerationMixin:
 
                         print("clock_logits_list", clock_logits_list)
                         print("surf_logits_list", surf_logits_list)
-                        # contrast_logits = self.code2_assistant.naive_focus_decoding(context_logits_list)
-                        # contrast_logits = self.code2_assistant.context_curve_contrastive_decoding(context_logits_list)
-                        verified_flag, candidate_logits = self.code2_assistant.context_contrastive_decoding(context_logits_list, last_tokens)
-                        if verified_flag == True:
+                        # contrast_logits = self.halc_assistant.naive_focus_decoding(context_logits_list)
+                        # contrast_logits = self.halc_assistant.context_curve_contrastive_decoding(context_logits_list)
+                        skip_flag, candidate_logits = self.halc_assistant.context_contrastive_decoding(context_logits_list, last_tokens)
+                        if skip_flag == True:
                             token_to_append = torch.tensor([last_tokens]).to(input_ids.device)
                         else:
                             contrast_logits = candidate_logits
@@ -4593,8 +4593,8 @@ class GenerationMixin:
                 # print("token_to_append", token_to_append)
 
                 intermediate_token_lists = torch.cat([intermediate_token_lists, token_to_append], dim=-1)
-                # last_word = self.code2_assistant.get_last_word([nominate_tokens])
-                last_word = self.code2_assistant.get_last_word(token_to_append[0])
+                # last_word = self.halc_assistant.get_last_word([nominate_tokens])
+                last_word = self.halc_assistant.get_last_word(token_to_append[0])
 
                 print("contrast word: ", last_word)
 
@@ -4650,7 +4650,7 @@ class GenerationMixin:
 
                     # print("\next_tokens_scores", next_tokens_scores)
                     next_tokens = torch.argmax(next_tokens_scores, dim=-1)
-                    last_word_flag = self.code2_assistant.check_word_complete(next_tokens[:, None])
+                    last_word_flag = self.halc_assistant.check_word_complete(next_tokens[:, None])
                     # print("resample token", next_tokens)
                     last_tokens = []
                     model_kwargs = copy.copy(last_model_kwargs)
@@ -4982,8 +4982,8 @@ class GenerationMixin:
 
 
             # print("\nnext_tokens", next_tokens)
-            # last_word_flag, last_word = self.code2_assistant.check_word_complete(intermediate_token_lists)
-            last_word_flag = self.code2_assistant.check_word_complete(next_tokens[:, None])
+            # last_word_flag, last_word = self.halc_assistant.check_word_complete(intermediate_token_lists)
+            last_word_flag = self.halc_assistant.check_word_complete(next_tokens[:, None])
             # print("last_word_flag: ", last_word_flag)
             # input()
 
@@ -5001,12 +5001,12 @@ class GenerationMixin:
                     contrast_logits = next_token_logits
                     token_to_append = None
                 else:
-                    current_word = self.code2_assistant.get_last_word(last_tokens) 
+                    current_word = self.halc_assistant.get_last_word(last_tokens) 
                     
                     print("current_word: ", current_word)
                     word_complete = True
                     entity = current_word
-                    embeds_list, detect_info = self.code2_assistant.context_density_embedding(entity, context_window=3)
+                    embeds_list, detect_info = self.halc_assistant.context_density_embedding(entity, context_window=3)
 
                     if detect_info["status"] == "invalid":
                         token_to_append = torch.tensor([last_tokens]).to(input_ids.device)
@@ -5070,8 +5070,8 @@ class GenerationMixin:
                 # print("token_to_append", token_to_append)
 
                 intermediate_token_lists = torch.cat([intermediate_token_lists, token_to_append], dim=-1)
-                # last_word = self.code2_assistant.get_last_word([nominate_tokens])
-                last_word = self.code2_assistant.get_last_word(token_to_append[0])
+                # last_word = self.halc_assistant.get_last_word([nominate_tokens])
+                last_word = self.halc_assistant.get_last_word(token_to_append[0])
 
                 print("contrast word: ", last_word)
 
@@ -5119,7 +5119,7 @@ class GenerationMixin:
                             )
 
                     next_tokens = torch.argmax(next_tokens_scores, dim=-1)
-                    last_word_flag = self.code2_assistant.check_word_complete(next_tokens[:, None])
+                    last_word_flag = self.halc_assistant.check_word_complete(next_tokens[:, None])
                     # print("resample token", next_tokens)
                     last_tokens = []
                     model_kwargs = copy.copy(last_model_kwargs)

@@ -23,7 +23,7 @@ args_dict = {
 }
 
 
-class code2_assistant:
+class halc_assistant:
     def __init__(self, model=None, vis_processor=None, device=None):
         model_args = SimpleNamespace(**args_dict)
         self.device = device
@@ -265,11 +265,10 @@ class code2_assistant:
         # positive_indices = np.where(positive_both)[0]  
 
         # print("positive_indices", positive_indices)
-
-        
+       
         # print("target_layer", target_layer)
         contrast_logits = upper_layer.cpu().numpy() * positive_both
-        contrast_logits += -5 * (1 - positive_both)
+        # contrast_logits += -5 * (1 - positive_both)
         # print("contrast_logits", contrast_logits)
         contrast_logits = torch.tensor(contrast_logits).to(self.device)
  
@@ -287,13 +286,15 @@ class code2_assistant:
         upper_contrast_logits = target_layer - upper_layer
         lower_contrast_logits = target_layer - lower_layer
 
-        if upper_contrast_logits > 0 and lower_contrast_logits > 0:
-            verified_flag = True
-        else:
-            verified_flag = False
+        # if upper_contrast_logits > 0 and lower_contrast_logits > 0:
+        #     skip_flag = True
+        # else:
+        #     skip_flag = False
+
+        skip_flag = False
 
         # return verified_flag, context_logits_list[0]
-        return False, context_logits_list[0]
+        return skip_flag, context_logits_list[0]
 
     def relative_top_filter(
         self,

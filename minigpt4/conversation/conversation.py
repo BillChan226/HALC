@@ -11,7 +11,7 @@ import dataclasses
 from enum import auto, Enum
 from typing import List, Tuple, Any
 
-from context_density.utility import code2_assistant
+from contrast_decoding_LVLMs.context_density.halc import halc_assistant
 
 from minigpt4.common.registry import registry
 
@@ -176,7 +176,7 @@ class Chat:
             self.stopping_criteria = StoppingCriteriaList(
                 [StoppingCriteriaSub(stops=stop_words_ids)]
             )
-        self.code2_assistant = code2_assistant(self.model, vis_processor=self.vis_processor, device=self.device)
+        self.halc_assistant = halc_assistant(self.model, vis_processor=self.vis_processor, device=self.device)
 
     def ask(self, text, conv):
         if (
@@ -188,7 +188,7 @@ class Chat:
         else:
             conv.append_message(conv.roles[0], text)
 
-        self.code2_assistant.update_conv(conv)
+        self.self.halc_assistant.update_conv(conv)
 
     def answer_prepare(
         self,
@@ -272,7 +272,7 @@ class Chat:
             candidate_premature_layers=candidate_premature_layers,
             mature_layer=mature_layer,
             return_dict_in_generate=True,
-            code2_kwargs=self.code2_assistant
+            halc_assistant=self.halc_assistant
         )
         return generation_kwargs
 
@@ -336,7 +336,7 @@ class Chat:
         self.image_path = image
         img_list.pop(0)
         if isinstance(image, str):  # is a image path
-            self.code2_assistant.update_img_path(image)
+            self.halc_assistant.update_img_path(image)
             raw_image = Image.open(image).convert("RGB")
             image = self.vis_processor(raw_image).unsqueeze(0).to(self.device)
         elif isinstance(image, Image.Image):

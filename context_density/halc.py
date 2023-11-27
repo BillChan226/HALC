@@ -210,7 +210,6 @@ class halc_assistant:
                 begin_idx = max(0, current_max_len - max_length)
                 embs = embs[:, begin_idx:]
                 embeds_list.append(embs)
-            # input()
         
         else:
             detect_info["status"] = "invalid"
@@ -220,14 +219,17 @@ class halc_assistant:
 
 
     def naive_focus_decoding(self, context_logits_list):
-
+        # 
+        # directly apply the detected box for decoding
+        #
         contrast_logits = context_logits_list[0]
         return contrast_logits
     
 
     def context_curve_contrastive_decoding(self, context_logits_list):
-
-        
+        # 
+        # this decoding method use the hallucination pattern for decoding
+        #
         target_layer = context_logits_list[0]
         lower_layer = context_logits_list[1]
         upper_layer = context_logits_list[2]
@@ -256,35 +258,31 @@ class halc_assistant:
         positive_upper = upper_contrast_logits > 0
         positive_lower = lower_contrast_logits > 0
 
-        # print("positive_lower", positive_lower)
-
         # Step 2: Create a combined mask
         positive_both = np.logical_and(positive_upper.cpu().numpy(), positive_lower.cpu().numpy())
 
-        # print("positive_both", positive_both)
-        # positive_indices = np.where(positive_both)[0]  
-
-        # print("positive_indices", positive_indices)
-       
-        # print("target_layer", target_layer)
         contrast_logits = upper_layer.cpu().numpy() * positive_both
-        # contrast_logits += -5 * (1 - positive_both)
-        # print("contrast_logits", contrast_logits)
+
         contrast_logits = torch.tensor(contrast_logits).to(self.device)
  
         return contrast_logits
         
     def context_contrastive_decoding(self, context_logits_list, last_tokens):
-
+        # 
+        # this decoding method use the hallucination pattern as a filter for verification
+        #
         hallucination_index = last_tokens[0]
         
         # print("ontext_logits_list[0]", context_logits_list[0])
-        target_layer = context_logits_list[0][0][hallucination_index]
-        lower_layer = context_logits_list[1][0][hallucination_index]
-        upper_layer = context_logits_list[2][0][hallucination_index]
+        target_layer = context_logits_list[0]
+        lower_layer = context_logits_list[1]
+        upper_layer = context_logits_list[2]
 
-        upper_contrast_logits = target_layer - upper_layer
-        lower_contrast_logits = target_layer - lower_layer
+        target_logits = target_layer[0][hallucination_index]
+        upper_logits = upper_layer[0][hallucination_index]
+        lower_logits = lower_layer[0][hallucination_index]
+        upper_contrast_logits = target_logits - upper_logits
+        lower_contrast_logits = target_logits - lower_logits
 
         # if upper_contrast_logits > 0 and lower_contrast_logits > 0:
         #     skip_flag = True
@@ -293,9 +291,15 @@ class halc_assistant:
 
         skip_flag = False
 
-        # return verified_flag, context_logits_list[0]
-        return skip_flag, context_logits_list[0]
+        return skip_flag, target_layer
+    
+    def your_decoding_method(self, context_logits_list):
+        # 
+        # put your decoding method here. refer to self.context_density_embedding for the defination of context_logits_list
+        #
+        pass
 
+    # don't really know what relative_top_filter is for, but maybe this could help
     def relative_top_filter(
         self,
         scores: torch.FloatTensor,

@@ -4467,19 +4467,11 @@ class GenerationMixin:
                     raise ValueError("If `eos_token_id` is defined, make sure that `pad_token_id` is defined.")
                 next_tokens = next_tokens * unfinished_sequences + pad_token_id * (1 - unfinished_sequences)
 
-            # print("\nnext_tokens", next_tokens)
-            # last_word_flag, last_word = self.halc_assistant.check_word_complete(intermediate_token_lists)
             last_word_flag = self.halc_assistant.check_word_complete(next_tokens[:, None])
             # print("last_word_flag: ", last_word_flag)
             # input()
 
             if last_word_flag == False:
-                
-                # if once_flag == False:
-                #     once_flag = True
-                #     last_model_kwargs = copy.copy(model_kwargs)
-                #     last_outputs = copy.copy(outputs)
-
                 word_complete = False
                 token_to_append = None
                 # last_tokens = last_tokens.append(next_tokens[:, None].cpu().numpy().tolist()[0][0])
@@ -4487,8 +4479,7 @@ class GenerationMixin:
                 # intermediate_token_lists = torch.cat([intermediate_token_lists, next_tokens[:, None]], dim=-1)
                 once_flag = False
                 last_model_kwargs_2 = copy.copy(model_kwargs)
-                # current_word = self.halc_assistant.get_last_word(intermediate_token_lists) 
-                # print("last_tokens", last_tokens)
+
                 if len(last_tokens) == 0:
                     contrast_logits = next_token_logits
                     token_to_append = None
@@ -4505,12 +4496,6 @@ class GenerationMixin:
                     else:
                         # print("DINO acctivated")
                         context_logits_list = []
-                        intermediate_model_kwargs_list = []
-
-                        are_equal = torch.equal(embeds_list[0], embeds_list[2])
-                        # print("\nif context window embedding is the same: ", are_equal)
-                        clock_logits_list = []
-                        surf_logits_list = []
                         for context_embed in embeds_list:
 
                             sub_model_kwargs = copy.copy(initial_model_kwargs)
@@ -4527,7 +4512,6 @@ class GenerationMixin:
                                 synced_gpus, streamer, **sub_model_kwargs,
                             )
 
-                            # intermediate_final_logits = intermediate_dict_outputs[mature_layer][:, -1, :]
                             # print("\nfinal_logits first", final_logits)
                             # if relative_top > 0.0:
                             #     final_logits = self.relative_top_filter(final_logits, relative_top)
@@ -4538,54 +4522,54 @@ class GenerationMixin:
                             # context_logits = logits
 
                             # context_logits = intermediate_final_logits
-                            clock_logits_list.append(context_logits[0][12006])
-                            surf_logits_list.append(context_logits[0][1190])
                             # print("context_logits", context_logits)
                             context_logits_list.append(context_logits)
-                            # intermediate_model_kwargs_list.append(intermediate_model_kwargs)
 
-                        print("clock_logits_list", clock_logits_list)
-                        print("surf_logits_list", surf_logits_list)
-                        # contrast_logits = self.halc_assistant.naive_focus_decoding(context_logits_list)
+                        contrast_logits = self.halc_assistant.naive_focus_decoding(context_logits_list)
                         # contrast_logits = self.halc_assistant.context_curve_contrastive_decoding(context_logits_list)
-                        skip_flag, candidate_logits = self.halc_assistant.context_contrastive_decoding(context_logits_list, last_tokens)
-                        if skip_flag == True:
-                            token_to_append = torch.tensor([last_tokens]).to(input_ids.device)
-                        else:
-                            contrast_logits = candidate_logits
+                        # skip_flag, candidate_logits = self.halc_assistant.context_contrastive_decoding(context_logits_list, last_tokens)
+                        # 
+                        # if skip_flag == True:
+                        #     token_to_append = torch.tensor([last_tokens]).to(input_ids.device)
+                        # else:
 
-                            # pre-process distribution
-                            next_tokens_scores = logits_processor(intermediate_token_lists, contrast_logits)
+                            # contrast_logits = candidate_logits
 
-                            # Store scores, attentions and hidden_states when required
-                            if return_dict_in_generate:
-                                if output_scores:
-                                    scores += (next_tokens_scores,)
-                                if output_attentions:
-                                    decoder_attentions += (
-                                        (outputs.decoder_attentions,) if self.config.is_encoder_decoder else (outputs.attentions,)
-                                    )
-                                    if self.config.is_encoder_decoder:
-                                        cross_attentions += (outputs.cross_attentions,)
+                        # pre-process distribution
+                        next_tokens_scores = logits_processor(intermediate_token_lists, contrast_logits)
 
-                                if output_hidden_states:
-                                    decoder_hidden_states += (
-                                        (outputs.decoder_hidden_states,)
-                                        if self.config.is_encoder_decoder
-                                        else (outputs.hidden_states,)
-                                    )
+                        # Store scores, attentions and hidden_states when required
+                        if return_dict_in_generate:
+                            if output_scores:
+                                scores += (next_tokens_scores,)
+                            if output_attentions:
+                                decoder_attentions += (
+                                    (outputs.decoder_attentions,) if self.config.is_encoder_decoder else (outputs.attentions,)
+                                )
+                                if self.config.is_encoder_decoder:
+                                    cross_attentions += (outputs.cross_attentions,)
 
-                            nominate_tokens = torch.argmax(next_tokens_scores, dim=-1)
+                            if output_hidden_states:
+                                decoder_hidden_states += (
+                                    (outputs.decoder_hidden_states,)
+                                    if self.config.is_encoder_decoder
+                                    else (outputs.hidden_states,)
+                                )
 
-                            # print("nominate_tokens", nominate_tokens)
+                        nominate_tokens = torch.argmax(next_tokens_scores, dim=-1)
 
-                            # finished sentences should have their next token be a padding token
-                            if eos_token_id is not None:
-                                if pad_token_id is None:
-                                    raise ValueError("If `eos_token_id` is defined, make sure that `pad_token_id` is defined.")
-                                nominate_tokens = nominate_tokens * unfinished_sequences + pad_token_id * (1 - unfinished_sequences)
+                        # print("nominate_tokens", nominate_tokens)
 
-                            token_to_append = nominate_tokens[:, None]
+                        # finished sentences should have their next token be a padding token
+                        if eos_token_id is not None:
+                            if pad_token_id is None:
+                                raise ValueError("If `eos_token_id` is defined, make sure that `pad_token_id` is defined.")
+                            nominate_tokens = nominate_tokens * unfinished_sequences + pad_token_id * (1 - unfinished_sequences)
+
+                        token_to_append = nominate_tokens[:, None]
+
+
+
 
                 last_tokens = []
 

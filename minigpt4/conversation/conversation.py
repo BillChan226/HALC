@@ -11,7 +11,7 @@ import dataclasses
 from enum import auto, Enum
 from typing import List, Tuple, Any
 
-from contrast_decoding_LVLMs.context_density.halc import halc_assistant
+from context_density.halc import halc_assistant
 
 from minigpt4.common.registry import registry
 
@@ -188,7 +188,7 @@ class Chat:
         else:
             conv.append_message(conv.roles[0], text)
 
-        self.self.halc_assistant.update_conv(conv)
+        self.halc_assistant.update_conv(conv)
 
     def answer_prepare(
         self,
@@ -244,14 +244,6 @@ class Chat:
         premature_layer = None
         candidate_premature_layers = lm_early_exit_layers[:-1]
         premature_layer_dist = {l: 0 for l in candidate_premature_layers}
-
-        # mode = "dola-static"
-        # mature_layer = early_exit_layers[1]
-        # premature_layer = None #early_exit_layers[0]
-        # # candidate_premature_layers = None
-        # candidate_premature_layers = early_exit_layers[:-1]
-        # # if args.repetition_penalty is None:
-        # #     args.repetition_penalty = 1.2
 
         generation_kwargs = dict(
             inputs_embeds=embs,

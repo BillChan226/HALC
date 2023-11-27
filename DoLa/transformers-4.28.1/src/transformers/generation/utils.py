@@ -4492,7 +4492,7 @@ class GenerationMixin:
                     if detect_info["status"] == "invalid":
                         token_to_append = torch.tensor([last_tokens]).to(input_ids.device)
                     else:
-                        print("DINO acctivated")
+                        # print("DINO acctivated")
                         context_logits_list = []
                         intermediate_model_kwargs_list = []
 
@@ -4537,7 +4537,6 @@ class GenerationMixin:
                         # contrast_logits = context_logits_list[2] - context_logits_list[0]
                         contrast_logits = context_logits_list[0]
 
-
                         # pre-process distribution
                         next_tokens_scores = logits_processor(intermediate_token_lists, contrast_logits)
 
@@ -4559,7 +4558,6 @@ class GenerationMixin:
                                     else (outputs.hidden_states,)
                                 )
 
-                        # print("\nnext_tokens_scores", next_tokens_scores)
                         nominate_tokens = torch.argmax(next_tokens_scores, dim=-1)
 
                         # print("nominate_tokens", nominate_tokens)
@@ -4572,14 +4570,11 @@ class GenerationMixin:
 
                         token_to_append = nominate_tokens[:, None]
 
-                        # print("token_to_append", token_to_append)
-
                 last_tokens = []
 
             if token_to_append != None:
-                print("token_to_append", token_to_append)
-                # for token in token_to_append:
-                #     intermediate_token_lists = torch.cat([intermediate_token_lists, token], dim=-1)
+                # print("token_to_append", token_to_append)
+
                 intermediate_token_lists = torch.cat([intermediate_token_lists, token_to_append], dim=-1)
                 # last_word = self.code2_assistant.get_last_word([nominate_tokens])
                 last_word = self.code2_assistant.get_last_word(token_to_append[0])
@@ -4587,12 +4582,10 @@ class GenerationMixin:
                 print("contrast word: ", last_word)
 
                 if last_word != current_word:
-                    print("\033[41mHallucination Detected!\033[0m")
-                    # which means hallucination has been corrected
-                    # resample a last token
+                    print("\033[41m!!!!! Hallucination Detected !!!!!!\033[0m")
 
-                # last_model_kwargs = self._update_model_kwargs_for_generation(
-                # last_outputs, last_model_kwargs, is_encoder_decoder=self.config.is_encoder_decoder)
+                    # which means hallucination has been corrected, then resample a last token
+
                     if last_word_flag == True:
                         last_model_kwargs = copy.copy(last_model_kwargs_2)
 
@@ -4640,7 +4633,8 @@ class GenerationMixin:
 
                     # print("\next_tokens_scores", next_tokens_scores)
                     next_tokens = torch.argmax(next_tokens_scores, dim=-1)
-                    print("resample token", next_tokens)
+                    last_word_flag = self.code2_assistant.check_word_complete(next_tokens[:, None])
+                    # print("resample token", next_tokens)
                     last_tokens = []
                     model_kwargs = copy.copy(last_model_kwargs)
                 else:
@@ -4652,7 +4646,7 @@ class GenerationMixin:
                 outputs, model_kwargs, is_encoder_decoder=self.config.is_encoder_decoder
             )
 
-            print("intermediate_token_lists", intermediate_token_lists)
+            # print("intermediate_token_lists", intermediate_token_lists)
             # intermediate_token_lists = input_ids
 
             last_tokens.append(next_tokens[:, None].cpu().numpy().tolist()[0][0])
@@ -4685,7 +4679,7 @@ class GenerationMixin:
                 if once_flag == False:
                     once_flag = True
                     last_model_kwargs = copy.copy(model_kwargs)
-                    last_outputs = copy.copy(outputs)
+                    
 
             # if eos_token was found in one sentence, set sentence to finished
             if eos_token_id_tensor is not None:

@@ -69,7 +69,7 @@ class code2_assistant:
         # input_ids = input_ids
         # input_ids = input_ids.cpu().numpy().tolist()
         # input_ids = input_ids.numpy().tolist()
-        print("input_ids", input_ids)
+        # print("input_ids", input_ids)
         # input()
         # input_ids = torch.tensor(input_ids)
         output_text = self.tokenizer.decode(input_ids, skip_special_tokens=True)
@@ -126,18 +126,15 @@ class code2_assistant:
             detect_info["pos"] = "PUNC"
         else:
             detect_info["pos"] = doc[0].pos_
+
         print("entity", entity)
         print("pos", detect_info["pos"])
 
         valid_list = ["NOUN", "PROPN"]
+
         if detect_info["pos"] in valid_list:
             detect_info["status"] = "acctivated"
-            # print("doc: ", doc)
-            # for token in doc:
-            #     print(token.text, token.lemma_, token.pos_, token.tag_, token.dep_,
-            #     token.shape_, token.is_alpha, token.is_stop)
             self.detector_dict["named_entity"] = [entity]
-            # self.detector_dict["named_entity"] = ["clock"]
             sample = self.detector.detect_objects(self.detector_dict)
 
             print("Detection: ", sample)

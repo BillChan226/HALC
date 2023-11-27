@@ -4483,45 +4483,27 @@ class GenerationMixin:
                     token_to_append = None
                 else:
                     current_word = self.code2_assistant.get_last_word(last_tokens) 
-                    last_tokens = []
-
+                    
                     print("current_word: ", current_word)
-                    # print("intermediate_token_lists", intermediate_token_lists)
                     word_complete = True
                     entity = current_word
-                    embeds_list = self.code2_assistant.context_density_embedding(entity, context_window=3)
-                    context_logits_list = []
-                    intermediate_model_kwargs_list = []
+                    embeds_list, detect_info = self.code2_assistant.context_density_embedding(entity, context_window=3)
 
-                    are_equal = torch.equal(embeds_list[0], embeds_list[2])
-                    # print("\nif context window embedding is the same: ", are_equal)
-                    clock_logits_list = []
-                    for context_embed in embeds_list:
-                        # print("context_embed", np.shape(context_embed))
-                        # print("intermediate_token_lists", intermediate_token_lists)
-                        # input()
-                        # sub_model_kwargs = model_kwargs
-                        # sub_model_kwargs = copy.copy(model_kwargs)
-                        sub_model_kwargs = copy.copy(initial_model_kwargs)
-                        sub_model_kwargs['inputs_embeds'] = context_embed
+                    if detect_info["status"] == "invalid":
+                        token_to_append = torch.tensor([last_tokens]).to(input_ids.device)
+                    else:
+                        print("DINO acctivated")
+                        context_logits_list = []
+                        intermediate_model_kwargs_list = []
 
-                        # print("context_embed", context_embed)
+                        are_equal = torch.equal(embeds_list[0], embeds_list[2])
+                        # print("\nif context window embedding is the same: ", are_equal)
+                        clock_logits_list = []
+                        for context_embed in embeds_list:
 
-                        # print("sub_model_kwargs['inputs_embeds']", sub_model_kwargs['inputs_embeds'])
-                        
-                        # context_logits = self.get_intermediate_logits(
-                        #     intermediate_token_lists, 
-                        #     mature_layer, base_layer, 
-                        #     candidate_premature_layers, 
-                        #     relative_top, logits_processor, 
-                        #     stopping_criteria, max_length, 
-                        #     pad_token_id, eos_token_id, 
-                        #     output_attentions, output_hidden_states, 
-                        #     output_scores, return_dict_in_generate, 
-                        #     synced_gpus, streamer, **sub_model_kwargs,
-                        # )
-                        
-                        if len(intermediate_token_lists[0]) > 0:
+                            sub_model_kwargs = copy.copy(initial_model_kwargs)
+                            sub_model_kwargs['inputs_embeds'] = context_embed
+                            
                             context_logits, _ = self.get_intermediate_logits(
                                 intermediate_token_lists, 
                                 initial_input_ids,
@@ -4532,86 +4514,75 @@ class GenerationMixin:
                                 output_scores, return_dict_in_generate, 
                                 synced_gpus, streamer, **sub_model_kwargs,
                             )
-                        else:
-                            context_logits = next_token_logits
+
+                            # intermediate_final_logits = intermediate_dict_outputs[mature_layer][:, -1, :]
+                            # print("\nfinal_logits first", final_logits)
+                            # if relative_top > 0.0:
+                            #     final_logits = self.relative_top_filter(final_logits, relative_top)
+                            #     base_logits = base_logits.log_softmax(dim=-1)
+                            #     mask = final_logits[0] < -1e3
+                            #     base_logits[0][mask] = -1e3
+                            # logits = final_logits - base_logits
+                            # context_logits = logits
+
+                            # context_logits = intermediate_final_logits
+                            # clock_logits_list.append(context_logits[0][12006])
                             
+                            # print("context_logits", context_logits)
+                            context_logits_list.append(context_logits)
+                            # intermediate_model_kwargs_list.append(intermediate_model_kwargs)
 
-                        # model_inputs = self.prepare_inputs_for_generation(input_ids, **sub_model_kwargs)
-                        # # print("model_inputs", model_inputs)
-                        # print("attention shape", np.shape(model_inputs['attention_mask']))
-                    
-                        # intermediate_dict_outputs, intermediate_outputs = self(
-                        #     **model_inputs,
-                        #     return_dict=True,
-                        #     output_attentions=output_attentions,
-                        #     output_hidden_states=output_hidden_states,
-                        #     early_exit_layers=early_exit_layers,
-                        # )
+                        # print("clock logits: ", clock_logits_list)
 
-                        # intermediate_final_logits = intermediate_dict_outputs[mature_layer][:, -1, :]
-                        # print("\nfinal_logits first", final_logits)
-                        # if relative_top > 0.0:
-                        #     final_logits = self.relative_top_filter(final_logits, relative_top)
-                        #     base_logits = base_logits.log_softmax(dim=-1)
-                        #     mask = final_logits[0] < -1e3
-                        #     base_logits[0][mask] = -1e3
-                        # logits = final_logits - base_logits
-                        # context_logits = logits
+                        # contrast_logits = context_logits_list[2] - context_logits_list[0]
+                        contrast_logits = context_logits_list[0]
 
-                        # context_logits = intermediate_final_logits
-                        # clock_logits_list.append(context_logits[0][12006])
-                        
-                        # print("context_logits", context_logits)
-                        context_logits_list.append(context_logits)
-                        # intermediate_model_kwargs_list.append(intermediate_model_kwargs)
 
-                    # print("clock logits: ", clock_logits_list)
+                        # pre-process distribution
+                        next_tokens_scores = logits_processor(intermediate_token_lists, contrast_logits)
 
-                    # contrast_logits = context_logits_list[2] - context_logits_list[0]
-                    contrast_logits = context_logits_list[0]
-                    # intermediate_model_kwargs = intermediate_model_kwargs_list[0]
+                        # Store scores, attentions and hidden_states when required
+                        if return_dict_in_generate:
+                            if output_scores:
+                                scores += (next_tokens_scores,)
+                            if output_attentions:
+                                decoder_attentions += (
+                                    (outputs.decoder_attentions,) if self.config.is_encoder_decoder else (outputs.attentions,)
+                                )
+                                if self.config.is_encoder_decoder:
+                                    cross_attentions += (outputs.cross_attentions,)
 
-                    # pre-process distribution
-                    next_tokens_scores = logits_processor(intermediate_token_lists, contrast_logits)
+                            if output_hidden_states:
+                                decoder_hidden_states += (
+                                    (outputs.decoder_hidden_states,)
+                                    if self.config.is_encoder_decoder
+                                    else (outputs.hidden_states,)
+                                )
 
-                    # Store scores, attentions and hidden_states when required
-                    if return_dict_in_generate:
-                        if output_scores:
-                            scores += (next_tokens_scores,)
-                        if output_attentions:
-                            decoder_attentions += (
-                                (outputs.decoder_attentions,) if self.config.is_encoder_decoder else (outputs.attentions,)
-                            )
-                            if self.config.is_encoder_decoder:
-                                cross_attentions += (outputs.cross_attentions,)
+                        # print("\nnext_tokens_scores", next_tokens_scores)
+                        nominate_tokens = torch.argmax(next_tokens_scores, dim=-1)
 
-                        if output_hidden_states:
-                            decoder_hidden_states += (
-                                (outputs.decoder_hidden_states,)
-                                if self.config.is_encoder_decoder
-                                else (outputs.hidden_states,)
-                            )
+                        # print("nominate_tokens", nominate_tokens)
 
-                    # print("\nnext_tokens_scores", next_tokens_scores)
-                    nominate_tokens = torch.argmax(next_tokens_scores, dim=-1)
+                        # finished sentences should have their next token be a padding token
+                        if eos_token_id is not None:
+                            if pad_token_id is None:
+                                raise ValueError("If `eos_token_id` is defined, make sure that `pad_token_id` is defined.")
+                            nominate_tokens = nominate_tokens * unfinished_sequences + pad_token_id * (1 - unfinished_sequences)
 
-                    # print("nominate_tokens", nominate_tokens)
+                        token_to_append = nominate_tokens[:, None]
 
-                    # finished sentences should have their next token be a padding token
-                    if eos_token_id is not None:
-                        if pad_token_id is None:
-                            raise ValueError("If `eos_token_id` is defined, make sure that `pad_token_id` is defined.")
-                        nominate_tokens = nominate_tokens * unfinished_sequences + pad_token_id * (1 - unfinished_sequences)
+                        # print("token_to_append", token_to_append)
 
-                    token_to_append = nominate_tokens[:, None]
-
-                    # print("token_to_append", token_to_append)
+                last_tokens = []
 
             if token_to_append != None:
+                print("token_to_append", token_to_append)
+                # for token in token_to_append:
+                #     intermediate_token_lists = torch.cat([intermediate_token_lists, token], dim=-1)
                 intermediate_token_lists = torch.cat([intermediate_token_lists, token_to_append], dim=-1)
-                # input_ids = intermediate_token_lists
-                # last_word = self.code2_assistant.get_last_word(intermediate_token_lists)
-                last_word = self.code2_assistant.get_last_word([nominate_tokens])
+                # last_word = self.code2_assistant.get_last_word([nominate_tokens])
+                last_word = self.code2_assistant.get_last_word(token_to_append[0])
 
                 print("contrast word: ", last_word)
 
@@ -4644,7 +4615,6 @@ class GenerationMixin:
                         base_logits[0][mask] = -1e3
                     logits = final_logits - base_logits
                     resample_logits = logits
-
 
 
                     # pre-process distribution
@@ -4685,12 +4655,9 @@ class GenerationMixin:
             print("intermediate_token_lists", intermediate_token_lists)
             # intermediate_token_lists = input_ids
 
-            # print("pre last_tokens", last_tokens)
-            # print("next_tokens[:, None].cpu().numpy().tolist()[0][0]", next_tokens[:, None].cpu().numpy().tolist()[0][0])
             last_tokens.append(next_tokens[:, None].cpu().numpy().tolist()[0][0])
             # print("post last_tokens", last_tokens)
             # last_token = next_tokens[:, None]
-                
             print("\n")
             # input("#####\n")
 

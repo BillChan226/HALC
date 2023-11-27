@@ -11,6 +11,10 @@ from tqdm import tqdm
 import json
 from collections import defaultdict
 
+# define pre-trained model download path by setting the environment variable
+os.environ["TRANSFORMERS_CACHE"] = "./model_checkpoints/"
+import transformers
+
 
 def initialize_mini_gpt_4(parser):
     from transformers import StoppingCriteriaList
@@ -81,7 +85,7 @@ def initialize_mini_gpt_4(parser):
         vis_processor,
         device="cuda:{}".format(args.gpu_id),
         stopping_criteria=stopping_criteria,
-        decoding_strategy=decoding_strategy
+        decoding_strategy=decoding_strategy,
     )
 
     return chat, CONV_VISION, cfg
@@ -91,6 +95,13 @@ def initialize_mini_gpt_4(parser):
 def main():
     # program level args
     parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "-d",
+        "--decoder",
+        type=str,
+        default="greedy",
+        help="Decoding strategy to use. You can choose from 'greedy', 'dola', 'halc'. Default is 'greedy'.",
+    )
     parser.add_argument(
         "--model_name",
         type=str,
@@ -135,16 +146,10 @@ def main():
         default=False,
         help="Verbosity. Default: False.",
     )
-    parser.add_argument(
-        "-d",
-        "--decoder",
-        type=str,
-        default="greedy",
-        help="Decoding strategy to use. You can choose from 'greedy', 'dola', 'halc'. Default is 'greedy'.",
-    )
 
     # load program level arguments
     args = parser.parse_args()
+    decoding_strategy = args.decoder
     model_name = args.model_name
     dataset_name = args.dataset_name
     data_dir = args.data_dir
@@ -152,11 +157,11 @@ def main():
     num_samples = args.num_samples
     seed = args.seed
     verbosity = args.verbosity
-    decoding_strategy = args.decoder
 
     # print program level arguments
     if verbosity:
-        print("\nmodel_name: ", model_name)
+        print("\nDecoding strategy: ", decoding_strategy)
+        print("backbone model_name: ", model_name)
         print("dataset_name: ", dataset_name)
         print("data_dir: ", data_dir)
         print("output_dir: ", output_dir)
@@ -177,17 +182,16 @@ def main():
 
     # set output dir
     model_type = cfg.model_cfg.model_type.replace("_", "-")
-    if cfg.model_cfg.dola_decoding is True:
-        dola_name = "dola"
-        model_type += f"_{dola_name}"
-    output_dir = os.path.join(output_dir, f"{model_name}_{model_type}", dataset_name)
+    output_dir = os.path.join(
+        output_dir, f"{model_name}_{model_type}", decoding_strategy, dataset_name
+    )
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
     # generated caption file path
     generated_captions_path = os.path.join(
         output_dir,
-        f"{model_name}_{model_type}_{dataset_name}_{num_samples}_generated_captions.json",
+        f"{model_name}_{model_type}_{decoding_strategy}_{dataset_name}_{num_samples}_generated_captions.json",
     )
 
     # chair input varies by dataset
@@ -317,7 +321,7 @@ def main():
         # save the formulated output dict
         formulated_output_path = os.path.join(
             output_dir,
-            f"{model_name}_{model_type}_{dataset_name}_{num_samples}_chair.json",
+            f"{model_name}_{model_type}_{decoding_strategy}_{dataset_name}_{num_samples}_chair.json",
         )
         with open(formulated_output_path, "w") as f:
             json.dump(formulated_output_dict, f)

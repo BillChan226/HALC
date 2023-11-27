@@ -12,23 +12,30 @@ from context_density.detector import Detector
 from types import SimpleNamespace
 from PIL import Image, ImageDraw
 
+from transformers import AutoTokenizer
+
 # initialize detector
 args_dict = {
-    'detector_config':"./woodpecker/GroundingDINO/groundingdino/config/GroundingDINO_SwinT_OGC.py",
-    'detector_model_path':"./woodpecker/GroundingDINO/weights/groundingdino_swint_ogc.pth",
-    'cache_dir': './cache_dir',
+    "detector_config": "./woodpecker/GroundingDINO/groundingdino/config/GroundingDINO_SwinT_OGC.py",
+    "detector_model_path": "./woodpecker/GroundingDINO/weights/groundingdino_swint_ogc.pth",
+    "cache_dir": "./cache_dir",
 }
+
 
 class code2_assistant:
     def __init__(self, model=None, vis_processor=None, device=None):
-
         model_args = SimpleNamespace(**args_dict)
         self.device = device
         self.detector = Detector(model_args)
         self.vis_processor = vis_processor
         self.model = model
         self.tokenizer = self.model.llama_tokenizer
-        token_vocab_dir = "/home/czr/.cache/huggingface/hub/models--meta-llama--Llama-2-7b-chat-hf/snapshots/c1b0db933684edbfe29a06fa47eb19cc48025e93/tokenizer.json"
+        # token_vocab_dir = "/home/czr/.cache/huggingface/hub/models--meta-llama--Llama-2-7b-chat-hf/snapshots/c1b0db933684edbfe29a06fa47eb19cc48025e93/tokenizer.json"
+        token_vocab_dir = "/media/zhuokai/SN850X_4TB/contrast_decoding_LVLMs/model_checkpoints/models--meta-llama--Llama-2-7b-chat-hf/snapshots/c1b0db933684edbfe29a06fa47eb19cc48025e93/tokenizer.json"
+        if not os.path.exists(token_vocab_dir):
+            temp = AutoTokenizer.from_pretrained(
+                "meta-llama/Llama-2-7b-chat-hf",  # official model name for llama2-7b-chat-hf
+            )
         with open(token_vocab_dir, "r") as f:
             self.token_vocab = json.load(f)
 
@@ -38,10 +45,9 @@ class code2_assistant:
 
     def update_img_path(self, img_path):
         print("img_path", img_path)
-        self.detector_dict = {'img_path': img_path, 'box_threshold':0.1}
+        self.detector_dict = {"img_path": img_path, "box_threshold": 0.1}
 
     def update_conv(self, conv):
-
         self.conv = conv
 
     # def check_word_complete(self, input_ids):
@@ -52,9 +58,8 @@ class code2_assistant:
     #     decoded_tokens = [
     #         self.tokenizer.decode([token_id]) for token_id in input_ids
     #     ]
-        
+
     #     final_tokens = self.token_vocab[input_ids[-1]]
-        
 
     #     output_text = self.tokenizer.decode(
     #         input_ids, skip_special_tokens=True
@@ -73,38 +78,33 @@ class code2_assistant:
     #     else:
     #         last_word_flag = False
     #         last_word = "not completed yet!"
-        
+
     #     return last_word_flag, last_word
 
     def check_word_complete(self, input_id):
-        
         input_id = input_id.cpu().numpy().tolist()
         # print("input_id", input_id)
         final_tokens = self.token_vocab[input_id[0][0]]
-        
+
         if "▁" in final_tokens or "." in final_tokens:
             last_word_flag = True
         else:
             last_word_flag = False
-        
+
         return last_word_flag
 
     def get_last_word(self, input_ids):
-
         # input_ids = input_ids[0]
         # input_ids = input_ids.cpu().numpy().tolist()
         # input_ids = input_ids.numpy().tolist()
         # print("input_ids", input_ids)
         input_ids = torch.tensor(input_ids)
-        output_text = self.tokenizer.decode(
-            input_ids, skip_special_tokens=True
-        )
+        output_text = self.tokenizer.decode(input_ids, skip_special_tokens=True)
 
         last_word_flag = True
         last_word = output_text.split(" ")[-1]
 
         return last_word
-
 
     def expand_bbox(self, bbox, context_expansion_factor):
         """
@@ -121,7 +121,7 @@ class code2_assistant:
 
         return [expanded_x_min, expanded_y_min, expanded_x_max, expanded_y_max]
 
-    def draw_bbox(self, image, bbox, color='yellow', width=3):
+    def draw_bbox(self, image, bbox, color="yellow", width=3):
         """
         Draws a bounding box on an image.
 
@@ -134,8 +134,10 @@ class code2_assistant:
         im_width, im_height = image.size
         # Convert normalized bbox coordinates to absolute pixel values
         rect = [
-            bbox[0] * im_width, bbox[1] * im_height,
-            bbox[2] * im_width, bbox[3] * im_height
+            bbox[0] * im_width,
+            bbox[1] * im_height,
+            bbox[2] * im_width,
+            bbox[3] * im_height,
         ]
         # Draw the rectangle on the image
         draw.rectangle(rect, outline=color, width=width)
@@ -151,27 +153,29 @@ class code2_assistant:
         print("Detection: ", sample)
 
         # Assuming the first detected bounding box is the one related to the entity
-        
-        original_bbox = sample['entity_info'][entity]['bbox']
+
+        original_bbox = sample["entity_info"][entity]["bbox"]
         if len(original_bbox) == 0:
             target_bbox = [0.3, 0.3, 0.6, 0.6]
         else:
-            area_list = [(bbox[2] - bbox[0]) * (bbox[3] - bbox[1]) for bbox in original_bbox]
+            area_list = [
+                (bbox[2] - bbox[0]) * (bbox[3] - bbox[1]) for bbox in original_bbox
+            ]
 
             # get the index of the smallest bbox
             target_bbox_index = area_list.index(min(area_list))
             target_bbox = original_bbox[target_bbox_index]
 
         # target_bbox = original_bbox[0]
-    
+
         # Calculate expanded bounding boxes for the given context window
         expanded_bboxes = [target_bbox]
         for _ in range(1, context_window):
             # Each expansion is double the size of the previous level
             expanded_bboxes.append(self.expand_bbox(expanded_bboxes[-1], 1.5))
-    
+
         # Load the original image
-        image_path = sample['img_path']
+        image_path = sample["img_path"]
         original_image = Image.open(image_path).convert("RGB")
 
         # Crop images to the expanded bounding boxes
@@ -183,20 +187,20 @@ class code2_assistant:
             top = bbox[1] * im_height
             right = bbox[2] * im_width
             bottom = bbox[3] * im_height
-            
+
             # Crop the image to the bounding box
             cropped_image = original_image.crop((left, top, right, bottom))
             cropped_images.append(cropped_image)
-        
+
         # Save the cropped images
         saved_paths = []
         for i, cropped_img in enumerate(cropped_images, start=1):
-            save_path = f'./context_density/mnt/cropped_level_{i}.png'
+            save_path = f"./context_density/mnt/cropped_level_{i}.png"
             cropped_img.save(save_path)
             saved_paths.append(save_path)
 
-        max_new_tokens=300
-        max_length=2000
+        max_new_tokens = 300
+        max_length = 2000
         embeds_list = []
         for i, cropped_img in enumerate(cropped_images, start=1):
             image = self.vis_processor(cropped_img).unsqueeze(0).to(self.device)
@@ -217,5 +221,4 @@ class code2_assistant:
             embeds_list.append(embs)
         # input()
 
-        
         return embeds_list

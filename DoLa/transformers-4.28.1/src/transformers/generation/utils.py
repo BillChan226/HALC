@@ -1449,10 +1449,10 @@ class GenerationMixin:
             generation_config=generation_config, stopping_criteria=stopping_criteria
         )
 
-        print("is_greedy_gen_mode: ", is_greedy_gen_mode)
-        print("is_sample_gen_mode", is_sample_gen_mode)
-        print("dola_decoding: ", dola_decoding)
-        print("halc_decoding", halc_decoding)
+        # print("is_greedy_gen_mode: ", is_greedy_gen_mode)
+        # print("is_sample_gen_mode", is_sample_gen_mode)
+        # print("dola_decoding: ", dola_decoding)
+        # print("halc_decoding", halc_decoding)
 
         if halc_decoding and dola_decoding:
             if generation_config.num_return_sequences > 1:
@@ -4508,9 +4508,9 @@ class GenerationMixin:
                     contrast_logits = next_token_logits
                     token_to_append = None
                 else:
-                    current_word = self.halc_assistant.get_last_word(last_tokens)
-
-                    print("current_word: ", current_word)
+                    current_word = self.halc_assistant.get_last_word(last_tokens) 
+                    
+                    # print("current_word: ", current_word)
                     word_complete = True
                     entity = current_word
                     embeds_list, detect_info = self.halc_assistant.context_density_embedding(entity, context_window=8)
@@ -4541,31 +4541,12 @@ class GenerationMixin:
                                 **sub_model_kwargs,
                             )
 
-                            # print("\nfinal_logits first", final_logits)
-                            # if relative_top > 0.0:
-                            #     final_logits = self.relative_top_filter(final_logits, relative_top)
-                            #     base_logits = base_logits.log_softmax(dim=-1)
-                            #     mask = final_logits[0] < -1e3
-                            #     base_logits[0][mask] = -1e3
-                            # logits = final_logits - base_logits
-                            # context_logits = logits
-
-                            # context_logits = intermediate_final_logits
-                            # print("context_logits", context_logits)
                             context_logits_list.append(context_logits)
 
-                        # contrast_logits = self.halc_assistant.naive_focus_decoding(context_logits_list)
+                        # skip_flag, contrast_logits = self.halc_assistant.naive_focus_decoding(context_logits_list)
                         # contrast_logits = self.halc_assistant.context_curve_contrastive_decoding(context_logits_list)
-                        # skip_flag, contrast_logits = self.halc_assistant.context_contrastive_decoding(
-                        #     context_logits_list, last_tokens
-                        # )
-                        skip_flag, contrast_logits = self.halc_assistant.auto_contrastive_context_decoding(
-                            context_logits_list, last_tokens
-                        )
-                        # skip_flag, contrast_logits = self.halc_assistant.contrastive_avg_context_decoding(
-                        #     context_logits_list, last_tokens
-                        # )
-
+                        skip_flag, contrast_logits = self.halc_assistant.context_contrastive_decoding(context_logits_list, last_tokens)
+                        
                         if skip_flag == True:
                             token_to_append = torch.tensor([last_tokens]).to(input_ids.device)
                         else:
@@ -4619,10 +4600,10 @@ class GenerationMixin:
                 # last_word = self.halc_assistant.get_last_word([nominate_tokens])
                 last_word = self.halc_assistant.get_last_word(token_to_append[0])
 
-                print("contrast word: ", last_word)
+                # print("contrast word: ", last_word)
 
                 if last_word != current_word:
-                    print("\033[41m!!!!! Hallucination Detected !!!!!!\033[0m")
+                    # print("\033[41m!!!!! Hallucination Detected !!!!!!\033[0m")
 
                     # which means hallucination has been corrected, then resample a last token
 
@@ -4693,7 +4674,7 @@ class GenerationMixin:
             last_tokens.append(next_tokens[:, None].cpu().numpy().tolist()[0][0])
             # print("post last_tokens", last_tokens)
             # last_token = next_tokens[:, None]
-            print("\n")
+            # print("\n")
             # input("#####\n")
 
             # print("intermediate_token_lists", intermediate_token_lists)

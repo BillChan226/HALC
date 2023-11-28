@@ -47,7 +47,7 @@ class halc_assistant:
         self.token_vocab = {value: key for key, value in self.token_vocab.items()}
 
     def update_img_path(self, img_path):
-        print("img_path", img_path)
+        # print("img_path", img_path)
         self.detector_dict = {"img_path": img_path, "box_threshold": 0.1}
 
     def update_conv(self, conv):
@@ -151,8 +151,8 @@ class halc_assistant:
         else:
             detect_info["pos"] = doc[0].pos_
 
-        print("entity", entity)
-        print("pos", detect_info["pos"])
+        # print("entity", entity)
+        # print("pos", detect_info["pos"])
 
         valid_list = ["NOUN", "PROPN"]
 
@@ -161,7 +161,7 @@ class halc_assistant:
             self.detector_dict["named_entity"] = [entity]
             sample = self.detector.detect_objects(self.detector_dict)
 
-            print("Detection: ", sample)
+            # print("Detection: ", sample)
 
             # Assuming the first detected bounding box is the one related to the entity
 
@@ -352,7 +352,7 @@ class halc_assistant:
         upper_contrast_logits = target_logits - upper_logits
         lower_contrast_logits = target_logits - lower_logits
 
-        if upper_contrast_logits > -2 and lower_contrast_logits > -2:
+        if upper_contrast_logits > -5 and lower_contrast_logits > -5:
             skip_flag = True
         else:
             skip_flag = False

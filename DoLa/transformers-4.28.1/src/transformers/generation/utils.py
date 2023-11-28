@@ -1246,7 +1246,6 @@ class GenerationMixin:
                     self.generation_config = new_generation_config
             generation_config = self.generation_config
 
-        
         generation_config = copy.deepcopy(generation_config)
         model_kwargs = generation_config.update(**kwargs)  # All unused kwargs must be model kwargs
         # print("model_kwargs", model_kwargs)
@@ -1478,7 +1477,7 @@ class GenerationMixin:
                 streamer=streamer,
                 **model_kwargs,
             )
-        
+
         if halc_decoding and not dola_decoding:
             if generation_config.num_return_sequences > 1:
                 raise ValueError(
@@ -1502,7 +1501,6 @@ class GenerationMixin:
                 streamer=streamer,
                 **model_kwargs,
             )
-
 
         # input()
         # 10. go into different generation modes
@@ -2500,22 +2498,28 @@ class GenerationMixin:
         info_dict = {}
         if return_dict_in_generate:
             if self.config.is_encoder_decoder:
-                return GreedySearchEncoderDecoderOutput(
-                    sequences=input_ids,
-                    scores=scores,
-                    encoder_attentions=encoder_attentions,
-                    encoder_hidden_states=encoder_hidden_states,
-                    decoder_attentions=decoder_attentions,
-                    cross_attentions=cross_attentions,
-                    decoder_hidden_states=decoder_hidden_states,
-                ), info_dict
+                return (
+                    GreedySearchEncoderDecoderOutput(
+                        sequences=input_ids,
+                        scores=scores,
+                        encoder_attentions=encoder_attentions,
+                        encoder_hidden_states=encoder_hidden_states,
+                        decoder_attentions=decoder_attentions,
+                        cross_attentions=cross_attentions,
+                        decoder_hidden_states=decoder_hidden_states,
+                    ),
+                    info_dict,
+                )
             else:
-                return GreedySearchDecoderOnlyOutput(
-                    sequences=input_ids,
-                    scores=scores,
-                    attentions=decoder_attentions,
-                    hidden_states=decoder_hidden_states,
-                ), info_dict
+                return (
+                    GreedySearchDecoderOnlyOutput(
+                        sequences=input_ids,
+                        scores=scores,
+                        attentions=decoder_attentions,
+                        hidden_states=decoder_hidden_states,
+                    ),
+                    info_dict,
+                )
         else:
             return input_ids, info_dict
 
@@ -2716,7 +2720,6 @@ class GenerationMixin:
         premature_layer_list = []
         all_layer_matrix = []
 
-
         while True:
             if synced_gpus:
                 # Under synced_gpus the `forward` call must continue until all gpus complete their sequence.
@@ -2785,9 +2788,13 @@ class GenerationMixin:
                 )  # shape: (num_premature_layers, batch_size, num_features)
 
                 # 5. Calculate the KL divergences and then the JS divergences
-                kl1 = F.kl_div(log_softmax_mature_layer[None, :, :], M, reduction='none').mean(-1)  # shape: (num_premature_layers, batch_size)
-                kl2 = F.kl_div(log_softmax_premature_layers, M, reduction='none').mean(-1)  # shape: (num_premature_layers, batch_size)
-                js_divs = 0.5 * (kl1 + kl2) # shape: (num_premature_layers, batch_size)
+                kl1 = F.kl_div(log_softmax_mature_layer[None, :, :], M, reduction="none").mean(
+                    -1
+                )  # shape: (num_premature_layers, batch_size)
+                kl2 = F.kl_div(log_softmax_premature_layers, M, reduction="none").mean(
+                    -1
+                )  # shape: (num_premature_layers, batch_size)
+                js_divs = 0.5 * (kl1 + kl2)  # shape: (num_premature_layers, batch_size)
                 # print("here")
                 # print("kl1: ", kl1)
                 # print("kl2: ", kl2)
@@ -2800,7 +2807,7 @@ class GenerationMixin:
 
                 # print("js_divs ", js_divs*10000)
                 JSD_matrix.append(js_divs)
-                
+
                 premature_layer = candidate_premature_layers[int(js_divs.argmax().cpu().item())]
                 premature_layer_list.append(premature_layer)
                 # print("premature_layer", premature_layer)
@@ -2815,14 +2822,14 @@ class GenerationMixin:
                 # "▁sur": 1190
                 all_layer_matrix.append(all_layer_logits)
                 all_layer_logits = np.array(all_layer_logits)
-                
+
                 # print("all_layer_logits", all_layer_logits)
 
                 # print("all_layer_logits", np.shape(all_layer_logits))
-                clock_logits = all_layer_logits[:,:,12006]
+                clock_logits = all_layer_logits[:, :, 12006]
                 clock_matrix.append(clock_logits)
                 # print("clock_logits", clock_logits)
-                surf_logits = all_layer_logits[:,:,1190]
+                surf_logits = all_layer_logits[:, :, 1190]
                 surf_matrix.append(surf_logits)
                 # print("clock_logits", np.shape(clock_logits))
                 # print("all_layer_logits", np.shape(all_layer_logits))
@@ -2868,8 +2875,6 @@ class GenerationMixin:
                     raise ValueError("If `eos_token_id` is defined, make sure that `pad_token_id` is defined.")
                 next_tokens = next_tokens * unfinished_sequences + pad_token_id * (1 - unfinished_sequences)
 
-
-
             # print("input_ids", input_ids)
 
             # update generated ids, model inputs, and length for next step
@@ -2894,11 +2899,10 @@ class GenerationMixin:
                 else:
                     this_peer_finished = True
 
-        
         info_dict["jsd_matrix"] = torch.stack(JSD_matrix, dim=0)
         info_dict["clock_matrix"] = clock_matrix
         info_dict["surf_matrix"] = surf_matrix
-        info_dict["all_layer_matrix"] = all_layer_matrix    
+        info_dict["all_layer_matrix"] = all_layer_matrix
         # print("return_dict_in_generate", return_dict_in_generate)
         # print("self.config.is_encoder_decoder", self.config.is_encoder_decoder)
 
@@ -2907,23 +2911,29 @@ class GenerationMixin:
 
         if return_dict_in_generate:
             if self.config.is_encoder_decoder:
-                return GreedySearchEncoderDecoderOutput(
-                    sequences=input_ids,
-                    scores=scores,
-                    encoder_attentions=encoder_attentions,
-                    encoder_hidden_states=encoder_hidden_states,
-                    decoder_attentions=decoder_attentions,
-                    cross_attentions=cross_attentions,
-                    decoder_hidden_states=decoder_hidden_states,
-                ), info_dict
+                return (
+                    GreedySearchEncoderDecoderOutput(
+                        sequences=input_ids,
+                        scores=scores,
+                        encoder_attentions=encoder_attentions,
+                        encoder_hidden_states=encoder_hidden_states,
+                        decoder_attentions=decoder_attentions,
+                        cross_attentions=cross_attentions,
+                        decoder_hidden_states=decoder_hidden_states,
+                    ),
+                    info_dict,
+                )
             else:
-                return GreedySearchDecoderOnlyOutput(
-                    sequences=input_ids,
-                    scores=scores,
-                    attentions=decoder_attentions,
-                    hidden_states=decoder_hidden_states,
-                    premature_layer_dist=premature_layer_dist,
-                ), info_dict
+                return (
+                    GreedySearchDecoderOnlyOutput(
+                        sequences=input_ids,
+                        scores=scores,
+                        attentions=decoder_attentions,
+                        hidden_states=decoder_hidden_states,
+                        premature_layer_dist=premature_layer_dist,
+                    ),
+                    info_dict,
+                )
         else:
             return input_ids, info_dict
 
@@ -3730,15 +3740,23 @@ class GenerationMixin:
                 )  # shape: (num_premature_layers, batch_size, num_features)
                 print("M: ", M)
                 # 4. Calculate log-softmax for the KL divergence
-                log_softmax_mature_layer = F.log_softmax(dict_outputs[mature_layer][:, -1, :], dim=-1)  # shape: (batch_size, num_features)
-                log_softmax_premature_layers = F.log_softmax(stacked_premature_layers, dim=-1)  # shape: (num_premature_layers, batch_size, num_features)
+                log_softmax_mature_layer = F.log_softmax(
+                    dict_outputs[mature_layer][:, -1, :], dim=-1
+                )  # shape: (batch_size, num_features)
+                log_softmax_premature_layers = F.log_softmax(
+                    stacked_premature_layers, dim=-1
+                )  # shape: (num_premature_layers, batch_size, num_features)
                 # print("log_softmax_premature_layers: ", log_softmax_premature_layers)
                 # print("log_softmax_premature_layers: ", np.shape(log_softmax_premature_layers))
                 # 5. Calculate the KL divergences and then the JS divergences
-                kl1 = F.kl_div(log_softmax_mature_layer[None, :, :], M, reduction='none').mean(-1)  # shape: (num_premature_layers, batch_size)
-                kl2 = F.kl_div(log_softmax_premature_layers, M, reduction='none').mean(-1)  # shape: (num_premature_layers, batch_size)
-                
-                js_divs = 0.5 * (kl1 + kl2)# shape: (num_premature_layers, batch_size)
+                kl1 = F.kl_div(log_softmax_mature_layer[None, :, :], M, reduction="none").mean(
+                    -1
+                )  # shape: (num_premature_layers, batch_size)
+                kl2 = F.kl_div(log_softmax_premature_layers, M, reduction="none").mean(
+                    -1
+                )  # shape: (num_premature_layers, batch_size)
+
+                js_divs = 0.5 * (kl1 + kl2)  # shape: (num_premature_layers, batch_size)
                 # print("js_divs ", js_divs)
                 # print("js_divs ", np.shape(js_divs))
                 # 6. Reduce the batchmean
@@ -4337,15 +4355,18 @@ class GenerationMixin:
                 if this_peer_finished_flag.item() == 0.0:
                     break
 
-            
             # save intermediate states until a complete word has been generated
             if word_complete:
                 # intermediate_token_lists = torch.tensor([]).to(input_ids.device)
                 # update intermediates for next word
-                save_intermediates = {"input_ids": input_ids, "model_kwargs":model_kwargs, "scores": scores, 
-                                      "decoder_attentions": decoder_attentions, "cross_attentions": cross_attentions, 
-                                      "decoder_hidden_states": decoder_hidden_states}
-
+                save_intermediates = {
+                    "input_ids": input_ids,
+                    "model_kwargs": model_kwargs,
+                    "scores": scores,
+                    "decoder_attentions": decoder_attentions,
+                    "cross_attentions": cross_attentions,
+                    "decoder_hidden_states": decoder_hidden_states,
+                }
 
             # prepare model inputs
             model_inputs = self.prepare_inputs_for_generation(input_ids, **model_kwargs)
@@ -4362,7 +4383,6 @@ class GenerationMixin:
 
             if synced_gpus and this_peer_finished:
                 continue  # don't waste resources running the code we don't need
-
 
             if base_layer is not None:
                 base_logits = dict_outputs[base_layer][:, -1, :]
@@ -4403,16 +4423,20 @@ class GenerationMixin:
                 )  # shape: (num_premature_layers, batch_size, num_features)
 
                 # 5. Calculate the KL divergences and then the JS divergences
-                kl1 = F.kl_div(log_softmax_mature_layer[None, :, :], M, reduction='none').mean(-1)  # shape: (num_premature_layers, batch_size)
-                kl2 = F.kl_div(log_softmax_premature_layers, M, reduction='none').mean(-1)  # shape: (num_premature_layers, batch_size)
-                js_divs = 0.5 * (kl1 + kl2) # shape: (num_premature_layers, batch_size)
+                kl1 = F.kl_div(log_softmax_mature_layer[None, :, :], M, reduction="none").mean(
+                    -1
+                )  # shape: (num_premature_layers, batch_size)
+                kl2 = F.kl_div(log_softmax_premature_layers, M, reduction="none").mean(
+                    -1
+                )  # shape: (num_premature_layers, batch_size)
+                js_divs = 0.5 * (kl1 + kl2)  # shape: (num_premature_layers, batch_size)
 
                 # 6. Reduce the batchmean
                 js_divs = js_divs.mean(-1)  # shape: (num_premature_layers,)
 
                 # print("js_divs ", js_divs*10000)
                 # JSD_matrix.append(js_divs)
-                
+
                 premature_layer = candidate_premature_layers[int(js_divs.argmax().cpu().item())]
                 premature_layer_list.append(premature_layer)
                 # print("premature_layer", premature_layer)
@@ -4458,7 +4482,7 @@ class GenerationMixin:
 
             # print("\next_tokens_scores", next_tokens_scores)
             next_tokens = torch.argmax(next_tokens_scores, dim=-1)
-            
+
             # print("\nnext_tokens", next_tokens)
 
             # finished sentences should have their next token be a padding token
@@ -4484,12 +4508,12 @@ class GenerationMixin:
                     contrast_logits = next_token_logits
                     token_to_append = None
                 else:
-                    current_word = self.halc_assistant.get_last_word(last_tokens) 
-                    
+                    current_word = self.halc_assistant.get_last_word(last_tokens)
+
                     print("current_word: ", current_word)
                     word_complete = True
                     entity = current_word
-                    embeds_list, detect_info = self.halc_assistant.context_density_embedding(entity, context_window=3)
+                    embeds_list, detect_info = self.halc_assistant.context_density_embedding(entity, context_window=8)
 
                     if detect_info["status"] == "invalid":
                         token_to_append = torch.tensor([last_tokens]).to(input_ids.device)
@@ -4497,19 +4521,24 @@ class GenerationMixin:
                         # print("DINO acctivated")
                         context_logits_list = []
                         for context_embed in embeds_list:
-
                             sub_model_kwargs = copy.copy(initial_model_kwargs)
-                            sub_model_kwargs['inputs_embeds'] = context_embed
-                            
+                            sub_model_kwargs["inputs_embeds"] = context_embed
+
                             context_logits, _ = self.get_intermediate_logits(
-                                intermediate_token_lists, 
+                                intermediate_token_lists,
                                 initial_input_ids,
-                                logits_processor, 
-                                stopping_criteria, max_length, 
-                                pad_token_id, eos_token_id, 
-                                output_attentions, output_hidden_states, 
-                                output_scores, return_dict_in_generate, 
-                                synced_gpus, streamer, **sub_model_kwargs,
+                                logits_processor,
+                                stopping_criteria,
+                                max_length,
+                                pad_token_id,
+                                eos_token_id,
+                                output_attentions,
+                                output_hidden_states,
+                                output_scores,
+                                return_dict_in_generate,
+                                synced_gpus,
+                                streamer,
+                                **sub_model_kwargs,
                             )
 
                             # print("\nfinal_logits first", final_logits)
@@ -4527,12 +4556,19 @@ class GenerationMixin:
 
                         # contrast_logits = self.halc_assistant.naive_focus_decoding(context_logits_list)
                         # contrast_logits = self.halc_assistant.context_curve_contrastive_decoding(context_logits_list)
-                        skip_flag, candidate_logits = self.halc_assistant.context_contrastive_decoding(context_logits_list, last_tokens)
-                        
+                        # skip_flag, contrast_logits = self.halc_assistant.context_contrastive_decoding(
+                        #     context_logits_list, last_tokens
+                        # )
+                        skip_flag, contrast_logits = self.halc_assistant.auto_contrastive_context_decoding(
+                            context_logits_list, last_tokens
+                        )
+                        # skip_flag, contrast_logits = self.halc_assistant.contrastive_avg_context_decoding(
+                        #     context_logits_list, last_tokens
+                        # )
+
                         if skip_flag == True:
                             token_to_append = torch.tensor([last_tokens]).to(input_ids.device)
                         else:
-
                             # contrast_logits = candidate_logits
 
                             # pre-process distribution
@@ -4544,7 +4580,9 @@ class GenerationMixin:
                                     scores += (next_tokens_scores,)
                                 if output_attentions:
                                     decoder_attentions += (
-                                        (outputs.decoder_attentions,) if self.config.is_encoder_decoder else (outputs.attentions,)
+                                        (outputs.decoder_attentions,)
+                                        if self.config.is_encoder_decoder
+                                        else (outputs.attentions,)
                                     )
                                     if self.config.is_encoder_decoder:
                                         cross_attentions += (outputs.cross_attentions,)
@@ -4563,12 +4601,14 @@ class GenerationMixin:
                             # finished sentences should have their next token be a padding token
                             if eos_token_id is not None:
                                 if pad_token_id is None:
-                                    raise ValueError("If `eos_token_id` is defined, make sure that `pad_token_id` is defined.")
-                                nominate_tokens = nominate_tokens * unfinished_sequences + pad_token_id * (1 - unfinished_sequences)
+                                    raise ValueError(
+                                        "If `eos_token_id` is defined, make sure that `pad_token_id` is defined."
+                                    )
+                                nominate_tokens = nominate_tokens * unfinished_sequences + pad_token_id * (
+                                    1 - unfinished_sequences
+                                )
 
                             token_to_append = nominate_tokens[:, None]
-
-
 
                 last_tokens = []
 
@@ -4590,7 +4630,7 @@ class GenerationMixin:
                         last_model_kwargs = copy.copy(last_model_kwargs_2)
 
                     model_inputs = self.prepare_inputs_for_generation(intermediate_token_lists, **last_model_kwargs)
-                
+
                     intermediate_dict_outputs, intermediate_outputs = self(
                         **model_inputs,
                         return_dict=True,
@@ -4609,7 +4649,6 @@ class GenerationMixin:
                     logits = final_logits - base_logits
                     resample_logits = logits
 
-
                     # pre-process distribution
                     next_tokens_scores = logits_processor(intermediate_token_lists, resample_logits)
 
@@ -4619,7 +4658,9 @@ class GenerationMixin:
                             scores += (next_tokens_scores,)
                         if output_attentions:
                             decoder_attentions += (
-                                (outputs.decoder_attentions,) if self.config.is_encoder_decoder else (outputs.attentions,)
+                                (outputs.decoder_attentions,)
+                                if self.config.is_encoder_decoder
+                                else (outputs.attentions,)
                             )
                             if self.config.is_encoder_decoder:
                                 cross_attentions += (outputs.cross_attentions,)
@@ -4639,12 +4680,12 @@ class GenerationMixin:
                     model_kwargs = copy.copy(last_model_kwargs)
                 else:
                     model_kwargs = self._update_model_kwargs_for_generation(
-                    outputs, model_kwargs, is_encoder_decoder=self.config.is_encoder_decoder
+                        outputs, model_kwargs, is_encoder_decoder=self.config.is_encoder_decoder
                     )
             else:
                 model_kwargs = self._update_model_kwargs_for_generation(
-                outputs, model_kwargs, is_encoder_decoder=self.config.is_encoder_decoder
-            )
+                    outputs, model_kwargs, is_encoder_decoder=self.config.is_encoder_decoder
+                )
 
             # print("intermediate_token_lists", intermediate_token_lists)
             # intermediate_token_lists = input_ids
@@ -4679,7 +4720,6 @@ class GenerationMixin:
                 if once_flag == False:
                     once_flag = True
                     last_model_kwargs = copy.copy(model_kwargs)
-                    
 
             # if eos_token was found in one sentence, set sentence to finished
             if eos_token_id_tensor is not None:
@@ -4701,26 +4741,31 @@ class GenerationMixin:
 
         if return_dict_in_generate:
             if self.config.is_encoder_decoder:
-                return GreedySearchEncoderDecoderOutput(
-                    sequences=input_ids,
-                    scores=scores,
-                    encoder_attentions=encoder_attentions,
-                    encoder_hidden_states=encoder_hidden_states,
-                    decoder_attentions=decoder_attentions,
-                    cross_attentions=cross_attentions,
-                    decoder_hidden_states=decoder_hidden_states,
-                ), info_dict
+                return (
+                    GreedySearchEncoderDecoderOutput(
+                        sequences=input_ids,
+                        scores=scores,
+                        encoder_attentions=encoder_attentions,
+                        encoder_hidden_states=encoder_hidden_states,
+                        decoder_attentions=decoder_attentions,
+                        cross_attentions=cross_attentions,
+                        decoder_hidden_states=decoder_hidden_states,
+                    ),
+                    info_dict,
+                )
             else:
-                return GreedySearchDecoderOnlyOutput(
-                    sequences=input_ids,
-                    scores=scores,
-                    attentions=decoder_attentions,
-                    hidden_states=decoder_hidden_states,
-                    premature_layer_dist=premature_layer_dist,
-                ), info_dict
+                return (
+                    GreedySearchDecoderOnlyOutput(
+                        sequences=input_ids,
+                        scores=scores,
+                        attentions=decoder_attentions,
+                        hidden_states=decoder_hidden_states,
+                        premature_layer_dist=premature_layer_dist,
+                    ),
+                    info_dict,
+                )
         else:
             return input_ids, info_dict
-
 
     def halc_greedy_decode(
         self,
@@ -4892,7 +4937,7 @@ class GenerationMixin:
             premature_layer_dist = {l: 0 for l in candidate_premature_layers}
         else:
             raise ValueError("You must specify either `base_layer` or `candidate_premature_layers`")
-        
+
         print("Halc Greedy Decode")
         # input()
         # info to go back to main for debug
@@ -4906,7 +4951,6 @@ class GenerationMixin:
         last_tokens = []
 
         while True:
-
             if synced_gpus:
                 # Under synced_gpus the `forward` call must continue until all gpus complete their sequence.
                 # The following logic allows an early break if all peers finished generating their sequence
@@ -4963,7 +5007,6 @@ class GenerationMixin:
                     raise ValueError("If `eos_token_id` is defined, make sure that `pad_token_id` is defined.")
                 next_tokens = next_tokens * unfinished_sequences + pad_token_id * (1 - unfinished_sequences)
 
-
             # print("\nnext_tokens", next_tokens)
             # last_word_flag, last_word = self.halc_assistant.check_word_complete(intermediate_token_lists)
             last_word_flag = self.halc_assistant.check_word_complete(next_tokens[:, None])
@@ -4971,7 +5014,6 @@ class GenerationMixin:
             # input()
 
             if last_word_flag == False:
-                
                 word_complete = False
                 token_to_append = None
                 # last_tokens = last_tokens.append(next_tokens[:, None].cpu().numpy().tolist()[0][0])
@@ -4984,8 +5026,8 @@ class GenerationMixin:
                     contrast_logits = next_token_logits
                     token_to_append = None
                 else:
-                    current_word = self.halc_assistant.get_last_word(last_tokens) 
-                    
+                    current_word = self.halc_assistant.get_last_word(last_tokens)
+
                     print("current_word: ", current_word)
                     word_complete = True
                     entity = current_word
@@ -4998,19 +5040,24 @@ class GenerationMixin:
                         context_logits_list = []
                         clock_logits_list = []
                         for context_embed in embeds_list:
-
                             sub_model_kwargs = copy.copy(initial_model_kwargs)
-                            sub_model_kwargs['inputs_embeds'] = context_embed
-                            
+                            sub_model_kwargs["inputs_embeds"] = context_embed
+
                             context_logits, _ = self.get_intermediate_logits(
-                                intermediate_token_lists, 
+                                intermediate_token_lists,
                                 initial_input_ids,
-                                logits_processor, 
-                                stopping_criteria, max_length, 
-                                pad_token_id, eos_token_id, 
-                                output_attentions, output_hidden_states, 
-                                output_scores, return_dict_in_generate, 
-                                synced_gpus, streamer, **sub_model_kwargs,
+                                logits_processor,
+                                stopping_criteria,
+                                max_length,
+                                pad_token_id,
+                                eos_token_id,
+                                output_attentions,
+                                output_hidden_states,
+                                output_scores,
+                                return_dict_in_generate,
+                                synced_gpus,
+                                streamer,
+                                **sub_model_kwargs,
                             )
 
                             context_logits_list.append(context_logits)
@@ -5026,7 +5073,9 @@ class GenerationMixin:
                                 scores += (next_tokens_scores,)
                             if output_attentions:
                                 decoder_attentions += (
-                                    (outputs.decoder_attentions,) if self.config.is_encoder_decoder else (outputs.attentions,)
+                                    (outputs.decoder_attentions,)
+                                    if self.config.is_encoder_decoder
+                                    else (outputs.attentions,)
                                 )
                                 if self.config.is_encoder_decoder:
                                     cross_attentions += (outputs.cross_attentions,)
@@ -5042,8 +5091,12 @@ class GenerationMixin:
                         # finished sentences should have their next token be a padding token
                         if eos_token_id is not None:
                             if pad_token_id is None:
-                                raise ValueError("If `eos_token_id` is defined, make sure that `pad_token_id` is defined.")
-                            nominate_tokens = nominate_tokens * unfinished_sequences + pad_token_id * (1 - unfinished_sequences)
+                                raise ValueError(
+                                    "If `eos_token_id` is defined, make sure that `pad_token_id` is defined."
+                                )
+                            nominate_tokens = nominate_tokens * unfinished_sequences + pad_token_id * (
+                                1 - unfinished_sequences
+                            )
 
                         token_to_append = nominate_tokens[:, None]
 
@@ -5067,7 +5120,7 @@ class GenerationMixin:
                         last_model_kwargs = copy.copy(last_model_kwargs_2)
 
                     model_inputs = self.prepare_inputs_for_generation(intermediate_token_lists, **last_model_kwargs)
-            
+
                     intermediate_outputs = self(
                         **model_inputs,
                         return_dict=True,
@@ -5089,7 +5142,9 @@ class GenerationMixin:
                             scores += (next_tokens_scores,)
                         if output_attentions:
                             decoder_attentions += (
-                                (outputs.decoder_attentions,) if self.config.is_encoder_decoder else (outputs.attentions,)
+                                (outputs.decoder_attentions,)
+                                if self.config.is_encoder_decoder
+                                else (outputs.attentions,)
                             )
                             if self.config.is_encoder_decoder:
                                 cross_attentions += (outputs.cross_attentions,)
@@ -5108,12 +5163,12 @@ class GenerationMixin:
                     model_kwargs = copy.copy(last_model_kwargs)
                 else:
                     model_kwargs = self._update_model_kwargs_for_generation(
-                    outputs, model_kwargs, is_encoder_decoder=self.config.is_encoder_decoder
+                        outputs, model_kwargs, is_encoder_decoder=self.config.is_encoder_decoder
                     )
             else:
                 model_kwargs = self._update_model_kwargs_for_generation(
-                outputs, model_kwargs, is_encoder_decoder=self.config.is_encoder_decoder
-            )
+                    outputs, model_kwargs, is_encoder_decoder=self.config.is_encoder_decoder
+                )
 
             # print("intermediate_token_lists", intermediate_token_lists)
             # intermediate_token_lists = input_ids
@@ -5136,7 +5191,6 @@ class GenerationMixin:
                 if once_flag == False:
                     once_flag = True
                     last_model_kwargs = copy.copy(model_kwargs)
-                    
 
             # if eos_token was found in one sentence, set sentence to finished
             if eos_token_id_tensor is not None:
@@ -5158,26 +5212,31 @@ class GenerationMixin:
 
         if return_dict_in_generate:
             if self.config.is_encoder_decoder:
-                return GreedySearchEncoderDecoderOutput(
-                    sequences=input_ids,
-                    scores=scores,
-                    encoder_attentions=encoder_attentions,
-                    encoder_hidden_states=encoder_hidden_states,
-                    decoder_attentions=decoder_attentions,
-                    cross_attentions=cross_attentions,
-                    decoder_hidden_states=decoder_hidden_states,
-                ), info_dict
+                return (
+                    GreedySearchEncoderDecoderOutput(
+                        sequences=input_ids,
+                        scores=scores,
+                        encoder_attentions=encoder_attentions,
+                        encoder_hidden_states=encoder_hidden_states,
+                        decoder_attentions=decoder_attentions,
+                        cross_attentions=cross_attentions,
+                        decoder_hidden_states=decoder_hidden_states,
+                    ),
+                    info_dict,
+                )
             else:
-                return GreedySearchDecoderOnlyOutput(
-                    sequences=input_ids,
-                    scores=scores,
-                    attentions=decoder_attentions,
-                    hidden_states=decoder_hidden_states,
-                    premature_layer_dist=premature_layer_dist,
-                ), info_dict
+                return (
+                    GreedySearchDecoderOnlyOutput(
+                        sequences=input_ids,
+                        scores=scores,
+                        attentions=decoder_attentions,
+                        hidden_states=decoder_hidden_states,
+                        premature_layer_dist=premature_layer_dist,
+                    ),
+                    info_dict,
+                )
         else:
             return input_ids, info_dict
-
 
     def get_intermediate_logits(
         self,
@@ -5197,7 +5256,6 @@ class GenerationMixin:
         streamer: Optional["BaseStreamer"] = None,
         **model_kwargs,
     ) -> Union[SampleOutput, torch.LongTensor]:
-
         # init values
         logits_processor = logits_processor if logits_processor is not None else LogitsProcessorList()
         stopping_criteria = stopping_criteria if stopping_criteria is not None else StoppingCriteriaList()
@@ -5305,11 +5363,11 @@ class GenerationMixin:
 
             # print("next_tokens", next_tokens)
             # print("teacher_forcing_tokens[tf]", teacher_forcing_tokens[tf])
-            if len(teacher_forcing_tokens[0])-1 == tf:
+            if len(teacher_forcing_tokens[0]) - 1 == tf:
                 break
-            next_tokens[0] = teacher_forcing_tokens[0][tf+1]
+            next_tokens[0] = teacher_forcing_tokens[0][tf + 1]
 
-            # print("\nnext_tokens:::", next_tokens)            
+            # print("\nnext_tokens:::", next_tokens)
 
             # # finished sentences should have their next token be a padding token
             # if eos_token_id is not None:
@@ -5339,7 +5397,6 @@ class GenerationMixin:
                 else:
                     this_peer_finished = True
 
-
         # # prepare model inputs
         # model_inputs = self.prepare_inputs_for_generation(input_ids, **model_kwargs)
 
@@ -5354,7 +5411,6 @@ class GenerationMixin:
         # next_token_logits = outputs.logits[:, -1, :]
         # print("\nnext_token_logits in get intermediate", next_tokens)
         return next_token_logits, model_kwargs
-
 
     def beam_search(
         self,

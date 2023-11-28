@@ -222,6 +222,11 @@ def main():
             for i, cur_img_id in enumerate(
                 tqdm(sampled_img_ids, desc="Generating Captions")
             ):
+                cur_generated_captions_path = os.path.join(
+                    output_dir,
+                    f"{model_name}_{model_type}_{decoding_strategy}_{dataset_name}_{i+1}_generated_captions.json",
+                )
+
                 # current image
                 cur_img = coco.loadImgs(cur_img_id)[0]
                 # current image path in the data dir
@@ -254,14 +259,22 @@ def main():
                 # clear the chat
                 CONV_VISION.messages = []
 
-            with open(
-                generated_captions_path,
-                "w",
-            ) as f:
-                json.dump(all_generated_captions, f)
+                with open(
+                    cur_generated_captions_path,
+                    "w",
+                ) as f:
+                    json.dump(all_generated_captions, f)
 
-            if verbosity:
-                print(f"\nGenerated captions saved to {output_dir}.")
+                if verbosity:
+                    print(f"\nGenerated captions saved to {output_dir}.")
+
+                # remove the previous file
+                if i > 0:
+                    prev_generated_captions_path = os.path.join(
+                        output_dir,
+                        f"{model_name}_{model_type}_{decoding_strategy}_{dataset_name}_{i}_generated_captions.json",
+                    )
+                    os.remove(prev_generated_captions_path)
 
         # evaluate all the generated captions using coco-caption
         if verbosity:

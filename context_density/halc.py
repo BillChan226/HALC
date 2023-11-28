@@ -12,6 +12,7 @@ from context_density.detector import Detector
 from types import SimpleNamespace
 from PIL import Image, ImageDraw
 import spacy
+from torch.nn import functional as F
 
 from transformers import AutoTokenizer
 
@@ -32,8 +33,8 @@ class halc_assistant:
         self.model = model
         self.tagging = spacy.load("en_core_web_sm")
         self.tokenizer = self.model.llama_tokenizer
-        token_vocab_dir = "./model_checkpoints/models--meta-llama--Llama-2-7b-chat-hf/snapshots/c1b0db933684edbfe29a06fa47eb19cc48025e93/tokenizer.json"
-        # token_vocab_dir = "/media/zhuokai/SN850X_4TB/contrast_decoding_LVLMs/model_checkpoints/models--meta-llama--Llama-2-7b-chat-hf/snapshots/c1b0db933684edbfe29a06fa47eb19cc48025e93/tokenizer.json"
+        # token_vocab_dir = "./model_checkpoints/models--meta-llama--Llama-2-7b-chat-hf/snapshots/c1b0db933684edbfe29a06fa47eb19cc48025e93/tokenizer.json"
+        token_vocab_dir = "/media/zhuokai/SN850X_4TB/contrast_decoding_LVLMs/model_checkpoints/models--meta-llama--Llama-2-7b-chat-hf/snapshots/c1b0db933684edbfe29a06fa47eb19cc48025e93/tokenizer.json"
         if not os.path.exists(token_vocab_dir):
             temp = AutoTokenizer.from_pretrained(
                 "meta-llama/Llama-2-7b-chat-hf",  # official model name for llama2-7b-chat-hf
@@ -51,7 +52,6 @@ class halc_assistant:
 
     def update_conv(self, conv):
         self.conv = conv
-
 
     def check_word_complete(self, input_id):
         input_id = input_id.cpu().numpy().tolist()
@@ -78,6 +78,17 @@ class halc_assistant:
         last_word = output_text.split(" ")[-1]
 
         return last_word
+
+    def compute_bbox_size(self, bbox):
+        """
+        Computes the size of a bounding box.
+        """
+        # bbox = [x_min, y_min, x_max, y_max]
+        x_min, y_min, x_max, y_max = bbox
+        width = x_max - x_min
+        height = y_max - y_min
+
+        return width * height
 
     def expand_bbox(self, bbox, context_expansion_factor):
         """
@@ -116,12 +127,25 @@ class halc_assistant:
         draw.rectangle(rect, outline=color, width=width)
         return image
 
+    def compute_jsd(self, p, q):
+        # calculate the kl divergence
+        def kl_divergence(p, q):
+            return sum(p[i] * np.log(p[i] / q[i]) for i in range(len(p)))
+
+        # calculate the js divergence
+        m = 0.5 * (p + q)
+        jsd = 0.5 * kl_divergence(p, m) + 0.5 * kl_divergence(q, m)
+        print(jsd)
+        exit()
+
+        return jsd
+
     def context_density_embedding(self, entity, context_window=3):
         # context_window specifies the number of context windows
         entity = entity.strip(".")
         doc = self.tagging(entity)
         detect_info = {}
-        
+
         if len(doc) < 1:
             detect_info["pos"] = "PUNC"
         else:
@@ -157,13 +181,56 @@ class halc_assistant:
             # target_bbox = original_bbox[0]
 
             # Calculate expanded bounding boxes for the given context window
-            expanded_bboxes = [target_bbox]
+            if context_window == 1:
+                # only the original one
+                expanded_bboxes = [target_bbox]
+            elif context_window == 3:
+                # one smaller one larger
+                expanded_bboxes = [target_bbox]  # original bbox
+                expanded_bboxes.append(
+                    self.expand_bbox(expanded_bboxes[-1], -0.5)
+                )  # smaller
+                expanded_bboxes.append(
+                    self.expand_bbox(expanded_bboxes[-1], 5)
+                )  # larger
+            # for the auto_context_contrastive_decoding method
+            else:
+                # check on the target box's size
+                target_bbox_size = self.compute_bbox_size(target_bbox)
+                # smallest size should be 0.2
+                if target_bbox_size < 0.2:
+                    # only increase the size
+                    expanded_bboxes = [target_bbox]
+                    for _ in range(1, context_window):
+                        # Each expansion is double the size of the previous level
+                        expanded_bboxes.append(
+                            self.expand_bbox(expanded_bboxes[-1], 0.2)
+                        )
+
+                    # index of the original target box
+                    self.target_bbox_index = 0
+                else:
+                    initial_ratio = np.sqrt(0.2 / target_bbox_size)
+                    expanded_bboxes = [self.expand_bbox(target_bbox, -initial_ratio)]
+                    all_box_sizes = [self.compute_bbox_size(expanded_bboxes[-1])]
+                    for _ in range(1, context_window):
+                        # Each expansion is double the size of the previous level
+                        expanded_bboxes.append(
+                            self.expand_bbox(expanded_bboxes[-1], 0.2)
+                        )
+                        all_box_sizes.append(
+                            self.compute_bbox_size(expanded_bboxes[-1])
+                        )
+
+                    # index of the original target box
+                    self.target_bbox_index = min(
+                        range(len(all_box_sizes)),
+                        key=lambda i: abs(all_box_sizes[i] - target_bbox_size),
+                    )
+
             # for _ in range(1, context_window):
             #     # Each expansion is double the size of the previous level
             #     expanded_bboxes.append(self.expand_bbox(expanded_bboxes[-1], 1.5))
-
-            expanded_bboxes.append(self.expand_bbox(expanded_bboxes[-1], -0.5))
-            expanded_bboxes.append(self.expand_bbox(expanded_bboxes[-1], 5))
 
             # Load the original image
             image_path = sample["img_path"]
@@ -190,6 +257,7 @@ class halc_assistant:
                 cropped_img.save(save_path)
                 saved_paths.append(save_path)
 
+            # get decoding for each context window
             max_new_tokens = 300
             max_length = 2000
             embeds_list = []
@@ -210,24 +278,22 @@ class halc_assistant:
                 begin_idx = max(0, current_max_len - max_length)
                 embs = embs[:, begin_idx:]
                 embeds_list.append(embs)
-        
+
         else:
             detect_info["status"] = "invalid"
             embeds_list = None
 
         return embeds_list, detect_info
 
-
     def naive_focus_decoding(self, context_logits_list):
-        # 
+        #
         # directly apply the detected box for decoding
         #
         contrast_logits = context_logits_list[0]
         return False, contrast_logits
-    
 
     def context_curve_contrastive_decoding(self, context_logits_list):
-        # 
+        #
         # this decoding method use the hallucination pattern for decoding
         #
         target_layer = context_logits_list[0]
@@ -259,20 +325,22 @@ class halc_assistant:
         positive_lower = lower_contrast_logits > 0
 
         # Step 2: Create a combined mask
-        positive_both = np.logical_and(positive_upper.cpu().numpy(), positive_lower.cpu().numpy())
+        positive_both = np.logical_and(
+            positive_upper.cpu().numpy(), positive_lower.cpu().numpy()
+        )
 
         contrast_logits = upper_layer.cpu().numpy() * positive_both
 
         contrast_logits = torch.tensor(contrast_logits).to(self.device)
- 
+
         return False, contrast_logits
-        
+
     def context_contrastive_decoding(self, context_logits_list, last_tokens):
-        # 
+        #
         # this decoding method use the hallucination pattern as a filter for verification
         #
         hallucination_index = last_tokens[0]
-        
+
         # print("ontext_logits_list[0]", context_logits_list[0])
         target_layer = context_logits_list[0]
         lower_layer = context_logits_list[1]
@@ -292,14 +360,7 @@ class halc_assistant:
         # skip_flag = False
 
         return skip_flag, target_layer
-    
-    def your_decoding_method(self, context_logits_list):
-        # 
-        # put your decoding method here. refer to self.context_density_embedding for the defination of context_logits_list
-        #
-        pass
 
-    # don't really know what relative_top_filter is for, but maybe this could help
     def relative_top_filter(
         self,
         scores: torch.FloatTensor,
@@ -315,4 +376,127 @@ class halc_assistant:
         probs_thresh = torch.min(min_thresh, probs_thresh)
         probs_thresh = probs_thresh.unsqueeze(-1)
         scores_normalized[scores_normalized < probs_thresh] = filter_value
+
         return scores_normalized
+
+    def auto_contrastive_context_decoding(self, context_logits_list, last_tokens):
+        """
+        The method uses a list of context windows rooted from the DINO detection one and apply the contrastive decoding method to each context-window pair to get a list of contrastive logits. Then we use the contrastive logits to do the decoding.
+        """
+        hallucination_index = last_tokens[0]
+
+        target_layer = context_logits_list[self.target_bbox_index]
+        lower_layer = context_logits_list[0]
+        upper_layer = context_logits_list[-1]
+
+        target_logits = target_layer[0][hallucination_index]
+        upper_logits = upper_layer[0][hallucination_index]
+        lower_logits = lower_layer[0][hallucination_index]
+        upper_contrast_logits = target_logits - upper_logits
+        lower_contrast_logits = target_logits - lower_logits
+
+        if upper_contrast_logits > -2 and lower_contrast_logits > -2:
+            skip_flag = True
+            return skip_flag, target_layer
+        else:
+            skip_flag = False
+
+            non_target_layer_indices = [
+                i
+                for i in range(len(context_logits_list))
+                if i != self.target_bbox_index
+            ]
+            # 1. Stacking all non-target context layer into a new dimension
+            stacked_premature_layers = torch.stack(
+                [context_logits_list[i] for i in non_target_layer_indices],
+                dim=0,
+            )
+
+            # 2. Calculate the softmax values for mature_layer and all premature_layers
+            softmax_mature_layer = F.softmax(
+                context_logits_list[self.target_bbox_index], dim=-1
+            )  # shape: (batch_size, num_features)
+            softmax_premature_layers = F.softmax(
+                stacked_premature_layers, dim=-1
+            )  # shape: (num_premature_layers, batch_size, num_features)
+
+            # 3. Calculate M, the average distribution
+            M = 0.5 * (
+                softmax_mature_layer[None, :, :] + softmax_premature_layers
+            )  # shape: (num_premature_layers, batch_size, num_features)
+
+            # 4. Calculate log-softmax for the KL divergence
+            log_softmax_mature_layer = F.log_softmax(
+                context_logits_list[self.target_bbox_index], dim=-1
+            )  # shape: (batch_size, num_features)
+            log_softmax_premature_layers = F.log_softmax(
+                stacked_premature_layers, dim=-1
+            )  # shape: (num_premature_layers, batch_size, num_features)
+
+            # 5. Calculate the KL divergences and then the JS divergences
+            kl1 = F.kl_div(
+                log_softmax_mature_layer[None, :, :], M, reduction="none"
+            ).mean(
+                -1
+            )  # shape: (num_premature_layers, batch_size)
+            kl2 = F.kl_div(log_softmax_premature_layers, M, reduction="none").mean(
+                -1
+            )  # shape: (num_premature_layers, batch_size)
+            js_divs = 0.5 * (kl1 + kl2)  # shape: (num_premature_layers, batch_size)
+
+            # 6. Reduce the batchmean
+            js_divs = js_divs.mean(-1)  # shape: (num_premature_layers,)
+
+            premature_layer_index = non_target_layer_indices[
+                int(js_divs.argmax().cpu().item())
+            ]
+
+            base_logits = context_logits_list[premature_layer_index]
+            final_logits = context_logits_list[self.target_bbox_index]
+
+            # final_logits = self.relative_top_filter(final_logits, relative_top=0.1)
+            # base_logits = base_logits.log_softmax(dim=-1)
+            mask = final_logits[0] < -1e3
+            base_logits[0][mask] = -1e3
+            contrast_logits = final_logits - base_logits
+
+            # we always use the target layer for decoding
+            return skip_flag, contrast_logits
+
+    def contrastive_avg_context_decoding(self, context_logits_list, last_tokens):
+        hallucination_index = last_tokens[0]
+
+        target_layer = context_logits_list[self.target_bbox_index]
+        lower_layer = context_logits_list[0]
+        upper_layer = context_logits_list[-1]
+
+        target_logits = target_layer[0][hallucination_index]
+        upper_logits = upper_layer[0][hallucination_index]
+        lower_logits = lower_layer[0][hallucination_index]
+        upper_contrast_logits = target_logits - upper_logits
+        lower_contrast_logits = target_logits - lower_logits
+
+        if upper_contrast_logits > -2 and lower_contrast_logits > -2:
+            skip_flag = True
+            return skip_flag, target_layer
+        else:
+            skip_flag = False
+
+            non_target_layer_indices = [
+                i
+                for i in range(len(context_logits_list))
+                if i != self.target_bbox_index
+            ]
+            # stack all non-target context layer into a new dimension
+            stacked_premature_layers = torch.stack(
+                [context_logits_list[i] for i in non_target_layer_indices],
+                dim=0,
+            )
+
+            # compute the average of premature layers
+            premature_layer_avg = stacked_premature_layers.mean(dim=0)
+            final_logits = context_logits_list[self.target_bbox_index]
+            contrast_logits = final_logits - premature_layer_avg
+
+            # we always use the target layer for decoding
+            return skip_flag, contrast_logits

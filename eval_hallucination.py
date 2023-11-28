@@ -39,7 +39,7 @@ def main():
     parser.add_argument(
         "--data_dir",
         type=str,
-        default="eval_dataset/val2014",
+        default="/media/zhuokai/SN850X_4TB/Data/coco/val2014",
         help="Test data directory. Default is '/media/zhuokai/SN850X_4TB/Data/coco/val2014'.",
     )
     parser.add_argument(
@@ -80,11 +80,14 @@ def main():
 
         # sanity check between caption file and command line arguments
         model_name = chair_input_path.split("/")[-1].split("_")[0]
-        model_type = chair_input_path.split("/")[-1].split("_")[1]
-        if "dola" in chair_input_path:
-            model_type += "_dola"
+        model_type = (
+            chair_input_path.split("/")[-1].split("_")[1]
+            + "_"
+            + chair_input_path.split("/")[-1].split("_")[2]
+        )
         num_images = chair_input_path.split("/")[-1].split("_")[-2]
         dataset_name_identified = chair_input_path.split("/")[-1].split("_")[-3]
+
         if dataset_name_identified != dataset_name:
             raise Exception(
                 f"Dataset name in caption file {dataset_name_identified} does not match command line argument {dataset_name}."

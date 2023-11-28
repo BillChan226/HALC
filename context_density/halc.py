@@ -66,14 +66,7 @@ class halc_assistant:
         return last_word_flag
 
     def get_last_word(self, input_ids):
-        # input_ids = input_ids
-        # input_ids = input_ids.cpu().numpy().tolist()
-        # input_ids = input_ids.numpy().tolist()
-        # print("input_ids", input_ids)
-        # input()
-        # input_ids = torch.tensor(input_ids)
         output_text = self.tokenizer.decode(input_ids, skip_special_tokens=True)
-
         last_word_flag = True
         last_word = output_text.split(" ")[-1]
 
@@ -250,12 +243,12 @@ class halc_assistant:
                 cropped_image = original_image.crop((left, top, right, bottom))
                 cropped_images.append(cropped_image)
 
-            # Save the cropped images
-            saved_paths = []
-            for i, cropped_img in enumerate(cropped_images, start=1):
-                save_path = f"./context_density/mnt/cropped_level_{i}.png"
-                cropped_img.save(save_path)
-                saved_paths.append(save_path)
+            # # Save the cropped images
+            # saved_paths = []
+            # for i, cropped_img in enumerate(cropped_images, start=1):
+            #     save_path = f"./context_density/mnt/cropped_level_{i}.png"
+            #     cropped_img.save(save_path)
+            #     saved_paths.append(save_path)
 
             # get decoding for each context window
             max_new_tokens = 300
@@ -291,6 +284,13 @@ class halc_assistant:
         #
         contrast_logits = context_logits_list[0]
         return False, contrast_logits
+
+    def auto_regressive_decoding(self, context_logits_list):
+        # 
+        # directly apply the detected box for decoding
+        #
+        return True, None
+    
 
     def context_curve_contrastive_decoding(self, context_logits_list):
         #

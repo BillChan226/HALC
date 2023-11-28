@@ -238,7 +238,7 @@ def main():
                 model.encode_img(img_list, 38)  # -1 means the last layer
                 # question taken from https://arxiv.org/pdf/2305.10355.pdf
                 # model.ask("Generate a short caption of the image.", CONV_VISION)
-                model.ask("Generate a one sentence caption of the image.", CONV_VISION)
+                model.ask("Generate a caption of the image with rich details.", CONV_VISION)
                 output_text, _, _ = model.answer(
                     CONV_VISION,
                     img_list,

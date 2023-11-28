@@ -26,10 +26,6 @@ from torch import nn
 from torch.nn import functional as F
 import numpy as np
 
-# import sys
-# sys.path.append("./MiniGPT-4/DoLa/transformers-4.28.1")
-# from context_density.utility import check_word_complete
-
 from ..deepspeed import is_deepspeed_zero3_enabled
 from ..modeling_outputs import CausalLMOutputWithPast, Seq2SeqLMOutput
 from ..models.auto import (
@@ -1460,7 +1456,7 @@ class GenerationMixin:
                     f"num_return_sequences has to be 1, but is {generation_config.num_return_sequences} when doing"
                     " greedy search."
                 )
-
+            # print("\033[41m!!!!! Halc-Dola Decoding !!!!!!\033[0m")
             return self.halc_dola_decode(
                 input_ids,
                 logits_processor=logits_processor,
@@ -1484,7 +1480,7 @@ class GenerationMixin:
                     f"num_return_sequences has to be 1, but is {generation_config.num_return_sequences} when doing"
                     " greedy search."
                 )
-
+            # print("\033[41m!!!!! Halc-Greedy Decoding !!!!!!\033[0m")
             return self.halc_greedy_decode(
                 input_ids,
                 logits_processor=logits_processor,
@@ -1511,6 +1507,7 @@ class GenerationMixin:
                     " greedy search."
                 )
             # 11. run greedy search
+            # print("\033[41m!!!!! DoLA-Greedy Decoding !!!!!!\033[0m")
             return self.dola_greedy_decode(
                 input_ids,
                 logits_processor=logits_processor,
@@ -1558,7 +1555,7 @@ class GenerationMixin:
                     f"num_return_sequences has to be 1, but is {generation_config.num_return_sequences} when doing"
                     " greedy search."
                 )
-
+            print("\033[41m!!!!! Greedy Decoding !!!!!!\033[0m")
             # 11. run greedy search
             return self.greedy_search(
                 input_ids,
@@ -4185,7 +4182,6 @@ class GenerationMixin:
 
         </Tip>
 
-
         Parameters:
             input_ids (`torch.LongTensor` of shape `(batch_size, sequence_length)`):
                 The sequence used as a prompt for the generation.
@@ -4265,9 +4261,6 @@ class GenerationMixin:
         >>> tokenizer.batch_decode(outputs, skip_special_tokens=True)
         ["It might be possible to get a better understanding of the nature of the problem, but it's not"]
         ```"""
-
-        print("Halc Dola Decode")
-
         # init values
         logits_processor = logits_processor if logits_processor is not None else LogitsProcessorList()
         stopping_criteria = stopping_criteria if stopping_criteria is not None else StoppingCriteriaList()
@@ -4335,12 +4328,7 @@ class GenerationMixin:
         all_layer_matrix = []
         initial_model_kwargs = copy.copy(model_kwargs)
         initial_input_ids = copy.copy(input_ids)
-        # print("model_kwargs", model_kwargs)
-        # input()
-        # print("input_ids", input_ids)
 
-        word_complete = True
-        # intermediate_token_lists = torch.tensor([]).to(input_ids.device)
         intermediate_token_lists = input_ids
         last_tokens = []
 
@@ -4354,19 +4342,6 @@ class GenerationMixin:
                 # did all peers finish? the reduced sum will be 0.0 then
                 if this_peer_finished_flag.item() == 0.0:
                     break
-
-            # save intermediate states until a complete word has been generated
-            if word_complete:
-                # intermediate_token_lists = torch.tensor([]).to(input_ids.device)
-                # update intermediates for next word
-                save_intermediates = {
-                    "input_ids": input_ids,
-                    "model_kwargs": model_kwargs,
-                    "scores": scores,
-                    "decoder_attentions": decoder_attentions,
-                    "cross_attentions": cross_attentions,
-                    "decoder_hidden_states": decoder_hidden_states,
-                }
 
             # prepare model inputs
             model_inputs = self.prepare_inputs_for_generation(input_ids, **model_kwargs)
@@ -4480,11 +4455,8 @@ class GenerationMixin:
                         else (outputs.hidden_states,)
                     )
 
-            # print("\next_tokens_scores", next_tokens_scores)
             next_tokens = torch.argmax(next_tokens_scores, dim=-1)
-
-            # print("\nnext_tokens", next_tokens)
-
+        
             # finished sentences should have their next token be a padding token
             if eos_token_id is not None:
                 if pad_token_id is None:
@@ -4492,11 +4464,8 @@ class GenerationMixin:
                 next_tokens = next_tokens * unfinished_sequences + pad_token_id * (1 - unfinished_sequences)
 
             last_word_flag = self.halc_assistant.check_word_complete(next_tokens[:, None])
-            # print("last_word_flag: ", last_word_flag)
-            # input()
 
             if last_word_flag == False:
-                word_complete = False
                 token_to_append = None
                 # last_tokens = last_tokens.append(next_tokens[:, None].cpu().numpy().tolist()[0][0])
             else:
@@ -4511,7 +4480,6 @@ class GenerationMixin:
                     current_word = self.halc_assistant.get_last_word(last_tokens) 
                     
                     # print("current_word: ", current_word)
-                    word_complete = True
                     entity = current_word
                     embeds_list, detect_info = self.halc_assistant.context_density_embedding(entity, context_window=8)
 
@@ -4522,7 +4490,7 @@ class GenerationMixin:
                         context_logits_list = []
                         for context_embed in embeds_list:
                             sub_model_kwargs = copy.copy(initial_model_kwargs)
-                            sub_model_kwargs["inputs_embeds"] = context_embed
+                            sub_model_kwargs['inputs_embeds'] = context_embed
 
                             context_logits, _ = self.get_intermediate_logits(
                                 intermediate_token_lists,
@@ -4543,10 +4511,11 @@ class GenerationMixin:
 
                             context_logits_list.append(context_logits)
 
-                        # skip_flag, contrast_logits = self.halc_assistant.naive_focus_decoding(context_logits_list)
+                        skip_flag, contrast_logits = self.halc_assistant.naive_focus_decoding(context_logits_list)
                         # contrast_logits = self.halc_assistant.context_curve_contrastive_decoding(context_logits_list)
-                        skip_flag, contrast_logits = self.halc_assistant.context_contrastive_decoding(context_logits_list, last_tokens)
-                        
+                        # skip_flag, contrast_logits = self.halc_assistant.context_contrastive_decoding(context_logits_list, last_tokens)
+                        # skip_flag, contrast_logits = self.halc_assistant.auto_regressive_decoding(context_logits_list)
+        
                         if skip_flag == True:
                             token_to_append = torch.tensor([last_tokens]).to(input_ids.device)
                         else:
@@ -4991,11 +4960,9 @@ class GenerationMixin:
             # print("\nnext_tokens", next_tokens)
             # last_word_flag, last_word = self.halc_assistant.check_word_complete(intermediate_token_lists)
             last_word_flag = self.halc_assistant.check_word_complete(next_tokens[:, None])
-            # print("last_word_flag: ", last_word_flag)
-            # input()
 
             if last_word_flag == False:
-                word_complete = False
+                
                 token_to_append = None
                 # last_tokens = last_tokens.append(next_tokens[:, None].cpu().numpy().tolist()[0][0])
             else:
@@ -5010,7 +4977,6 @@ class GenerationMixin:
                     current_word = self.halc_assistant.get_last_word(last_tokens)
 
                     print("current_word: ", current_word)
-                    word_complete = True
                     entity = current_word
                     embeds_list, detect_info = self.halc_assistant.context_density_embedding(entity, context_window=3)
 
@@ -5158,9 +5124,7 @@ class GenerationMixin:
             # print("post last_tokens", last_tokens)
             # last_token = next_tokens[:, None]
             print("\n")
-            # input("#####\n")
 
-            # print("intermediate_token_lists", intermediate_token_lists)
             # update generated ids, model inputs, and length for next step
             input_ids = torch.cat([input_ids, next_tokens[:, None]], dim=-1)
             # input_ids = intermediate_token_lists

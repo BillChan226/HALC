@@ -33,8 +33,8 @@ class halc_assistant:
         self.model = model
         self.tagging = spacy.load("en_core_web_sm")
         self.tokenizer = self.model.llama_tokenizer
-        # token_vocab_dir = "./model_checkpoints/models--meta-llama--Llama-2-7b-chat-hf/snapshots/c1b0db933684edbfe29a06fa47eb19cc48025e93/tokenizer.json"
-        token_vocab_dir = "/media/zhuokai/SN850X_4TB/contrast_decoding_LVLMs/model_checkpoints/models--meta-llama--Llama-2-7b-chat-hf/snapshots/c1b0db933684edbfe29a06fa47eb19cc48025e93/tokenizer.json"
+        token_vocab_dir = "./model_checkpoints/models--meta-llama--Llama-2-7b-chat-hf/snapshots/c1b0db933684edbfe29a06fa47eb19cc48025e93/tokenizer.json"
+        # token_vocab_dir = "/media/zhuokai/SN850X_4TB/contrast_decoding_LVLMs/model_checkpoints/models--meta-llama--Llama-2-7b-chat-hf/snapshots/c1b0db933684edbfe29a06fa47eb19cc48025e93/tokenizer.json"
         if not os.path.exists(token_vocab_dir):
             temp = AutoTokenizer.from_pretrained(
                 "meta-llama/Llama-2-7b-chat-hf",  # official model name for llama2-7b-chat-hf
@@ -204,7 +204,8 @@ class halc_assistant:
                     self.target_bbox_index = 0
                 else:
                     initial_ratio = np.sqrt(0.2 / target_bbox_size)
-                    expanded_bboxes = [self.expand_bbox(target_bbox, -initial_ratio)]
+                    # expanded_bboxes = [self.expand_bbox(target_bbox, -initial_ratio)]
+                    expanded_bboxes = [target_bbox]
                     all_box_sizes = [self.compute_bbox_size(expanded_bboxes[-1])]
                     for _ in range(1, context_window):
                         # Each expansion is double the size of the previous level
@@ -395,7 +396,8 @@ class halc_assistant:
         upper_contrast_logits = target_logits - upper_logits
         lower_contrast_logits = target_logits - lower_logits
 
-        if upper_contrast_logits > -2 and lower_contrast_logits > -2:
+        # if upper_contrast_logits > -2 and lower_contrast_logits > -2:
+        if False:
             skip_flag = True
             return skip_flag, target_layer
         else:
@@ -500,3 +502,65 @@ class halc_assistant:
 
             # we always use the target layer for decoding
             return skip_flag, contrast_logits
+
+    def context_layer_contrastive_decoding(self, context_logits_list, last_tokens):
+        """
+        The method uses a list of context windows rooted from the DINO detection one and apply the contrastive decoding method to each context-window pair to get a list of contrastive logits. Then we use the contrastive logits to do the decoding.
+        """
+        hallucination_index = last_tokens[0]
+
+        target_layer = context_logits_list[self.target_bbox_index]
+        lower_layer = context_logits_list[0]
+        upper_layer = context_logits_list[-1]
+
+
+        skip_flag = False
+
+        # non_target_layer_indices = [
+        #     i
+        #     for i in range(len(context_logits_list))
+        #     if i != self.target_bbox_index
+        # ]
+        all_layer_indices = range(len(context_logits_list))
+
+
+        # 1. Stacking all non-target context layer into a new dimension
+        stacked_premature_layers = torch.stack(
+            [context_logits_list[i] for i in all_layer_indices],
+            dim=0,
+        )
+
+        # print("stacked_premature_layers", np.shape(stacked_premature_layers))
+        # input()
+        num_layers = len(stacked_premature_layers)
+        jsd_matrix = torch.zeros((num_layers, num_layers))
+
+        for i in range(num_layers):
+            for j in range(i+1, num_layers):
+                M = 0.5 * (F.softmax(stacked_premature_layers[i], dim=-1) + F.softmax(stacked_premature_layers[j], dim=-1))
+                kl1 = F.kl_div(F.log_softmax(stacked_premature_layers[i], dim=-1), M, reduction="batchmean")
+                kl2 = F.kl_div(F.log_softmax(stacked_premature_layers[j], dim=-1), M, reduction="batchmean")
+                jsd = 0.5 * (kl1 + kl2)
+                jsd_matrix[i, j] = jsd
+                jsd_matrix[j, i] = jsd  # Symmetric matrix
+
+        # Find indices of max JSD
+        # print("jsd_matrix.triu(diagonal=1)", jsd_matrix.triu(diagonal=1))
+        max_jsd_flat_index = torch.argmax(jsd_matrix.triu(diagonal=1)) #.unbind()
+        # layer_idx1, layer_idx2 = max_jsd_indices[0], max_jsd_indices[1]
+        layer_idx1, layer_idx2 = np.unravel_index(max_jsd_flat_index.cpu().numpy(), jsd_matrix.shape)
+        print("layer_idx1, layer_idx2: ", layer_idx1, layer_idx2)
+
+        # Update final_logits and base_logits
+        final_logits = context_logits_list[layer_idx1]
+        base_logits = context_logits_list[layer_idx2]
+        
+        # final_logits = self.relative_top_filter(final_logits, relative_top=0.1)
+        # base_logits = base_logits.log_softmax(dim=-1)
+        mask = final_logits[0] < -1e3
+        base_logits[0][mask] = -1e3
+        contrast_logits = final_logits - base_logits * 0.05
+
+        # we always use the target layer for decoding
+
+        return skip_flag, contrast_logits

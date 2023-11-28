@@ -4479,9 +4479,9 @@ class GenerationMixin:
                 else:
                     current_word = self.halc_assistant.get_last_word(last_tokens) 
                     
-                    # print("current_word: ", current_word)
+                    print("current_word: ", current_word)
                     entity = current_word
-                    embeds_list, detect_info = self.halc_assistant.context_density_embedding(entity, context_window=8)
+                    embeds_list, detect_info = self.halc_assistant.context_density_embedding(entity, context_window=5)
 
                     if detect_info["status"] == "invalid":
                         token_to_append = torch.tensor([last_tokens]).to(input_ids.device)
@@ -4511,11 +4511,14 @@ class GenerationMixin:
 
                             context_logits_list.append(context_logits)
 
-                        skip_flag, contrast_logits = self.halc_assistant.naive_focus_decoding(context_logits_list)
+                        # skip_flag, contrast_logits = self.halc_assistant.naive_focus_decoding(context_logits_list)
                         # contrast_logits = self.halc_assistant.context_curve_contrastive_decoding(context_logits_list)
                         # skip_flag, contrast_logits = self.halc_assistant.context_contrastive_decoding(context_logits_list, last_tokens)
                         # skip_flag, contrast_logits = self.halc_assistant.auto_regressive_decoding(context_logits_list)
-        
+                        
+                        skip_flag, contrast_logits = self.halc_assistant.context_layer_contrastive_decoding(context_logits_list, last_tokens)
+
+                        # skip_flag, contrast_logits = self.halc_assistant.auto_contrastive_context_decoding(context_logits_list, last_tokens)
                         if skip_flag == True:
                             token_to_append = torch.tensor([last_tokens]).to(input_ids.device)
                         else:
@@ -4569,7 +4572,7 @@ class GenerationMixin:
                 # last_word = self.halc_assistant.get_last_word([nominate_tokens])
                 last_word = self.halc_assistant.get_last_word(token_to_append[0])
 
-                # print("contrast word: ", last_word)
+                print("contrast word: ", last_word)
 
                 if last_word != current_word:
                     # print("\033[41m!!!!! Hallucination Detected !!!!!!\033[0m")

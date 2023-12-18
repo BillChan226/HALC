@@ -155,10 +155,14 @@ class halc_assistant:
             sample = self.detector.detect_objects(self.detector_dict)
 
             # print("Detection: ", sample)
-
             # Assuming the first detected bounding box is the one related to the entity
 
             original_bbox = sample["entity_info"][entity]["bbox"]
+            if len(original_bbox) > 2:
+                detect_info["status"] = "invalid"
+                embeds_list = None
+                return embeds_list, detect_info
+
             if len(original_bbox) == 0:
                 target_bbox = [0.3, 0.3, 0.6, 0.6]
                 detect_info["status"] = "bounding box not detected"
@@ -507,22 +511,9 @@ class halc_assistant:
         """
         The method uses a list of context windows rooted from the DINO detection one and apply the contrastive decoding method to each context-window pair to get a list of contrastive logits. Then we use the contrastive logits to do the decoding.
         """
-        hallucination_index = last_tokens[0]
-
-        target_layer = context_logits_list[self.target_bbox_index]
-        lower_layer = context_logits_list[0]
-        upper_layer = context_logits_list[-1]
-
-
         skip_flag = False
 
-        # non_target_layer_indices = [
-        #     i
-        #     for i in range(len(context_logits_list))
-        #     if i != self.target_bbox_index
-        # ]
         all_layer_indices = range(len(context_logits_list))
-
 
         # 1. Stacking all non-target context layer into a new dimension
         stacked_premature_layers = torch.stack(

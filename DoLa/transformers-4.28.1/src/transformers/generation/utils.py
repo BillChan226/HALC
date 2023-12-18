@@ -4333,6 +4333,7 @@ class GenerationMixin:
         last_tokens = []
 
         while True:
+            
             if synced_gpus:
                 # Under synced_gpus the `forward` call must continue until all gpus complete their sequence.
                 # The following logic allows an early break if all peers finished generating their sequence
@@ -4479,9 +4480,9 @@ class GenerationMixin:
                 else:
                     current_word = self.halc_assistant.get_last_word(last_tokens) 
                     
-                    # print("current_word: ", current_word)
+                    # print("CURRENT WORD: ", current_word)
                     entity = current_word
-                    embeds_list, detect_info = self.halc_assistant.context_density_embedding(entity, context_window=5)
+                    embeds_list, detect_info = self.halc_assistant.context_density_embedding(entity, context_window=4)
 
                     if detect_info["status"] == "invalid":
                         token_to_append = torch.tensor([last_tokens]).to(input_ids.device)
@@ -4569,10 +4570,15 @@ class GenerationMixin:
                 # print("token_to_append", token_to_append)
 
                 intermediate_token_lists = torch.cat([intermediate_token_lists, token_to_append], dim=-1)
+                
+                input_ids = intermediate_token_lists
+                # print("intermediate_token_lists", intermediate_token_lists)
+                # print("input_ids", input_ids)
+                # input()
                 # last_word = self.halc_assistant.get_last_word([nominate_tokens])
                 last_word = self.halc_assistant.get_last_word(token_to_append[0])
 
-                # print("contrast word: ", last_word)
+                # print("CONTRAST WORD: ", last_word)
 
                 if last_word != current_word:
                     # print("\033[41m!!!!! Hallucination Detected !!!!!!\033[0m")
@@ -4640,35 +4646,16 @@ class GenerationMixin:
                     outputs, model_kwargs, is_encoder_decoder=self.config.is_encoder_decoder
                 )
 
-            # print("intermediate_token_lists", intermediate_token_lists)
-            # intermediate_token_lists = input_ids
 
             last_tokens.append(next_tokens[:, None].cpu().numpy().tolist()[0][0])
-            # print("post last_tokens", last_tokens)
-            # last_token = next_tokens[:, None]
-            # print("\n")
-            # input("#####\n")
 
-            # print("intermediate_token_lists", intermediate_token_lists)
             # update generated ids, model inputs, and length for next step
             input_ids = torch.cat([input_ids, next_tokens[:, None]], dim=-1)
-            # input_ids = intermediate_token_lists
-            # intermediate_token_lists = input_ids[0]
+
             if streamer is not None:
                 streamer.put(next_tokens.cpu())
 
-            # print("outputs", outputs)
-            # if token_to_append != None:
-            #     if last_word != current_word:
-            #         pass
-            # else:
-            # model_kwargs = self._update_model_kwargs_for_generation(
-            #     outputs, model_kwargs, is_encoder_decoder=self.config.is_encoder_decoder
-            # )
 
-            # if last_word_flag == True:
-            #     last_model_kwargs = copy.copy(model_kwargs)
-            #     last_outputs = copy.copy(outputs)
             if last_word_flag == False:
                 if once_flag == False:
                     once_flag = True
@@ -4687,8 +4674,14 @@ class GenerationMixin:
                 else:
                     this_peer_finished = True
 
-        input_ids = intermediate_token_lists
-
+        # print("input_ids", input_ids)
+        output_text = self.halc_assistant.tokenizer.decode(input_ids[0], skip_special_tokens=True)
+        # print("output_text", output_text)
+        # intermediate_token_lists = torch.cat([intermediate_token_lists, input_ids[:, -1]], dim=-1)
+        # input_ids = intermediate_token_lists
+        output_text = self.halc_assistant.tokenizer.decode(input_ids[0], skip_special_tokens=True)
+        # print("output_text", output_text)
+        # print("input_ids", input_ids)
         if streamer is not None:
             streamer.end()
 

@@ -246,7 +246,7 @@ def main():
                 )
 
                 print("output_text: ", output_text)
-
+                print("cur_img_id: ", cur_img_id)
                 # append the generated caption to the list
                 # format follows https://github.com/tylin/coco-caption/tree/master
                 all_generated_captions.append(

@@ -82,8 +82,8 @@ img = "/home/czr/contrast_decoding_LVLMs/hallucinatory_image/beach_on_a_clock.pn
 # img = "/home/czr/contrast_decoding_LVLMs/hallucinatory_image/zoom_in_2.png"
 # img = "/home/czr/contrast_decoding_LVLMs/hallucinatory_image/zoom_in_3.png"
 
-# decoding_strategy = "halc-dola"
-decoding_strategy = "halc-greedy"
+decoding_strategy = "halc-dola"
+# decoding_strategy = "halc-greedy"
 
 chat = Chat(model, vis_processor, device='cuda:{}'.format(args.gpu_id), stopping_criteria=stopping_criteria, decoding_strategy=decoding_strategy)
 print('Initialization Finished')

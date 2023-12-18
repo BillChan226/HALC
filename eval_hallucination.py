@@ -110,8 +110,16 @@ def main():
         evaluator.get_annotations()
         # compute chair metrics
         cap_dict = evaluator.compute_chair(chair_input_path)
+        # save to json pretty print
+        chair_json_path = os.path.join(
+            output_dir,
+            f"{model_name}_{model_type}_{dataset_name}_num_images_{num_images}_chair_results.json",
+        )
+        with open(chair_json_path, "w") as f:
+            json.dump(cap_dict, f, indent=4)
         # print metric
         metric_string_ce = chair.print_metrics(cap_dict, quiet=False)
+        
         # save results
         result_path = os.path.join(
             output_dir,

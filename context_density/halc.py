@@ -540,7 +540,7 @@ class halc_assistant:
         max_jsd_flat_index = torch.argmax(jsd_matrix.triu(diagonal=1)) #.unbind()
         # layer_idx1, layer_idx2 = max_jsd_indices[0], max_jsd_indices[1]
         layer_idx1, layer_idx2 = np.unravel_index(max_jsd_flat_index.cpu().numpy(), jsd_matrix.shape)
-        print("layer_idx1, layer_idx2: ", layer_idx1, layer_idx2)
+        # print("layer_idx1, layer_idx2: ", layer_idx1, layer_idx2)
 
         # Update final_logits and base_logits
         final_logits = context_logits_list[layer_idx1]

@@ -35,12 +35,6 @@ def initialize_mini_gpt_4(parser):
         help="path to configuration file.",
     )
     parser_group.add_argument(
-        "--gpu_id",
-        type=int,
-        default=0,
-        help="specify the gpu to load the model.",
-    )
-    parser_group.add_argument(
         "--options",
         nargs="+",
         help="override some settings in the used config, the key-value pair "
@@ -146,6 +140,13 @@ def main():
         default=False,
         help="Verbosity. Default: False.",
     )
+    parser.add_argument(
+        "-g",
+        "--gpu_id",
+        type=int,
+        default=0,
+        help="specify the gpu to load the model.",
+    )
 
     # load program level arguments
     args = parser.parse_args()
@@ -231,10 +232,10 @@ def main():
                 cur_img = coco.loadImgs(cur_img_id)[0]
                 # current image path in the data dir
                 cur_img_path = os.path.join(data_dir, cur_img["file_name"])
-
                 # construct the conversation
                 img_list = []
                 model.upload_img(cur_img_path, CONV_VISION, img_list)
+                
                 model.encode_img(img_list, 38)  # -1 means the last layer
                 # question taken from https://arxiv.org/pdf/2305.10355.pdf
                 model.ask("Generate a one sentence caption of the image.", CONV_VISION)
@@ -244,9 +245,9 @@ def main():
                     img_list,
                     # dola_decoding=cfg.model_cfg.dola_decoding,
                 )
-
+                print("cur_img_path: ", cur_img_path)
                 print("output_text: ", output_text)
-                print("cur_img_id: ", cur_img_id)
+                
                 # append the generated caption to the list
                 # format follows https://github.com/tylin/coco-caption/tree/master
                 all_generated_captions.append(

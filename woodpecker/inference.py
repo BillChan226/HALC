@@ -19,6 +19,7 @@ if __name__ == '__main__':
     
     parser.add_argument('--api-key', type=str, help="API key for GPT service.")
     parser.add_argument('--api-base', type=str, help="API base link for GPT service.")
+    parser.add_argument('--llm_backbone', type=str, default="llama", help="LLM backbone")
     args = parser.parse_args()
     
     args_dict = {

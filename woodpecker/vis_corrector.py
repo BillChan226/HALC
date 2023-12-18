@@ -8,20 +8,32 @@ from models.answerer import Answerer
 from models.claim_generator import ClaimGenerator
 from models.refiner import Refiner
 from tqdm import tqdm
+from transformers import AutoModelForCausalLM, AutoTokenizer
 from typing import List, Dict
 import time
+
+LLaMA_MODEL_PATH = "/home/czr/contrast_decoding_LVLMs/model_checkpoints/models--meta-llama--Llama-2-7b-chat-hf/snapshots/c1b0db933684edbfe29a06fa47eb19cc48025e93"
 
 class Corrector:
     def __init__(self, args) -> None:
         # init all the model
         
-        self.preprocessor = PreProcessor(args)
+        if args.llm_backbone == "llama":
+            self.LLM_backbone = AutoModelForCausalLM.from_pretrained(
+        LLaMA_MODEL_PATH, 
+        load_in_8bit=True, device_map={"": Accelerator().process_index}
+        )
+            self.LLM_tokenizer = AutoTokenizer.from_pretrained(LLaMA_MODEL_PATH)
+
+        self.LLM_MODEL = {"model": self.LLM_backbone, "tokenizer": self.LLM_tokenizer}
+
+        self.preprocessor = PreProcessor(args, self.LLM_MODEL)
         self.entity_extractor = EntityExtractor(args)
         self.detector = Detector(args)
         self.questioner = Questioner(args)
-        # self.answerer = Answerer(args)
-        # self.claim_generator = ClaimGenerator(args)
-        # self.refiner = Refiner(args)
+        self.answerer = Answerer(args)
+        self.claim_generator = ClaimGenerator(args)
+        self.refiner = Refiner(args)
         
         print("Finish loading models.")
 

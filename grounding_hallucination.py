@@ -213,7 +213,7 @@ def model_predict(image_path, question, box_threshold, area_threshold):
             
 # my_model_function(img, "What is the man holding in his hand?", 0.35, 0.02)
 # my_model_function(img, "What is the man holding in his hand?", 0.05, 0.005)
-my_model_function(img, "Describe this image with with moderate details.", 0.05, 0.005)
+# my_model_function(img, "Describe this image with with moderate details.", 0.05, 0.005)
 
 
 # def create_multi_modal_demo():

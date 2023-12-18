@@ -4479,7 +4479,7 @@ class GenerationMixin:
                 else:
                     current_word = self.halc_assistant.get_last_word(last_tokens) 
                     
-                    print("current_word: ", current_word)
+                    # print("current_word: ", current_word)
                     entity = current_word
                     embeds_list, detect_info = self.halc_assistant.context_density_embedding(entity, context_window=5)
 
@@ -4572,7 +4572,7 @@ class GenerationMixin:
                 # last_word = self.halc_assistant.get_last_word([nominate_tokens])
                 last_word = self.halc_assistant.get_last_word(token_to_append[0])
 
-                print("contrast word: ", last_word)
+                # print("contrast word: ", last_word)
 
                 if last_word != current_word:
                     # print("\033[41m!!!!! Hallucination Detected !!!!!!\033[0m")
@@ -4891,7 +4891,7 @@ class GenerationMixin:
         else:
             raise ValueError("You must specify either `base_layer` or `candidate_premature_layers`")
 
-        print("Halc Greedy Decode")
+        # print("Halc Greedy Decode")
         # input()
         # info to go back to main for debug
         info_dict = {}
@@ -4979,7 +4979,7 @@ class GenerationMixin:
                 else:
                     current_word = self.halc_assistant.get_last_word(last_tokens)
 
-                    print("current_word: ", current_word)
+                    # print("current_word: ", current_word)
                     entity = current_word
                     embeds_list, detect_info = self.halc_assistant.context_density_embedding(entity, context_window=3)
 
@@ -5059,7 +5059,7 @@ class GenerationMixin:
                 # last_word = self.halc_assistant.get_last_word([nominate_tokens])
                 last_word = self.halc_assistant.get_last_word(token_to_append[0])
 
-                print("contrast word: ", last_word)
+                # print("contrast word: ", last_word)
 
                 if last_word != current_word:
                     print("\033[41m!!!!! Hallucination Detected !!!!!!\033[0m")

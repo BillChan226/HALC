@@ -27,8 +27,8 @@ from minigpt4.tasks import *
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Demo")
-    parser.add_argument("--cfg-path", required=True, help="path to configuration file.")
-    parser.add_argument("--gpu-id", type=int, default=0, help="specify the gpu to load the model.")
+    parser.add_argument("--cfg-path", default="eval_configs/minigpt4_llama2_eval.yaml", help="path to configuration file.")
+    parser.add_argument("--gpu-id", type=int, default=1, help="specify the gpu to load the model.")
     parser.add_argument(
         "--options",
         nargs="+",
@@ -82,7 +82,9 @@ img = "/home/czr/contrast_decoding_LVLMs/hallucinatory_image/beach_on_a_clock.pn
 # img = "/home/czr/contrast_decoding_LVLMs/hallucinatory_image/zoom_in_2.png"
 # img = "/home/czr/contrast_decoding_LVLMs/hallucinatory_image/zoom_in_3.png"
 
-decoding_strategy = "halc-dola"
+# decoding_strategy = "halc-dola"
+decoding_strategy = "halc-greedy"
+
 chat = Chat(model, vis_processor, device='cuda:{}'.format(args.gpu_id), stopping_criteria=stopping_criteria, decoding_strategy=decoding_strategy)
 print('Initialization Finished')
 

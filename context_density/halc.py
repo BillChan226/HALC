@@ -25,7 +25,7 @@ args_dict = {
 
 
 class halc_assistant:
-    def __init__(self, model=None, vis_processor=None, device=None):
+    def __init__(self, model=None, vis_processor=None, device=None, halc_params=None):
         model_args = SimpleNamespace(**args_dict)
         self.device = device
         self.detector = Detector(model_args)
@@ -33,6 +33,7 @@ class halc_assistant:
         self.model = model
         self.tagging = spacy.load("en_core_web_sm")
         self.tokenizer = self.model.llama_tokenizer
+        self.halc_params = halc_params
         token_vocab_dir = "./model_checkpoints/models--meta-llama--Llama-2-7b-chat-hf/snapshots/c1b0db933684edbfe29a06fa47eb19cc48025e93/tokenizer.json"
         # token_vocab_dir = "/media/zhuokai/SN850X_4TB/contrast_decoding_LVLMs/model_checkpoints/models--meta-llama--Llama-2-7b-chat-hf/snapshots/c1b0db933684edbfe29a06fa47eb19cc48025e93/tokenizer.json"
         if not os.path.exists(token_vocab_dir):
@@ -135,9 +136,16 @@ class halc_assistant:
 
     def context_density_embedding(self, entity, context_window=3):
         # context_window specifies the number of context windows
+
+        context_window = self.halc_params["context_window"]
+        # expand_ratio = 0.1
+        expand_ratio = self.halc_params["expand_ratio"]
+
         entity = entity.strip(".")
         doc = self.tagging(entity)
         detect_info = {}
+
+        
 
         if len(doc) < 1:
             detect_info["pos"] = "PUNC"
@@ -181,27 +189,27 @@ class halc_assistant:
             if context_window == 1:
                 # only the original one
                 expanded_bboxes = [target_bbox]
-            elif context_window == 3:
-                # one smaller one larger
-                expanded_bboxes = [target_bbox]  # original bbox
-                expanded_bboxes.append(
-                    self.expand_bbox(expanded_bboxes[-1], -0.5)
-                )  # smaller
-                expanded_bboxes.append(
-                    self.expand_bbox(expanded_bboxes[-1], 5)
-                )  # larger
-            # for the auto_context_contrastive_decoding method
+            # elif context_window == 3:
+            #     # one smaller one larger
+            #     expanded_bboxes = [target_bbox]  # original bbox
+            #     expanded_bboxes.append(
+            #         self.expand_bbox(expanded_bboxes[-1], -0.5)
+            #     )  # smaller
+            #     expanded_bboxes.append(
+            #         self.expand_bbox(expanded_bboxes[-1], 5)
+            #     )  # larger
+            # # for the auto_context_contrastive_decoding method
             else:
                 # check on the target box's size
                 target_bbox_size = self.compute_bbox_size(target_bbox)
                 # smallest size should be 0.2
                 if target_bbox_size < 0.2:
                     # only increase the size
-                    expanded_bboxes = [target_bbox]
-                    for _ in range(1, context_window):
+                    expanded_bboxes = [self.expand_bbox(target_bbox, -expand_ratio), target_bbox]
+                    for _ in range(1, context_window-1):
                         # Each expansion is double the size of the previous level
                         expanded_bboxes.append(
-                            self.expand_bbox(expanded_bboxes[-1], 0.2)
+                            self.expand_bbox(expanded_bboxes[-1], expand_ratio)
                         )
 
                     # index of the original target box
@@ -209,12 +217,13 @@ class halc_assistant:
                 else:
                     initial_ratio = np.sqrt(0.2 / target_bbox_size)
                     # expanded_bboxes = [self.expand_bbox(target_bbox, -initial_ratio)]
-                    expanded_bboxes = [target_bbox]
-                    all_box_sizes = [self.compute_bbox_size(expanded_bboxes[-1])]
-                    for _ in range(1, context_window):
+                    expanded_bboxes = [self.expand_bbox(target_bbox, -expand_ratio), target_bbox]
+                    all_box_sizes = [self.compute_bbox_size(expanded_bboxes[0]), self.compute_bbox_size(expanded_bboxes[1])]
+                    
+                    for _ in range(1, context_window-1):
                         # Each expansion is double the size of the previous level
                         expanded_bboxes.append(
-                            self.expand_bbox(expanded_bboxes[-1], 0.2)
+                            self.expand_bbox(expanded_bboxes[-1], expand_ratio)
                         )
                         all_box_sizes.append(
                             self.compute_bbox_size(expanded_bboxes[-1])
@@ -540,17 +549,32 @@ class halc_assistant:
         max_jsd_flat_index = torch.argmax(jsd_matrix.triu(diagonal=1)) #.unbind()
         # layer_idx1, layer_idx2 = max_jsd_indices[0], max_jsd_indices[1]
         layer_idx1, layer_idx2 = np.unravel_index(max_jsd_flat_index.cpu().numpy(), jsd_matrix.shape)
-        # print("layer_idx1, layer_idx2: ", layer_idx1, layer_idx2)
+        print("base_layer, final_layer: ", layer_idx1, layer_idx2)
 
+        # # Update final_logits and base_logits
+        # final_logits = context_logits_list[layer_idx1]
+        # base_logits = context_logits_list[layer_idx2]
+
+        context_domain = self.halc_params["context_domain"]
         # Update final_logits and base_logits
-        final_logits = context_logits_list[layer_idx1]
-        base_logits = context_logits_list[layer_idx2]
+        if context_domain == "upper":
+            base_logits = context_logits_list[layer_idx1]
+            final_logits = context_logits_list[layer_idx2]
+        elif context_domain == "lower":
+            base_logits = context_logits_list[layer_idx2]
+            final_logits = context_logits_list[layer_idx1]
+        else:
+            raise ValueError("Invalid context domain!")
         
         # final_logits = self.relative_top_filter(final_logits, relative_top=0.1)
         # base_logits = base_logits.log_softmax(dim=-1)
         mask = final_logits[0] < -1e3
         base_logits[0][mask] = -1e3
-        contrast_logits = final_logits - base_logits * 0.05
+
+        contrast_weight = self.halc_params["contrast_weight"]
+
+        # contrast_logits = final_logits - base_logits * 0.05
+        contrast_logits = final_logits - base_logits * contrast_weight
 
         # we always use the target layer for decoding
 

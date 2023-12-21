@@ -16,7 +16,7 @@ os.environ["TRANSFORMERS_CACHE"] = "./model_checkpoints/"
 import transformers
 
 
-def initialize_mini_gpt_4(parser):
+def initialize_mini_gpt_4(parser, hyper_params):
     from transformers import StoppingCriteriaList
     from minigpt4.conversation.conversation import (
         Chat,
@@ -74,8 +74,6 @@ def initialize_mini_gpt_4(parser):
         [StoppingCriteriaSub(stops=stop_words_ids)]
     )
 
-    halc_params = {"context_domain": True, "contrast_weight": 0.05, "context_window": 4, "expand_ratio": 0.1}
-    hyper_params = {"halc_params": halc_params}
     chat = Chat(
         model,
         vis_processor,
@@ -89,70 +87,8 @@ def initialize_mini_gpt_4(parser):
 
 
 # main function
-def main():
-    # program level args
-    parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "-d",
-        "--decoder",
-        type=str,
-        default="greedy",
-        help="Decoding strategy to use. You can choose from 'greedy', 'dola', 'halc'. Default is 'greedy'.",
-    )
-    parser.add_argument(
-        "--model_name",
-        type=str,
-        default="minigpt4",
-        help="Name of the model. Default is 'minigpt4'.",
-    )
-    parser.add_argument(
-        "--dataset_name",
-        type=str,
-        default="coco",
-        help="Name of the dataset. Default is 'coco'.",
-    )
-    parser.add_argument(
-        "--data_dir",
-        type=str,
-        default="/media/zhuokai/SN850X_4TB/Data/coco/val2014",
-        help="Test data directory. Default is '/media/zhuokai/SN850X_4TB/Data/coco/val2014'.",
-    )
-    parser.add_argument(
-        "--output_dir",
-        type=str,
-        default="./generated_chair_inputs/",
-        help="Output ditectory for saving test results. Default is './generated_chair_inputs/'.",
-    )
-    parser.add_argument(
-        "--num_samples",
-        type=int,
-        default=2000,
-        help="Number of evaluation samples from the dataset. Default is 2000.",
-    )
-    parser.add_argument(
-        "--seed",
-        type=int,
-        default=1,
-        help="Set universal seed. Default is 1.",
-    )
-    parser.add_argument(
-        "-v",
-        "--verbosity",
-        action="store_true",
-        dest="verbosity",
-        default=False,
-        help="Verbosity. Default: False.",
-    )
-    parser.add_argument(
-        "-g",
-        "--gpu_id",
-        type=int,
-        default=0,
-        help="specify the gpu to load the model.",
-    )
+def generate_chair_input(hyper_params):
 
-    # load program level arguments
-    args = parser.parse_args()
     decoding_strategy = args.decoder
     model_name = args.model_name
     dataset_name = args.dataset_name
@@ -179,7 +115,7 @@ def main():
 
     # load model
     if model_name == "minigpt4":
-        model, CONV_VISION, cfg = initialize_mini_gpt_4(parser)
+        model, CONV_VISION, cfg = initialize_mini_gpt_4(parser, hyper_params)
 
     if verbosity:
         print(f"\n{model_name} model initialized successfully.")
@@ -273,10 +209,17 @@ def main():
                     print(f"\nGenerated captions saved to {output_dir}.")
 
                 # remove the previous file
+                halc_params = hyper_params["halc_params"]
+                context_domain = halc_params["context_domain"]
+                contrast_weight = halc_params["contrast_weight"]
+                context_window = halc_params["context_window"]
+                expand_ratio = halc_params["expand_ratio"]
+
                 if i > 0:
                     prev_generated_captions_path = os.path.join(
                         output_dir,
-                        f"{model_name}_{model_type}_{decoding_strategy}_{dataset_name}_{i}_generated_captions.json",
+                        # f"{model_name}_{model_type}_{decoding_strategy}_{dataset_name}_{i}_generated_captions.json",
+                        f"{model_name}_{model_type}_{decoding_strategy}_{dataset_name}_{context_domain}_{contrast_weight}_{context_window}_{expand_ratio}_{i}_generated_captions.json",
                     )
                     os.remove(prev_generated_captions_path)
 
@@ -349,4 +292,84 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+
+    # program level args
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "-d",
+        "--decoder",
+        type=str,
+        default="greedy",
+        help="Decoding strategy to use. You can choose from 'greedy', 'dola', 'halc'. Default is 'greedy'.",
+    )
+    parser.add_argument(
+        "--model_name",
+        type=str,
+        default="minigpt4",
+        help="Name of the model. Default is 'minigpt4'.",
+    )
+    parser.add_argument(
+        "--dataset_name",
+        type=str,
+        default="coco",
+        help="Name of the dataset. Default is 'coco'.",
+    )
+    parser.add_argument(
+        "--data_dir",
+        type=str,
+        default="/media/zhuokai/SN850X_4TB/Data/coco/val2014",
+        help="Test data directory. Default is '/media/zhuokai/SN850X_4TB/Data/coco/val2014'.",
+    )
+    parser.add_argument(
+        "--output_dir",
+        type=str,
+        default="./generated_chair_inputs/",
+        help="Output ditectory for saving test results. Default is './generated_chair_inputs/'.",
+    )
+    parser.add_argument(
+        "--num_samples",
+        type=int,
+        default=2000,
+        help="Number of evaluation samples from the dataset. Default is 2000.",
+    )
+    parser.add_argument(
+        "--seed",
+        type=int,
+        default=1,
+        help="Set universal seed. Default is 1.",
+    )
+    parser.add_argument(
+        "-v",
+        "--verbosity",
+        action="store_true",
+        dest="verbosity",
+        default=False,
+        help="Verbosity. Default: False.",
+    )
+    parser.add_argument(
+        "-g",
+        "--gpu_id",
+        type=int,
+        default=0,
+        help="specify the gpu to load the model.",
+    )
+
+    # load program level arguments
+    args = parser.parse_args()
+
+        # context_window = self.halc_params["context_window"]
+        # # expand_ratio = 0.1
+        # expand_ratio = self.halc_params["expand_ratio"]
+    ###### PARAMETER SEARCH ######
+
+    halc_params = {"context_domain":"upper"}
+
+    for contrast_weight in [0, 0.01, 0.02, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.4, 0.5, 1]:
+        for  context_window in [2, 3, 4, 5, 6]:
+            for expand_ratio in [0.01, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4]:
+                halc_params["contrast_weight"] = contrast_weight
+                halc_params["context_window"] = context_window
+                halc_params["expand_ratio"] = expand_ratio
+                hyper_params = {"halc_params": halc_params}
+                print("hyper_params: ", hyper_params)
+                generate_chair_input(hyper_params)

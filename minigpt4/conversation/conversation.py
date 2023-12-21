@@ -142,7 +142,7 @@ CONV_VISION_minigptv2 = Conversation(
 
 
 class Chat:
-    def __init__(self, model, vis_processor, device="cuda:0", stopping_criteria=None, decoding_strategy = "greedy"):
+    def __init__(self, model, vis_processor, device="cuda:0", stopping_criteria=None, decoding_strategy = "greedy", hyper_params = None):
         self.device = device
         self.model = model
         self.vis_processor = vis_processor
@@ -184,7 +184,8 @@ class Chat:
             self.stopping_criteria = StoppingCriteriaList(
                 [StoppingCriteriaSub(stops=stop_words_ids)]
             )
-        self.halc_assistant = halc_assistant(self.model, vis_processor=self.vis_processor, device=self.device)
+        halc_params = hyper_params["halc_params"]
+        self.halc_assistant = halc_assistant(self.model, vis_processor=self.vis_processor, device=self.device, halc_params=halc_params)
 
     def ask(self, text, conv):
         if (

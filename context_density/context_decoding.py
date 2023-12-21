@@ -86,8 +86,10 @@ img = "/home/czr/contrast_decoding_LVLMs/hallucinatory_image/beach_on_a_clock.pn
 # decoding_strategy = "halc-greedy"
 decoding_strategy = "halc-beam"
 
+halc_params = {"context_domain": "upper", "contrast_weight": 0.05, "context_window": 4, "expand_ratio": 0.1}
+hyper_params = {"halc_params": halc_params}
 
-chat = Chat(model, vis_processor, device='cuda:{}'.format(args.gpu_id), stopping_criteria=stopping_criteria, decoding_strategy=decoding_strategy)
+chat = Chat(model, vis_processor, device='cuda:{}'.format(args.gpu_id), stopping_criteria=stopping_criteria, decoding_strategy=decoding_strategy, hyper_params=hyper_params)
 print('Initialization Finished')
 
 

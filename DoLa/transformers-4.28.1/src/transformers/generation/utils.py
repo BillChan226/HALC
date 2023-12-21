@@ -4345,11 +4345,6 @@ class GenerationMixin:
         # info to go back to main for debug
         info_dict = {}
 
-        JSD_matrix = []
-        clock_matrix = []
-        surf_matrix = []
-        premature_layer_list = []
-        all_layer_matrix = []
         initial_model_kwargs = copy.copy(model_kwargs)
         initial_input_ids = copy.copy(input_ids)
 
@@ -4433,13 +4428,8 @@ class GenerationMixin:
 
                 # 6. Reduce the batchmean
                 js_divs = js_divs.mean(-1)  # shape: (num_premature_layers,)
-
-                # print("js_divs ", js_divs*10000)
-                # JSD_matrix.append(js_divs)
-
                 premature_layer = candidate_premature_layers[int(js_divs.argmax().cpu().item())]
-                premature_layer_list.append(premature_layer)
-                # print("premature_layer", premature_layer)
+
                 premature_layer_dist[premature_layer] += 1
                 # record_data = candidate_premature_layers + mature_layer
                 all_layer_logits = []
@@ -4669,7 +4659,6 @@ class GenerationMixin:
                 model_kwargs = self._update_model_kwargs_for_generation(
                     outputs, model_kwargs, is_encoder_decoder=self.config.is_encoder_decoder
                 )
-
 
             last_tokens.append(next_tokens[:, None].cpu().numpy().tolist()[0][0])
 
@@ -4910,14 +4899,42 @@ class GenerationMixin:
         # info to go back to main for debug
         info_dict = {}
 
+        beam_size = 1
         initial_model_kwargs = copy.copy(model_kwargs)
         initial_input_ids = copy.copy(input_ids)
 
         intermediate_token_lists = input_ids
         last_tokens = []
 
+        # create copies for beam search
+
+        beam_search_states_dict = {}
+        states_dict = {"input_ids": input_ids, "unfinished_sequences": unfinished_sequences, 
+        "intermediate_token_lists": intermediate_token_lists, 
+        "last_tokens": last_tokens, "model_kwargs": model_kwargs, 
+        "initial_model_kwargs": initial_model_kwargs, "initial_input_ids": initial_input_ids}
+        
+        for i in range(beam_size):
+            states_dict = copy.copy(states_dict)
+            beam_search_states_dict[i] = states_dict
+
+
         while True:
             
+
+        # for bs in range(beam_size):
+
+            # # get states for this search
+            # states_dict = beam_search_states_dict[bs]
+            # input_ids = states_dict["input_ids"]
+            # unfinished_sequences = states_dict["unfinished_sequences"]
+            # intermediate_token_lists = states_dict["intermediate_token_lists"]
+            # last_tokens = states_dict["last_tokens"]
+            # model_kwargs = states_dict["model_kwargs"]
+            # initial_model_kwargs = states_dict["initial_model_kwargs"]
+            # initial_input_ids = states_dict["initial_input_ids"]
+
+
             if synced_gpus:
                 # Under synced_gpus the `forward` call must continue until all gpus complete their sequence.
                 # The following logic allows an early break if all peers finished generating their sequence
@@ -4931,6 +4948,7 @@ class GenerationMixin:
             # prepare model inputs
             model_inputs = self.prepare_inputs_for_generation(input_ids, **model_kwargs)
 
+            # print("early_exit_layers", early_exit_layers)
             # forward pass to get next token
             dict_outputs, outputs = self(
                 **model_inputs,
@@ -4997,7 +5015,6 @@ class GenerationMixin:
                 # JSD_matrix.append(js_divs)
 
                 premature_layer = candidate_premature_layers[int(js_divs.argmax().cpu().item())]
-                # print("premature_layer", premature_layer)
                 premature_layer_dist[premature_layer] += 1
                 # record_data = candidate_premature_layers + mature_layer
                 all_layer_logits = []
@@ -5007,6 +5024,7 @@ class GenerationMixin:
 
                 base_logits = dict_outputs[premature_layer][:, -1, :]
                 final_logits = dict_outputs[mature_layer][:, -1, :]
+                # print("\nfinal_logits first", final_logits)
 
                 if relative_top > 0.0:
                     final_logits = self.relative_top_filter(final_logits, relative_top)
@@ -5049,13 +5067,14 @@ class GenerationMixin:
 
             if last_word_flag == False:
                 token_to_append = None
+    
             else:
-                # intermediate_token_lists = torch.cat([intermediate_token_lists, next_tokens[:, None]], dim=-1)
                 once_flag = False
-                last_model_kwargs_2 = copy.copy(model_kwargs)
+                # last_model_kwargs_2 = copy.copy(model_kwargs)
+                last_model_kwargs = copy.copy(model_kwargs)
 
                 if len(last_tokens) == 0:
-                    contrast_logits = next_token_logits
+                    # contrast_logits = next_token_logits
                     token_to_append = None
                 else:
                     current_word = self.halc_assistant.get_last_word(last_tokens) 
@@ -5092,14 +5111,15 @@ class GenerationMixin:
 
                             context_logits_list.append(context_logits)
 
+                        ############ Contrast Decoding Policy ############
                         # skip_flag, contrast_logits = self.halc_assistant.naive_focus_decoding(context_logits_list)
                         # contrast_logits = self.halc_assistant.context_curve_contrastive_decoding(context_logits_list)
                         # skip_flag, contrast_logits = self.halc_assistant.context_contrastive_decoding(context_logits_list, last_tokens)
                         # skip_flag, contrast_logits = self.halc_assistant.auto_regressive_decoding(context_logits_list)
-                        
                         skip_flag, contrast_logits = self.halc_assistant.context_layer_contrastive_decoding(context_logits_list, last_tokens)
-
                         # skip_flag, contrast_logits = self.halc_assistant.auto_contrastive_context_decoding(context_logits_list, last_tokens)
+                        ############ Contrast Decoding Policy ############
+
                         if skip_flag == True:
                             token_to_append = torch.tensor([last_tokens]).to(input_ids.device)
                         else:
@@ -5128,6 +5148,8 @@ class GenerationMixin:
 
                             nominate_tokens = torch.argmax(next_tokens_scores, dim=-1)
 
+                            # print("nominate_tokens", nominate_tokens)
+
                             # finished sentences should have their next token be a padding token
                             if eos_token_id is not None:
                                 if pad_token_id is None:
@@ -5142,6 +5164,8 @@ class GenerationMixin:
 
                 last_tokens = []
 
+            # break
+
             if token_to_append != None:
                 # print("token_to_append", token_to_append)
 
@@ -5155,8 +5179,9 @@ class GenerationMixin:
                 if last_word != current_word:
                     # print("\033[41m!!!!! Hallucination Detected !!!!!!\033[0m")
                     # which means hallucination has been corrected, then resample a last token
-                    if last_word_flag == True:
-                        last_model_kwargs = copy.copy(last_model_kwargs_2)
+
+                    # if last_word_flag == True:
+                    #     last_model_kwargs = copy.copy(last_model_kwargs_2)
 
                     model_inputs = self.prepare_inputs_for_generation(intermediate_token_lists, **last_model_kwargs)
 
@@ -5168,11 +5193,12 @@ class GenerationMixin:
                         early_exit_layers=early_exit_layers,
                     )
 
+                    intermediate_base_logits = intermediate_dict_outputs[premature_layer][:, -1, :]
                     intermediate_final_logits = intermediate_dict_outputs[mature_layer][:, -1, :]
 
                     if relative_top > 0.0:
                         final_logits = self.relative_top_filter(intermediate_final_logits, relative_top)
-                        base_logits = base_logits.log_softmax(dim=-1)
+                        base_logits = intermediate_base_logits.log_softmax(dim=-1)
                         mask = final_logits[0] < -1e3
                         base_logits[0][mask] = -1e3
                     logits = final_logits - base_logits
@@ -5183,29 +5209,35 @@ class GenerationMixin:
 
                     # Store scores, attentions and hidden_states when required
                     if return_dict_in_generate:
+                        # input("here")
                         if output_scores:
                             scores += (next_tokens_scores,)
                         if output_attentions:
                             decoder_attentions += (
-                                (outputs.decoder_attentions,)
+                                (intermediate_outputs.decoder_attentions,)
                                 if self.config.is_encoder_decoder
-                                else (outputs.attentions,)
+                                else (intermediate_outputs.attentions,)
                             )
                             if self.config.is_encoder_decoder:
                                 cross_attentions += (outputs.cross_attentions,)
 
                         if output_hidden_states:
                             decoder_hidden_states += (
-                                (outputs.decoder_hidden_states,)
+                                (intermediate_outputs.decoder_hidden_states,)
                                 if self.config.is_encoder_decoder
-                                else (outputs.hidden_states,)
+                                else (intermediate_outputs.hidden_states,)
                             )
 
+                    # print("\next_tokens_scores", next_tokens_scores)
                     next_tokens = torch.argmax(next_tokens_scores, dim=-1)
                     last_word_flag = self.halc_assistant.check_word_complete(next_tokens[:, None])
                     # print("resample token", next_tokens)
                     last_tokens = []
                     model_kwargs = copy.copy(last_model_kwargs)
+                    model_kwargs = self._update_model_kwargs_for_generation(
+                        intermediate_outputs, model_kwargs, is_encoder_decoder=self.config.is_encoder_decoder
+                    )
+
                 else:
                     model_kwargs = self._update_model_kwargs_for_generation(
                         outputs, model_kwargs, is_encoder_decoder=self.config.is_encoder_decoder
@@ -5215,7 +5247,6 @@ class GenerationMixin:
                     outputs, model_kwargs, is_encoder_decoder=self.config.is_encoder_decoder
                 )
 
-
             last_tokens.append(next_tokens[:, None].cpu().numpy().tolist()[0][0])
 
             # update generated ids, model inputs, and length for next step
@@ -5223,7 +5254,6 @@ class GenerationMixin:
 
             if streamer is not None:
                 streamer.put(next_tokens.cpu())
-
 
             if last_word_flag == False:
                 if once_flag == False:
@@ -5273,8 +5303,6 @@ class GenerationMixin:
                 )
         else:
             return input_ids, info_dict
-
-
 
 
 
@@ -5874,19 +5902,9 @@ class GenerationMixin:
             probs = nn.functional.softmax(next_token_scores, dim=-1)
             next_tokens = torch.multinomial(probs, num_samples=1).squeeze(1)
 
-            # print("next_tokens", next_tokens)
-            # print("teacher_forcing_tokens[tf]", teacher_forcing_tokens[tf])
             if len(teacher_forcing_tokens[0]) - 1 == tf:
                 break
             next_tokens[0] = teacher_forcing_tokens[0][tf + 1]
-
-            # print("\nnext_tokens:::", next_tokens)
-
-            # # finished sentences should have their next token be a padding token
-            # if eos_token_id is not None:
-            #     if pad_token_id is None:
-            #         raise ValueError("If `eos_token_id` is defined, make sure that `pad_token_id` is defined.")
-            #     next_tokens = next_tokens * unfinished_sequences + pad_token_id * (1 - unfinished_sequences)
 
             # update generated ids, model inputs, and length for next step
             input_ids = torch.cat([input_ids, next_tokens[:, None]], dim=-1)
@@ -5896,6 +5914,8 @@ class GenerationMixin:
             model_kwargs = self._update_model_kwargs_for_generation(
                 outputs, model_kwargs, is_encoder_decoder=self.config.is_encoder_decoder
             )
+            # if len(teacher_forcing_tokens[0]) - 1 == tf:
+            #     break
 
             # if eos_token was found in one sentence, set sentence to finished
             if eos_token_id_tensor is not None:
@@ -5910,19 +5930,9 @@ class GenerationMixin:
                 else:
                     this_peer_finished = True
 
-        # # prepare model inputs
-        # model_inputs = self.prepare_inputs_for_generation(input_ids, **model_kwargs)
-
-        # # forward pass to get next token
-        # outputs = self(
-        #     **model_inputs,
-        #     return_dict=True,
-        #     output_attentions=output_attentions,
-        #     output_hidden_states=output_hidden_states,
-        # )
-
-        # next_token_logits = outputs.logits[:, -1, :]
-        # print("\nnext_token_logits in get intermediate", next_tokens)
+        model_kwargs = self._update_model_kwargs_for_generation(
+            outputs, model_kwargs, is_encoder_decoder=self.config.is_encoder_decoder
+        )
         return next_token_logits, model_kwargs
 
     def beam_search(

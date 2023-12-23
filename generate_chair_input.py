@@ -74,7 +74,7 @@ def initialize_mini_gpt_4(parser):
         [StoppingCriteriaSub(stops=stop_words_ids)]
     )
 
-    halc_params = {"context_domain": True, "contrast_weight": 0.05, "context_window": 4, "expand_ratio": 0.1}
+    halc_params = {"context_domain": "upper", "contrast_weight": 0.05, "context_window": 4, "expand_ratio": 0.1}
     hyper_params = {"halc_params": halc_params}
     chat = Chat(
         model,

@@ -36,6 +36,7 @@ def parse_args():
         "in xxx=yyy format will be merged into config file (deprecate), "
         "change to --cfg-options instead.",
     )
+    parser.add_argument("-d", type=str, default="dola", help="decoding strategy")
     args = parser.parse_args()
     return args
 
@@ -77,16 +78,21 @@ stop_words_ids = [torch.tensor(ids).to(device='cuda:{}'.format(args.gpu_id)) for
 stopping_criteria = StoppingCriteriaList([StoppingCriteriaSub(stops=stop_words_ids)])
 
 # img = '/home/czr/contrast_decoding_LVLMs/eval_dataset/val2014/COCO_val2014_000000043448.jpg'
-img = "/home/czr/contrast_decoding_LVLMs/hallucinatory_image/beach_on_a_clock.png"
+# img = "/home/czr/contrast_decoding_LVLMs/hallucinatory_image/beach_on_a_clock.png"
+# img = "/home/czr/contrast_decoding_LVLMs/hallucinatory_image/pizza_with_topping.jpg"
+img = "/home/czr/contrast_decoding_LVLMs/hallucinatory_image/dog_tv.jpg"
 # img = "/home/czr/contrast_decoding_LVLMs/eval_dataset/val2014/COCO_val2014_000000000196.jpg"
 # img = "/home/czr/contrast_decoding_LVLMs/hallucinatory_image/zoom_in_2.png"
 # img = "/home/czr/contrast_decoding_LVLMs/hallucinatory_image/zoom_in_3.png"
 
 # decoding_strategy = "halc-dola"
 # decoding_strategy = "halc-greedy"
-decoding_strategy = "halc-beam"
+# decoding_strategy = "halc-beam"
+decoding_strategy = args.d
 
 halc_params = {"context_domain": "upper", "contrast_weight": 0.05, "context_window": 4, "expand_ratio": 0.1}
+
+# halc_params = {"context_domain": "upper", "contrast_weight": 0.05, "context_window": 4, "expand_ratio": 0.2}
 hyper_params = {"halc_params": halc_params}
 
 chat = Chat(model, vis_processor, device='cuda:{}'.format(args.gpu_id), stopping_criteria=stopping_criteria, decoding_strategy=decoding_strategy, hyper_params=hyper_params)
@@ -104,8 +110,10 @@ chat.encode_img(img_list, early_exit_layer_idx)
 
 # chat.ask("Briefly describe the image.", CONV_VISION)
 # chat.ask("Describe the man with detail.", CONV_VISION)
-chat.ask("What is the man holding in his hand?", CONV_VISION)
+# chat.ask("What is the man holding in his hand?", CONV_VISION)
+chat.ask("Generate a one sentence caption of the image.", CONV_VISION)
 
 output_text, output_token, info = chat.answer(CONV_VISION, img_list)
 
 print("output_text", output_text)
+print(f"\033[1;45m Final Decoded Text: {output_text} \033[0m")

@@ -34,6 +34,7 @@ class halc_assistant:
         self.tagging = spacy.load("en_core_web_sm")
         self.tokenizer = self.model.llama_tokenizer
         self.halc_params = halc_params
+        self.k_candidate_num = 4
         token_vocab_dir = "./model_checkpoints/models--meta-llama--Llama-2-7b-chat-hf/snapshots/c1b0db933684edbfe29a06fa47eb19cc48025e93/tokenizer.json"
         # token_vocab_dir = "/media/zhuokai/SN850X_4TB/contrast_decoding_LVLMs/model_checkpoints/models--meta-llama--Llama-2-7b-chat-hf/snapshots/c1b0db933684edbfe29a06fa47eb19cc48025e93/tokenizer.json"
         if not os.path.exists(token_vocab_dir):
@@ -58,8 +59,7 @@ class halc_assistant:
         input_id = input_id.cpu().numpy().tolist()
         # print("input_id", input_id)
         final_tokens = self.token_vocab[input_id[0][0]]
-
-        if "▁" in final_tokens or "." in final_tokens:
+        if "▁" in final_tokens or "." in final_tokens or input_id[0][0] == 2:
             last_word_flag = True
         else:
             last_word_flag = False
@@ -72,6 +72,11 @@ class halc_assistant:
         last_word = output_text.split(" ")[-1]
 
         return last_word
+
+    def get_sequence_text(self, input_ids):
+        output_text = self.tokenizer.decode(input_ids, skip_special_tokens=True)
+
+        return output_text
 
     def compute_bbox_size(self, bbox):
         """
@@ -146,7 +151,6 @@ class halc_assistant:
         detect_info = {}
 
         
-
         if len(doc) < 1:
             detect_info["pos"] = "PUNC"
         else:
@@ -579,3 +583,65 @@ class halc_assistant:
         # we always use the target layer for decoding
 
         return skip_flag, contrast_logits
+
+
+    def context_layer_multi_contrastive_decoding(self, context_logits_list, last_tokens):
+        """
+        The method uses a list of context windows rooted from the DINO detection one and apply the contrastive decoding method to each context-window pair to get a list of contrastive logits. Then we use the contrastive logits to do the decoding.
+        """
+        skip_flag = False
+        k_candidate = self.k_candidate_num
+        all_layer_indices = range(len(context_logits_list))
+
+
+        stacked_premature_layers = torch.stack(
+            [context_logits_list[i] for i in all_layer_indices],
+            dim=0,
+        )
+
+        num_layers = len(stacked_premature_layers)
+        jsd_matrix = torch.zeros((num_layers, num_layers))
+
+        for i in range(num_layers):
+            for j in range(i+1, num_layers):
+                M = 0.5 * (F.softmax(stacked_premature_layers[i], dim=-1) + F.softmax(stacked_premature_layers[j], dim=-1))
+                kl1 = F.kl_div(F.log_softmax(stacked_premature_layers[i], dim=-1), M, reduction="batchmean")
+                kl2 = F.kl_div(F.log_softmax(stacked_premature_layers[j], dim=-1), M, reduction="batchmean")
+                jsd = 0.5 * (kl1 + kl2)
+                jsd_matrix[i, j] = jsd
+                jsd_matrix[j, i] = jsd  # Symmetric matrix
+
+
+        # Find indices of top k_candidate JSD values
+        upper_tri_flat = jsd_matrix.triu(diagonal=1).flatten()
+        top_k_indices_flat = torch.topk(upper_tri_flat, k_candidate).indices
+        rows = top_k_indices_flat // jsd_matrix.size(1)
+        cols = top_k_indices_flat % jsd_matrix.size(1)
+        top_k_indices = list(zip(rows.tolist(), cols.tolist()))
+
+        contrast_logits_array = []
+        context_domain = self.halc_params["context_domain"]
+        contrast_weight = self.halc_params["contrast_weight"]
+
+        for (layer_idx1, layer_idx2) in top_k_indices:
+            # print("base_layer, final_layer: ", layer_idx1, layer_idx2)
+            # (layer_idx1, layer_idx2) = top_k_indices[0]
+
+            # Update final_logits and base_logits
+            if context_domain == "upper":
+                base_logits = context_logits_list[layer_idx1]
+                final_logits = context_logits_list[layer_idx2]
+            elif context_domain == "lower":
+                base_logits = context_logits_list[layer_idx2]
+                final_logits = context_logits_list[layer_idx1]
+            else:
+                raise ValueError("Invalid context domain!")
+
+            mask = final_logits[0] < -1e3
+            base_logits[0][mask] = -1e3
+
+            # contrast_logits = final_logits - base_logits * 0.05
+            contrast_logits = final_logits - base_logits * contrast_weight
+            contrast_logits_array.append(contrast_logits)
+
+        return skip_flag, contrast_logits_array

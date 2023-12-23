@@ -27,20 +27,7 @@ def initialize_mini_gpt_4(parser, hyper_params):
     from minigpt4.common.config import Config
     from minigpt4.common.registry import registry
 
-    # model specific parser
-    parser_group = parser.add_argument_group("MiniGPT4")
-    parser_group.add_argument(
-        "--cfg_path",
-        default="./eval_configs/minigpt4_llama2_eval_hallucination.yaml",
-        help="path to configuration file.",
-    )
-    parser_group.add_argument(
-        "--options",
-        nargs="+",
-        help="override some settings in the used config, the key-value pair "
-        "in xxx=yyy format will be merged into config file (deprecate), "
-        "change to --cfg_options instead.",
-    )
+
 
     args = parser.parse_args()
 
@@ -87,7 +74,7 @@ def initialize_mini_gpt_4(parser, hyper_params):
 
 
 # main function
-def generate_chair_input(hyper_params):
+def generate_chair_input(hyper_params, args):
 
     decoding_strategy = args.decoder
     model_name = args.model_name
@@ -107,6 +94,13 @@ def generate_chair_input(hyper_params):
         print("output_dir: ", output_dir)
         print("num_samples: ", num_samples)
         print("seed: ", seed)
+
+
+    halc_params = hyper_params["halc_params"]
+    context_domain = halc_params["context_domain"]
+    contrast_weight = halc_params["contrast_weight"]
+    context_window = halc_params["context_window"]
+    expand_ratio = halc_params["expand_ratio"]
 
     # set seed
     random.seed(seed)
@@ -131,7 +125,7 @@ def generate_chair_input(hyper_params):
     # generated caption file path
     generated_captions_path = os.path.join(
         output_dir,
-        f"{model_name}_{model_type}_{decoding_strategy}_{dataset_name}_{num_samples}_generated_captions.json",
+        f"{model_name}_{model_type}_{decoding_strategy}_{dataset_name}_{context_domain}_{contrast_weight}_{context_window}_{expand_ratio}_{num_samples}_generated_captions.json",
     )
 
     # chair input varies by dataset
@@ -142,6 +136,7 @@ def generate_chair_input(hyper_params):
         )
         # with the coco api
         coco = COCO(annotation_file_path)
+
 
         # if generated captions already exist
         if os.path.exists(generated_captions_path):
@@ -164,7 +159,7 @@ def generate_chair_input(hyper_params):
             ):
                 cur_generated_captions_path = os.path.join(
                     output_dir,
-                    f"{model_name}_{model_type}_{decoding_strategy}_{dataset_name}_{i+1}_generated_captions.json",
+                    f"{model_name}_{model_type}_{decoding_strategy}_{dataset_name}_{context_domain}_{contrast_weight}_{context_window}_{expand_ratio}_{i+1}_generated_captions.json",
                 )
 
                 # current image
@@ -209,12 +204,6 @@ def generate_chair_input(hyper_params):
                     print(f"\nGenerated captions saved to {output_dir}.")
 
                 # remove the previous file
-                halc_params = hyper_params["halc_params"]
-                context_domain = halc_params["context_domain"]
-                contrast_weight = halc_params["contrast_weight"]
-                context_window = halc_params["context_window"]
-                expand_ratio = halc_params["expand_ratio"]
-
                 if i > 0:
                     prev_generated_captions_path = os.path.join(
                         output_dir,
@@ -281,7 +270,9 @@ def generate_chair_input(hyper_params):
         # save the formulated output dict
         formulated_output_path = os.path.join(
             output_dir,
-            f"{model_name}_{model_type}_{decoding_strategy}_{dataset_name}_{num_samples}_chair.json",
+            f"{model_name}_{model_type}_{decoding_strategy}_{dataset_name}_{context_domain}_{contrast_weight}_{context_window}_{expand_ratio}_{num_samples}_chair.json",
+
+            # f"{model_name}_{model_type}_{decoding_strategy}_{dataset_name}_{num_samples}_chair.json",
         )
         with open(formulated_output_path, "w") as f:
             json.dump(formulated_output_dict, f)
@@ -354,6 +345,21 @@ if __name__ == "__main__":
         help="specify the gpu to load the model.",
     )
 
+        # model specific parser
+    parser_group = parser.add_argument_group("MiniGPT4")
+    parser_group.add_argument(
+        "--cfg_path",
+        default="./eval_configs/minigpt4_llama2_eval_hallucination.yaml",
+        help="path to configuration file.",
+    )
+    parser_group.add_argument(
+        "--options",
+        nargs="+",
+        help="override some settings in the used config, the key-value pair "
+        "in xxx=yyy format will be merged into config file (deprecate), "
+        "change to --cfg_options instead.",
+    )
+
     # load program level arguments
     args = parser.parse_args()
 
@@ -372,4 +378,4 @@ if __name__ == "__main__":
                 halc_params["expand_ratio"] = expand_ratio
                 hyper_params = {"halc_params": halc_params}
                 print("hyper_params: ", hyper_params)
-                generate_chair_input(hyper_params)
+                generate_chair_input(hyper_params, args)

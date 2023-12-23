@@ -271,7 +271,7 @@ class Chat:
             premature_layer=premature_layer,
             candidate_premature_layers=candidate_premature_layers,
             mature_layer=mature_layer,
-            return_dict_in_generate=True,
+            return_dict_in_generate=False,
             halc_assistant=self.halc_assistant
         )
         return generation_kwargs
@@ -284,7 +284,8 @@ class Chat:
         # print("output_token: ", output_token)
         # print("info", info)
         # print("output_token", output_token)
-        sequences, scores = output_token.sequences, output_token.scores
+        # sequences, scores = output_token.sequences, output_token.scores
+        sequences = output_token
         inputs_embeds = generation_dict["inputs_embeds"]
         # print("inputs_embeds.shape[-1]", inputs_embeds.shape[-1])
         # skip the tokens in the input prompt

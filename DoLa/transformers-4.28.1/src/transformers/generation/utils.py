@@ -25,6 +25,7 @@ import torch.distributed as dist
 from torch import nn
 from torch.nn import functional as F
 import numpy as np
+import random
 
 from ..deepspeed import is_deepspeed_zero3_enabled
 from ..modeling_outputs import CausalLMOutputWithPast, Seq2SeqLMOutput
@@ -3725,8 +3726,8 @@ class GenerationMixin:
                 early_exit_layers=early_exit_layers,
             )
 
-            print("base_layer: ", base_layer)
-            print("candidate_premature_layers: ", candidate_premature_layers)
+            # print("base_layer: ", base_layer)
+            # print("candidate_premature_layers: ", candidate_premature_layers)
             # input()
 
             if synced_gpus and this_peer_finished:
@@ -4612,6 +4613,8 @@ class GenerationMixin:
                         early_exit_layers=early_exit_layers,
                     )
 
+                    ### bug fixed ###
+                    base_logits = intermediate_dict_outputs[premature_layer][:, -1, :]
                     intermediate_final_logits = intermediate_dict_outputs[mature_layer][:, -1, :]
 
                     if relative_top > 0.0:
@@ -4651,6 +4654,13 @@ class GenerationMixin:
                     # print("resample token", next_tokens)
                     last_tokens = []
                     model_kwargs = copy.copy(last_model_kwargs)
+
+                    # ### bug fixed ### may consider remove this though!
+                    # model_kwargs = self._update_model_kwargs_for_generation(
+                    #     intermediate_outputs, model_kwargs, is_encoder_decoder=self.config.is_encoder_decoder
+                    # )
+                    # ### bug fixed ###
+
                 else:
                     model_kwargs = self._update_model_kwargs_for_generation(
                         outputs, model_kwargs, is_encoder_decoder=self.config.is_encoder_decoder
@@ -4687,14 +4697,6 @@ class GenerationMixin:
                 else:
                     this_peer_finished = True
 
-        # print("input_ids", input_ids)
-        output_text = self.halc_assistant.tokenizer.decode(input_ids[0], skip_special_tokens=True)
-        # print("output_text", output_text)
-        # intermediate_token_lists = torch.cat([intermediate_token_lists, input_ids[:, -1]], dim=-1)
-        # input_ids = intermediate_token_lists
-        output_text = self.halc_assistant.tokenizer.decode(input_ids[0], skip_special_tokens=True)
-        # print("output_text", output_text)
-        # print("input_ids", input_ids)
         if streamer is not None:
             streamer.end()
 
@@ -4728,7 +4730,7 @@ class GenerationMixin:
 
 
 
-    def halc_dola_beam_search(
+    def halc_dola_archive_decoding(
         self,
         input_ids: torch.LongTensor,
         mature_layer: int,
@@ -5306,9 +5308,670 @@ class GenerationMixin:
 
 
 
+    def halc_dola_beam_search(
+        self,
+        input_ids: torch.LongTensor,
+        mature_layer: int,
+        base_layer: Optional[int] = None,
+        candidate_premature_layers: Optional[List[int]] = None,
+        relative_top: float = 0.1,
+        logits_processor: Optional[LogitsProcessorList] = None,
+        stopping_criteria: Optional[StoppingCriteriaList] = None,
+        max_length: Optional[int] = None,
+        pad_token_id: Optional[int] = None,
+        eos_token_id: Optional[Union[int, List[int]]] = None,
+        output_attentions: Optional[bool] = None,
+        output_hidden_states: Optional[bool] = None,
+        output_scores: Optional[bool] = None,
+        return_dict_in_generate: Optional[bool] = None,
+        synced_gpus: Optional[bool] = False,
+        streamer: Optional["BaseStreamer"] = None,
+        **model_kwargs,
+    ) -> Union[GreedySearchOutput, torch.LongTensor]:
+        r"""
+        Generates sequences of token ids for models with a language modeling head using **greedy decoding** and can be
+        used for text-decoder, text-to-text, speech-to-text, and vision-to-text models.
+
+        <Tip warning={true}>
+
+        In most cases, you do not need to call [`~generation.GenerationMixin.greedy_search`] directly. Use generate()
+        instead. For an overview of generation strategies and code examples, check the [following
+        guide](../generation_strategies).
+
+        </Tip>
+
+        Parameters:
+            input_ids (`torch.LongTensor` of shape `(batch_size, sequence_length)`):
+                The sequence used as a prompt for the generation.
+            logits_processor (`LogitsProcessorList`, *optional*):
+                An instance of [`LogitsProcessorList`]. List of instances of class derived from [`LogitsProcessor`]
+                used to modify the prediction scores of the language modeling head applied at each generation step.
+            stopping_criteria (`StoppingCriteriaList`, *optional*):
+                An instance of [`StoppingCriteriaList`]. List of instances of class derived from [`StoppingCriteria`]
+                used to tell if the generation loop should stop.
+
+            max_length (`int`, *optional*, defaults to 20):
+                **DEPRECATED**. Use `logits_processor` or `stopping_criteria` directly to cap the number of generated
+                tokens. The maximum length of the sequence to be generated.
+            pad_token_id (`int`, *optional*):
+                The id of the *padding* token.
+            eos_token_id (`Union[int, List[int]]`, *optional*):
+                The id of the *end-of-sequence* token. Optionally, use a list to set multiple *end-of-sequence* tokens.
+            output_attentions (`bool`, *optional*, defaults to `False`):
+                Whether or not to return the attentions tensors of all attention layers. See `attentions` under
+                returned tensors for more details.
+            output_hidden_states (`bool`, *optional*, defaults to `False`):
+                Whether or not to return the hidden states of all layers. See `hidden_states` under returned tensors
+                for more details.
+            output_scores (`bool`, *optional*, defaults to `False`):
+                Whether or not to return the prediction scores. See `scores` under returned tensors for more details.
+            return_dict_in_generate (`bool`, *optional*, defaults to `False`):
+                Whether or not to return a [`~utils.ModelOutput`] instead of a plain tuple.
+            synced_gpus (`bool`, *optional*, defaults to `False`):
+                Whether to continue running the while loop until max_length (needed for ZeRO stage 3)
+            streamer (`BaseStreamer`, *optional*):
+                Streamer object that will be used to stream the generated sequences. Generated tokens are passed
+                through `streamer.put(token_ids)` and the streamer is responsible for any further processing.
+            model_kwargs:
+                Additional model specific keyword arguments will be forwarded to the `forward` function of the model.
+                If model is an encoder-decoder model the kwargs should include `encoder_outputs`.
+
+        Return:
+            [`~generation.GreedySearchDecoderOnlyOutput`], [`~generation.GreedySearchEncoderDecoderOutput`] or
+            `torch.LongTensor`: A `torch.LongTensor` containing the generated tokens (default behaviour) or a
+            [`~generation.GreedySearchDecoderOnlyOutput`] if `model.config.is_encoder_decoder=False` and
+            `return_dict_in_generate=True` or a [`~generation.GreedySearchEncoderDecoderOutput`] if
+            `model.config.is_encoder_decoder=True`.
+
+        Examples:
+
+        ```python
+        >>> from transformers import (
+        ...     AutoTokenizer,
+        ...     AutoModelForCausalLM,
+        ...     LogitsProcessorList,
+        ...     MinLengthLogitsProcessor,
+        ...     StoppingCriteriaList,
+        ...     MaxLengthCriteria,
+        ... )
+
+        >>> tokenizer = AutoTokenizer.from_pretrained("gpt2")
+        >>> model = AutoModelForCausalLM.from_pretrained("gpt2")
+
+        >>> # set pad_token_id to eos_token_id because GPT2 does not have a PAD token
+        >>> model.generation_config.pad_token_id = model.generation_config.eos_token_id
+
+        >>> input_prompt = "It might be possible to"
+        >>> input_ids = tokenizer(input_prompt, return_tensors="pt").input_ids
+
+        >>> # instantiate logits processors
+        >>> logits_processor = LogitsProcessorList(
+        ...     [
+        ...         MinLengthLogitsProcessor(10, eos_token_id=model.generation_config.eos_token_id),
+        ...     ]
+        ... )
+        >>> stopping_criteria = StoppingCriteriaList([MaxLengthCriteria(max_length=20)])
+
+        >>> outputs = model.greedy_search(
+        ...     input_ids, logits_processor=logits_processor, stopping_criteria=stopping_criteria
+        ... )
+
+        >>> tokenizer.batch_decode(outputs, skip_special_tokens=True)
+        ["It might be possible to get a better understanding of the nature of the problem, but it's not"]
+        ```"""
+        # init values
+        logits_processor = logits_processor if logits_processor is not None else LogitsProcessorList()
+        stopping_criteria = stopping_criteria if stopping_criteria is not None else StoppingCriteriaList()
+        if max_length is not None:
+            warnings.warn(
+                "`max_length` is deprecated in this function, use"
+                " `stopping_criteria=StoppingCriteriaList([MaxLengthCriteria(max_length=max_length)])` instead.",
+                UserWarning,
+            )
+            stopping_criteria = validate_stopping_criteria(stopping_criteria, max_length)
+        pad_token_id = pad_token_id if pad_token_id is not None else self.generation_config.pad_token_id
+        eos_token_id = eos_token_id if eos_token_id is not None else self.generation_config.eos_token_id
+        if isinstance(eos_token_id, int):
+            eos_token_id = [eos_token_id]
+        eos_token_id_tensor = torch.tensor(eos_token_id).to(input_ids.device) if eos_token_id is not None else None
+        output_scores = output_scores if output_scores is not None else self.generation_config.output_scores
+        output_attentions = (
+            output_attentions if output_attentions is not None else self.generation_config.output_attentions
+        )
+        output_hidden_states = (
+            output_hidden_states if output_hidden_states is not None else self.generation_config.output_hidden_states
+        )
+        return_dict_in_generate = (
+            return_dict_in_generate
+            if return_dict_in_generate is not None
+            else self.generation_config.return_dict_in_generate
+        )
+
+        # init attention / hidden states / scores tuples
+        scores = () if (return_dict_in_generate and output_scores) else None
+        decoder_attentions = () if (return_dict_in_generate and output_attentions) else None
+        cross_attentions = () if (return_dict_in_generate and output_attentions) else None
+        decoder_hidden_states = () if (return_dict_in_generate and output_hidden_states) else None
+
+        # if model is an encoder-decoder, retrieve encoder attention weights and hidden states
+        if return_dict_in_generate and self.config.is_encoder_decoder:
+            encoder_attentions = model_kwargs["encoder_outputs"].get("attentions") if output_attentions else None
+            encoder_hidden_states = (
+                model_kwargs["encoder_outputs"].get("hidden_states") if output_hidden_states else None
+            )
+
+        # keep track of which sequences are already finished
+        unfinished_sequences = torch.ones(input_ids.shape[0], dtype=torch.long, device=input_ids.device)
+
+        this_peer_finished = False  # used by synced_gpus only
+
+        if base_layer is not None and candidate_premature_layers is None:
+            early_exit_layers = [base_layer, mature_layer]
+            num_base_layers = 1
+            premature_layer_dist = {}
+        elif candidate_premature_layers is not None:
+            early_exit_layers = candidate_premature_layers + [mature_layer]
+            num_base_layers = len(candidate_premature_layers)
+            premature_layer_dist = {l: 0 for l in candidate_premature_layers}
+        else:
+            raise ValueError("You must specify either `base_layer` or `candidate_premature_layers`")
+
+        # info to go back to main for debug
+        info_dict = {}
+
+        beam_size = 3
+        initial_model_kwargs = copy.copy(model_kwargs)
+        initial_input_ids = copy.copy(input_ids)
+
+        intermediate_token_lists = input_ids
+        last_tokens = []
 
 
+        def deep_copy_tensor_structure(structure):
+            """
+            Deep copy a nested structure of lists/dicts containing PyTorch tensors,
+            while preserving the tensor's gradient information.
+            """
+            if isinstance(structure, torch.Tensor):
+                # Clone tensor and preserve grad property
+                return structure.clone().detach().requires_grad_(structure.requires_grad)
+            elif isinstance(structure, dict):
+                # Recursively deep copy dictionary
+                return {k: deep_copy_tensor_structure(v) for k, v in structure.items()}
+            elif isinstance(structure, list):
+                # Recursively deep copy list
+                return [deep_copy_tensor_structure(v) for v in structure]
+            else:
+                # If not a tensor, dict, or list, return the structure as is (could be modified to handle other types)
+                return structure
 
+        # create copies for beam search
+        # beam_intermediate_token_lists = [intermediate_token_lists] * beam_size
+        beam_intermediate_token_lists = [deep_copy_tensor_structure(intermediate_token_lists) for _ in range(beam_size)]
+        intermediate_token_lists = None
+        # beam_input_ids = [input_ids] * beam_size
+        beam_input_ids = [deep_copy_tensor_structure(input_ids) for _ in range(beam_size)]
+        input_ids = None
+        beam_outputs = [None] * beam_size
+        beam_dict_outputs = [None] * beam_size
+        # beam_unfinished_sequences = [unfinished_sequences] * beam_size
+        beam_unfinished_sequences = [deep_copy_tensor_structure(unfinished_sequences) for _ in range(beam_size)]
+        unfinished_sequences = None
+        # beam_model_kwargs = [model_kwargs] * beam_size
+        beam_model_kwargs = [deep_copy_tensor_structure(model_kwargs) for _ in range(beam_size)]
+        model_kwargs = None
+        beam_last_model_kwargs = [None] * beam_size
+        beam_last_word_flag = [None] * beam_size
+        beam_current_word = [None] * beam_size
+        beam_last_tokens = [[]] * beam_size
+        beam_candidate_token_to_append = [None] * beam_size
+        beam_token_to_append = [None] * beam_size
+        beam_once_flag = [None] * beam_size
+        beam_next_tokens = [None] * beam_size
+        beam_finished = [False] * beam_size
+ 
+        while True:
+
+            if synced_gpus:
+                # Under synced_gpus the `forward` call must continue until all gpus complete their sequence.
+                # The following logic allows an early break if all peers finished generating their sequence
+                this_peer_finished_flag = torch.tensor(0.0 if this_peer_finished else 1.0).to(beam_input_ids[bs].device)
+                # send 0.0 if we finished, 1.0 otherwise
+                dist.all_reduce(this_peer_finished_flag, op=dist.ReduceOp.SUM)
+                # did all peers finish? the reduced sum will be 0.0 then
+                if this_peer_finished_flag.item() == 0.0:
+                    break
+
+            # print("beam_finished: ", beam_finished)
+            if beam_finished == [True] * beam_size:
+                # print("#####\nfinal top k:\n", beam_intermediate_token_lists)
+                # print("ALL FINISHED")
+                input_ids = beam_intermediate_token_lists[0]
+                break
+
+            # print("FIRST: beam_input_ids", beam_input_ids)
+            for bs in range(beam_size):
+                # prepare model inputs
+                model_inputs = self.prepare_inputs_for_generation(beam_input_ids[bs], **beam_model_kwargs[bs])
+
+                
+                # forward pass to get next token
+                dict_outputs, outputs = self(
+                    **model_inputs,
+                    return_dict=True,
+                    output_attentions=output_attentions,
+                    output_hidden_states=output_hidden_states,
+                    early_exit_layers=early_exit_layers,
+                )
+
+                beam_outputs[bs] = outputs
+                beam_dict_outputs[bs] = dict_outputs
+
+            if synced_gpus and this_peer_finished:
+                continue  # don't waste resources running the code we don't need
+
+            dict_outputs = None
+            outputs = None
+            for bs in range(beam_size):
+
+                if base_layer is not None:
+                    base_logits = beam_dict_outputs[bs][base_layer][:, -1, :]
+                    final_logits = beam_dict_outputs[bs][mature_layer][:, -1, :]
+                    if relative_top > 0.0:
+                        final_logits = self.relative_top_filter(final_logits, relative_top)
+                        base_logits = base_logits.log_softmax(dim=-1)
+                        mask = final_logits[0] < -1e3
+                        base_logits[0][mask] = -1e3
+
+                    logits = final_logits - base_logits
+                    next_token_logits = logits
+                else:
+                    # 1. Stacking all premature_layers into a new dimension
+                    stacked_premature_layers = torch.stack(
+                        [beam_dict_outputs[bs][i][:, -1, :] for i in candidate_premature_layers], dim=0
+                    )
+
+                    # 2. Calculate the softmax values for mature_layer and all premature_layers
+                    softmax_mature_layer = F.softmax(
+                        beam_dict_outputs[bs][mature_layer][:, -1, :], dim=-1
+                    )  # shape: (batch_size, num_features)
+                    softmax_premature_layers = F.softmax(
+                        stacked_premature_layers, dim=-1
+                    )  # shape: (num_premature_layers, batch_size, num_features)
+
+                    # 3. Calculate M, the average distribution
+                    M = 0.5 * (
+                        softmax_mature_layer[None, :, :] + softmax_premature_layers
+                    )  # shape: (num_premature_layers, batch_size, num_features)
+
+                    # 4. Calculate log-softmax for the KL divergence
+                    log_softmax_mature_layer = F.log_softmax(
+                        beam_dict_outputs[bs][mature_layer][:, -1, :], dim=-1
+                    )  # shape: (batch_size, num_features)
+                    log_softmax_premature_layers = F.log_softmax(
+                        stacked_premature_layers, dim=-1
+                    )  # shape: (num_premature_layers, batch_size, num_features)
+
+                    # 5. Calculate the KL divergences and then the JS divergences
+                    kl1 = F.kl_div(log_softmax_mature_layer[None, :, :], M, reduction="none").mean(
+                        -1
+                    )  # shape: (num_premature_layers, batch_size)
+                    kl2 = F.kl_div(log_softmax_premature_layers, M, reduction="none").mean(
+                        -1
+                    )  # shape: (num_premature_layers, batch_size)
+                    js_divs = 0.5 * (kl1 + kl2)  # shape: (num_premature_layers, batch_size)
+
+                    # 6. Reduce the batchmean
+                    js_divs = js_divs.mean(-1)  # shape: (num_premature_layers,)
+
+                    premature_layer = candidate_premature_layers[int(js_divs.argmax().cpu().item())]
+                    premature_layer_dist[premature_layer] += 1
+
+                    base_logits = beam_dict_outputs[bs][premature_layer][:, -1, :]
+                    final_logits = beam_dict_outputs[bs][mature_layer][:, -1, :]
+
+                    if relative_top > 0.0:
+                        final_logits = self.relative_top_filter(final_logits, relative_top)
+                        base_logits = base_logits.log_softmax(dim=-1)
+                        mask = final_logits[0] < -1e3
+                        base_logits[0][mask] = -1e3
+                    logits = final_logits - base_logits
+                    next_token_logits = logits
+
+                # pre-process distribution
+                next_tokens_scores = logits_processor(beam_input_ids[bs], next_token_logits)
+
+                beam_next_tokens[bs] = torch.argmax(next_tokens_scores, dim=-1)
+            
+                # finished sentences should have their next token be a padding token
+                if eos_token_id is not None:
+                    if pad_token_id is None:
+                        raise ValueError("If `eos_token_id` is defined, make sure that `pad_token_id` is defined.")
+                    beam_next_tokens[bs] = beam_next_tokens[bs] * beam_unfinished_sequences[bs] + pad_token_id * (1 - beam_unfinished_sequences[bs])
+
+                # print("FIRST beam_next_tokens[bs]", beam_next_tokens[bs])
+                beam_last_word_flag[bs] = self.halc_assistant.check_word_complete(beam_next_tokens[bs][:, None])
+                
+                # print("FIRST beam_last_word_flag[bs]", beam_last_word_flag[bs])
+                if beam_last_word_flag[bs] == False:
+                    # beam_token_to_append[bs] = None
+                    candidate_token_to_append = []
+                    for candidate_contrast_logits in range(self.halc_assistant.k_candidate_num):
+                        candidate_token_to_append.append(None)
+                    beam_candidate_token_to_append[bs] = candidate_token_to_append
+                else:
+                    beam_once_flag[bs] = False
+                    beam_last_model_kwargs[bs] = copy.copy(beam_model_kwargs[bs])
+
+                    if len(beam_last_tokens[bs]) == 0:
+                        # beam_token_to_append[bs] = None
+                        candidate_token_to_append = []
+                        for candidate_contrast_logits in range(self.halc_assistant.k_candidate_num):
+                            candidate_token_to_append.append(None)
+                        beam_candidate_token_to_append[bs] = candidate_token_to_append
+                        
+                    else:
+                        beam_current_word[bs] = self.halc_assistant.get_last_word(beam_last_tokens[bs]) 
+                        
+                        # print("CURRENT WORD: ", beam_current_word[bs])
+                        entity = beam_current_word[bs]
+                        embeds_list, detect_info = self.halc_assistant.context_density_embedding(entity)
+
+                        if detect_info["status"] == "invalid":
+                            # print("CURRENT WORD: ", beam_current_word[bs],"detect: ", detect_info["status"])
+                            # beam_token_to_append[bs] = torch.tensor([beam_last_tokens[bs]]).to(beam_input_ids[bs].device)
+                            candidate_token_to_append = []
+                            for _ in range(self.halc_assistant.k_candidate_num):
+                                candidate_token_to_append.append(torch.tensor([beam_last_tokens[bs]]).to(beam_input_ids[bs].device))
+                            beam_candidate_token_to_append[bs] = candidate_token_to_append
+                        
+                        else:
+                            # print("DINO acctivated")
+                            context_logits_list = []
+                            for context_embed in embeds_list:
+                                # sub_model_kwargs = copy.copy(initial_model_kwargs)
+                                sub_model_kwargs = deep_copy_tensor_structure(initial_model_kwargs)
+                                sub_model_kwargs['inputs_embeds'] = context_embed
+
+                                context_logits, _ = self.get_intermediate_logits(
+                                    beam_intermediate_token_lists[bs],
+                                    initial_input_ids,
+                                    logits_processor,
+                                    stopping_criteria,
+                                    max_length,
+                                    pad_token_id,
+                                    eos_token_id,
+                                    output_attentions,
+                                    output_hidden_states,
+                                    output_scores,
+                                    return_dict_in_generate,
+                                    synced_gpus,
+                                    streamer,
+                                    **sub_model_kwargs,
+                                )
+
+                                context_logits_list.append(context_logits)
+
+                            ############ Contrast Decoding Policy ############
+                            # skip_flag, contrast_logits = self.halc_assistant.naive_focus_decoding(context_logits_list)
+                            # contrast_logits = self.halc_assistant.context_curve_contrastive_decoding(context_logits_list)
+                            # skip_flag, contrast_logits = self.halc_assistant.context_contrastive_decoding(context_logits_list, last_tokens)
+                            # skip_flag, contrast_logits = self.halc_assistant.auto_regressive_decoding(context_logits_list)
+                            skip_flag, contrast_logits_array = self.halc_assistant.context_layer_multi_contrastive_decoding(context_logits_list, [beam_last_tokens[bs]])
+                            # skip_flag, contrast_logits = self.halc_assistant.auto_contrastive_context_decoding(context_logits_list, last_tokens)
+                            ############ Contrast Decoding Policy ############
+
+                            # contrast_logits_array = []
+                            # for i in range(self.halc_assistant.k_candidate_num):
+                            #     skip_flag, contrast_logits = self.halc_assistant.context_layer_contrastive_decoding(context_logits_list, [beam_last_tokens[bs]])
+                            #     contrast_logits_array.append(contrast_logits)
+                            
+
+                            if skip_flag == True:
+                                beam_token_to_append[bs] = torch.tensor([beam_last_tokens[bs]]).to(beam_input_ids[bs].device)
+                                candidate_token_to_append = []
+                                for candidate_contrast_logits in range(notdefinedyet):
+                                    candidate_token_to_append.append(token_to_append)
+                                beam_candidate_token_to_append[bs] = candidate_token_to_append
+                            else:
+                                candidate_token_to_append = []
+                                for candidate_contrast_logits in contrast_logits_array:
+                                    # pre-process distribution
+                                    next_tokens_scores = logits_processor(beam_intermediate_token_lists[bs], candidate_contrast_logits)
+
+                                    nominate_tokens = torch.argmax(next_tokens_scores, dim=-1)
+
+                                    # finished sentences should have their next token be a padding token
+                                    if eos_token_id is not None:
+                                        if pad_token_id is None:
+                                            raise ValueError(
+                                                "If `eos_token_id` is defined, make sure that `pad_token_id` is defined."
+                                            )
+                                        nominate_tokens = nominate_tokens * beam_unfinished_sequences[bs] + pad_token_id * (
+                                            1 - beam_unfinished_sequences[bs]
+                                        )
+                                    token_to_append = nominate_tokens[:, None]
+                                    candidate_token_to_append.append(token_to_append)
+
+                                beam_candidate_token_to_append[bs] = candidate_token_to_append
+
+                            
+                    beam_last_tokens[bs] = []
+
+            candidate_intermediate_token_lists_array = []
+            candidate_token_to_append_lists = []
+            for bs in range(beam_size):
+
+                # print("beam_candidate_token_to_append[bs]", beam_candidate_token_to_append[bs])
+
+                if beam_candidate_token_to_append[bs] != None:
+                    for candidate_token_to_append in beam_candidate_token_to_append[bs]:
+                        if candidate_token_to_append != None:
+                            candidate_intermediate_token_lists_array.append(torch.cat([beam_intermediate_token_lists[bs], candidate_token_to_append], dim=-1))
+                            candidate_token_to_append_lists.append(candidate_token_to_append)
+                        else:
+                            candidate_intermediate_token_lists_array.append(None)
+                            candidate_token_to_append_lists.append(None)
+
+                beam_candidate_token_to_append[bs] = None
+
+            # print("candidate_intermediate_token_lists_array", candidate_intermediate_token_lists_array)
+            
+            # random select number of batch size elements in candidate_intermediate_token_lists_array
+            if len(candidate_intermediate_token_lists_array) > 0:
+                # generate random index
+                random.seed(8)
+                random_index = random.sample(range(len(candidate_intermediate_token_lists_array)), beam_size)
+                
+                # print("random_index", random_index)
+
+                for index, bs in zip(random_index, range(beam_size)):
+                    
+                    row_index = index//(len(candidate_intermediate_token_lists_array)//beam_size)
+                    # print("row_index", row_index)
+                    beam_intermediate_token_lists[bs] = deep_copy_tensor_structure(beam_intermediate_token_lists[row_index])
+                    beam_input_ids[bs] = deep_copy_tensor_structure(beam_input_ids[row_index])
+                    beam_outputs[bs] = beam_outputs[row_index]
+                    beam_dict_outputs[bs] = beam_dict_outputs[row_index]
+                    beam_unfinished_sequences[bs] = deep_copy_tensor_structure(beam_unfinished_sequences[row_index])
+                    beam_model_kwargs[bs] = deep_copy_tensor_structure(beam_model_kwargs[row_index])
+                    beam_last_model_kwargs[bs] = deep_copy_tensor_structure(beam_last_model_kwargs[row_index])
+                    beam_last_word_flag[bs] = deep_copy_tensor_structure(beam_last_word_flag[row_index])
+                    beam_current_word[bs] = beam_current_word[row_index]
+                    beam_last_tokens[bs] = deep_copy_tensor_structure(beam_last_tokens[row_index])
+                    beam_once_flag[bs] = beam_once_flag[row_index]
+                    beam_next_tokens[bs] = deep_copy_tensor_structure(beam_next_tokens[row_index])
+
+                    # beam_token_to_append[bs] = deep_copy_tensor_structure(beam_token_to_append[row_index])
+                    if candidate_intermediate_token_lists_array[index] != None:
+                        # beam_token_to_append[bs] = candidate_intermediate_token_lists_array[index][:, -1].unsqueeze(0)
+                        beam_token_to_append[bs] = candidate_token_to_append_lists[index]
+                    else:
+                        beam_token_to_append[bs] = None
+                    
+
+            # print("candidate_intermediate_token_lists_array", candidate_intermediate_token_lists_array)
+            # print("candidates\n")
+            # print("beam_token_to_append", beam_token_to_append)
+            # print("beam_intermediate_token_lists", beam_intermediate_token_lists)
+
+            # if len(candidate_intermediate_token_lists_array) == 0:
+            #     for candidate_lists in candidate_intermediate_token_lists_array:
+            #         pass
+            # else:
+            
+            if True:
+                for bs in range(beam_size):
+                    if beam_token_to_append[bs] != None and beam_finished[bs] == False:
+                        beam_intermediate_token_lists[bs] = torch.cat([beam_intermediate_token_lists[bs], beam_token_to_append[bs]], dim=-1)
+                        # text = self.halc_assistant.get_sequence_text(beam_intermediate_token_lists[bs][0].cpu().numpy().tolist())
+                        # print(f"beam_token_to_append {bs}", text)
+            # print("beam_intermediate_token_lists", beam_intermediate_token_lists)
+            # print("beam_input_ids", beam_input_ids)
+            # input("\n\n")
+
+
+            for bs in range(beam_size):
+
+                if beam_token_to_append[bs] != None:
+                    beam_input_ids[bs] = beam_intermediate_token_lists[bs]
+                    last_word = self.halc_assistant.get_last_word(beam_token_to_append[bs][0])
+
+                    # print("CONTRAST WORD: ", last_word)
+
+                    if last_word != beam_current_word[bs]:
+                        # print("\033[41m!!!!! Hallucination Detected !!!!!!\033[0m")
+                        # which means hallucination has been corrected, then resample a last token
+
+                        model_inputs = self.prepare_inputs_for_generation(beam_intermediate_token_lists[bs], **beam_last_model_kwargs[bs])
+
+                        intermediate_dict_outputs, intermediate_outputs = self(
+                            **model_inputs,
+                            return_dict=True,
+                            output_attentions=output_attentions,
+                            output_hidden_states=output_hidden_states,
+                            early_exit_layers=early_exit_layers,
+                        )
+
+                        intermediate_base_logits = intermediate_dict_outputs[premature_layer][:, -1, :]
+                        intermediate_final_logits = intermediate_dict_outputs[mature_layer][:, -1, :]
+
+                        if relative_top > 0.0:
+                            final_logits = self.relative_top_filter(intermediate_final_logits, relative_top)
+                            base_logits = intermediate_base_logits.log_softmax(dim=-1)
+                            mask = final_logits[0] < -1e3
+                            base_logits[0][mask] = -1e3
+                        logits = final_logits - base_logits
+                        resample_logits = logits
+
+                        # pre-process distribution
+                        next_tokens_scores = logits_processor(beam_intermediate_token_lists[bs], resample_logits)
+
+
+                        # print("\next_tokens_scores", next_tokens_scores)
+                        beam_next_tokens[bs] = torch.argmax(next_tokens_scores, dim=-1)
+                        beam_last_word_flag[bs] = self.halc_assistant.check_word_complete(beam_next_tokens[bs][:, None])
+                        # print("resample token", next_tokens)
+                        beam_last_tokens[bs] = []
+                        # model_kwargs = copy.copy(beam_last_model_kwargs[bs])
+                        model_kwargs = deep_copy_tensor_structure(beam_last_model_kwargs[bs])
+
+
+                        beam_model_kwargs[bs] = self._update_model_kwargs_for_generation(
+                            intermediate_outputs, model_kwargs, is_encoder_decoder=self.config.is_encoder_decoder
+                        )
+
+
+                        # beam_model_kwargs[bs] = model_kwargs
+                        # input()
+                        # print("last_word", last_word)
+                    else:
+                        beam_model_kwargs[bs] = self._update_model_kwargs_for_generation(
+                            beam_outputs[bs], beam_model_kwargs[bs], is_encoder_decoder=self.config.is_encoder_decoder
+                        )
+                else:
+                    beam_model_kwargs[bs] = self._update_model_kwargs_for_generation(
+                        beam_outputs[bs], beam_model_kwargs[bs], is_encoder_decoder=self.config.is_encoder_decoder
+                    )
+                
+                # print("beam_model_kwargs is beam_model_kwargs: ", beam_model_kwargs[0] is beam_model_kwargs[1])
+                # print("beam_model_kwargs is beam_model_kwargs: ", beam_model_kwargs[0] is beam_model_kwargs[2])
+                # print("beam_model_kwargs is beam_model_kwargs: ", beam_model_kwargs[1] is beam_model_kwargs[2])
+
+                beam_last_tokens[bs].append(beam_next_tokens[bs][:, None].cpu().numpy().tolist()[0][0])
+                if beam_finished[bs] == False:
+                    # update generated ids, model inputs, and length for next step
+                    beam_input_ids[bs] = torch.cat([beam_input_ids[bs], beam_next_tokens[bs][:, None]], dim=-1)
+
+                if streamer is not None:
+                    streamer.put(next_tokens.cpu())
+
+                if beam_last_word_flag[bs] == False:
+                    if beam_once_flag[bs] == False:
+                        beam_once_flag[bs] = True
+                        beam_last_model_kwargs[bs] = copy.copy(beam_model_kwargs[bs])
+
+                # if eos_token was found in one sentence, set sentence to finished
+                if eos_token_id_tensor is not None:
+                    beam_unfinished_sequences[bs] = beam_unfinished_sequences[bs].mul(
+                        beam_next_tokens[bs].tile(eos_token_id_tensor.shape[0], 1).ne(eos_token_id_tensor.unsqueeze(1)).prod(dim=0)
+                    )
+
+                # # stop when each sentence is finished, or if we exceed the maximum length
+                # if beam_unfinished_sequences[bs].max() == 0 or stopping_criteria(beam_input_ids[bs], scores):
+                #     if not synced_gpus:
+                #         break
+                #     else:
+                #         this_peer_finished = True
+                # print("eos_token_id", eos_token_id[0])
+                # print("final id", beam_intermediate_token_lists[bs][0][-1].cpu().numpy().tolist())
+                # if beam_intermediate_token_lists[bs][0][-1].cpu().numpy().tolist() == eos_token_id[0]:
+                #     input("{bs} finished")
+                #     beam_finished[bs] = True
+                if beam_input_ids[bs][0][-1].cpu().numpy().tolist() == eos_token_id[0]:
+                    beam_intermediate_token_lists[bs] = beam_input_ids[bs]
+                    # input(f"{bs} finished\n")
+                    beam_finished[bs] = True
+
+
+        for bs in range(beam_size):
+            text = self.halc_assistant.get_sequence_text(beam_intermediate_token_lists[bs][0].cpu().numpy().tolist())
+            
+            print(f"\033[1;4{bs+5}m Beam Search Candidate: {bs+1} {text} \033[0m")
+
+
+            # print("beam_last_tokens", beam_last_tokens)
+
+        if streamer is not None:
+            streamer.end()
+
+        if return_dict_in_generate:
+            if self.config.is_encoder_decoder:
+                return (
+                    GreedySearchEncoderDecoderOutput(
+                        sequences=input_ids,
+                        scores=scores,
+                        encoder_attentions=encoder_attentions,
+                        encoder_hidden_states=encoder_hidden_states,
+                        decoder_attentions=decoder_attentions,
+                        cross_attentions=cross_attentions,
+                        decoder_hidden_states=decoder_hidden_states,
+                    ),
+                    info_dict,
+                )
+            else:
+                return (
+                    GreedySearchDecoderOnlyOutput(
+                        sequences=input_ids,
+                        scores=scores,
+                        attentions=decoder_attentions,
+                        hidden_states=decoder_hidden_states,
+                        premature_layer_dist=premature_layer_dist,
+                    ),
+                    info_dict,
+                )
+        else:
+            return input_ids, info_dict
 
 
 

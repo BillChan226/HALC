@@ -5,9 +5,9 @@
             "caption": "A small brown dog is sitting in front of a television, watching a show.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "tv",
                 "dog",
-                "potted plant"
+                "potted plant",
+                "tv"
             ],
             "mscoco_generated_words": [
                 "dog",
@@ -38,7 +38,7 @@
                 "Bleu_3": 0.6350469468327574,
                 "Bleu_4": 0.5737774095625392,
                 "METEOR": 0.49867090666290614,
-                "CIDEr": 1.5024083003240447,
+                "CIDEr": 1.4975757983510443,
                 "SPICE": {
                     "All": {
                         "pr": 0.2727272727272727,
@@ -148,7 +148,7 @@
                 "Bleu_3": 0.33251432919328744,
                 "Bleu_4": 0.269205088078134,
                 "METEOR": 0.37373231420817127,
-                "CIDEr": 0.9554117842276093,
+                "CIDEr": 0.9550775921648315,
                 "SPICE": {
                     "All": {
                         "pr": 0.4166666666666667,
@@ -229,9 +229,9 @@
                 ]
             ],
             "mscoco_gt_words": [
+                "couch",
                 "orange",
-                "remote",
-                "couch"
+                "remote"
             ],
             "mscoco_generated_words": [
                 "couch",
@@ -267,7 +267,7 @@
                 "Bleu_3": 1.5083054171370475e-06,
                 "Bleu_4": 3.95671672919582e-09,
                 "METEOR": 0.2509416657628807,
-                "CIDEr": 0.32959477575217894,
+                "CIDEr": 0.3318848319728872,
                 "SPICE": {
                     "All": {
                         "pr": 0.2857142857142857,
@@ -343,11 +343,11 @@
             "caption": "A white cat sits on a laptop, looking at the screen with its eyes.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "mouse",
-                "orange",
+                "cat",
                 "tv",
+                "mouse",
                 "laptop",
-                "cat"
+                "orange"
             ],
             "mscoco_generated_words": [
                 "cat",
@@ -378,7 +378,7 @@
                 "Bleu_3": 0.332107832024521,
                 "Bleu_4": 0.24022110860738335,
                 "METEOR": 0.29734609736557566,
-                "CIDEr": 1.0524786953644731,
+                "CIDEr": 1.0811469783227567,
                 "SPICE": {
                     "All": {
                         "pr": 0.375,
@@ -454,8 +454,8 @@
             "caption": "The cat is laying on the sink in the bathroom.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "sink",
-                "cat"
+                "cat",
+                "sink"
             ],
             "mscoco_generated_words": [
                 "cat",
@@ -481,7 +481,7 @@
                 "Bleu_3": 0.8879040015543326,
                 "Bleu_4": 0.8408964150689345,
                 "METEOR": 0.36269742013564654,
-                "CIDEr": 2.603809105652651,
+                "CIDEr": 2.5795107817855643,
                 "SPICE": {
                     "All": {
                         "pr": 0.18181818181818182,
@@ -557,9 +557,9 @@
             "caption": "A group of people are skateboarding down the sidewalk in front of a building.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "handbag",
                 "skateboard",
                 "person",
+                "handbag",
                 "bench",
                 "backpack"
             ],
@@ -590,7 +590,7 @@
                 "Bleu_3": 0.18576267964549759,
                 "Bleu_4": 2.7629350708394213e-05,
                 "METEOR": 0.2339095284108899,
-                "CIDEr": 0.4547653176267228,
+                "CIDEr": 0.4509582320298108,
                 "SPICE": {
                     "All": {
                         "pr": 0.23076923076923078,
@@ -666,8 +666,8 @@
             "caption": "The baby is sitting on the floor, holding a toothbrush in her mouth and looking up at the camera with a big smile on her face.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "book",
                 "person",
+                "book",
                 "toothbrush"
             ],
             "mscoco_generated_words": [
@@ -711,7 +711,7 @@
                 "Bleu_3": 0.3298788532755987,
                 "Bleu_4": 0.26158582824725907,
                 "METEOR": 0.3202051604553877,
-                "CIDEr": 0.08913753581415776,
+                "CIDEr": 0.08828904375207527,
                 "SPICE": {
                     "All": {
                         "pr": 0.46153846153846156,
@@ -787,9 +787,9 @@
             "caption": "A man is flying a kite in a park on a sunny day.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
+                "kite",
                 "person",
-                "bicycle",
-                "kite"
+                "bicycle"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -818,7 +818,7 @@
                 "Bleu_3": 0.6647184770503481,
                 "Bleu_4": 0.5854547191189152,
                 "METEOR": 0.4075372471516239,
-                "CIDEr": 1.876796792617962,
+                "CIDEr": 1.877015957354067,
                 "SPICE": {
                     "All": {
                         "pr": 0.18181818181818182,
@@ -894,9 +894,9 @@
             "caption": "A wooden spade is laying on a white table with a small amount of flouring powder on it.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
+                "pizza",
                 "chair",
-                "dining table",
-                "pizza"
+                "dining table"
             ],
             "mscoco_generated_words": [
                 "dining table"
@@ -929,7 +929,7 @@
                 "Bleu_3": 1.8696896461570437e-06,
                 "Bleu_4": 4.568822937434734e-09,
                 "METEOR": 0.23817567098713474,
-                "CIDEr": 0.13356726772596408,
+                "CIDEr": 0.13275288758998033,
                 "SPICE": {
                     "All": {
                         "pr": 0.1875,
@@ -1005,8 +1005,8 @@
             "caption": "The image shows a large neon sign with the words \"Public House\" written in red letters on a black background, surrounded by people standing in front of it.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
-                "clock"
+                "clock",
+                "person"
             ],
             "mscoco_generated_words": [
                 "person"
@@ -1052,7 +1052,7 @@
                 "Bleu_3": 0.22833557018968256,
                 "Bleu_4": 0.1477219991130278,
                 "METEOR": 0.2593318509098148,
-                "CIDEr": 0.0479748131190308,
+                "CIDEr": 0.04790805081693643,
                 "SPICE": {
                     "All": {
                         "pr": 0.6666666666666666,
@@ -1133,13 +1133,13 @@
                 ]
             ],
             "mscoco_gt_words": [
-                "handbag",
-                "bicycle",
-                "backpack",
-                "potted plant",
-                "person",
                 "cell phone",
-                "traffic light"
+                "person",
+                "potted plant",
+                "handbag",
+                "traffic light",
+                "bicycle",
+                "backpack"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -1170,7 +1170,7 @@
                 "Bleu_3": 0.37431888793482826,
                 "Bleu_4": 4.785543920673609e-05,
                 "METEOR": 0.24545893028074914,
-                "CIDEr": 0.5198762252331616,
+                "CIDEr": 0.5279195100733176,
                 "SPICE": {
                     "All": {
                         "pr": 0.13333333333333333,
@@ -1246,17 +1246,17 @@
             "caption": "The image shows a group of people sitting around a table with plates of food in front of them.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "broccoli",
-                "book",
-                "chair",
                 "cup",
-                "bowl",
-                "fork",
-                "spoon",
-                "pizza",
+                "chair",
                 "person",
+                "book",
+                "bowl",
+                "spoon",
                 "dining table",
-                "bottle"
+                "bottle",
+                "pizza",
+                "fork",
+                "broccoli"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -1291,7 +1291,7 @@
                 "Bleu_3": 0.1534315794427687,
                 "Bleu_4": 2.179746912278627e-05,
                 "METEOR": 0.22558193263681361,
-                "CIDEr": 0.2520219176002486,
+                "CIDEr": 0.24771730511814846,
                 "SPICE": {
                     "All": {
                         "pr": 0.5,
@@ -1368,9 +1368,9 @@
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
                 "boat",
+                "toilet",
                 "sink",
-                "bowl",
-                "toilet"
+                "bowl"
             ],
             "mscoco_generated_words": [
                 "toilet",
@@ -1400,7 +1400,7 @@
                 "Bleu_3": 0.3083016009580945,
                 "Bleu_4": 0.227187097787101,
                 "METEOR": 0.23732328341130698,
-                "CIDEr": 0.8364424931087798,
+                "CIDEr": 0.8354432298642727,
                 "SPICE": {
                     "All": {
                         "pr": 0.21428571428571427,
@@ -1508,7 +1508,7 @@
                 "Bleu_3": 0.2544973642717564,
                 "Bleu_4": 3.4234749556136714e-05,
                 "METEOR": 0.36593862814358624,
-                "CIDEr": 0.7947137654593505,
+                "CIDEr": 0.7962251280829944,
                 "SPICE": {
                     "All": {
                         "pr": 0.3,
@@ -1589,11 +1589,11 @@
                 ]
             ],
             "mscoco_gt_words": [
-                "tv",
-                "person",
                 "chair",
-                "laptop",
-                "bottle"
+                "person",
+                "bottle",
+                "tv",
+                "laptop"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -1630,7 +1630,7 @@
                 "Bleu_3": 0.27836043274885724,
                 "Bleu_4": 0.1981178554742336,
                 "METEOR": 0.2321759113417467,
-                "CIDEr": 0.2250543812522879,
+                "CIDEr": 0.22669295797028086,
                 "SPICE": {
                     "All": {
                         "pr": 0.5,
@@ -1737,7 +1737,7 @@
                 "Bleu_3": 0.3499514023642014,
                 "Bleu_4": 0.23961829055469533,
                 "METEOR": 0.4267964141369142,
-                "CIDEr": 0.8212243396877329,
+                "CIDEr": 0.8212753222979938,
                 "SPICE": {
                     "All": {
                         "pr": 0.3,
@@ -1842,7 +1842,7 @@
                 "Bleu_3": 0.3321078320482429,
                 "Bleu_4": 0.24022110862454196,
                 "METEOR": 0.2933803593290056,
-                "CIDEr": 1.2443593251595586,
+                "CIDEr": 1.2416676369500923,
                 "SPICE": {
                     "All": {
                         "pr": 0.15384615384615385,
@@ -1918,11 +1918,11 @@
             "caption": "A group of men sitting on the grass outside a building, using laptops and drinking coffee.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
                 "clock",
-                "laptop",
+                "person",
                 "motorcycle",
-                "backpack"
+                "backpack",
+                "laptop"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -1955,7 +1955,7 @@
                 "Bleu_3": 0.5908328751942447,
                 "Bleu_4": 0.501912080740177,
                 "METEOR": 0.2887675538674008,
-                "CIDEr": 0.8431668502147089,
+                "CIDEr": 0.8441378440387279,
                 "SPICE": {
                     "All": {
                         "pr": 0.125,
@@ -2032,8 +2032,8 @@
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
                 "orange",
-                "cake",
-                "bowl"
+                "bowl",
+                "cake"
             ],
             "mscoco_generated_words": [
                 "orange"
@@ -2068,7 +2068,7 @@
                 "Bleu_3": 0.17497570118210076,
                 "Bleu_4": 2.533654946272864e-05,
                 "METEOR": 0.2344554455445545,
-                "CIDEr": 0.26961223954711977,
+                "CIDEr": 0.2682708172590297,
                 "SPICE": {
                     "All": {
                         "pr": 0.08333333333333333,
@@ -2144,10 +2144,10 @@
             "caption": "The two people are lying in bed, both holding laptops in their laps.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "bed",
                 "person",
-                "apple",
-                "laptop"
+                "laptop",
+                "bed",
+                "apple"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -2178,7 +2178,7 @@
                 "Bleu_3": 2.7580051473758982e-06,
                 "Bleu_4": 6.767781115948732e-09,
                 "METEOR": 0.3800532460777086,
-                "CIDEr": 1.1368449366010136,
+                "CIDEr": 1.135563806450011,
                 "SPICE": {
                     "All": {
                         "pr": 0.45454545454545453,
@@ -2254,10 +2254,10 @@
             "caption": "The image shows a plate of French toast with bacon, bananas, and syrup.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "cake",
                 "orange",
+                "banana",
                 "bowl",
-                "banana"
+                "cake"
             ],
             "mscoco_generated_words": [
                 "banana"
@@ -2287,7 +2287,7 @@
                 "Bleu_3": 0.7486377758696564,
                 "Bleu_4": 0.7083397531666261,
                 "METEOR": 0.5064338070856284,
-                "CIDEr": 2.503622757815588,
+                "CIDEr": 2.5027231261761274,
                 "SPICE": {
                     "All": {
                         "pr": 0.42857142857142855,
@@ -2363,11 +2363,11 @@
             "caption": "A black dog is sitting in the back seat of a car, looking out the window at the street and trees passing by.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "car",
-                "traffic light",
                 "chair",
                 "truck",
-                "dog"
+                "dog",
+                "traffic light",
+                "car"
             ],
             "mscoco_generated_words": [
                 "dog",
@@ -2408,7 +2408,7 @@
                 "Bleu_3": 0.1729806903297508,
                 "Bleu_4": 2.255489037161007e-05,
                 "METEOR": 0.2535708674077557,
-                "CIDEr": 0.2790679524518014,
+                "CIDEr": 0.286010335968784,
                 "SPICE": {
                     "All": {
                         "pr": 0.3125,
@@ -2514,7 +2514,7 @@
                 "Bleu_3": 0.23799482225353116,
                 "Bleu_4": 3.132518342233183e-05,
                 "METEOR": 0.21235853451860306,
-                "CIDEr": 0.45997366130384065,
+                "CIDEr": 0.4584844252337851,
                 "SPICE": {
                     "All": {
                         "pr": 0.45454545454545453,
@@ -2590,12 +2590,12 @@
             "caption": "The image shows a cluttered desk with a computer, keyboard, and other office supplies.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "mouse",
-                "keyboard",
-                "tv",
-                "laptop",
                 "dining table",
-                "bottle"
+                "bottle",
+                "tv",
+                "keyboard",
+                "mouse",
+                "laptop"
             ],
             "mscoco_generated_words": [
                 "dining table",
@@ -2628,7 +2628,7 @@
                 "Bleu_3": 0.2948798730646316,
                 "Bleu_4": 0.2197281387165561,
                 "METEOR": 0.23131702761371697,
-                "CIDEr": 0.8304326913931575,
+                "CIDEr": 0.8279010774207616,
                 "SPICE": {
                     "All": {
                         "pr": 0.35714285714285715,
@@ -2704,12 +2704,12 @@
             "caption": "A group of bicyclists are parked in front of a building with a sign on the side of it.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "bicycle",
-                "car",
-                "person",
                 "truck",
+                "person",
                 "motorcycle",
-                "backpack"
+                "bicycle",
+                "backpack",
+                "car"
             ],
             "mscoco_generated_words": [
                 "person"
@@ -2743,7 +2743,7 @@
                 "Bleu_3": 0.283160693887166,
                 "Bleu_4": 0.1940862326951359,
                 "METEOR": 0.22363396752883,
-                "CIDEr": 0.16055025065800085,
+                "CIDEr": 0.15929024582255744,
                 "SPICE": {
                     "All": {
                         "pr": 0.23076923076923078,
@@ -2824,8 +2824,8 @@
                 ]
             ],
             "mscoco_gt_words": [
-                "dining table",
-                "cell phone"
+                "cell phone",
+                "dining table"
             ],
             "mscoco_generated_words": [
                 "apple"
@@ -2856,7 +2856,7 @@
                 "Bleu_3": 1.3179708049006483e-06,
                 "Bleu_4": 3.7982292265213524e-09,
                 "METEOR": 0.12667482749763329,
-                "CIDEr": 0.08893026802062862,
+                "CIDEr": 0.0884902293029971,
                 "SPICE": {
                     "All": {
                         "pr": 1.0,
@@ -2968,7 +2968,7 @@
                 "Bleu_3": 0.14434534519045383,
                 "Bleu_4": 2.0217803036299014e-05,
                 "METEOR": 0.17244392130769876,
-                "CIDEr": 0.08742348448293925,
+                "CIDEr": 0.08725716801070535,
                 "SPICE": {
                     "All": {
                         "pr": 0.2727272727272727,
@@ -3044,9 +3044,9 @@
             "caption": "The image shows a bedroom with a white bed, a dresser, and a window with red curtains.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "bed",
                 "chair",
-                "dining table"
+                "dining table",
+                "bed"
             ],
             "mscoco_generated_words": [
                 "bed"
@@ -3080,113 +3080,7 @@
                 "Bleu_3": 0.3533492012932546,
                 "Bleu_4": 0.23693055762206497,
                 "METEOR": 0.272122996818861,
-                "CIDEr": 0.7739567669038127,
-                "SPICE": {
-                    "All": {
-                        "pr": 0.09090909090909091,
-                        "re": 0.05,
-                        "f": 0.06451612903225806,
-                        "fn": 19.0,
-                        "numImages": 1.0,
-                        "fp": 10.0,
-                        "tp": 1.0
-                    },
-                    "Relation": {
-                        "pr": 0.0,
-                        "re": 0.0,
-                        "f": 0.0,
-                        "fn": 7.0,
-                        "numImages": 1.0,
-                        "fp": 3.0,
-                        "tp": 0.0
-                    },
-                    "Cardinality": {
-                        "pr": NaN,
-                        "re": NaN,
-                        "f": NaN,
-                        "fn": 0.0,
-                        "numImages": 1.0,
-                        "fp": 0.0,
-                        "tp": 0.0
-                    },
-                    "Attribute": {
-                        "pr": 0.0,
-                        "re": 0.0,
-                        "f": 0.0,
-                        "fn": 5.0,
-                        "numImages": 1.0,
-                        "fp": 2.0,
-                        "tp": 0.0
-                    },
-                    "Size": {
-                        "pr": 0.0,
-                        "re": 0.0,
-                        "f": 0.0,
-                        "fn": 1.0,
-                        "numImages": 1.0,
-                        "fp": 0.0,
-                        "tp": 0.0
-                    },
-                    "Color": {
-                        "pr": NaN,
-                        "re": NaN,
-                        "f": NaN,
-                        "fn": 0.0,
-                        "numImages": 1.0,
-                        "fp": 0.0,
-                        "tp": 0.0
-                    },
-                    "Object": {
-                        "pr": 0.16666666666666666,
-                        "re": 0.125,
-                        "f": 0.14285714285714288,
-                        "fn": 7.0,
-                        "numImages": 1.0,
-                        "fp": 5.0,
-                        "tp": 1.0
-                    }
-                },
-                "ROUGE_L": 0.5252960172228203,
-                "CHAIRs": 0,
-                "CHAIRi": 0.0
-            }
-        },
-        {
-            "image_id": 285258,
-            "caption": "A group of dogs playing in a fenced area with their owners watching them.",
-            "mscoco_hallucinated_words": [],
-            "mscoco_gt_words": [
-                "person",
-                "dog"
-            ],
-            "mscoco_generated_words": [
-                "dog"
-            ],
-            "hallucination_idxs": [],
-            "words": [
-                "a",
-                "group",
-                "of",
-                "dog",
-                "playing",
-                "in",
-                "a",
-                "fenced",
-                "area",
-                "with",
-                "their",
-                "owner",
-                "watching",
-                "them",
-                "."
-            ],
-            "metrics": {
-                "Bleu_1": 0.6428571428112246,
-                "Bleu_2": 0.3851644432312519,
-                "Bleu_3": 0.23122620071857092,
-                "Bleu_4": 3.255964125937714e-05,
-                "METEOR": 0.2225075195018709,
-                "CIDEr": 0.6676174644235834,
+                "CIDEr": 0.7692701028669691,
                 "SPICE": {
                     "All": {
                         "pr": 0.5555555555555556,
@@ -3252,64 +3146,47 @@
                         "tp": 3.0
                     }
                 },
-                "ROUGE_L": 0.42957746478873243,
+                "ROUGE_L": 0.5252960172228203,
                 "CHAIRs": 0,
                 "CHAIRi": 0.0
             }
         },
         {
-            "image_id": 574454,
-            "caption": "The image shows a group of people surfing on the waves in front of Table Mountain in Cape Town, South Africa.",
-            "mscoco_hallucinated_words": [
-                [
-                    "table",
-                    "dining table"
-                ]
-            ],
+            "image_id": 285258,
+            "caption": "A group of dogs playing in a fenced area with their owners watching them.",
+            "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
                 "person",
-                "kite",
-                "surfboard"
+                "dog"
             ],
             "mscoco_generated_words": [
-                "person",
-                "dining table"
+                "dog"
             ],
-            "hallucination_idxs": [
-                14
-            ],
+            "hallucination_idxs": [],
             "words": [
-                "the",
-                "image",
-                "show",
                 "a",
                 "group",
                 "of",
-                "person",
-                "surfing",
-                "on",
-                "the",
-                "wave",
+                "dog",
+                "playing",
                 "in",
-                "front",
-                "of",
-                "table",
-                "mountain",
-                "in",
-                "cape",
-                "town",
-                ",",
-                "south",
-                "africa",
+                "a",
+                "fenced",
+                "area",
+                "with",
+                "their",
+                "owner",
+                "watching",
+                "them",
                 "."
             ],
             "metrics": {
-                "Bleu_1": 0.2857142857006803,
-                "Bleu_2": 0.20701966779260178,
-                "Bleu_3": 0.16523417248578956,
-                "Bleu_4": 0.12582205557812004,
-                "METEOR": 0.18784324551807682,
-                "CIDEr": 0.017187077223447162,
+                "Bleu_1": 0.6428571428112246,
+                "Bleu_2": 0.3851644432312519,
+                "Bleu_3": 0.23122620071857092,
+                "Bleu_4": 3.255964125937714e-05,
+                "METEOR": 0.2225075195018709,
+                "CIDEr": 0.6664826354620188,
                 "SPICE": {
                     "All": {
                         "pr": 0.26666666666666666,
@@ -3375,46 +3252,64 @@
                         "tp": 3.0
                     }
                 },
-                "ROUGE_L": 0.37515375153751535,
-                "CHAIRs": 1,
-                "CHAIRi": 0.5
+                "ROUGE_L": 0.42957746478873243,
+                "CHAIRs": 0,
+                "CHAIRi": 0.0
             }
         },
         {
-            "image_id": 57703,
-            "caption": "A group of people hiking in the woods with their dogs.",
-            "mscoco_hallucinated_words": [],
+            "image_id": 574454,
+            "caption": "The image shows a group of people surfing on the waves in front of Table Mountain in Cape Town, South Africa.",
+            "mscoco_hallucinated_words": [
+                [
+                    "table",
+                    "dining table"
+                ]
+            ],
             "mscoco_gt_words": [
                 "person",
-                "dog",
-                "backpack"
+                "kite",
+                "surfboard"
             ],
             "mscoco_generated_words": [
                 "person",
-                "dog"
+                "dining table"
             ],
-            "hallucination_idxs": [],
+            "hallucination_idxs": [
+                14
+            ],
             "words": [
+                "the",
+                "image",
+                "show",
                 "a",
                 "group",
                 "of",
                 "person",
-                "hiking",
-                "in",
+                "surfing",
+                "on",
                 "the",
-                "wood",
-                "with",
-                "their",
-                "dog",
+                "wave",
+                "in",
+                "front",
+                "of",
+                "table",
+                "mountain",
+                "in",
+                "cape",
+                "town",
+                ",",
+                "south",
+                "africa",
                 "."
             ],
             "metrics": {
-                "Bleu_1": 0.999999999909091,
-                "Bleu_2": 0.9486832979599579,
-                "Bleu_3": 0.7937005259041954,
-                "Bleu_4": 0.6580370064059976,
-                "METEOR": 0.49841832975371303,
-                "CIDEr": 1.9726424307784396,
+                "Bleu_1": 0.2857142857006803,
+                "Bleu_2": 0.20701966779260178,
+                "Bleu_3": 0.16523417248578956,
+                "Bleu_4": 0.12582205557812004,
+                "METEOR": 0.18784324551807682,
+                "CIDEr": 0.017438395460300724,
                 "SPICE": {
                     "All": {
                         "pr": 0.375,
@@ -3480,52 +3375,46 @@
                         "tp": 3.0
                     }
                 },
-                "ROUGE_L": 0.9165275459098498,
-                "CHAIRs": 0,
-                "CHAIRi": 0.0
+                "ROUGE_L": 0.37515375153751535,
+                "CHAIRs": 1,
+                "CHAIRi": 0.5
             }
         },
         {
-            "image_id": 70294,
-            "caption": "The blue bus is parked in front of a building with a sign that reads \"Welcome to the Hotel\".",
+            "image_id": 57703,
+            "caption": "A group of people hiking in the woods with their dogs.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
                 "person",
-                "bus"
+                "backpack",
+                "dog"
             ],
-            "mscoco_generated_words": [],
+            "mscoco_generated_words": [
+                "person",
+                "dog"
+            ],
             "hallucination_idxs": [],
             "words": [
-                "the",
-                "blue",
-                "bu",
-                "is",
-                "parked",
-                "in",
-                "front",
+                "a",
+                "group",
                 "of",
-                "a",
-                "building",
-                "with",
-                "a",
-                "sign",
-                "that",
-                "read",
-                "``",
-                "welcome",
-                "to",
+                "person",
+                "hiking",
+                "in",
                 "the",
-                "hotel",
-                "'s's",
+                "wood",
+                "with",
+                "their",
+                "dog",
                 "."
             ],
             "metrics": {
-                "Bleu_1": 0.5789473683905818,
-                "Bleu_2": 0.35868505787991106,
-                "Bleu_3": 0.19633265955961549,
-                "Bleu_4": 2.6224934766358168e-05,
-                "METEOR": 0.23510499817987074,
-                "CIDEr": 0.39439223525261907,
+                "Bleu_1": 0.999999999909091,
+                "Bleu_2": 0.9486832979599579,
+                "Bleu_3": 0.7937005259041954,
+                "Bleu_4": 0.6580370064059976,
+                "METEOR": 0.49841832975371303,
+                "CIDEr": 1.9675299668178505,
                 "SPICE": {
                     "All": {
                         "pr": 0.2857142857142857,
@@ -3591,62 +3480,52 @@
                         "tp": 2.0
                     }
                 },
-                "ROUGE_L": 0.40352811466372657,
+                "ROUGE_L": 0.9165275459098498,
                 "CHAIRs": 0,
                 "CHAIRi": 0.0
             }
         },
         {
-            "image_id": 279769,
-            "caption": "The image shows a banana peel on a table next to a pair of scissors and a piece of paper.",
-            "mscoco_hallucinated_words": [
-                [
-                    "scissors",
-                    "scissors"
-                ]
-            ],
+            "image_id": 70294,
+            "caption": "The blue bus is parked in front of a building with a sign that reads \"Welcome to the Hotel\".",
+            "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "dining table",
-                "banana"
+                "person",
+                "bus"
             ],
-            "mscoco_generated_words": [
-                "banana",
-                "dining table",
-                "scissors"
-            ],
-            "hallucination_idxs": [
-                14
-            ],
+            "mscoco_generated_words": [],
+            "hallucination_idxs": [],
             "words": [
                 "the",
-                "image",
-                "show",
+                "blue",
+                "bu",
+                "is",
+                "parked",
+                "in",
+                "front",
+                "of",
                 "a",
-                "banana",
-                "peel",
-                "on",
+                "building",
+                "with",
                 "a",
-                "table",
-                "next",
+                "sign",
+                "that",
+                "read",
+                "``",
+                "welcome",
                 "to",
-                "a",
-                "pair",
-                "of",
-                "scissors",
-                "and",
-                "a",
-                "piece",
-                "of",
-                "paper",
+                "the",
+                "hotel",
+                "'s's",
                 "."
             ],
             "metrics": {
-                "Bleu_1": 0.5499999999725,
-                "Bleu_2": 0.41675437671185933,
-                "Bleu_3": 0.3070457069121754,
-                "Bleu_4": 0.2415725260884915,
-                "METEOR": 0.2511098683841856,
-                "CIDEr": 0.3076052951175278,
+                "Bleu_1": 0.5789473683905818,
+                "Bleu_2": 0.35868505787991106,
+                "Bleu_3": 0.19633265955961549,
+                "Bleu_4": 2.6224934766358168e-05,
+                "METEOR": 0.23510499817987074,
+                "CIDEr": 0.3934543244203897,
                 "SPICE": {
                     "All": {
                         "pr": 0.2857142857142857,
@@ -3712,55 +3591,62 @@
                         "tp": 3.0
                     }
                 },
-                "ROUGE_L": 0.4765625,
-                "CHAIRs": 1,
-                "CHAIRi": 0.3333333333333333
+                "ROUGE_L": 0.40352811466372657,
+                "CHAIRs": 0,
+                "CHAIRi": 0.0
             }
         },
         {
-            "image_id": 541474,
-            "caption": "A skier is riding down a snowy slope on a snowboard, wearing a blue and black pants and a helmet.",
-            "mscoco_hallucinated_words": [],
+            "image_id": 279769,
+            "caption": "The image shows a banana peel on a table next to a pair of scissors and a piece of paper.",
+            "mscoco_hallucinated_words": [
+                [
+                    "scissors",
+                    "scissors"
+                ]
+            ],
             "mscoco_gt_words": [
-                "person",
-                "snowboard"
+                "banana",
+                "dining table"
             ],
             "mscoco_generated_words": [
-                "person",
-                "snowboard"
+                "banana",
+                "dining table",
+                "scissors"
             ],
-            "hallucination_idxs": [],
+            "hallucination_idxs": [
+                14
+            ],
             "words": [
+                "the",
+                "image",
+                "show",
                 "a",
-                "skier",
-                "is",
-                "riding",
-                "down",
-                "a",
-                "snowy",
-                "slope",
+                "banana",
+                "peel",
                 "on",
                 "a",
-                "snowboard",
-                ",",
-                "wearing",
+                "table",
+                "next",
+                "to",
                 "a",
-                "blue",
-                "and",
-                "black",
-                "pant",
+                "pair",
+                "of",
+                "scissors",
                 "and",
                 "a",
-                "helmet",
+                "piece",
+                "of",
+                "paper",
                 "."
             ],
             "metrics": {
-                "Bleu_1": 0.44999999997750006,
-                "Bleu_2": 0.3441236007881837,
-                "Bleu_3": 0.2702459674543633,
-                "Bleu_4": 3.282518529551091e-05,
-                "METEOR": 0.32801350181790595,
-                "CIDEr": 0.1928920345159063,
+                "Bleu_1": 0.5499999999725,
+                "Bleu_2": 0.41675437671185933,
+                "Bleu_3": 0.3070457069121754,
+                "Bleu_4": 0.2415725260884915,
+                "METEOR": 0.2511098683841856,
+                "CIDEr": 0.30681454325829005,
                 "SPICE": {
                     "All": {
                         "pr": 0.7142857142857143,
@@ -3826,51 +3712,55 @@
                         "tp": 4.0
                     }
                 },
-                "ROUGE_L": 0.40558510638297873,
-                "CHAIRs": 0,
-                "CHAIRi": 0.0
+                "ROUGE_L": 0.4765625,
+                "CHAIRs": 1,
+                "CHAIRi": 0.3333333333333333
             }
         },
         {
-            "image_id": 217561,
-            "caption": "The image shows a table set with plates, silverware, and glasses.",
+            "image_id": 541474,
+            "caption": "A skier is riding down a snowy slope on a snowboard, wearing a blue and black pants and a helmet.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "spoon",
-                "wine glass",
-                "knife",
-                "toothbrush",
-                "cup",
-                "dining table",
-                "fork"
+                "person",
+                "snowboard"
             ],
             "mscoco_generated_words": [
-                "dining table"
+                "person",
+                "snowboard"
             ],
             "hallucination_idxs": [],
             "words": [
-                "the",
-                "image",
-                "show",
                 "a",
-                "table",
-                "set",
-                "with",
-                "plate",
+                "skier",
+                "is",
+                "riding",
+                "down",
+                "a",
+                "snowy",
+                "slope",
+                "on",
+                "a",
+                "snowboard",
                 ",",
-                "silverware",
-                ",",
+                "wearing",
+                "a",
+                "blue",
                 "and",
-                "glass",
+                "black",
+                "pant",
+                "and",
+                "a",
+                "helmet",
                 "."
             ],
             "metrics": {
-                "Bleu_1": 0.6363636363057852,
-                "Bleu_2": 0.3567530339722843,
-                "Bleu_3": 2.418230050265566e-06,
-                "Bleu_4": 6.484115070705435e-09,
-                "METEOR": 0.10029809176321795,
-                "CIDEr": 0.31127901470130326,
+                "Bleu_1": 0.44999999997750006,
+                "Bleu_2": 0.3441236007881837,
+                "Bleu_3": 0.2702459674543633,
+                "Bleu_4": 3.282518529551091e-05,
+                "METEOR": 0.32801350181790595,
+                "CIDEr": 0.1900516817178352,
                 "SPICE": {
                     "All": {
                         "pr": 0.3888888888888889,
@@ -3936,21 +3826,26 @@
                         "tp": 3.0
                     }
                 },
-                "ROUGE_L": 0.32504440497335696,
+                "ROUGE_L": 0.40558510638297873,
                 "CHAIRs": 0,
                 "CHAIRi": 0.0
             }
         },
         {
-            "image_id": 303778,
-            "caption": "The image shows a baseball player in a white uniform holding a bat and standing on the field.",
+            "image_id": 217561,
+            "caption": "The image shows a table set with plates, silverware, and glasses.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "baseball bat",
-                "person"
+                "cup",
+                "spoon",
+                "knife",
+                "dining table",
+                "wine glass",
+                "fork",
+                "toothbrush"
             ],
             "mscoco_generated_words": [
-                "person"
+                "dining table"
             ],
             "hallucination_idxs": [],
             "words": [
@@ -3958,29 +3853,24 @@
                 "image",
                 "show",
                 "a",
-                "baseball",
-                "player",
-                "in",
-                "a",
-                "white",
-                "uniform",
-                "holding",
-                "a",
-                "bat",
+                "table",
+                "set",
+                "with",
+                "plate",
+                ",",
+                "silverware",
+                ",",
                 "and",
-                "standing",
-                "on",
-                "the",
-                "field",
+                "glass",
                 "."
             ],
             "metrics": {
-                "Bleu_1": 0.6111111110771605,
-                "Bleu_2": 0.5016313256758622,
-                "Bleu_3": 0.3613462263106288,
-                "Bleu_4": 4.2113353702720685e-05,
-                "METEOR": 0.43847422213496656,
-                "CIDEr": 0.8888852471839623,
+                "Bleu_1": 0.6363636363057852,
+                "Bleu_2": 0.3567530339722843,
+                "Bleu_3": 2.418230050265566e-06,
+                "Bleu_4": 6.484115070705435e-09,
+                "METEOR": 0.10029809176321795,
+                "CIDEr": 0.3111494325465457,
                 "SPICE": {
                     "All": {
                         "pr": 0.3333333333333333,
@@ -4046,24 +3936,21 @@
                         "tp": 2.0
                     }
                 },
-                "ROUGE_L": 0.6777777777777778,
+                "ROUGE_L": 0.32504440497335696,
                 "CHAIRs": 0,
                 "CHAIRi": 0.0
             }
         },
         {
-            "image_id": 40426,
-            "caption": "The image shows a kitchen countertop with a blender, a bowl of strawberries, and a spoon.",
+            "image_id": 303778,
+            "caption": "The image shows a baseball player in a white uniform holding a bat and standing on the field.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "spoon",
-                "bowl",
-                "book",
-                "bottle"
+                "person",
+                "baseball bat"
             ],
             "mscoco_generated_words": [
-                "bowl",
-                "spoon"
+                "person"
             ],
             "hallucination_idxs": [],
             "words": [
@@ -4071,29 +3958,29 @@
                 "image",
                 "show",
                 "a",
-                "kitchen",
-                "countertop",
-                "with",
+                "baseball",
+                "player",
+                "in",
                 "a",
-                "blender",
-                ",",
+                "white",
+                "uniform",
+                "holding",
                 "a",
-                "bowl",
-                "of",
-                "strawberry",
-                ",",
+                "bat",
                 "and",
-                "a",
-                "spoon",
+                "standing",
+                "on",
+                "the",
+                "field",
                 "."
             ],
             "metrics": {
-                "Bleu_1": 0.4374999999726563,
-                "Bleu_2": 0.29580398913587685,
-                "Bleu_3": 0.1842015749197028,
-                "Bleu_4": 2.6332019390569436e-05,
-                "METEOR": 0.2023354944308462,
-                "CIDEr": 0.6467402880003605,
+                "Bleu_1": 0.6111111110771605,
+                "Bleu_2": 0.5016313256758622,
+                "Bleu_3": 0.3613462263106288,
+                "Bleu_4": 4.2113353702720685e-05,
+                "METEOR": 0.43847422213496656,
+                "CIDEr": 0.8876569214295278,
                 "SPICE": {
                     "All": {
                         "pr": 0.6363636363636364,
@@ -4159,50 +4046,54 @@
                         "tp": 4.0
                     }
                 },
-                "ROUGE_L": 0.36658653846153844,
+                "ROUGE_L": 0.6777777777777778,
                 "CHAIRs": 0,
                 "CHAIRi": 0.0
             }
         },
         {
-            "image_id": 324291,
-            "caption": "A young girl is riding a pony in a green field with trees in the background.",
+            "image_id": 40426,
+            "caption": "The image shows a kitchen countertop with a blender, a bowl of strawberries, and a spoon.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "horse",
-                "person"
+                "spoon",
+                "book",
+                "bottle",
+                "bowl"
             ],
             "mscoco_generated_words": [
-                "person",
-                "horse"
+                "bowl",
+                "spoon"
             ],
             "hallucination_idxs": [],
             "words": [
-                "a",
-                "young",
-                "girl",
-                "is",
-                "riding",
-                "a",
-                "pony",
-                "in",
-                "a",
-                "green",
-                "field",
-                "with",
-                "tree",
-                "in",
                 "the",
-                "background",
+                "image",
+                "show",
+                "a",
+                "kitchen",
+                "countertop",
+                "with",
+                "a",
+                "blender",
+                ",",
+                "a",
+                "bowl",
+                "of",
+                "strawberry",
+                ",",
+                "and",
+                "a",
+                "spoon",
                 "."
             ],
             "metrics": {
-                "Bleu_1": 0.6874999999570314,
-                "Bleu_2": 0.47871355384725217,
-                "Bleu_3": 0.3661970900603787,
-                "Bleu_4": 0.24791358671576869,
-                "METEOR": 0.28759616165195967,
-                "CIDEr": 0.9030543773092394,
+                "Bleu_1": 0.4374999999726563,
+                "Bleu_2": 0.29580398913587685,
+                "Bleu_3": 0.1842015749197028,
+                "Bleu_4": 2.6332019390569436e-05,
+                "METEOR": 0.2023354944308462,
+                "CIDEr": 0.6444660113038854,
                 "SPICE": {
                     "All": {
                         "pr": 0.3333333333333333,
@@ -4268,51 +4159,50 @@
                         "tp": 5.0
                     }
                 },
-                "ROUGE_L": 0.5840425531914895,
+                "ROUGE_L": 0.36658653846153844,
                 "CHAIRs": 0,
                 "CHAIRi": 0.0
             }
         },
         {
-            "image_id": 96241,
-            "caption": "A group of people are standing next to a train that is parked on the tracks.",
+            "image_id": 324291,
+            "caption": "A young girl is riding a pony in a green field with trees in the background.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
                 "person",
-                "train",
-                "tie"
+                "horse"
             ],
             "mscoco_generated_words": [
                 "person",
-                "train"
+                "horse"
             ],
             "hallucination_idxs": [],
             "words": [
                 "a",
-                "group",
-                "of",
-                "person",
-                "are",
-                "standing",
-                "next",
-                "to",
-                "a",
-                "train",
-                "that",
+                "young",
+                "girl",
                 "is",
-                "parked",
-                "on",
+                "riding",
+                "a",
+                "pony",
+                "in",
+                "a",
+                "green",
+                "field",
+                "with",
+                "tree",
+                "in",
                 "the",
-                "track",
+                "background",
                 "."
             ],
             "metrics": {
-                "Bleu_1": 0.5624999999648439,
-                "Bleu_2": 0.19364916729786447,
-                "Bleu_3": 1.3887830606267012e-06,
-                "Bleu_4": 3.788697835944244e-09,
-                "METEOR": 0.1996119874121316,
-                "CIDEr": 0.4953715342826395,
+                "Bleu_1": 0.6874999999570314,
+                "Bleu_2": 0.47871355384725217,
+                "Bleu_3": 0.3661970900603787,
+                "Bleu_4": 0.24791358671576869,
+                "METEOR": 0.28759616165195967,
+                "CIDEr": 0.8952941347010103,
                 "SPICE": {
                     "All": {
                         "pr": 0.2222222222222222,
@@ -4378,48 +4268,51 @@
                         "tp": 2.0
                     }
                 },
-                "ROUGE_L": 0.36658653846153844,
+                "ROUGE_L": 0.5840425531914895,
                 "CHAIRs": 0,
                 "CHAIRi": 0.0
             }
         },
         {
-            "image_id": 326911,
-            "caption": "A small white dog is standing next to a black bicycle on the sidewalk.",
+            "image_id": 96241,
+            "caption": "A group of people are standing next to a train that is parked on the tracks.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "bicycle",
-                "dog"
+                "tie",
+                "person",
+                "train"
             ],
             "mscoco_generated_words": [
-                "dog",
-                "bicycle"
+                "person",
+                "train"
             ],
             "hallucination_idxs": [],
             "words": [
                 "a",
-                "small",
-                "white",
-                "dog",
-                "is",
+                "group",
+                "of",
+                "person",
+                "are",
                 "standing",
                 "next",
                 "to",
                 "a",
-                "black",
-                "bicycle",
+                "train",
+                "that",
+                "is",
+                "parked",
                 "on",
                 "the",
-                "sidewalk",
+                "track",
                 "."
             ],
             "metrics": {
-                "Bleu_1": 0.5714285713877553,
-                "Bleu_2": 0.29649972664244745,
-                "Bleu_3": 0.19421783838169637,
-                "Bleu_4": 2.856726515501468e-05,
-                "METEOR": 0.3009778441153526,
-                "CIDEr": 0.7193238541990441,
+                "Bleu_1": 0.5624999999648439,
+                "Bleu_2": 0.19364916729786447,
+                "Bleu_3": 1.3887830606267012e-06,
+                "Bleu_4": 3.788697835944244e-09,
+                "METEOR": 0.1996119874121316,
+                "CIDEr": 0.4955167690510445,
                 "SPICE": {
                     "All": {
                         "pr": 0.14285714285714285,
@@ -4485,60 +4378,48 @@
                         "tp": 2.0
                     }
                 },
-                "ROUGE_L": 0.47805642633228845,
+                "ROUGE_L": 0.36658653846153844,
                 "CHAIRs": 0,
                 "CHAIRi": 0.0
             }
         },
         {
-            "image_id": 209222,
-            "caption": "The image shows a man sitting on a bench in the middle of a city street, surrounded by tall buildings and trees.",
+            "image_id": 326911,
+            "caption": "A small white dog is standing next to a black bicycle on the sidewalk.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "handbag",
-                "car",
-                "person",
-                "truck",
-                "bench"
+                "bicycle",
+                "dog"
             ],
             "mscoco_generated_words": [
-                "person",
-                "bench"
+                "dog",
+                "bicycle"
             ],
             "hallucination_idxs": [],
             "words": [
-                "the",
-                "image",
-                "show",
                 "a",
-                "man",
-                "sitting",
+                "small",
+                "white",
+                "dog",
+                "is",
+                "standing",
+                "next",
+                "to",
+                "a",
+                "black",
+                "bicycle",
                 "on",
-                "a",
-                "bench",
-                "in",
                 "the",
-                "middle",
-                "of",
-                "a",
-                "city",
-                "street",
-                ",",
-                "surrounded",
-                "by",
-                "tall",
-                "building",
-                "and",
-                "tree",
+                "sidewalk",
                 "."
             ],
             "metrics": {
-                "Bleu_1": 0.5454545454297521,
-                "Bleu_2": 0.42640143269137754,
-                "Bleu_3": 0.356882927734784,
-                "Bleu_4": 0.3127670020947406,
-                "METEOR": 0.35756395412910197,
-                "CIDEr": 0.19236865760358687,
+                "Bleu_1": 0.5714285713877553,
+                "Bleu_2": 0.29649972664244745,
+                "Bleu_3": 0.19421783838169637,
+                "Bleu_4": 2.856726515501468e-05,
+                "METEOR": 0.3009778441153526,
+                "CIDEr": 0.7195505579525174,
                 "SPICE": {
                     "All": {
                         "pr": 0.7142857142857143,
@@ -4604,58 +4485,60 @@
                         "tp": 3.0
                     }
                 },
-                "ROUGE_L": 0.5583524027459954,
+                "ROUGE_L": 0.47805642633228845,
                 "CHAIRs": 0,
                 "CHAIRi": 0.0
             }
         },
         {
-            "image_id": 362293,
-            "caption": "A group of a man rider on a horse pulling a carriage down a city street.",
+            "image_id": 209222,
+            "caption": "The image shows a man sitting on a bench in the middle of a city street, surrounded by tall buildings and trees.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "car",
-                "parking meter",
                 "truck",
-                "tie",
-                "handbag",
-                "traffic light",
-                "horse",
                 "person",
-                "suitcase"
+                "handbag",
+                "bench",
+                "car"
             ],
             "mscoco_generated_words": [
                 "person",
-                "person",
-                "horse"
+                "bench"
             ],
             "hallucination_idxs": [],
             "words": [
-                "a",
-                "group",
-                "of",
+                "the",
+                "image",
+                "show",
                 "a",
                 "man",
-                "rider",
+                "sitting",
                 "on",
                 "a",
-                "horse",
-                "pulling",
-                "a",
-                "carriage",
-                "down",
+                "bench",
+                "in",
+                "the",
+                "middle",
+                "of",
                 "a",
                 "city",
                 "street",
+                ",",
+                "surrounded",
+                "by",
+                "tall",
+                "building",
+                "and",
+                "tree",
                 "."
             ],
             "metrics": {
-                "Bleu_1": 0.6874999999140626,
-                "Bleu_2": 0.6422616288516358,
-                "Bleu_3": 0.38914247573807637,
-                "Bleu_4": 0.2594750713732382,
-                "METEOR": 0.3743091326734579,
-                "CIDEr": 1.3102698693573451,
+                "Bleu_1": 0.5454545454297521,
+                "Bleu_2": 0.42640143269137754,
+                "Bleu_3": 0.356882927734784,
+                "Bleu_4": 0.3127670020947406,
+                "METEOR": 0.35756395412910197,
+                "CIDEr": 0.19297927183998914,
                 "SPICE": {
                     "All": {
                         "pr": 0.2222222222222222,
@@ -4721,61 +4604,58 @@
                         "tp": 2.0
                     }
                 },
-                "ROUGE_L": 0.53643216080402,
+                "ROUGE_L": 0.5583524027459954,
                 "CHAIRs": 0,
                 "CHAIRi": 0.0
             }
         },
         {
-            "image_id": 144481,
-            "caption": "The image shows two large vases on display in a museum, one with a red and black design and the other with a blue and white design.",
+            "image_id": 362293,
+            "caption": "A group of a man rider on a horse pulling a carriage down a city street.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
                 "person",
-                "vase"
+                "traffic light",
+                "suitcase",
+                "car",
+                "tie",
+                "truck",
+                "handbag",
+                "parking meter",
+                "horse"
             ],
             "mscoco_generated_words": [
-                "vase"
+                "person",
+                "person",
+                "horse"
             ],
             "hallucination_idxs": [],
             "words": [
-                "the",
-                "image",
-                "show",
-                "two",
-                "large",
-                "vase",
+                "a",
+                "group",
+                "of",
+                "a",
+                "man",
+                "rider",
                 "on",
-                "display",
-                "in",
                 "a",
-                "museum",
-                ",",
-                "one",
-                "with",
+                "horse",
+                "pulling",
                 "a",
-                "red",
-                "and",
-                "black",
-                "design",
-                "and",
-                "the",
-                "other",
-                "with",
+                "carriage",
+                "down",
                 "a",
-                "blue",
-                "and",
-                "white",
-                "design",
+                "city",
+                "street",
                 "."
             ],
             "metrics": {
-                "Bleu_1": 0.4074074073923183,
-                "Bleu_2": 0.2168145451878124,
-                "Bleu_3": 0.12342759676459983,
-                "Bleu_4": 1.6730402691842624e-05,
-                "METEOR": 0.20915032679738566,
-                "CIDEr": 0.013423014672012543,
+                "Bleu_1": 0.6874999999140626,
+                "Bleu_2": 0.6422616288516358,
+                "Bleu_3": 0.38914247573807637,
+                "Bleu_4": 0.2594750713732382,
+                "METEOR": 0.3743091326734579,
+                "CIDEr": 1.3054745179837153,
                 "SPICE": {
                     "All": {
                         "pr": 0.125,
@@ -4841,49 +4721,61 @@
                         "tp": 1.0
                     }
                 },
-                "ROUGE_L": 0.2946859903381643,
+                "ROUGE_L": 0.53643216080402,
                 "CHAIRs": 0,
                 "CHAIRi": 0.0
             }
         },
         {
-            "image_id": 433804,
-            "caption": "A small boat is traveling down a river surrounded by tall palm trees and lush greenery.",
+            "image_id": 144481,
+            "caption": "The image shows two large vases on display in a museum, one with a red and black design and the other with a blue and white design.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
-                "boat"
+                "vase",
+                "person"
             ],
             "mscoco_generated_words": [
-                "boat"
+                "vase"
             ],
             "hallucination_idxs": [],
             "words": [
+                "the",
+                "image",
+                "show",
+                "two",
+                "large",
+                "vase",
+                "on",
+                "display",
+                "in",
                 "a",
-                "small",
-                "boat",
-                "is",
-                "traveling",
-                "down",
+                "museum",
+                ",",
+                "one",
+                "with",
                 "a",
-                "river",
-                "surrounded",
-                "by",
-                "tall",
-                "palm",
-                "tree",
+                "red",
                 "and",
-                "lush",
-                "greenery",
+                "black",
+                "design",
+                "and",
+                "the",
+                "other",
+                "with",
+                "a",
+                "blue",
+                "and",
+                "white",
+                "design",
                 "."
             ],
             "metrics": {
-                "Bleu_1": 0.3749999999765626,
-                "Bleu_2": 0.22360679773553777,
-                "Bleu_3": 1.528553543562194e-06,
-                "Bleu_4": 4.071220775270606e-09,
-                "METEOR": 0.1980952380952381,
-                "CIDEr": 0.3792882933696534,
+                "Bleu_1": 0.4074074073923183,
+                "Bleu_2": 0.2168145451878124,
+                "Bleu_3": 0.12342759676459983,
+                "Bleu_4": 1.6730402691842624e-05,
+                "METEOR": 0.20915032679738566,
+                "CIDEr": 0.01337252192346762,
                 "SPICE": {
                     "All": {
                         "pr": 0.3333333333333333,
@@ -4949,52 +4841,49 @@
                         "tp": 1.0
                     }
                 },
-                "ROUGE_L": 0.4212707182320442,
+                "ROUGE_L": 0.2946859903381643,
                 "CHAIRs": 0,
                 "CHAIRi": 0.0
             }
         },
         {
-            "image_id": 142815,
-            "caption": "The image shows a man sitting on a bed, holding a camera and looking at the screen.",
+            "image_id": 433804,
+            "caption": "A small boat is traveling down a river surrounded by tall palm trees and lush greenery.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "bed",
-                "person"
+                "person",
+                "boat"
             ],
             "mscoco_generated_words": [
-                "person",
-                "bed"
+                "boat"
             ],
             "hallucination_idxs": [],
             "words": [
-                "the",
-                "image",
-                "show",
                 "a",
-                "man",
-                "sitting",
-                "on",
+                "small",
+                "boat",
+                "is",
+                "traveling",
+                "down",
                 "a",
-                "bed",
-                ",",
-                "holding",
-                "a",
-                "camera",
+                "river",
+                "surrounded",
+                "by",
+                "tall",
+                "palm",
+                "tree",
                 "and",
-                "looking",
-                "at",
-                "the",
-                "screen",
+                "lush",
+                "greenery",
                 "."
             ],
             "metrics": {
-                "Bleu_1": 0.47058823526643606,
-                "Bleu_2": 0.3834824944004226,
-                "Bleu_3": 0.26965590887682184,
-                "Bleu_4": 3.440134693110683e-05,
-                "METEOR": 0.31104174714887395,
-                "CIDEr": 0.7331473713052208,
+                "Bleu_1": 0.3749999999765626,
+                "Bleu_2": 0.22360679773553777,
+                "Bleu_3": 1.528553543562194e-06,
+                "Bleu_4": 4.071220775270606e-09,
+                "METEOR": 0.1980952380952381,
+                "CIDEr": 0.37832744580897837,
                 "SPICE": {
                     "All": {
                         "pr": 0.8571428571428571,
@@ -5060,59 +4949,52 @@
                         "tp": 3.0
                     }
                 },
-                "ROUGE_L": 0.47495458084609393,
+                "ROUGE_L": 0.4212707182320442,
                 "CHAIRs": 0,
                 "CHAIRi": 0.0
             }
         },
         {
-            "image_id": 85292,
-            "caption": "A train is a large, a long train traveling on the tracks with several cars behind it.",
-            "mscoco_hallucinated_words": [
-                [
-                    "car",
-                    "car"
-                ]
-            ],
+            "image_id": 142815,
+            "caption": "The image shows a man sitting on a bed, holding a camera and looking at the screen.",
+            "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "train"
+                "person",
+                "bed"
             ],
             "mscoco_generated_words": [
-                "train",
-                "train",
-                "car"
+                "person",
+                "bed"
             ],
-            "hallucination_idxs": [
-                15
-            ],
+            "hallucination_idxs": [],
             "words": [
-                "a",
-                "train",
-                "is",
-                "a",
-                "large",
-                ",",
-                "a",
-                "long",
-                "train",
-                "traveling",
-                "on",
                 "the",
-                "track",
-                "with",
-                "several",
-                "car",
-                "behind",
-                "it",
+                "image",
+                "show",
+                "a",
+                "man",
+                "sitting",
+                "on",
+                "a",
+                "bed",
+                ",",
+                "holding",
+                "a",
+                "camera",
+                "and",
+                "looking",
+                "at",
+                "the",
+                "screen",
                 "."
             ],
             "metrics": {
-                "Bleu_1": 0.5882352940830451,
-                "Bleu_2": 0.4696682182853713,
-                "Bleu_3": 0.3086789594799614,
-                "Bleu_4": 0.21409092658369572,
-                "METEOR": 0.3429616064529616,
-                "CIDEr": 0.8435136323645007,
+                "Bleu_1": 0.47058823526643606,
+                "Bleu_2": 0.3834824944004226,
+                "Bleu_3": 0.26965590887682184,
+                "Bleu_4": 3.440134693110683e-05,
+                "METEOR": 0.31104174714887395,
+                "CIDEr": 0.7290640503853658,
                 "SPICE": {
                     "All": {
                         "pr": 0.4444444444444444,
@@ -5178,45 +5060,59 @@
                         "tp": 3.0
                     }
                 },
-                "ROUGE_L": 0.4886515353805074,
-                "CHAIRs": 1,
-                "CHAIRi": 0.3333333333333333
+                "ROUGE_L": 0.47495458084609393,
+                "CHAIRs": 0,
+                "CHAIRi": 0.0
             }
         },
         {
-            "image_id": 500423,
-            "caption": "The orange and white train is parked in the station.",
-            "mscoco_hallucinated_words": [],
+            "image_id": 85292,
+            "caption": "A train is a large, a long train traveling on the tracks with several cars behind it.",
+            "mscoco_hallucinated_words": [
+                [
+                    "car",
+                    "car"
+                ]
+            ],
             "mscoco_gt_words": [
-                "person",
-                "orange",
                 "train"
             ],
             "mscoco_generated_words": [
-                "orange",
-                "train"
+                "train",
+                "train",
+                "car"
             ],
-            "hallucination_idxs": [],
+            "hallucination_idxs": [
+                15
+            ],
             "words": [
-                "the",
-                "orange",
-                "and",
-                "white",
+                "a",
                 "train",
                 "is",
-                "parked",
-                "in",
+                "a",
+                "large",
+                ",",
+                "a",
+                "long",
+                "train",
+                "traveling",
+                "on",
                 "the",
-                "station",
+                "track",
+                "with",
+                "several",
+                "car",
+                "behind",
+                "it",
                 "."
             ],
             "metrics": {
-                "Bleu_1": 0.7999999998400004,
-                "Bleu_2": 0.29814239693868744,
-                "Bleu_3": 2.23144316646742e-06,
-                "Bleu_4": 6.311969076838888e-09,
-                "METEOR": 0.2242933024914006,
-                "CIDEr": 0.9656829084263017,
+                "Bleu_1": 0.5882352940830451,
+                "Bleu_2": 0.4696682182853713,
+                "Bleu_3": 0.3086789594799614,
+                "Bleu_4": 0.21409092658369572,
+                "METEOR": 0.3429616064529616,
+                "CIDEr": 0.8419657725422796,
                 "SPICE": {
                     "All": {
                         "pr": 0.36363636363636365,
@@ -5282,64 +5178,45 @@
                         "tp": 2.0
                     }
                 },
-                "ROUGE_L": 0.47213622291021673,
-                "CHAIRs": 0,
-                "CHAIRi": 0.0
+                "ROUGE_L": 0.4886515353805074,
+                "CHAIRs": 1,
+                "CHAIRi": 0.3333333333333333
             }
         },
         {
-            "image_id": 196280,
-            "caption": "The image shows a young boy standing in a kitchen, holding a spoon and looking at a skull on the wall.",
-            "mscoco_hallucinated_words": [
-                [
-                    "spoon",
-                    "spoon"
-                ]
-            ],
+            "image_id": 500423,
+            "caption": "The orange and white train is parked in the station.",
+            "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
+                "orange",
                 "person",
-                "oven",
-                "bowl"
+                "train"
             ],
             "mscoco_generated_words": [
-                "person",
-                "spoon"
+                "orange",
+                "train"
             ],
-            "hallucination_idxs": [
-                13
-            ],
+            "hallucination_idxs": [],
             "words": [
                 "the",
-                "image",
-                "show",
-                "a",
-                "young",
-                "boy",
-                "standing",
-                "in",
-                "a",
-                "kitchen",
-                ",",
-                "holding",
-                "a",
-                "spoon",
+                "orange",
                 "and",
-                "looking",
-                "at",
-                "a",
-                "skull",
-                "on",
+                "white",
+                "train",
+                "is",
+                "parked",
+                "in",
                 "the",
-                "wall",
+                "station",
                 "."
             ],
             "metrics": {
-                "Bleu_1": 0.5714285714013606,
-                "Bleu_2": 0.41403933558520356,
-                "Bleu_3": 0.26229289922503723,
-                "Bleu_4": 3.1642571775070466e-05,
-                "METEOR": 0.23628861746093707,
-                "CIDEr": 0.1673058135595485,
+                "Bleu_1": 0.7999999998400004,
+                "Bleu_2": 0.29814239693868744,
+                "Bleu_3": 2.23144316646742e-06,
+                "Bleu_4": 6.311969076838888e-09,
+                "METEOR": 0.2242933024914006,
+                "CIDEr": 0.96380227793859,
                 "SPICE": {
                     "All": {
                         "pr": 0.1111111111111111,
@@ -5405,9 +5282,9 @@
                         "tp": 1.0
                     }
                 },
-                "ROUGE_L": 0.43109540636042404,
-                "CHAIRs": 1,
-                "CHAIRi": 0.5
+                "ROUGE_L": 0.47213622291021673,
+                "CHAIRs": 0,
+                "CHAIRi": 0.0
             }
         },
         {
@@ -5416,8 +5293,8 @@
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
                 "truck",
-                "car",
-                "airplane"
+                "airplane",
+                "car"
             ],
             "mscoco_generated_words": [
                 "airplane"
@@ -5455,7 +5332,7 @@
                 "Bleu_3": 0.2426427503086868,
                 "Bleu_4": 0.19692215901893703,
                 "METEOR": 0.27980649658211537,
-                "CIDEr": 0.12543740457191732,
+                "CIDEr": 0.1258981866776263,
                 "SPICE": {
                     "All": {
                         "pr": 0.3,
@@ -5531,9 +5408,9 @@
             "caption": "A small brown dog is sitting on top of a couch in a living room with wooden floors and a fireplace.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "remote",
+                "couch",
                 "dog",
-                "couch"
+                "remote"
             ],
             "mscoco_generated_words": [
                 "dog",
@@ -5570,7 +5447,7 @@
                 "Bleu_3": 0.30209249064527993,
                 "Bleu_4": 0.26035572671947094,
                 "METEOR": 0.35510078446672166,
-                "CIDEr": 0.2857650097979883,
+                "CIDEr": 0.28457531964421623,
                 "SPICE": {
                     "All": {
                         "pr": 0.25,
@@ -5646,9 +5523,9 @@
             "caption": "The image shows a chocolate cake with a small stream running through it, surrounded by trees and rocks.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "cake",
                 "dining table",
-                "bear"
+                "bear",
+                "cake"
             ],
             "mscoco_generated_words": [
                 "cake"
@@ -5682,7 +5559,7 @@
                 "Bleu_3": 1.543394797405524e-06,
                 "Bleu_4": 3.95671672921152e-09,
                 "METEOR": 0.2150431110196039,
-                "CIDEr": 0.30453938994244706,
+                "CIDEr": 0.3028563187038613,
                 "SPICE": {
                     "All": {
                         "pr": 0.36363636363636365,
@@ -5801,7 +5678,7 @@
                 "Bleu_3": 1.6823908656274826e-06,
                 "Bleu_4": 4.374811430921123e-09,
                 "METEOR": 0.15862231434347676,
-                "CIDEr": 0.45099955356563937,
+                "CIDEr": 0.4504871782799624,
                 "SPICE": {
                     "All": {
                         "pr": 0.5,
@@ -5877,11 +5754,11 @@
             "caption": "The white cat is sitting on top of a black bag in the corner of a room.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "handbag",
                 "book",
                 "dining table",
+                "cat",
                 "dog",
-                "cat"
+                "handbag"
             ],
             "mscoco_generated_words": [
                 "cat"
@@ -5913,7 +5790,7 @@
                 "Bleu_3": 1.6401017070887658e-06,
                 "Bleu_4": 4.2132873222835864e-09,
                 "METEOR": 0.27827690227188295,
-                "CIDEr": 0.2626493620454369,
+                "CIDEr": 0.2609641092651081,
                 "SPICE": {
                     "All": {
                         "pr": 0.6666666666666666,
@@ -6021,7 +5898,7 @@
                 "Bleu_3": 0.40398938376812005,
                 "Bleu_4": 0.35831291873740967,
                 "METEOR": 0.38094948311511406,
-                "CIDEr": 1.3623140749642784,
+                "CIDEr": 1.364659022700145,
                 "SPICE": {
                     "All": {
                         "pr": 0.25,
@@ -6097,10 +5974,10 @@
             "caption": "A cat sits on top of a microwave oven in a kitchen.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "oven",
                 "cup",
                 "microwave",
-                "cat"
+                "cat",
+                "oven"
             ],
             "mscoco_generated_words": [
                 "cat",
@@ -6129,7 +6006,7 @@
                 "Bleu_3": 0.6933612742872518,
                 "Bleu_4": 0.5773502691340049,
                 "METEOR": 0.5528036415211608,
-                "CIDEr": 3.5817322913625214,
+                "CIDEr": 3.594737407013416,
                 "SPICE": {
                     "All": {
                         "pr": 0.5454545454545454,
@@ -6236,7 +6113,7 @@
                 "Bleu_3": 0.3769737205393706,
                 "Bleu_4": 0.3334477432578259,
                 "METEOR": 0.387111752664311,
-                "CIDEr": 1.1032388787750496,
+                "CIDEr": 1.1100755777711329,
                 "SPICE": {
                     "All": {
                         "pr": 0.5,
@@ -6313,8 +6190,8 @@
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
                 "person",
-                "bench",
-                "dog"
+                "dog",
+                "bench"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -6344,7 +6221,7 @@
                 "Bleu_3": 0.3375531905613214,
                 "Bleu_4": 0.2490328638628145,
                 "METEOR": 0.38843482425017706,
-                "CIDEr": 1.5109343206593786,
+                "CIDEr": 1.5127330671932309,
                 "SPICE": {
                     "All": {
                         "pr": 0.25,
@@ -6420,10 +6297,10 @@
             "caption": "The image shows a red sports car parked in front of a small, rusty old school bus on a dirt road surrounded by trees and mountains in the background.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "horse",
                 "boat",
-                "car",
-                "bus"
+                "horse",
+                "bus",
+                "car"
             ],
             "mscoco_generated_words": [
                 "car"
@@ -6468,7 +6345,7 @@
                 "Bleu_3": 0.2220396237571862,
                 "Bleu_4": 0.18852104512871407,
                 "METEOR": 0.3206938530969062,
-                "CIDEr": 0.017100266887484967,
+                "CIDEr": 0.017312378649311493,
                 "SPICE": {
                     "All": {
                         "pr": 0.3,
@@ -6577,7 +6454,7 @@
                 "Bleu_3": 0.22833557018287956,
                 "Bleu_4": 3.0934588292167495e-05,
                 "METEOR": 0.2643089300915738,
-                "CIDEr": 0.43651544794008784,
+                "CIDEr": 0.43627218688969693,
                 "SPICE": {
                     "All": {
                         "pr": 0.25,
@@ -6696,7 +6573,7 @@
                 "Bleu_3": 0.2998546863243232,
                 "Bleu_4": 0.20590188177204233,
                 "METEOR": 0.28517591762526895,
-                "CIDEr": 0.34527968043635204,
+                "CIDEr": 0.34591862340896107,
                 "SPICE": {
                     "All": {
                         "pr": 0.3076923076923077,
@@ -6772,9 +6649,9 @@
             "caption": "A man in a white suit and hat is sitting on the back of a horse drawn carriage in front of a building with a red roof.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "horse",
                 "person",
-                "potted plant"
+                "potted plant",
+                "horse"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -6817,7 +6694,7 @@
                 "Bleu_3": 0.4416635478366959,
                 "Bleu_4": 0.34616316657558927,
                 "METEOR": 0.3719139465068065,
-                "CIDEr": 0.07919617939417116,
+                "CIDEr": 0.07936877049657223,
                 "SPICE": {
                     "All": {
                         "pr": 0.4166666666666667,
@@ -6893,8 +6770,8 @@
             "caption": "The image shows a ski slope with people skiing down it on a sunny day.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
                 "chair",
+                "person",
                 "skis",
                 "snowboard"
             ],
@@ -6927,7 +6804,7 @@
                 "Bleu_3": 0.2884183011751023,
                 "Bleu_4": 3.698141786428543e-05,
                 "METEOR": 0.35590923468283703,
-                "CIDEr": 0.9380010212121239,
+                "CIDEr": 0.9383672313725424,
                 "SPICE": {
                     "All": {
                         "pr": 0.4444444444444444,
@@ -7003,16 +6880,16 @@
             "caption": "The image shows a kitchen with white cabinets and countertops, black appliances, and a wooden island with a sink and stove.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "sink",
-                "refrigerator",
                 "cup",
+                "refrigerator",
+                "sink",
                 "oven",
-                "bowl",
-                "spoon",
                 "vase",
+                "bowl",
                 "apple",
-                "potted plant",
-                "dining table"
+                "spoon",
+                "dining table",
+                "potted plant"
             ],
             "mscoco_generated_words": [
                 "sink",
@@ -7051,7 +6928,7 @@
                 "Bleu_3": 0.2012040979204394,
                 "Bleu_4": 2.5936387735224197e-05,
                 "METEOR": 0.21392694772021764,
-                "CIDEr": 0.2255473138475395,
+                "CIDEr": 0.23481241103724976,
                 "SPICE": {
                     "All": {
                         "pr": 0.46153846153846156,
@@ -7127,16 +7004,16 @@
             "caption": "A woman is sitting at a table with a plate of food in front of her.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "knife",
-                "broccoli",
                 "cup",
-                "bowl",
-                "fork",
-                "spoon",
-                "sandwich",
                 "person",
+                "bowl",
+                "sandwich",
+                "spoon",
                 "dining table",
-                "bottle"
+                "bottle",
+                "knife",
+                "fork",
+                "broccoli"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -7168,7 +7045,7 @@
                 "Bleu_3": 0.56808564024826,
                 "Bleu_4": 0.5393396303823841,
                 "METEOR": 0.3866327916892876,
-                "CIDEr": 1.7111365528898541,
+                "CIDEr": 1.6897838944348376,
                 "SPICE": {
                     "All": {
                         "pr": 0.2,
@@ -7293,7 +7170,7 @@
                 "Bleu_3": 0.2315979476693905,
                 "Bleu_4": 0.15786779060858716,
                 "METEOR": 0.27593045175718867,
-                "CIDEr": 0.11175538408975158,
+                "CIDEr": 0.1113520731840002,
                 "SPICE": {
                     "All": {
                         "pr": 0.35714285714285715,
@@ -7374,8 +7251,8 @@
                 ]
             ],
             "mscoco_gt_words": [
-                "bowl",
-                "toilet"
+                "toilet",
+                "bowl"
             ],
             "mscoco_generated_words": [
                 "toilet",
@@ -7411,7 +7288,7 @@
                 "Bleu_3": 0.18298968736921678,
                 "Bleu_4": 2.5281168695855676e-05,
                 "METEOR": 0.22079473921715126,
-                "CIDEr": 0.41934034558833255,
+                "CIDEr": 0.417667336596088,
                 "SPICE": {
                     "All": {
                         "pr": 0.5,
@@ -7515,7 +7392,7 @@
                 "Bleu_3": 0.23044502516602136,
                 "Bleu_4": 3.3260249502635095e-05,
                 "METEOR": 0.2315848887903427,
-                "CIDEr": 0.8190493674683512,
+                "CIDEr": 0.8161691388170029,
                 "SPICE": {
                     "All": {
                         "pr": 0.42857142857142855,
@@ -7591,8 +7468,8 @@
             "caption": "The pizza box has a slice of pizza with vegetables and meat on top of it.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "dining table",
-                "pizza"
+                "pizza",
+                "dining table"
             ],
             "mscoco_generated_words": [
                 "pizza",
@@ -7624,7 +7501,7 @@
                 "Bleu_3": 2.357062687511784e-06,
                 "Bleu_4": 5.6336843687375215e-09,
                 "METEOR": 0.288263887173835,
-                "CIDEr": 0.5992812025555126,
+                "CIDEr": 0.5961319627139698,
                 "SPICE": {
                     "All": {
                         "pr": 0.5555555555555556,
@@ -7700,9 +7577,9 @@
             "caption": "A group of people are standing on a beach with kayaks in the water.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
+                "cell phone",
                 "person",
-                "boat",
-                "cell phone"
+                "boat"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -7732,116 +7609,7 @@
                 "Bleu_3": 0.34540606445152255,
                 "Bleu_4": 4.3994592306989425e-05,
                 "METEOR": 0.22376644811512714,
-                "CIDEr": 0.8246922706330415,
-                "SPICE": {
-                    "All": {
-                        "pr": 0.07894736842105263,
-                        "re": 0.125,
-                        "f": 0.0967741935483871,
-                        "fn": 21.0,
-                        "numImages": 1.0,
-                        "fp": 35.0,
-                        "tp": 3.0
-                    },
-                    "Relation": {
-                        "pr": 0.0,
-                        "re": 0.0,
-                        "f": 0.0,
-                        "fn": 6.0,
-                        "numImages": 1.0,
-                        "fp": 12.0,
-                        "tp": 0.0
-                    },
-                    "Cardinality": {
-                        "pr": NaN,
-                        "re": NaN,
-                        "f": NaN,
-                        "fn": 0.0,
-                        "numImages": 1.0,
-                        "fp": 0.0,
-                        "tp": 0.0
-                    },
-                    "Attribute": {
-                        "pr": 0.0,
-                        "re": 0.0,
-                        "f": 0.0,
-                        "fn": 8.0,
-                        "numImages": 1.0,
-                        "fp": 10.0,
-                        "tp": 0.0
-                    },
-                    "Size": {
-                        "pr": NaN,
-                        "re": NaN,
-                        "f": NaN,
-                        "fn": 0.0,
-                        "numImages": 1.0,
-                        "fp": 2.0,
-                        "tp": 0.0
-                    },
-                    "Color": {
-                        "pr": NaN,
-                        "re": NaN,
-                        "f": NaN,
-                        "fn": 0.0,
-                        "numImages": 1.0,
-                        "fp": 2.0,
-                        "tp": 0.0
-                    },
-                    "Object": {
-                        "pr": 0.1875,
-                        "re": 0.3,
-                        "f": 0.23076923076923075,
-                        "fn": 7.0,
-                        "numImages": 1.0,
-                        "fp": 13.0,
-                        "tp": 3.0
-                    }
-                },
-                "ROUGE_L": 0.5669144981412639,
-                "CHAIRs": 0,
-                "CHAIRi": 0.0
-            }
-        },
-        {
-            "image_id": 19608,
-            "caption": "A heron stands on the edge of a pond, looking out at the water.",
-            "mscoco_hallucinated_words": [],
-            "mscoco_gt_words": [
-                "person",
-                "bicycle",
-                "bird",
-                "bench"
-            ],
-            "mscoco_generated_words": [
-                "bird"
-            ],
-            "hallucination_idxs": [],
-            "words": [
-                "a",
-                "heron",
-                "stand",
-                "on",
-                "the",
-                "edge",
-                "of",
-                "a",
-                "pond",
-                ",",
-                "looking",
-                "out",
-                "at",
-                "the",
-                "water",
-                "."
-            ],
-            "metrics": {
-                "Bleu_1": 0.7857142856581634,
-                "Bleu_2": 0.3476767476567686,
-                "Bleu_3": 2.1596830289715096e-06,
-                "Bleu_4": 5.5010341417372664e-09,
-                "METEOR": 0.17955112219451372,
-                "CIDEr": 0.3480572051742309,
+                "CIDEr": 0.8204462856914472,
                 "SPICE": {
                     "All": {
                         "pr": 0.3,
@@ -7907,49 +7675,50 @@
                         "tp": 2.0
                     }
                 },
-                "ROUGE_L": 0.4039735099337749,
+                "ROUGE_L": 0.5669144981412639,
                 "CHAIRs": 0,
                 "CHAIRi": 0.0
             }
         },
         {
-            "image_id": 497348,
-            "caption": "An empty street with a sign that reads \"no through traffic\" on the side of the road.",
+            "image_id": 19608,
+            "caption": "A heron stands on the edge of a pond, looking out at the water.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "car"
+                "bird",
+                "person",
+                "bicycle",
+                "bench"
             ],
-            "mscoco_generated_words": [],
+            "mscoco_generated_words": [
+                "bird"
+            ],
             "hallucination_idxs": [],
             "words": [
-                "an",
-                "empty",
-                "street",
-                "with",
                 "a",
-                "sign",
-                "that",
-                "read",
-                "``",
-                "no",
-                "through",
-                "traffic",
-                "'s's",
+                "heron",
+                "stand",
                 "on",
                 "the",
-                "side",
+                "edge",
                 "of",
+                "a",
+                "pond",
+                ",",
+                "looking",
+                "out",
+                "at",
                 "the",
-                "road",
+                "water",
                 "."
             ],
             "metrics": {
-                "Bleu_1": 0.7058823528996541,
-                "Bleu_2": 0.5144957553963163,
-                "Bleu_3": 0.37548955666810835,
-                "Bleu_4": 0.24797984720301927,
-                "METEOR": 0.3019945768450708,
-                "CIDEr": 0.9216715268243947,
+                "Bleu_1": 0.7857142856581634,
+                "Bleu_2": 0.3476767476567686,
+                "Bleu_3": 2.1596830289715096e-06,
+                "Bleu_4": 5.5010341417372664e-09,
+                "METEOR": 0.17955112219451372,
+                "CIDEr": 0.3489857290961311,
                 "SPICE": {
                     "All": {
                         "pr": 0.09090909090909091,
@@ -8015,60 +7784,49 @@
                         "tp": 1.0
                     }
                 },
-                "ROUGE_L": 0.4982497082847141,
+                "ROUGE_L": 0.4039735099337749,
                 "CHAIRs": 0,
                 "CHAIRi": 0.0
             }
         },
         {
-            "image_id": 437594,
-            "caption": "A person is sitting at a table in front of a laptop, looking at the screen.",
-            "mscoco_hallucinated_words": [
-                [
-                    "table",
-                    "dining table"
-                ]
-            ],
+            "image_id": 497348,
+            "caption": "An empty street with a sign that reads \"no through traffic\" on the side of the road.",
+            "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
-                "keyboard",
-                "laptop"
+                "car"
             ],
-            "mscoco_generated_words": [
-                "person",
-                "dining table",
-                "laptop"
-            ],
-            "hallucination_idxs": [
-                6
-            ],
+            "mscoco_generated_words": [],
+            "hallucination_idxs": [],
             "words": [
+                "an",
+                "empty",
+                "street",
+                "with",
                 "a",
-                "person",
-                "is",
-                "sitting",
-                "at",
-                "a",
-                "table",
-                "in",
-                "front",
-                "of",
-                "a",
-                "laptop",
-                ",",
-                "looking",
-                "at",
+                "sign",
+                "that",
+                "read",
+                "``",
+                "no",
+                "through",
+                "traffic",
+                "'s's",
+                "on",
                 "the",
-                "screen",
+                "side",
+                "of",
+                "the",
+                "road",
                 "."
             ],
             "metrics": {
-                "Bleu_1": 0.6249999999609376,
-                "Bleu_2": 0.4999999999677084,
-                "Bleu_3": 0.41491326665537864,
-                "Bleu_4": 0.2722589422880811,
-                "METEOR": 0.2676667758194993,
-                "CIDEr": 0.6614966352892429,
+                "Bleu_1": 0.7058823528996541,
+                "Bleu_2": 0.5144957553963163,
+                "Bleu_3": 0.37548955666810835,
+                "Bleu_4": 0.24797984720301927,
+                "METEOR": 0.3019945768450708,
+                "CIDEr": 0.9232784728625849,
                 "SPICE": {
                     "All": {
                         "pr": 0.18181818181818182,
@@ -8134,49 +7892,60 @@
                         "tp": 2.0
                     }
                 },
-                "ROUGE_L": 0.5313588850174217,
-                "CHAIRs": 1,
-                "CHAIRi": 0.3333333333333333
+                "ROUGE_L": 0.4982497082847141,
+                "CHAIRs": 0,
+                "CHAIRi": 0.0
             }
         },
         {
-            "image_id": 413404,
-            "caption": "A group of people are walking through a park with benches and trees.",
-            "mscoco_hallucinated_words": [],
+            "image_id": 437594,
+            "caption": "A person is sitting at a table in front of a laptop, looking at the screen.",
+            "mscoco_hallucinated_words": [
+                [
+                    "table",
+                    "dining table"
+                ]
+            ],
             "mscoco_gt_words": [
-                "handbag",
+                "keyboard",
                 "person",
-                "bird",
-                "bench"
+                "laptop"
             ],
             "mscoco_generated_words": [
                 "person",
-                "bench"
+                "dining table",
+                "laptop"
             ],
-            "hallucination_idxs": [],
+            "hallucination_idxs": [
+                6
+            ],
             "words": [
                 "a",
-                "group",
-                "of",
                 "person",
-                "are",
-                "walking",
-                "through",
+                "is",
+                "sitting",
+                "at",
                 "a",
-                "park",
-                "with",
-                "bench",
-                "and",
-                "tree",
+                "table",
+                "in",
+                "front",
+                "of",
+                "a",
+                "laptop",
+                ",",
+                "looking",
+                "at",
+                "the",
+                "screen",
                 "."
             ],
             "metrics": {
-                "Bleu_1": 0.7692307691715977,
-                "Bleu_2": 0.620173672896349,
-                "Bleu_3": 0.5190764423040098,
-                "Bleu_4": 0.4525888007493225,
-                "METEOR": 0.36979003672714356,
-                "CIDEr": 2.2907704700473848,
+                "Bleu_1": 0.6249999999609376,
+                "Bleu_2": 0.4999999999677084,
+                "Bleu_3": 0.41491326665537864,
+                "Bleu_4": 0.2722589422880811,
+                "METEOR": 0.2676667758194993,
+                "CIDEr": 0.6669970882379561,
                 "SPICE": {
                     "All": {
                         "pr": 0.375,
@@ -8242,48 +8011,49 @@
                         "tp": 3.0
                     }
                 },
-                "ROUGE_L": 0.6459909228441755,
-                "CHAIRs": 0,
-                "CHAIRi": 0.0
+                "ROUGE_L": 0.5313588850174217,
+                "CHAIRs": 1,
+                "CHAIRi": 0.3333333333333333
             }
         },
         {
-            "image_id": 332775,
-            "caption": "A black cat is sitting in a suitcase on a bed.",
+            "image_id": 413404,
+            "caption": "A group of people are walking through a park with benches and trees.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "bed",
-                "suitcase",
-                "dining table",
-                "cat"
+                "bird",
+                "person",
+                "handbag",
+                "bench"
             ],
             "mscoco_generated_words": [
-                "cat",
-                "suitcase",
-                "bed"
+                "person",
+                "bench"
             ],
             "hallucination_idxs": [],
             "words": [
                 "a",
-                "black",
-                "cat",
-                "is",
-                "sitting",
-                "in",
+                "group",
+                "of",
+                "person",
+                "are",
+                "walking",
+                "through",
                 "a",
-                "suitcase",
-                "on",
-                "a",
-                "bed",
+                "park",
+                "with",
+                "bench",
+                "and",
+                "tree",
                 "."
             ],
             "metrics": {
-                "Bleu_1": 0.8181818181074382,
-                "Bleu_2": 0.7006490496784906,
-                "Bleu_3": 0.6020134378481848,
-                "Bleu_4": 0.5348259312267923,
-                "METEOR": 0.45859532837267003,
-                "CIDEr": 2.818966306052893,
+                "Bleu_1": 0.7692307691715977,
+                "Bleu_2": 0.620173672896349,
+                "Bleu_3": 0.5190764423040098,
+                "Bleu_4": 0.4525888007493225,
+                "METEOR": 0.36979003672714356,
+                "CIDEr": 2.277858151747643,
                 "SPICE": {
                     "All": {
                         "pr": 0.23076923076923078,
@@ -8349,50 +8119,48 @@
                         "tp": 2.0
                     }
                 },
-                "ROUGE_L": 0.8146911519198664,
+                "ROUGE_L": 0.6459909228441755,
                 "CHAIRs": 0,
                 "CHAIRi": 0.0
             }
         },
         {
-            "image_id": 530624,
-            "caption": "The black and brown dog is curled up under the covers on a floral patterned bed.",
+            "image_id": 332775,
+            "caption": "A black cat is sitting in a suitcase on a bed.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "bed",
-                "dog"
+                "suitcase",
+                "dining table",
+                "cat",
+                "bed"
             ],
             "mscoco_generated_words": [
-                "dog",
+                "cat",
+                "suitcase",
                 "bed"
             ],
             "hallucination_idxs": [],
             "words": [
-                "the",
+                "a",
                 "black",
-                "and",
-                "brown",
-                "dog",
+                "cat",
                 "is",
-                "curled",
-                "up",
-                "under",
-                "the",
-                "cover",
+                "sitting",
+                "in",
+                "a",
+                "suitcase",
                 "on",
                 "a",
-                "floral",
-                "patterned",
                 "bed",
                 "."
             ],
             "metrics": {
-                "Bleu_1": 0.6249999999609376,
-                "Bleu_2": 0.40824829043749705,
-                "Bleu_3": 0.22833557018287956,
-                "Bleu_4": 3.0934588292167495e-05,
-                "METEOR": 0.36126276959671677,
-                "CIDEr": 0.5740538067120191,
+                "Bleu_1": 0.8181818181074382,
+                "Bleu_2": 0.7006490496784906,
+                "Bleu_3": 0.6020134378481848,
+                "Bleu_4": 0.5348259312267923,
+                "METEOR": 0.45859532837267003,
+                "CIDEr": 2.8106198781443235,
                 "SPICE": {
                     "All": {
                         "pr": 0.26666666666666666,
@@ -8458,46 +8226,50 @@
                         "tp": 2.0
                     }
                 },
-                "ROUGE_L": 0.4212707182320442,
+                "ROUGE_L": 0.8146911519198664,
                 "CHAIRs": 0,
                 "CHAIRi": 0.0
             }
         },
         {
-            "image_id": 139113,
-            "caption": "A group of young men play soccer on a dusty field at night.",
+            "image_id": 530624,
+            "caption": "The black and brown dog is curled up under the covers on a floral patterned bed.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
-                "sports ball"
+                "dog",
+                "bed"
             ],
             "mscoco_generated_words": [
-                "person"
+                "dog",
+                "bed"
             ],
             "hallucination_idxs": [],
             "words": [
-                "a",
-                "group",
-                "of",
-                "young",
-                "man",
-                "play",
-                "soccer",
+                "the",
+                "black",
+                "and",
+                "brown",
+                "dog",
+                "is",
+                "curled",
+                "up",
+                "under",
+                "the",
+                "cover",
                 "on",
                 "a",
-                "dusty",
-                "field",
-                "at",
-                "night",
+                "floral",
+                "patterned",
+                "bed",
                 "."
             ],
             "metrics": {
-                "Bleu_1": 0.5935873285582154,
-                "Bleu_2": 0.46049977460554975,
-                "Bleu_3": 0.40436218825542447,
-                "Bleu_4": 0.36112252912402,
-                "METEOR": 0.3468401356199333,
-                "CIDEr": 1.1213149406857583,
+                "Bleu_1": 0.6249999999609376,
+                "Bleu_2": 0.40824829043749705,
+                "Bleu_3": 0.22833557018287956,
+                "Bleu_4": 3.0934588292167495e-05,
+                "METEOR": 0.36126276959671677,
+                "CIDEr": 0.5698688312610233,
                 "SPICE": {
                     "All": {
                         "pr": 0.36363636363636365,
@@ -8563,60 +8335,46 @@
                         "tp": 3.0
                     }
                 },
-                "ROUGE_L": 0.6233576642335765,
+                "ROUGE_L": 0.4212707182320442,
                 "CHAIRs": 0,
                 "CHAIRi": 0.0
             }
         },
         {
-            "image_id": 192858,
-            "caption": "The image shows a group of people sitting at a table in a restaurant, enjoying pizza and drinks.",
+            "image_id": 139113,
+            "caption": "A group of young men play soccer on a dusty field at night.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "chair",
-                "cup",
-                "bowl",
-                "spoon",
-                "pizza",
                 "person",
-                "dining table",
-                "bottle"
+                "sports ball"
             ],
             "mscoco_generated_words": [
-                "person",
-                "dining table",
-                "pizza"
+                "person"
             ],
             "hallucination_idxs": [],
             "words": [
-                "the",
-                "image",
-                "show",
                 "a",
                 "group",
                 "of",
-                "person",
-                "sitting",
+                "young",
+                "man",
+                "play",
+                "soccer",
+                "on",
+                "a",
+                "dusty",
+                "field",
                 "at",
-                "a",
-                "table",
-                "in",
-                "a",
-                "restaurant",
-                ",",
-                "enjoying",
-                "pizza",
-                "and",
-                "drink",
+                "night",
                 "."
             ],
             "metrics": {
-                "Bleu_1": 0.6111111110771605,
-                "Bleu_2": 0.42395584920006113,
-                "Bleu_3": 0.32300866909287546,
-                "Bleu_4": 0.21771473287409404,
-                "METEOR": 0.2558944617976744,
-                "CIDEr": 0.3665164692635907,
+                "Bleu_1": 0.5935873285582154,
+                "Bleu_2": 0.46049977460554975,
+                "Bleu_3": 0.40436218825542447,
+                "Bleu_4": 0.36112252912402,
+                "METEOR": 0.3468401356199333,
+                "CIDEr": 1.1203908889089573,
                 "SPICE": {
                     "All": {
                         "pr": 0.2857142857142857,
@@ -8682,63 +8440,60 @@
                         "tp": 2.0
                     }
                 },
-                "ROUGE_L": 0.5115303983228512,
+                "ROUGE_L": 0.6233576642335765,
                 "CHAIRs": 0,
                 "CHAIRi": 0.0
             }
         },
         {
-            "image_id": 482742,
-            "caption": "A group of a man rider on a bicycle on a sidewalk next to a building with a red roof and green plants in the foreground.",
+            "image_id": 192858,
+            "caption": "The image shows a group of people sitting at a table in a restaurant, enjoying pizza and drinks.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
+                "cup",
+                "chair",
                 "person",
-                "bicycle",
-                "handbag",
-                "traffic light"
+                "bowl",
+                "spoon",
+                "dining table",
+                "bottle",
+                "pizza"
             ],
             "mscoco_generated_words": [
                 "person",
-                "person",
-                "bicycle"
+                "dining table",
+                "pizza"
             ],
             "hallucination_idxs": [],
             "words": [
+                "the",
+                "image",
+                "show",
                 "a",
                 "group",
                 "of",
+                "person",
+                "sitting",
+                "at",
                 "a",
-                "man",
-                "rider",
-                "on",
-                "a",
-                "bicycle",
-                "on",
-                "a",
-                "sidewalk",
-                "next",
-                "to",
-                "a",
-                "building",
-                "with",
-                "a",
-                "red",
-                "roof",
-                "and",
-                "green",
-                "plant",
+                "table",
                 "in",
-                "the",
-                "foreground",
+                "a",
+                "restaurant",
+                ",",
+                "enjoying",
+                "pizza",
+                "and",
+                "drink",
                 "."
             ],
             "metrics": {
-                "Bleu_1": 0.5384615384408284,
-                "Bleu_2": 0.32816506164407266,
-                "Bleu_3": 0.20781065557855458,
-                "Bleu_4": 2.4993029414165317e-05,
-                "METEOR": 0.19981256120390906,
-                "CIDEr": 0.09732152113639772,
+                "Bleu_1": 0.6111111110771605,
+                "Bleu_2": 0.42395584920006113,
+                "Bleu_3": 0.32300866909287546,
+                "Bleu_4": 0.21771473287409404,
+                "METEOR": 0.2558944617976744,
+                "CIDEr": 0.36497387284575533,
                 "SPICE": {
                     "All": {
                         "pr": 0.125,
@@ -8804,48 +8559,63 @@
                         "tp": 2.0
                     }
                 },
-                "ROUGE_L": 0.3382624768946396,
+                "ROUGE_L": 0.5115303983228512,
                 "CHAIRs": 0,
                 "CHAIRi": 0.0
             }
         },
         {
-            "image_id": 398818,
-            "caption": "There are three bananas on the counter, each with a different sticker on them.",
+            "image_id": 482742,
+            "caption": "A group of a man rider on a bicycle on a sidewalk next to a building with a red roof and green plants in the foreground.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "bottle",
-                "banana"
+                "traffic light",
+                "person",
+                "bicycle",
+                "handbag"
             ],
             "mscoco_generated_words": [
-                "banana"
+                "person",
+                "person",
+                "bicycle"
             ],
             "hallucination_idxs": [],
             "words": [
-                "there",
-                "are",
-                "three",
-                "banana",
+                "a",
+                "group",
+                "of",
+                "a",
+                "man",
+                "rider",
                 "on",
-                "the",
-                "counter",
-                ",",
-                "each",
+                "a",
+                "bicycle",
+                "on",
+                "a",
+                "sidewalk",
+                "next",
+                "to",
+                "a",
+                "building",
                 "with",
                 "a",
-                "different",
-                "sticker",
-                "on",
-                "them",
+                "red",
+                "roof",
+                "and",
+                "green",
+                "plant",
+                "in",
+                "the",
+                "foreground",
                 "."
             ],
             "metrics": {
-                "Bleu_1": 0.5714285713877553,
-                "Bleu_2": 0.29649972664244745,
-                "Bleu_3": 1.9421783838169644e-06,
-                "Bleu_4": 5.080057942628497e-09,
-                "METEOR": 0.20367632405846198,
-                "CIDEr": 0.5013519287073454,
+                "Bleu_1": 0.5384615384408284,
+                "Bleu_2": 0.32816506164407266,
+                "Bleu_3": 0.20781065557855458,
+                "Bleu_4": 2.4993029414165317e-05,
+                "METEOR": 0.19981256120390906,
+                "CIDEr": 0.09628027087504018,
                 "SPICE": {
                     "All": {
                         "pr": 0.2727272727272727,
@@ -8911,47 +8681,48 @@
                         "tp": 2.0
                     }
                 },
-                "ROUGE_L": 0.3620178041543027,
+                "ROUGE_L": 0.3382624768946396,
                 "CHAIRs": 0,
                 "CHAIRi": 0.0
             }
         },
         {
-            "image_id": 305871,
-            "caption": "The image shows a street with a sign on the sidewalk that reads, \"San Carlos Street.\"",
+            "image_id": 398818,
+            "caption": "There are three bananas on the counter, each with a different sticker on them.",
             "mscoco_hallucinated_words": [],
-            "mscoco_gt_words": [],
-            "mscoco_generated_words": [],
+            "mscoco_gt_words": [
+                "banana",
+                "bottle"
+            ],
+            "mscoco_generated_words": [
+                "banana"
+            ],
             "hallucination_idxs": [],
             "words": [
-                "the",
-                "image",
-                "show",
-                "a",
-                "street",
-                "with",
-                "a",
-                "sign",
+                "there",
+                "are",
+                "three",
+                "banana",
                 "on",
                 "the",
-                "sidewalk",
-                "that",
-                "read",
+                "counter",
                 ",",
-                "``",
-                "san",
-                "carlo",
-                "street",
-                ".",
-                "'s's"
+                "each",
+                "with",
+                "a",
+                "different",
+                "sticker",
+                "on",
+                "them",
+                "."
             ],
             "metrics": {
-                "Bleu_1": 0.4374999999726563,
-                "Bleu_2": 0.2415229457542257,
-                "Bleu_3": 1.609148974235122e-06,
-                "Bleu_4": 4.231178541317022e-09,
-                "METEOR": 0.16713274514744228,
-                "CIDEr": 0.1774195225103289,
+                "Bleu_1": 0.5714285713877553,
+                "Bleu_2": 0.29649972664244745,
+                "Bleu_3": 1.9421783838169644e-06,
+                "Bleu_4": 5.080057942628497e-09,
+                "METEOR": 0.20367632405846198,
+                "CIDEr": 0.5002535809117029,
                 "SPICE": {
                     "All": {
                         "pr": 0.375,
@@ -9017,56 +8788,47 @@
                         "tp": 3.0
                     }
                 },
-                "ROUGE_L": 0.2932692307692307,
+                "ROUGE_L": 0.3620178041543027,
                 "CHAIRs": 0,
                 "CHAIRi": 0.0
             }
         },
         {
-            "image_id": 443818,
-            "caption": "A small brown dog is sitting in a large, furry, and padded bed with a white collar around its neck.",
+            "image_id": 305871,
+            "caption": "The image shows a street with a sign on the sidewalk that reads, \"San Carlos Street.\"",
             "mscoco_hallucinated_words": [],
-            "mscoco_gt_words": [
-                "bed",
-                "dog"
-            ],
-            "mscoco_generated_words": [
-                "dog",
-                "bed"
-            ],
+            "mscoco_gt_words": [],
+            "mscoco_generated_words": [],
             "hallucination_idxs": [],
             "words": [
+                "the",
+                "image",
+                "show",
                 "a",
-                "small",
-                "brown",
-                "dog",
-                "is",
-                "sitting",
-                "in",
-                "a",
-                "large",
-                ",",
-                "furry",
-                ",",
-                "and",
-                "padded",
-                "bed",
+                "street",
                 "with",
                 "a",
-                "white",
-                "collar",
-                "around",
-                "it",
-                "neck",
-                "."
+                "sign",
+                "on",
+                "the",
+                "sidewalk",
+                "that",
+                "read",
+                ",",
+                "``",
+                "san",
+                "carlo",
+                "street",
+                ".",
+                "'s's"
             ],
             "metrics": {
-                "Bleu_1": 0.34999999998250003,
-                "Bleu_2": 0.13572417850069451,
-                "Bleu_3": 1.0077372514442853e-06,
-                "Bleu_4": 2.785468517213771e-09,
-                "METEOR": 0.25664215534054236,
-                "CIDEr": 0.07783571662895186,
+                "Bleu_1": 0.4374999999726563,
+                "Bleu_2": 0.2415229457542257,
+                "Bleu_3": 1.609148974235122e-06,
+                "Bleu_4": 4.231178541317022e-09,
+                "METEOR": 0.16713274514744228,
+                "CIDEr": 0.17613717938219542,
                 "SPICE": {
                     "All": {
                         "pr": 0.375,
@@ -9132,46 +8894,56 @@
                         "tp": 3.0
                     }
                 },
-                "ROUGE_L": 0.3096446700507614,
+                "ROUGE_L": 0.2932692307692307,
                 "CHAIRs": 0,
                 "CHAIRi": 0.0
             }
         },
         {
-            "image_id": 421109,
-            "caption": "A brown horse grazes in a green field with mountains in the background.",
+            "image_id": 443818,
+            "caption": "A small brown dog is sitting in a large, furry, and padded bed with a white collar around its neck.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "horse",
-                "person"
+                "dog",
+                "bed"
             ],
             "mscoco_generated_words": [
-                "horse"
+                "dog",
+                "bed"
             ],
             "hallucination_idxs": [],
             "words": [
                 "a",
+                "small",
                 "brown",
-                "horse",
-                "graze",
+                "dog",
+                "is",
+                "sitting",
                 "in",
                 "a",
-                "green",
-                "field",
+                "large",
+                ",",
+                "furry",
+                ",",
+                "and",
+                "padded",
+                "bed",
                 "with",
-                "mountain",
-                "in",
-                "the",
-                "background",
+                "a",
+                "white",
+                "collar",
+                "around",
+                "it",
+                "neck",
                 "."
             ],
             "metrics": {
-                "Bleu_1": 0.5384615384201185,
-                "Bleu_2": 0.36689969282327245,
-                "Bleu_3": 0.23044502516602136,
-                "Bleu_4": 3.3260249502635095e-05,
-                "METEOR": 0.2381786129196738,
-                "CIDEr": 0.8986201797075721,
+                "Bleu_1": 0.34999999998250003,
+                "Bleu_2": 0.13572417850069451,
+                "Bleu_3": 1.0077372514442853e-06,
+                "Bleu_4": 2.785468517213771e-09,
+                "METEOR": 0.25664215534054236,
+                "CIDEr": 0.07812099738475618,
                 "SPICE": {
                     "All": {
                         "pr": 1.0,
@@ -9237,134 +9009,46 @@
                         "tp": 2.0
                     }
                 },
-                "ROUGE_L": 0.5343065693430658,
+                "ROUGE_L": 0.3096446700507614,
                 "CHAIRs": 0,
                 "CHAIRi": 0.0
             }
         },
         {
-            "image_id": 416660,
-            "caption": "A group of people are standing in front of a store with a large window display of clothing and accessories.\n\nThe image is in black and white and shows people walking down the street in front of a store with a large window display of clothing and accessories. The people are dressed in various outfits, including suits, dresses, and hats. The store has a large sign that reads \"johnson's\" in bold letters. The image is taken from a low angle, looking up at the store from the sidewalk.",
+            "image_id": 421109,
+            "caption": "A brown horse grazes in a green field with mountains in the background.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
                 "person",
-                "clock"
+                "horse"
             ],
             "mscoco_generated_words": [
-                "person",
-                "person",
-                "person"
+                "horse"
             ],
             "hallucination_idxs": [],
             "words": [
                 "a",
-                "group",
-                "of",
-                "person",
-                "are",
-                "standing",
+                "brown",
+                "horse",
+                "graze",
                 "in",
-                "front",
-                "of",
                 "a",
-                "store",
+                "green",
+                "field",
                 "with",
-                "a",
-                "large",
-                "window",
-                "display",
-                "of",
-                "clothing",
-                "and",
-                "accessory",
-                ".",
-                "the",
-                "image",
-                "is",
+                "mountain",
                 "in",
-                "black",
-                "and",
-                "white",
-                "and",
-                "show",
-                "person",
-                "walking",
-                "down",
                 "the",
-                "street",
-                "in",
-                "front",
-                "of",
-                "a",
-                "store",
-                "with",
-                "a",
-                "large",
-                "window",
-                "display",
-                "of",
-                "clothing",
-                "and",
-                "accessory",
-                ".",
-                "the",
-                "person",
-                "are",
-                "dressed",
-                "in",
-                "variou",
-                "outfit",
-                ",",
-                "including",
-                "suit",
-                ",",
-                "dress",
-                ",",
-                "and",
-                "hat",
-                ".",
-                "the",
-                "store",
-                "ha",
-                "a",
-                "large",
-                "sign",
-                "that",
-                "read",
-                "``",
-                "johnson",
-                "'",
-                "'s's",
-                "in",
-                "bold",
-                "letter",
-                ".",
-                "the",
-                "image",
-                "is",
-                "taken",
-                "from",
-                "a",
-                "low",
-                "angle",
-                ",",
-                "looking",
-                "up",
-                "at",
-                "the",
-                "store",
-                "from",
-                "the",
-                "sidewalk",
+                "background",
                 "."
             ],
             "metrics": {
-                "Bleu_1": 0.17977528089685646,
-                "Bleu_2": 0.1107131677604587,
-                "Bleu_3": 0.07504703157966132,
-                "Bleu_4": 0.04708423582903722,
-                "METEOR": 0.15013233916024177,
-                "CIDEr": 1.7678120676929758e-37,
+                "Bleu_1": 0.5384615384201185,
+                "Bleu_2": 0.36689969282327245,
+                "Bleu_3": 0.23044502516602136,
+                "Bleu_4": 3.3260249502635095e-05,
+                "METEOR": 0.2381786129196738,
+                "CIDEr": 0.898455038043059,
                 "SPICE": {
                     "All": {
                         "pr": 0.7142857142857143,
@@ -9430,7 +9114,7 @@
                         "tp": 4.0
                     }
                 },
-                "ROUGE_L": 0.16751667320517852,
+                "ROUGE_L": 0.5343065693430658,
                 "CHAIRs": 0,
                 "CHAIRi": 0.0
             }
@@ -9477,7 +9161,7 @@
                 "Bleu_3": 1.429652860731961e-06,
                 "Bleu_4": 3.5215555865744205e-09,
                 "METEOR": 0.24544248412126632,
-                "CIDEr": 0.14329666946406688,
+                "CIDEr": 0.14285116318382748,
                 "SPICE": {
                     "All": {
                         "pr": 0.2222222222222222,
@@ -9591,7 +9275,7 @@
                 "Bleu_3": 0.2974441746146045,
                 "Bleu_4": 0.19554016375455724,
                 "METEOR": 0.34843457895251023,
-                "CIDEr": 0.28594998698648455,
+                "CIDEr": 0.2862640823314232,
                 "SPICE": {
                     "All": {
                         "pr": 0.5555555555555556,
@@ -9667,9 +9351,9 @@
             "caption": "The image shows a person wearing a yellow and black jacketpack with a banana in the pocket.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
+                "banana",
                 "person",
-                "bicycle",
-                "banana"
+                "bicycle"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -9702,7 +9386,7 @@
                 "Bleu_3": 0.3889111187084499,
                 "Bleu_4": 0.302770291955685,
                 "METEOR": 0.31587181105353435,
-                "CIDEr": 1.0197817585967048,
+                "CIDEr": 1.0079982751613852,
                 "SPICE": {
                     "All": {
                         "pr": 0.375,
@@ -9808,7 +9492,7 @@
                 "Bleu_3": 0.5897597461221931,
                 "Bleu_4": 0.4500531894676543,
                 "METEOR": 0.3489824192300035,
-                "CIDEr": 2.0172247458582664,
+                "CIDEr": 2.0199274925114024,
                 "SPICE": {
                     "All": {
                         "pr": 0.375,
@@ -9915,7 +9599,7 @@
                 "Bleu_3": 0.45900113549351607,
                 "Bleu_4": 0.39431683755535174,
                 "METEOR": 0.34405818097020296,
-                "CIDEr": 0.686526865589713,
+                "CIDEr": 0.6893343288236473,
                 "SPICE": {
                     "All": {
                         "pr": 0.3,
@@ -9992,8 +9676,8 @@
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
                 "person",
-                "cake",
-                "airplane"
+                "airplane",
+                "cake"
             ],
             "mscoco_generated_words": [
                 "cake",
@@ -10020,132 +9704,7 @@
                 "Bleu_3": 0.6020134377934564,
                 "Bleu_4": 0.4832697829950971,
                 "METEOR": 0.4697430356542962,
-                "CIDEr": 1.95216585592244,
-                "SPICE": {
-                    "All": {
-                        "pr": 0.4,
-                        "re": 0.14814814814814814,
-                        "f": 0.21621621621621623,
-                        "fn": 23.0,
-                        "numImages": 1.0,
-                        "fp": 6.0,
-                        "tp": 4.0
-                    },
-                    "Relation": {
-                        "pr": 0.0,
-                        "re": 0.0,
-                        "f": 0.0,
-                        "fn": 9.0,
-                        "numImages": 1.0,
-                        "fp": 2.0,
-                        "tp": 0.0
-                    },
-                    "Cardinality": {
-                        "pr": NaN,
-                        "re": NaN,
-                        "f": NaN,
-                        "fn": 0.0,
-                        "numImages": 1.0,
-                        "fp": 0.0,
-                        "tp": 0.0
-                    },
-                    "Attribute": {
-                        "pr": 0.3333333333333333,
-                        "re": 0.1,
-                        "f": 0.15384615384615383,
-                        "fn": 9.0,
-                        "numImages": 1.0,
-                        "fp": 2.0,
-                        "tp": 1.0
-                    },
-                    "Size": {
-                        "pr": 0.0,
-                        "re": 0.0,
-                        "f": 0.0,
-                        "fn": 2.0,
-                        "numImages": 1.0,
-                        "fp": 0.0,
-                        "tp": 0.0
-                    },
-                    "Color": {
-                        "pr": 0.0,
-                        "re": 0.0,
-                        "f": 0.0,
-                        "fn": 2.0,
-                        "numImages": 1.0,
-                        "fp": 1.0,
-                        "tp": 0.0
-                    },
-                    "Object": {
-                        "pr": 0.6,
-                        "re": 0.375,
-                        "f": 0.4615384615384615,
-                        "fn": 5.0,
-                        "numImages": 1.0,
-                        "fp": 2.0,
-                        "tp": 3.0
-                    }
-                },
-                "ROUGE_L": 0.7584369449378331,
-                "CHAIRs": 0,
-                "CHAIRi": 0.0
-            }
-        },
-        {
-            "image_id": 104625,
-            "caption": "The cat is sitting on the couch in front of the television, looking at the image on the screen.",
-            "mscoco_hallucinated_words": [
-                [
-                    "couch",
-                    "couch"
-                ]
-            ],
-            "mscoco_gt_words": [
-                "tv",
-                "book",
-                "person",
-                "chair",
-                "dining table",
-                "cat"
-            ],
-            "mscoco_generated_words": [
-                "cat",
-                "couch",
-                "tv"
-            ],
-            "hallucination_idxs": [
-                6
-            ],
-            "words": [
-                "the",
-                "cat",
-                "is",
-                "sitting",
-                "on",
-                "the",
-                "couch",
-                "in",
-                "front",
-                "of",
-                "the",
-                "television",
-                ",",
-                "looking",
-                "at",
-                "the",
-                "image",
-                "on",
-                "the",
-                "screen",
-                "."
-            ],
-            "metrics": {
-                "Bleu_1": 0.36842105261218844,
-                "Bleu_2": 0.2861316917441729,
-                "Bleu_3": 0.21276703089613747,
-                "Bleu_4": 2.7854685172050662e-05,
-                "METEOR": 0.33271514972597793,
-                "CIDEr": 0.47243777028701406,
+                "CIDEr": 1.950125640293097,
                 "SPICE": {
                     "All": {
                         "pr": 0.3333333333333333,
@@ -10211,43 +9770,57 @@
                         "tp": 2.0
                     }
                 },
-                "ROUGE_L": 0.511377245508982,
-                "CHAIRs": 1,
-                "CHAIRi": 0.3333333333333333
+                "ROUGE_L": 0.7584369449378331,
+                "CHAIRs": 0,
+                "CHAIRi": 0.0
             }
         },
         {
-            "image_id": 175612,
-            "caption": "The image shows a cartoon character holding a skateboard in front of a pile of leaves on the ground.",
-            "mscoco_hallucinated_words": [],
+            "image_id": 104625,
+            "caption": "The cat is sitting on the couch in front of the television, looking at the image on the screen.",
+            "mscoco_hallucinated_words": [
+                [
+                    "couch",
+                    "couch"
+                ]
+            ],
             "mscoco_gt_words": [
+                "chair",
                 "person",
-                "skateboard"
+                "book",
+                "dining table",
+                "cat",
+                "tv"
             ],
             "mscoco_generated_words": [
-                "skateboard"
+                "cat",
+                "couch",
+                "tv"
             ],
-            "hallucination_idxs": [],
+            "hallucination_idxs": [
+                6
+            ],
             "words": [
                 "the",
-                "image",
-                "show",
-                "a",
-                "cartoon",
-                "character",
-                "holding",
-                "a",
-                "skateboard",
+                "cat",
+                "is",
+                "sitting",
+                "on",
+                "the",
+                "couch",
                 "in",
                 "front",
                 "of",
-                "a",
-                "pile",
-                "of",
-                "leaf",
+                "the",
+                "television",
+                ",",
+                "looking",
+                "at",
+                "the",
+                "image",
                 "on",
                 "the",
-                "ground",
+                "screen",
                 "."
             ],
             "metrics": {
@@ -10255,8 +9828,8 @@
                 "Bleu_2": 0.2861316917441729,
                 "Bleu_3": 0.21276703089613747,
                 "Bleu_4": 2.7854685172050662e-05,
-                "METEOR": 0.18945547776412913,
-                "CIDEr": 0.16978019844714923,
+                "METEOR": 0.33271514972597793,
+                "CIDEr": 0.47207111610073765,
                 "SPICE": {
                     "All": {
                         "pr": 0.7777777777777778,
@@ -10322,55 +9895,52 @@
                         "tp": 5.0
                     }
                 },
-                "ROUGE_L": 0.3197903014416776,
-                "CHAIRs": 0,
-                "CHAIRi": 0.0
+                "ROUGE_L": 0.511377245508982,
+                "CHAIRs": 1,
+                "CHAIRi": 0.3333333333333333
             }
         },
         {
-            "image_id": 43448,
-            "caption": "The image shows two elephants standing on a rocky beach, with one of them holding a small rock in its trunk.",
+            "image_id": 175612,
+            "caption": "The image shows a cartoon character holding a skateboard in front of a pile of leaves on the ground.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
-                "elephant"
+                "skateboard",
+                "person"
             ],
             "mscoco_generated_words": [
-                "elephant"
+                "skateboard"
             ],
             "hallucination_idxs": [],
             "words": [
                 "the",
                 "image",
                 "show",
-                "two",
-                "elephant",
-                "standing",
-                "on",
                 "a",
-                "rocky",
-                "beach",
-                ",",
-                "with",
-                "one",
-                "of",
-                "them",
+                "cartoon",
+                "character",
                 "holding",
                 "a",
-                "small",
-                "rock",
+                "skateboard",
                 "in",
-                "it",
-                "trunk",
+                "front",
+                "of",
+                "a",
+                "pile",
+                "of",
+                "leaf",
+                "on",
+                "the",
+                "ground",
                 "."
             ],
             "metrics": {
-                "Bleu_1": 0.3542423303766505,
-                "Bleu_2": 0.2095725889056902,
-                "Bleu_3": 0.12408830884788255,
-                "Bleu_4": 1.7210731661769256e-05,
-                "METEOR": 0.20806226950609621,
-                "CIDEr": 0.18120658992567898,
+                "Bleu_1": 0.36842105261218844,
+                "Bleu_2": 0.2861316917441729,
+                "Bleu_3": 0.21276703089613747,
+                "Bleu_4": 2.7854685172050662e-05,
+                "METEOR": 0.18945547776412913,
+                "CIDEr": 0.16904756578721844,
                 "SPICE": {
                     "All": {
                         "pr": 0.5,
@@ -10436,56 +10006,55 @@
                         "tp": 3.0
                     }
                 },
-                "ROUGE_L": 0.3071500503524673,
+                "ROUGE_L": 0.3197903014416776,
                 "CHAIRs": 0,
                 "CHAIRi": 0.0
             }
         },
         {
-            "image_id": 528705,
-            "caption": "A young woman is sitting on the back of a person wearing a red coat, holding a stuffed animal.",
+            "image_id": 43448,
+            "caption": "The image shows two elephants standing on a rocky beach, with one of them holding a small rock in its trunk.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
                 "person",
-                "bear",
-                "teddy bear",
-                "backpack"
+                "elephant"
             ],
             "mscoco_generated_words": [
-                "person",
-                "person"
+                "elephant"
             ],
             "hallucination_idxs": [],
             "words": [
-                "a",
-                "young",
-                "woman",
-                "is",
-                "sitting",
-                "on",
                 "the",
-                "back",
-                "of",
+                "image",
+                "show",
+                "two",
+                "elephant",
+                "standing",
+                "on",
                 "a",
-                "person",
-                "wearing",
-                "a",
-                "red",
-                "coat",
+                "rocky",
+                "beach",
                 ",",
+                "with",
+                "one",
+                "of",
+                "them",
                 "holding",
                 "a",
-                "stuffed",
-                "animal",
+                "small",
+                "rock",
+                "in",
+                "it",
+                "trunk",
                 "."
             ],
             "metrics": {
-                "Bleu_1": 0.5789473683905818,
-                "Bleu_2": 0.4010220859664639,
-                "Bleu_3": 0.21149294627072776,
-                "Bleu_4": 2.7729492407550513e-05,
-                "METEOR": 0.26229432083292714,
-                "CIDEr": 0.2716978229558227,
+                "Bleu_1": 0.3542423303766505,
+                "Bleu_2": 0.2095725889056902,
+                "Bleu_3": 0.12408830884788255,
+                "Bleu_4": 1.7210731661769256e-05,
+                "METEOR": 0.20806226950609621,
+                "CIDEr": 0.18084478588546532,
                 "SPICE": {
                     "All": {
                         "pr": 0.45454545454545453,
@@ -10551,7 +10120,7 @@
                         "tp": 3.0
                     }
                 },
-                "ROUGE_L": 0.3652694610778443,
+                "ROUGE_L": 0.3071500503524673,
                 "CHAIRs": 0,
                 "CHAIRi": 0.0
             }
@@ -10566,13 +10135,13 @@
                 ]
             ],
             "mscoco_gt_words": [
+                "tie",
+                "person",
                 "spoon",
                 "knife",
-                "broccoli",
-                "person",
-                "tie",
+                "fork",
                 "bowl",
-                "fork"
+                "broccoli"
             ],
             "mscoco_generated_words": [
                 "dining table"
@@ -10605,7 +10174,7 @@
                 "Bleu_3": 1.2132137515201732e-06,
                 "Bleu_4": 3.4234749556315017e-09,
                 "METEOR": 0.22114823703850434,
-                "CIDEr": 0.22581578995980173,
+                "CIDEr": 0.22507498570923457,
                 "SPICE": {
                     "All": {
                         "pr": 0.16666666666666666,
@@ -10681,10 +10250,10 @@
             "caption": "The image shows a bowl of cereal with bananas and milk on a table.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
+                "banana",
                 "spoon",
                 "dining table",
-                "bowl",
-                "banana"
+                "bowl"
             ],
             "mscoco_generated_words": [
                 "bowl",
@@ -10715,7 +10284,7 @@
                 "Bleu_3": 0.449232173148337,
                 "Bleu_4": 0.3013040489035573,
                 "METEOR": 0.42703145619203187,
-                "CIDEr": 1.548165451771727,
+                "CIDEr": 1.5447620517597476,
                 "SPICE": {
                     "All": {
                         "pr": 0.23809523809523808,
@@ -10791,8 +10360,8 @@
             "caption": "The image shows a person holding a sandwich in their hand, with the bread visible on the plate.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
                 "sandwich",
+                "person",
                 "hot dog"
             ],
             "mscoco_generated_words": [
@@ -10828,7 +10397,7 @@
                 "Bleu_3": 1.4193697400876474e-06,
                 "Bleu_4": 3.7157701522892835e-09,
                 "METEOR": 0.20360502375913334,
-                "CIDEr": 0.3452269349024836,
+                "CIDEr": 0.34305730570083004,
                 "SPICE": {
                     "All": {
                         "pr": 0.3333333333333333,
@@ -10909,14 +10478,14 @@
                 ]
             ],
             "mscoco_gt_words": [
-                "microwave",
-                "chair",
                 "cup",
-                "bowl",
-                "vase",
-                "potted plant",
+                "chair",
                 "person",
-                "couch"
+                "microwave",
+                "vase",
+                "bowl",
+                "couch",
+                "potted plant"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -10959,7 +10528,7 @@
                 "Bleu_3": 0.4876186398530248,
                 "Bleu_4": 0.41261520347155095,
                 "METEOR": 0.4297583283599868,
-                "CIDEr": 0.2143622960898357,
+                "CIDEr": 0.21440196571343462,
                 "SPICE": {
                     "All": {
                         "pr": 0.375,
@@ -11035,13 +10604,13 @@
             "caption": "The old clock tower stands tall in the middle of the town square, its face illuminated by the streetlights at night.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "handbag",
-                "bicycle",
-                "person",
-                "car",
-                "traffic light",
                 "clock",
-                "truck"
+                "truck",
+                "person",
+                "handbag",
+                "traffic light",
+                "bicycle",
+                "car"
             ],
             "mscoco_generated_words": [
                 "clock",
@@ -11079,7 +10648,7 @@
                 "Bleu_3": 0.2825464605197286,
                 "Bleu_4": 0.2237467707633438,
                 "METEOR": 0.31866370209498296,
-                "CIDEr": 0.4724091160265179,
+                "CIDEr": 0.4716216268354009,
                 "SPICE": {
                     "All": {
                         "pr": 0.15384615384615385,
@@ -11185,7 +10754,7 @@
                 "Bleu_3": 0.22232392575344898,
                 "Bleu_4": 3.1614875842339754e-05,
                 "METEOR": 0.2540247569599537,
-                "CIDEr": 0.5356245523120176,
+                "CIDEr": 0.5270288673023722,
                 "SPICE": {
                     "All": {
                         "pr": 0.3333333333333333,
@@ -11261,8 +10830,8 @@
             "caption": "The young boy is throwing a baseball in a grassy field during a game.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
                 "baseball glove",
+                "person",
                 "sports ball"
             ],
             "mscoco_generated_words": [
@@ -11292,7 +10861,7 @@
                 "Bleu_3": 0.449232173148337,
                 "Bleu_4": 0.3013040489035573,
                 "METEOR": 0.3584945317870707,
-                "CIDEr": 1.2527876089982104,
+                "CIDEr": 1.2633456852517115,
                 "SPICE": {
                     "All": {
                         "pr": 0.1875,
@@ -11365,15 +10934,15 @@
         }
     ],
     "overall_metrics": {
-        "Bleu_1": 0.5465313028761722,
-        "Bleu_2": 0.39598630738552515,
-        "Bleu_3": 0.2857256027494022,
-        "Bleu_4": 0.2056746620241604,
-        "METEOR": 0.2830866439602691,
-        "CIDEr": 0.7145957067022605,
-        "SPICE": 0.21711153340789327,
-        "ROUGE_L": 0.4933124632762389,
-        "CHAIRs": 0.16,
-        "CHAIRi": 0.09195402298850575
+        "Bleu_1": 0.5656934306565902,
+        "Bleu_2": 0.41146784906837697,
+        "Bleu_3": 0.2985929520495488,
+        "Bleu_4": 0.21666547878127537,
+        "METEOR": 0.286784430717365,
+        "CIDEr": 0.731313577878181,
+        "SPICE": 0.21993450311332438,
+        "ROUGE_L": 0.49863262666990144,
+        "CHAIRs": 0.15463917525773196,
+        "CHAIRi": 0.08982035928143713
     }
 }

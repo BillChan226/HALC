@@ -20,14 +20,45 @@
 
     | SPICE | METEOR | CIDEr | CHAIRs | CHAIRi |
     |-------|--------|-------|--------|--------|
-    | 21.3  | 28.1   | 74.4  | 11.6   | 7.1    |
+    | 21.5  | 28.1   | 67.3  | 14.0   | 8.0    |
 
 
 + HaLC+Beam:
 
     | SPICE | METEOR | CIDEr | CHAIRs | CHAIRi |
     |-------|--------|-------|--------|--------|
-    | 21.5  | 28.0   | 69.3  | 14.0   | 9.0    |
+    | 21.5  | 28.1   | 67.3  | 14.0   | 8.0    |
+
+
+### COCO num_sample: 200
+
++ Greedy: 
+
+    | SPICE | METEOR | CIDEr | CHAIRs | CHAIRi |
+    |-------|--------|-------|--------|--------|
+    | 20.7  | 26.5   | 58.1  | 14.2   | 8.4    |
+
++ DoLA: 
+
+    | SPICE | METEOR | CIDEr | CHAIRs | CHAIRi |
+    |-------|--------|-------|--------|--------|
+    | 20.7  | 26.5   | 56.8  | 13.8   | 8.1    |
+
+
++ HaLC+DoLA:
+
+
+    | SPICE | METEOR | CIDEr | CHAIRs | CHAIRi |
+    |-------|--------|-------|--------|--------|
+    | 19.7  | 25.2   | 50.7  | 15.5   | 9.8    |
+
++ HaLC+Beam:
+
+
+    | SPICE | METEOR | CIDEr | CHAIRs | CHAIRi |
+    |-------|--------|-------|--------|--------|
+    | 21.2  | 26.7   | 59.5  | 12.0   | 7.7    |
+
 
 ### COCO num_sample: 500
 
@@ -95,3 +126,22 @@
     | SPICE | METEOR | CIDEr | CHAIRs | CHAIRi |
     |-------|--------|-------|--------|--------|
     | 19.8  | 25.6   | 52.7  | 12.8   | 8.2    |
+
+
+### Experiment 12/25
+
+still running:
+
++ HaLC+DoLA 500: 
+
+![Alt text](image.png)
+
++ HaLC+Beam 100:
+
+![Alt text](image-1.png)
+
+![Alt text](image-2.png)
+
+    | SPICE | METEOR | CIDEr | CHAIRs | CHAIRi |
+    |-------|--------|-------|--------|--------|
+    | 21.7  | 28.3   | 71.5  | 16.0   | 9.2    |

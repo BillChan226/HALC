@@ -80,7 +80,9 @@ stopping_criteria = StoppingCriteriaList([StoppingCriteriaSub(stops=stop_words_i
 # img = '/home/czr/contrast_decoding_LVLMs/eval_dataset/val2014/COCO_val2014_000000043448.jpg'
 # img = "/home/czr/contrast_decoding_LVLMs/hallucinatory_image/beach_on_a_clock.png"
 # img = "/home/czr/contrast_decoding_LVLMs/hallucinatory_image/pizza_with_topping.jpg"
-img = "/home/czr/contrast_decoding_LVLMs/hallucinatory_image/dog_tv.jpg"
+# img = "/home/czr/contrast_decoding_LVLMs/hallucinatory_image/dog_tv.jpg"
+# img = "/home/czr/contrast_decoding_LVLMs/hallucinatory_image/zoom_in_1.png"
+img = "/home/czr/contrast_decoding_LVLMs/hallucinatory_image/people_on_the_street.jpg"
 # img = "/home/czr/contrast_decoding_LVLMs/eval_dataset/val2014/COCO_val2014_000000000196.jpg"
 # img = "/home/czr/contrast_decoding_LVLMs/hallucinatory_image/zoom_in_2.png"
 # img = "/home/czr/contrast_decoding_LVLMs/hallucinatory_image/zoom_in_3.png"

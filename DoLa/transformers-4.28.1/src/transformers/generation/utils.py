@@ -4497,7 +4497,7 @@ class GenerationMixin:
                     
                     # print("CURRENT WORD: ", current_word)
                     entity = current_word
-                    embeds_list, detect_info = self.halc_assistant.context_density_embedding(entity, context_window=4)
+                    embeds_list, detect_info = self.halc_assistant.context_density_embedding(entity)
 
                     if detect_info["status"] == "invalid":
                         token_to_append = torch.tensor([last_tokens]).to(input_ids.device)
@@ -4677,7 +4677,6 @@ class GenerationMixin:
 
             if streamer is not None:
                 streamer.put(next_tokens.cpu())
-
 
             if last_word_flag == False:
                 if once_flag == False:
@@ -5526,7 +5525,8 @@ class GenerationMixin:
         beam_last_tokens = [[]] * beam_size
         beam_candidate_token_to_append = [None] * beam_size
         beam_token_to_append = [None] * beam_size
-        beam_once_flag = [None] * beam_size
+        # beam_once_flag = [None] * beam_size
+        beam_once_flag = [False] * beam_size
         beam_next_tokens = [None] * beam_size
         beam_finished = [False] * beam_size
  
@@ -5659,6 +5659,10 @@ class GenerationMixin:
                     for candidate_contrast_logits in range(self.halc_assistant.k_candidate_num):
                         candidate_token_to_append.append(None)
                     beam_candidate_token_to_append[bs] = candidate_token_to_append
+
+                    # if beam_once_flag[bs] == False:
+                    #     beam_once_flag[bs] = True
+                    #     beam_last_model_kwargs[bs] = copy.copy(beam_model_kwargs[bs])
                 else:
                     beam_once_flag[bs] = False
                     beam_last_model_kwargs[bs] = copy.copy(beam_model_kwargs[bs])
@@ -5755,37 +5759,40 @@ class GenerationMixin:
 
                                 beam_candidate_token_to_append[bs] = candidate_token_to_append
 
-                            
                     beam_last_tokens[bs] = []
 
             candidate_intermediate_token_lists_array = []
             candidate_token_to_append_lists = []
+
             for bs in range(beam_size):
-
                 # print("beam_candidate_token_to_append[bs]", beam_candidate_token_to_append[bs])
-
                 if beam_candidate_token_to_append[bs] != None:
                     for candidate_token_to_append in beam_candidate_token_to_append[bs]:
                         if candidate_token_to_append != None:
                             candidate_intermediate_token_lists_array.append(torch.cat([beam_intermediate_token_lists[bs], candidate_token_to_append], dim=-1))
                             candidate_token_to_append_lists.append(candidate_token_to_append)
                         else:
-                            candidate_intermediate_token_lists_array.append(None)
+                            # candidate_intermediate_token_lists_array.append(None)
+                            candidate_intermediate_token_lists_array.append(beam_intermediate_token_lists[bs])
+
                             candidate_token_to_append_lists.append(None)
 
                 beam_candidate_token_to_append[bs] = None
 
-            # print("candidate_intermediate_token_lists_array", candidate_intermediate_token_lists_array)
+            # print("candidate_intermediate_token_lists: ", candidate_intermediate_token_lists_array)
             
             # random select number of batch size elements in candidate_intermediate_token_lists_array
             if len(candidate_intermediate_token_lists_array) > 0:
-                # generate random index
-                random.seed(8)
-                random_index = random.sample(range(len(candidate_intermediate_token_lists_array)), beam_size)
                 
+            
+                ############ Beam Search Score ############
+                # candidate_index = self.halc_assistant.random_selection(candidate_intermediate_token_lists_array, beam_size)
+                candidate_index = self.halc_assistant.clip_score_selection(candidate_intermediate_token_lists_array, beam_size)
+                ############ Beam Search Score ############
+
                 # print("random_index", random_index)
 
-                for index, bs in zip(random_index, range(beam_size)):
+                for index, bs in zip(candidate_index, range(beam_size)):
                     
                     row_index = index//(len(candidate_intermediate_token_lists_array)//beam_size)
                     # print("row_index", row_index)
@@ -5803,11 +5810,12 @@ class GenerationMixin:
                     beam_next_tokens[bs] = deep_copy_tensor_structure(beam_next_tokens[row_index])
 
                     # beam_token_to_append[bs] = deep_copy_tensor_structure(beam_token_to_append[row_index])
-                    if candidate_intermediate_token_lists_array[index] != None:
-                        # beam_token_to_append[bs] = candidate_intermediate_token_lists_array[index][:, -1].unsqueeze(0)
-                        beam_token_to_append[bs] = candidate_token_to_append_lists[index]
-                    else:
-                        beam_token_to_append[bs] = None
+                    # if candidate_intermediate_token_lists_array[index] != None:
+                    #     # beam_token_to_append[bs] = candidate_intermediate_token_lists_array[index][:, -1].unsqueeze(0)
+                    #     beam_token_to_append[bs] = candidate_token_to_append_lists[index]
+                    # else:
+                    #     beam_token_to_append[bs] = None
+                    beam_token_to_append[bs] = candidate_token_to_append_lists[index]
                     
 
             # print("candidate_intermediate_token_lists_array", candidate_intermediate_token_lists_array)
@@ -5824,12 +5832,10 @@ class GenerationMixin:
                 for bs in range(beam_size):
                     if beam_token_to_append[bs] != None and beam_finished[bs] == False:
                         beam_intermediate_token_lists[bs] = torch.cat([beam_intermediate_token_lists[bs], beam_token_to_append[bs]], dim=-1)
-                        # text = self.halc_assistant.get_sequence_text(beam_intermediate_token_lists[bs][0].cpu().numpy().tolist())
-                        # print(f"beam_token_to_append {bs}", text)
+
             # print("beam_intermediate_token_lists", beam_intermediate_token_lists)
             # print("beam_input_ids", beam_input_ids)
             # input("\n\n")
-
 
             for bs in range(beam_size):
 
@@ -5876,11 +5882,9 @@ class GenerationMixin:
                         # model_kwargs = copy.copy(beam_last_model_kwargs[bs])
                         model_kwargs = deep_copy_tensor_structure(beam_last_model_kwargs[bs])
 
-
                         beam_model_kwargs[bs] = self._update_model_kwargs_for_generation(
                             intermediate_outputs, model_kwargs, is_encoder_decoder=self.config.is_encoder_decoder
                         )
-
 
                         # beam_model_kwargs[bs] = model_kwargs
                         # input()
@@ -5894,10 +5898,6 @@ class GenerationMixin:
                         beam_outputs[bs], beam_model_kwargs[bs], is_encoder_decoder=self.config.is_encoder_decoder
                     )
                 
-                # print("beam_model_kwargs is beam_model_kwargs: ", beam_model_kwargs[0] is beam_model_kwargs[1])
-                # print("beam_model_kwargs is beam_model_kwargs: ", beam_model_kwargs[0] is beam_model_kwargs[2])
-                # print("beam_model_kwargs is beam_model_kwargs: ", beam_model_kwargs[1] is beam_model_kwargs[2])
-
                 beam_last_tokens[bs].append(beam_next_tokens[bs][:, None].cpu().numpy().tolist()[0][0])
                 if beam_finished[bs] == False:
                     # update generated ids, model inputs, and length for next step
@@ -5910,6 +5910,8 @@ class GenerationMixin:
                     if beam_once_flag[bs] == False:
                         beam_once_flag[bs] = True
                         beam_last_model_kwargs[bs] = copy.copy(beam_model_kwargs[bs])
+                # else:
+                #     beam_last_model_kwargs[bs] = copy.copy(beam_model_kwargs[bs])
 
                 # if eos_token was found in one sentence, set sentence to finished
                 if eos_token_id_tensor is not None:
@@ -5928,6 +5930,7 @@ class GenerationMixin:
                 # if beam_intermediate_token_lists[bs][0][-1].cpu().numpy().tolist() == eos_token_id[0]:
                 #     input("{bs} finished")
                 #     beam_finished[bs] = True
+
                 if beam_input_ids[bs][0][-1].cpu().numpy().tolist() == eos_token_id[0]:
                     beam_intermediate_token_lists[bs] = beam_input_ids[bs]
                     # input(f"{bs} finished\n")
@@ -5938,9 +5941,10 @@ class GenerationMixin:
             text = self.halc_assistant.get_sequence_text(beam_intermediate_token_lists[bs][0].cpu().numpy().tolist())
             
             print(f"\033[1;4{bs+5}m Beam Search Candidate: {bs+1} {text} \033[0m")
-
-
             # print("beam_last_tokens", beam_last_tokens)
+
+        # reset states for halc
+        self.halc_assistant.original_image = None
 
         if streamer is not None:
             streamer.end()

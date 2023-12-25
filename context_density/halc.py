@@ -13,7 +13,8 @@ from types import SimpleNamespace
 from PIL import Image, ImageDraw
 import spacy
 from torch.nn import functional as F
-
+from transformers import CLIPProcessor, CLIPModel
+import random
 from transformers import AutoTokenizer
 
 # initialize detector
@@ -35,6 +36,7 @@ class halc_assistant:
         self.tokenizer = self.model.llama_tokenizer
         self.halc_params = halc_params
         self.k_candidate_num = 4
+        self.original_image = None
         token_vocab_dir = "./model_checkpoints/models--meta-llama--Llama-2-7b-chat-hf/snapshots/c1b0db933684edbfe29a06fa47eb19cc48025e93/tokenizer.json"
         # token_vocab_dir = "/media/zhuokai/SN850X_4TB/contrast_decoding_LVLMs/model_checkpoints/models--meta-llama--Llama-2-7b-chat-hf/snapshots/c1b0db933684edbfe29a06fa47eb19cc48025e93/tokenizer.json"
         if not os.path.exists(token_vocab_dir):
@@ -47,6 +49,10 @@ class halc_assistant:
         self.token_vocab = self.token_vocab["model"]["vocab"]
 
         self.token_vocab = {value: key for key, value in self.token_vocab.items()}
+
+        self.clip_model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32")
+        self.clip_processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32")
+
 
     def update_img_path(self, img_path):
         # print("img_path", img_path)
@@ -74,6 +80,7 @@ class halc_assistant:
         return last_word
 
     def get_sequence_text(self, input_ids):
+        
         output_text = self.tokenizer.decode(input_ids, skip_special_tokens=True)
 
         return output_text
@@ -139,7 +146,7 @@ class halc_assistant:
 
         return jsd
 
-    def context_density_embedding(self, entity, context_window=3):
+    def context_density_embedding(self, entity):
         # context_window specifies the number of context windows
 
         context_window = self.halc_params["context_window"]
@@ -245,7 +252,8 @@ class halc_assistant:
 
             # Load the original image
             image_path = sample["img_path"]
-            original_image = Image.open(image_path).convert("RGB")
+            self.original_image = Image.open(image_path)
+            original_image = self.original_image.convert("RGB")
 
             # Crop images to the expanded bounding boxes
             cropped_images = []
@@ -297,23 +305,23 @@ class halc_assistant:
         return embeds_list, detect_info
 
     def naive_focus_decoding(self, context_logits_list):
-        #
-        # directly apply the detected box for decoding
-        #
+        """
+        directly apply the detected box for decoding
+        """
         contrast_logits = context_logits_list[0]
         return False, contrast_logits
 
     def auto_regressive_decoding(self, context_logits_list):
-        # 
-        # directly apply the detected box for decoding
-        #
+        """
+        directly apply the detected box for decoding
+        """
         return True, None
     
 
     def context_curve_contrastive_decoding(self, context_logits_list):
-        #
-        # this decoding method use the hallucination pattern for decoding
-        #
+        """
+        this decoding method use the hallucination pattern for decoding
+        """
         target_layer = context_logits_list[0]
         lower_layer = context_logits_list[1]
         upper_layer = context_logits_list[2]
@@ -483,6 +491,7 @@ class halc_assistant:
             return skip_flag, contrast_logits
 
     def contrastive_avg_context_decoding(self, context_logits_list, last_tokens):
+
         hallucination_index = last_tokens[0]
 
         target_layer = context_logits_list[self.target_bbox_index]
@@ -645,3 +654,46 @@ class halc_assistant:
             contrast_logits_array.append(contrast_logits)
 
         return skip_flag, contrast_logits_array
+
+
+    def clip_score_selection(self, candidate_intermediate_token_lists_array, beam_size):
+
+
+        if candidate_intermediate_token_lists_array == [None] * len(candidate_intermediate_token_lists_array) or self.original_image == None:
+            # print("identical candidate lists: ", candidate_intermediate_token_lists_array)
+            # input()
+            random.seed(8)
+            candidate_index = random.sample(range(len(candidate_intermediate_token_lists_array)), beam_size)
+        else:
+            candidate_texts = []
+            for candidate_intermediate_token_lists in candidate_intermediate_token_lists_array:
+                candidate_texts.append(self.get_sequence_text(candidate_intermediate_token_lists[0]))
+
+            original_image = self.original_image
+            
+            clip_inputs = self.clip_processor(text=candidate_texts, images=original_image, return_tensors="pt", padding=True, truncation=True)
+
+            clip_outputs = self.clip_model(**clip_inputs)
+            logits_per_image = clip_outputs.logits_per_image  # image-text similarity score
+            clip_probs = logits_per_image.softmax(dim=1)[0]  # take the softmax to get the label probabilities
+
+            # print("candidate lists:", candidate_intermediate_token_lists_array)
+            # print("clip_probs:", clip_probs)
+            
+            # get the top beam_size candidates
+            clip_probs = clip_probs.cpu().numpy()
+            candidate_index = clip_probs.argsort()[-beam_size:][::-1]
+            # print("candidate_index:", candidate_index)
+            # input()
+
+        return candidate_index
+
+    def random_selection(self, candidate_intermediate_token_lists_array, beam_size):
+
+        random.seed(8)
+        candidate_index = random.sample(range(len(candidate_intermediate_token_lists_array)), beam_size)
+            
+        return candidate_index
+
+
+

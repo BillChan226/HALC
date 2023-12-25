@@ -6,8 +6,8 @@
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
                 "tv",
-                "potted plant",
-                "dog"
+                "dog",
+                "potted plant"
             ],
             "mscoco_generated_words": [
                 "dog",
@@ -41,12 +41,12 @@
                 "CIDEr": 1.5024083003240447,
                 "SPICE": {
                     "All": {
-                        "pr": 0.2727272727272727,
+                        "pr": 0.2,
                         "re": 0.13636363636363635,
-                        "f": 0.1818181818181818,
+                        "f": 0.16216216216216214,
                         "fn": 19.0,
                         "numImages": 1.0,
-                        "fp": 8.0,
+                        "fp": 12.0,
                         "tp": 3.0
                     },
                     "Relation": {
@@ -55,7 +55,7 @@
                         "f": 0.0,
                         "fn": 11.0,
                         "numImages": 1.0,
-                        "fp": 5.0,
+                        "fp": 6.0,
                         "tp": 0.0
                     },
                     "Cardinality": {
@@ -73,7 +73,7 @@
                         "f": 0.0,
                         "fn": 2.0,
                         "numImages": 1.0,
-                        "fp": 1.0,
+                        "fp": 4.0,
                         "tp": 0.0
                     },
                     "Size": {
@@ -91,7 +91,7 @@
                         "f": NaN,
                         "fn": 0.0,
                         "numImages": 1.0,
-                        "fp": 1.0,
+                        "fp": 2.0,
                         "tp": 0.0
                     },
                     "Object": {
@@ -111,7 +111,7 @@
         },
         {
             "image_id": 397773,
-            "caption": "The image shows a plate filled with pasta, meatballs, and broccoli, topped with cheese and surrounded by a creamy sauce.",
+            "caption": "The image shows a plate of pasta with meatballs, broccoli, and cheese on a white tablecloth tablecloth.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
                 "broccoli"
@@ -126,41 +126,37 @@
                 "show",
                 "a",
                 "plate",
-                "filled",
-                "with",
+                "of",
                 "pastum",
-                ",",
+                "with",
                 "meatball",
                 ",",
-                "and",
                 "broccoli",
                 ",",
-                "topped",
-                "with",
-                "cheese",
                 "and",
-                "surrounded",
-                "by",
+                "cheese",
+                "on",
                 "a",
-                "creamy",
-                "sauce",
+                "white",
+                "tablecloth",
+                "tablecloth",
                 "."
             ],
             "metrics": {
-                "Bleu_1": 0.44999999997750006,
-                "Bleu_2": 0.3077935056097516,
-                "Bleu_3": 0.17394640853977758,
-                "Bleu_4": 2.358844810525448e-05,
-                "METEOR": 0.2757467079182324,
-                "CIDEr": 0.30982738771190277,
+                "Bleu_1": 0.5882352940830451,
+                "Bleu_2": 0.42874646283026363,
+                "Bleu_3": 0.33251432919328744,
+                "Bleu_4": 0.269205088078134,
+                "METEOR": 0.37373231420817127,
+                "CIDEr": 0.9554117842276093,
                 "SPICE": {
                     "All": {
-                        "pr": 0.38461538461538464,
+                        "pr": 0.4166666666666667,
                         "re": 0.19230769230769232,
-                        "f": 0.2564102564102564,
+                        "f": 0.2631578947368421,
                         "fn": 21.0,
                         "numImages": 1.0,
-                        "fp": 8.0,
+                        "fp": 7.0,
                         "tp": 5.0
                     },
                     "Relation": {
@@ -182,12 +178,12 @@
                         "tp": 0.0
                     },
                     "Attribute": {
-                        "pr": 0.5,
+                        "pr": 1.0,
                         "re": 0.1,
-                        "f": 0.16666666666666669,
+                        "f": 0.18181818181818182,
                         "fn": 9.0,
                         "numImages": 1.0,
-                        "fp": 1.0,
+                        "fp": 0.0,
                         "tp": 1.0
                     },
                     "Size": {
@@ -205,7 +201,7 @@
                         "f": NaN,
                         "fn": 0.0,
                         "numImages": 1.0,
-                        "fp": 1.0,
+                        "fp": 0.0,
                         "tp": 0.0
                     },
                     "Object": {
@@ -218,7 +214,7 @@
                         "tp": 4.0
                     }
                 },
-                "ROUGE_L": 0.37014563106796117,
+                "ROUGE_L": 0.6515353805073432,
                 "CHAIRs": 0,
                 "CHAIRi": 0.0
             }
@@ -233,8 +229,8 @@
                 ]
             ],
             "mscoco_gt_words": [
-                "remote",
                 "orange",
+                "remote",
                 "couch"
             ],
             "mscoco_generated_words": [
@@ -274,13 +270,13 @@
                 "CIDEr": 0.32959477575217894,
                 "SPICE": {
                     "All": {
-                        "pr": 0.4444444444444444,
-                        "re": 0.16,
-                        "f": 0.23529411764705882,
-                        "fn": 21.0,
+                        "pr": 0.2,
+                        "re": 0.08,
+                        "f": 0.11428571428571428,
+                        "fn": 23.0,
                         "numImages": 1.0,
-                        "fp": 5.0,
-                        "tp": 4.0
+                        "fp": 8.0,
+                        "tp": 2.0
                     },
                     "Relation": {
                         "pr": 0.0,
@@ -288,7 +284,7 @@
                         "f": 0.0,
                         "fn": 9.0,
                         "numImages": 1.0,
-                        "fp": 2.0,
+                        "fp": 4.0,
                         "tp": 0.0
                     },
                     "Cardinality": {
@@ -301,12 +297,12 @@
                         "tp": 0.0
                     },
                     "Attribute": {
-                        "pr": 0.5,
+                        "pr": 1.0,
                         "re": 0.16666666666666666,
-                        "f": 0.25,
+                        "f": 0.2857142857142857,
                         "fn": 5.0,
                         "numImages": 1.0,
-                        "fp": 1.0,
+                        "fp": 0.0,
                         "tp": 1.0
                     },
                     "Size": {
@@ -328,13 +324,13 @@
                         "tp": 1.0
                     },
                     "Object": {
-                        "pr": 0.6,
-                        "re": 0.3,
-                        "f": 0.4,
-                        "fn": 7.0,
+                        "pr": 0.2,
+                        "re": 0.1,
+                        "f": 0.13333333333333333,
+                        "fn": 9.0,
                         "numImages": 1.0,
-                        "fp": 2.0,
-                        "tp": 3.0
+                        "fp": 4.0,
+                        "tp": 1.0
                     }
                 },
                 "ROUGE_L": 0.44974195133939543,
@@ -344,7 +340,7 @@
         },
         {
             "image_id": 573877,
-            "caption": "A cat sits on a laptop, looking at the screen.",
+            "caption": "A white cat sits on a laptop, looking at the screen with its eyes.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
                 "tv",
@@ -360,6 +356,7 @@
             "hallucination_idxs": [],
             "words": [
                 "a",
+                "white",
                 "cat",
                 "sit",
                 "on",
@@ -370,24 +367,27 @@
                 "at",
                 "the",
                 "screen",
+                "with",
+                "it",
+                "eye",
                 "."
             ],
             "metrics": {
-                "Bleu_1": 0.814353676069493,
-                "Bleu_2": 0.5722694305102773,
-                "Bleu_3": 0.41998832549001985,
-                "Bleu_4": 0.31282110206804015,
-                "METEOR": 0.33266138284631636,
-                "CIDEr": 1.2235022649117604,
+                "Bleu_1": 0.7142857141836737,
+                "Bleu_2": 0.46880723087023524,
+                "Bleu_3": 0.332107832024521,
+                "Bleu_4": 0.24022110860738335,
+                "METEOR": 0.29734609736557566,
+                "CIDEr": 1.0524786953644731,
                 "SPICE": {
                     "All": {
-                        "pr": 0.75,
-                        "re": 0.13636363636363635,
-                        "f": 0.23076923076923075,
-                        "fn": 19.0,
+                        "pr": 0.2857142857142857,
+                        "re": 0.09090909090909091,
+                        "f": 0.13793103448275862,
+                        "fn": 20.0,
                         "numImages": 1.0,
-                        "fp": 1.0,
-                        "tp": 3.0
+                        "fp": 5.0,
+                        "tp": 2.0
                     },
                     "Relation": {
                         "pr": 0.0,
@@ -395,7 +395,7 @@
                         "f": 0.0,
                         "fn": 9.0,
                         "numImages": 1.0,
-                        "fp": 1.0,
+                        "fp": 2.0,
                         "tp": 0.0
                     },
                     "Cardinality": {
@@ -408,13 +408,13 @@
                         "tp": 0.0
                     },
                     "Attribute": {
-                        "pr": 1.0,
-                        "re": 0.2,
-                        "f": 0.33333333333333337,
-                        "fn": 4.0,
+                        "pr": 0.0,
+                        "re": 0.0,
+                        "f": 0.0,
+                        "fn": 5.0,
                         "numImages": 1.0,
-                        "fp": 0.0,
-                        "tp": 1.0
+                        "fp": 1.0,
+                        "tp": 0.0
                     },
                     "Size": {
                         "pr": NaN,
@@ -426,25 +426,25 @@
                         "tp": 0.0
                     },
                     "Color": {
-                        "pr": 1.0,
-                        "re": 1.0,
-                        "f": 1.0,
-                        "fn": 0.0,
+                        "pr": 0.0,
+                        "re": 0.0,
+                        "f": 0.0,
+                        "fn": 1.0,
                         "numImages": 1.0,
                         "fp": 0.0,
-                        "tp": 1.0
+                        "tp": 0.0
                     },
                     "Object": {
-                        "pr": 1.0,
+                        "pr": 0.5,
                         "re": 0.25,
-                        "f": 0.4,
+                        "f": 0.3333333333333333,
                         "fn": 6.0,
                         "numImages": 1.0,
-                        "fp": 0.0,
+                        "fp": 2.0,
                         "tp": 2.0
                     }
                 },
-                "ROUGE_L": 0.540506329113924,
+                "ROUGE_L": 0.5258620689655172,
                 "CHAIRs": 0,
                 "CHAIRi": 0.0
             }
@@ -484,13 +484,13 @@
                 "CIDEr": 2.603809105652651,
                 "SPICE": {
                     "All": {
-                        "pr": 0.5,
-                        "re": 0.3157894736842105,
-                        "f": 0.3870967741935484,
-                        "fn": 13.0,
+                        "pr": 0.45454545454545453,
+                        "re": 0.2631578947368421,
+                        "f": 0.3333333333333333,
+                        "fn": 14.0,
                         "numImages": 1.0,
                         "fp": 6.0,
-                        "tp": 6.0
+                        "tp": 5.0
                     },
                     "Relation": {
                         "pr": 0.2,
@@ -512,12 +512,12 @@
                     },
                     "Attribute": {
                         "pr": 1.0,
-                        "re": 0.3333333333333333,
-                        "f": 0.5,
-                        "fn": 4.0,
+                        "re": 0.16666666666666666,
+                        "f": 0.2857142857142857,
+                        "fn": 5.0,
                         "numImages": 1.0,
                         "fp": 0.0,
-                        "tp": 2.0
+                        "tp": 1.0
                     },
                     "Size": {
                         "pr": 0.0,
@@ -529,13 +529,13 @@
                         "tp": 0.0
                     },
                     "Color": {
-                        "pr": 1.0,
-                        "re": 1.0,
-                        "f": 1.0,
-                        "fn": 0.0,
+                        "pr": 0.0,
+                        "re": 0.0,
+                        "f": 0.0,
+                        "fn": 1.0,
                         "numImages": 1.0,
                         "fp": 0.0,
-                        "tp": 1.0
+                        "tp": 0.0
                     },
                     "Object": {
                         "pr": 0.6,
@@ -557,10 +557,10 @@
             "caption": "A group of people are skateboarding down the sidewalk in front of a building.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "skateboard",
-                "bench",
                 "person",
+                "skateboard",
                 "handbag",
+                "bench",
                 "backpack"
             ],
             "mscoco_generated_words": [
@@ -666,9 +666,9 @@
             "caption": "The baby is sitting on the floor, holding a toothbrush in her mouth and looking up at the camera with a big smile on her face.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "book",
+                "toothbrush",
                 "person",
-                "toothbrush"
+                "book"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -784,12 +784,12 @@
         },
         {
             "image_id": 490415,
-            "caption": "A young man is flying a kite in a park on a sunny day.",
+            "caption": "A man is flying a kite in a park on a sunny day.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
+                "person",
                 "bicycle",
-                "kite",
-                "person"
+                "kite"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -798,7 +798,6 @@
             "hallucination_idxs": [],
             "words": [
                 "a",
-                "young",
                 "man",
                 "is",
                 "flying",
@@ -814,12 +813,12 @@
                 "."
             ],
             "metrics": {
-                "Bleu_1": 0.6428571428112246,
-                "Bleu_2": 0.588348405370911,
-                "Bleu_3": 0.5572880389364925,
-                "Bleu_4": 0.46611377074521926,
-                "METEOR": 0.37556337063180384,
-                "CIDEr": 1.509960011828888,
+                "Bleu_1": 0.692307692254438,
+                "Bleu_2": 0.6793662204323212,
+                "Bleu_3": 0.6647184770503481,
+                "Bleu_4": 0.5854547191189152,
+                "METEOR": 0.4075372471516239,
+                "CIDEr": 1.876796792617962,
                 "SPICE": {
                     "All": {
                         "pr": 0.16666666666666666,
@@ -885,44 +884,57 @@
                         "tp": 2.0
                     }
                 },
-                "ROUGE_L": 0.5865384615384615,
+                "ROUGE_L": 0.6073968705547652,
                 "CHAIRs": 0,
                 "CHAIRi": 0.0
             }
         },
         {
             "image_id": 432293,
-            "caption": "A wooden benchool with a yellow and cheese and shrims on it.",
-            "mscoco_hallucinated_words": [],
-            "mscoco_gt_words": [
-                "dining table",
-                "pizza",
-                "chair"
+            "caption": "A wooden spade is laying on a cutting board with a knife of wood on it.",
+            "mscoco_hallucinated_words": [
+                [
+                    "knife",
+                    "knife"
+                ]
             ],
-            "mscoco_generated_words": [],
-            "hallucination_idxs": [],
+            "mscoco_gt_words": [
+                "chair",
+                "pizza",
+                "dining table"
+            ],
+            "mscoco_generated_words": [
+                "knife"
+            ],
+            "hallucination_idxs": [
+                11
+            ],
             "words": [
                 "a",
                 "wooden",
-                "benchool",
+                "spade",
+                "is",
+                "laying",
+                "on",
+                "a",
+                "cutting",
+                "board",
                 "with",
                 "a",
-                "yellow",
-                "and",
-                "cheese",
-                "and",
-                "shrim",
+                "knife",
+                "of",
+                "wood",
                 "on",
                 "it",
                 "."
             ],
             "metrics": {
-                "Bleu_1": 0.4999999999583334,
-                "Bleu_2": 0.3692744729058266,
-                "Bleu_3": 2.389091911370125e-06,
-                "Bleu_4": 6.238986071516447e-09,
-                "METEOR": 0.20930348676907154,
-                "CIDEr": 0.35789661201406775,
+                "Bleu_1": 0.5624999999648439,
+                "Bleu_2": 0.433012701864254,
+                "Bleu_3": 0.23747856288237024,
+                "Bleu_4": 3.1859024287250204e-05,
+                "METEOR": 0.26289598997718516,
+                "CIDEr": 0.3450266927080158,
                 "SPICE": {
                     "All": {
                         "pr": 0.1875,
@@ -988,9 +1000,9 @@
                         "tp": 2.0
                     }
                 },
-                "ROUGE_L": 0.5258620689655172,
-                "CHAIRs": 0,
-                "CHAIRi": 0.0
+                "ROUGE_L": 0.53643216080402,
+                "CHAIRs": 1,
+                "CHAIRi": 1.0
             }
         },
         {
@@ -1126,12 +1138,12 @@
                 ]
             ],
             "mscoco_gt_words": [
-                "cell phone",
-                "potted plant",
                 "person",
+                "traffic light",
                 "handbag",
                 "bicycle",
-                "traffic light",
+                "cell phone",
+                "potted plant",
                 "backpack"
             ],
             "mscoco_generated_words": [
@@ -1239,17 +1251,17 @@
             "caption": "The image shows a group of people sitting around a table with plates of food in front of them.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "fork",
-                "bowl",
-                "pizza",
+                "bottle",
                 "person",
-                "chair",
-                "dining table",
-                "spoon",
+                "pizza",
+                "fork",
                 "book",
                 "broccoli",
+                "spoon",
+                "chair",
+                "dining table",
                 "cup",
-                "bottle"
+                "bowl"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -1357,13 +1369,13 @@
         },
         {
             "image_id": 448320,
-            "caption": "The image shows a toilet with a sink and a mirror above it.",
+            "caption": "The image shows a toilet with a sink and mirror above it, surrounded by white walls and a wooden floor.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "boat",
                 "sink",
                 "toilet",
-                "bowl"
+                "bowl",
+                "boat"
             ],
             "mscoco_generated_words": [
                 "toilet",
@@ -1380,28 +1392,36 @@
                 "a",
                 "sink",
                 "and",
-                "a",
                 "mirror",
                 "above",
                 "it",
+                ",",
+                "surrounded",
+                "by",
+                "white",
+                "wall",
+                "and",
+                "a",
+                "wooden",
+                "floor",
                 "."
             ],
             "metrics": {
-                "Bleu_1": 0.6923076922011837,
-                "Bleu_2": 0.5883484053221515,
-                "Bleu_3": 0.5011627948048272,
-                "Bleu_4": 0.39832871545008475,
-                "METEOR": 0.2870118140906677,
-                "CIDEr": 1.1767773145117646,
+                "Bleu_1": 0.44999999997750006,
+                "Bleu_2": 0.3441236007881837,
+                "Bleu_3": 0.23608159784189342,
+                "Bleu_4": 0.16679551612892413,
+                "METEOR": 0.23480328453086358,
+                "CIDEr": 0.37717417675518083,
                 "SPICE": {
                     "All": {
-                        "pr": 0.25,
-                        "re": 0.14285714285714285,
-                        "f": 0.18181818181818182,
-                        "fn": 24.0,
+                        "pr": 0.21428571428571427,
+                        "re": 0.10714285714285714,
+                        "f": 0.14285714285714285,
+                        "fn": 25.0,
                         "numImages": 1.0,
-                        "fp": 12.0,
-                        "tp": 4.0
+                        "fp": 11.0,
+                        "tp": 3.0
                     },
                     "Relation": {
                         "pr": 0.0,
@@ -1422,13 +1442,13 @@
                         "tp": 0.0
                     },
                     "Attribute": {
-                        "pr": 0.2,
-                        "re": 0.1111111111111111,
-                        "f": 0.14285714285714285,
-                        "fn": 8.0,
+                        "pr": 0.0,
+                        "re": 0.0,
+                        "f": 0.0,
+                        "fn": 9.0,
                         "numImages": 1.0,
                         "fp": 4.0,
-                        "tp": 1.0
+                        "tp": 0.0
                     },
                     "Size": {
                         "pr": NaN,
@@ -1445,31 +1465,31 @@
                         "f": NaN,
                         "fn": 0.0,
                         "numImages": 1.0,
-                        "fp": 1.0,
+                        "fp": 3.0,
                         "tp": 0.0
                     },
                     "Object": {
-                        "pr": 0.42857142857142855,
+                        "pr": 0.5,
                         "re": 0.25,
-                        "f": 0.3157894736842105,
+                        "f": 0.3333333333333333,
                         "fn": 9.0,
                         "numImages": 1.0,
-                        "fp": 4.0,
+                        "fp": 3.0,
                         "tp": 3.0
                     }
                 },
-                "ROUGE_L": 0.5922330097087377,
+                "ROUGE_L": 0.4117911791179118,
                 "CHAIRs": 0,
                 "CHAIRi": 0.0
             }
         },
         {
             "image_id": 14874,
-            "caption": "A man in a blue downhill stands in the snow with his skis and poles.",
+            "caption": "A man in a blue and black jacket skiing gear stands in the snow with his skis and poles next to him.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "skis",
-                "person"
+                "person",
+                "skis"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -1482,7 +1502,11 @@
                 "in",
                 "a",
                 "blue",
-                "downhill",
+                "and",
+                "black",
+                "jacket",
+                "skiing",
+                "gear",
                 "stand",
                 "in",
                 "the",
@@ -1492,24 +1516,27 @@
                 "ski",
                 "and",
                 "pole",
+                "next",
+                "to",
+                "him",
                 "."
             ],
             "metrics": {
-                "Bleu_1": 0.5999999999600001,
-                "Bleu_2": 0.462910049854313,
-                "Bleu_3": 0.2544973642717564,
-                "Bleu_4": 3.4234749556136714e-05,
-                "METEOR": 0.36593862814358624,
-                "CIDEr": 0.7947137654593505,
+                "Bleu_1": 0.4999999999772728,
+                "Bleu_2": 0.377964472991638,
+                "Bleu_3": 0.19258567854623335,
+                "Bleu_4": 2.476165057957504e-05,
+                "METEOR": 0.3254551790431028,
+                "CIDEr": 0.12312171259305478,
                 "SPICE": {
                     "All": {
-                        "pr": 0.3,
-                        "re": 0.15789473684210525,
-                        "f": 0.20689655172413793,
-                        "fn": 16.0,
+                        "pr": 0.2222222222222222,
+                        "re": 0.10526315789473684,
+                        "f": 0.14285714285714285,
+                        "fn": 17.0,
                         "numImages": 1.0,
                         "fp": 7.0,
-                        "tp": 3.0
+                        "tp": 2.0
                     },
                     "Relation": {
                         "pr": 0.0,
@@ -1530,13 +1557,13 @@
                         "tp": 0.0
                     },
                     "Attribute": {
-                        "pr": 1.0,
-                        "re": 0.14285714285714285,
-                        "f": 0.25,
-                        "fn": 6.0,
+                        "pr": 0.0,
+                        "re": 0.0,
+                        "f": 0.0,
+                        "fn": 7.0,
                         "numImages": 1.0,
-                        "fp": 0.0,
-                        "tp": 1.0
+                        "fp": 2.0,
+                        "tp": 0.0
                     },
                     "Size": {
                         "pr": NaN,
@@ -1548,25 +1575,25 @@
                         "tp": 0.0
                     },
                     "Color": {
-                        "pr": 1.0,
-                        "re": 1.0,
-                        "f": 1.0,
-                        "fn": 0.0,
+                        "pr": 0.0,
+                        "re": 0.0,
+                        "f": 0.0,
+                        "fn": 1.0,
                         "numImages": 1.0,
                         "fp": 0.0,
-                        "tp": 1.0
+                        "tp": 0.0
                     },
                     "Object": {
-                        "pr": 0.4,
+                        "pr": 0.6666666666666666,
                         "re": 0.4,
-                        "f": 0.4000000000000001,
+                        "f": 0.5,
                         "fn": 3.0,
                         "numImages": 1.0,
-                        "fp": 3.0,
+                        "fp": 1.0,
                         "tp": 2.0
                     }
                 },
-                "ROUGE_L": 0.6108726752503576,
+                "ROUGE_L": 0.48855835240274603,
                 "CHAIRs": 0,
                 "CHAIRi": 0.0
             }
@@ -1802,7 +1829,7 @@
         },
         {
             "image_id": 20059,
-            "caption": "The zebras are grazing in the green grass.",
+            "caption": "The zebras are grazing in the grass in front of a wooden fence.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
                 "zebra"
@@ -1818,17 +1845,22 @@
                 "grazing",
                 "in",
                 "the",
-                "green",
                 "gras",
+                "in",
+                "front",
+                "of",
+                "a",
+                "wooden",
+                "fence",
                 "."
             ],
             "metrics": {
-                "Bleu_1": 0.8749999997812503,
-                "Bleu_2": 0.7905694148373941,
-                "Bleu_3": 0.6786044039656115,
-                "Bleu_4": 0.49999999985818483,
-                "METEOR": 0.322386265131623,
-                "CIDEr": 2.293238223194823,
+                "Bleu_1": 0.6153846153372783,
+                "Bleu_2": 0.4529108136215475,
+                "Bleu_3": 0.3341085298955855,
+                "Bleu_4": 0.24712442543084054,
+                "METEOR": 0.262455858254025,
+                "CIDEr": 1.5548513389700163,
                 "SPICE": {
                     "All": {
                         "pr": 0.15384615384615385,
@@ -1894,7 +1926,7 @@
                         "tp": 2.0
                     }
                 },
-                "ROUGE_L": 0.5446428571428571,
+                "ROUGE_L": 0.4699537750385208,
                 "CHAIRs": 0,
                 "CHAIRi": 0.0
             }
@@ -1904,8 +1936,8 @@
             "caption": "A group of men sitting on the grass outside a building, using laptops to work.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "clock",
                 "person",
+                "clock",
                 "motorcycle",
                 "laptop",
                 "backpack"
@@ -2016,9 +2048,9 @@
             "caption": "The image shows a collage of different colors and textures, including orange, blue, green, and purple.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "bowl",
+                "cake",
                 "orange",
-                "cake"
+                "bowl"
             ],
             "mscoco_generated_words": [
                 "orange"
@@ -2129,9 +2161,9 @@
             "caption": "The two people are lying in bed, both holding laptops in their laps.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "laptop",
-                "bed",
                 "person",
+                "bed",
+                "laptop",
                 "apple"
             ],
             "mscoco_generated_words": [
@@ -2239,10 +2271,10 @@
             "caption": "The image shows a plate of French toast with bacon, bananas, and maple syrup.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "banana",
-                "bowl",
+                "cake",
                 "orange",
-                "cake"
+                "bowl",
+                "banana"
             ],
             "mscoco_generated_words": [
                 "banana"
@@ -2350,10 +2382,10 @@
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
                 "dog",
-                "chair",
-                "truck",
+                "car",
                 "traffic light",
-                "car"
+                "truck",
+                "chair"
             ],
             "mscoco_generated_words": [
                 "dog",
@@ -2576,12 +2608,12 @@
             "caption": "The image shows a cluttered desk with a computer, keyboard, and other office supplies.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "keyboard",
                 "tv",
+                "keyboard",
                 "bottle",
                 "mouse",
-                "laptop",
-                "dining table"
+                "dining table",
+                "laptop"
             ],
             "mscoco_generated_words": [
                 "dining table",
@@ -2617,22 +2649,22 @@
                 "CIDEr": 0.8304326913931575,
                 "SPICE": {
                     "All": {
-                        "pr": 0.26666666666666666,
-                        "re": 0.21052631578947367,
-                        "f": 0.23529411764705882,
-                        "fn": 15.0,
+                        "pr": 0.35714285714285715,
+                        "re": 0.2631578947368421,
+                        "f": 0.30303030303030304,
+                        "fn": 14.0,
                         "numImages": 1.0,
-                        "fp": 11.0,
-                        "tp": 4.0
+                        "fp": 9.0,
+                        "tp": 5.0
                     },
                     "Relation": {
-                        "pr": 0.2,
-                        "re": 0.125,
-                        "f": 0.15384615384615385,
-                        "fn": 7.0,
+                        "pr": 0.0,
+                        "re": 0.0,
+                        "f": 0.0,
+                        "fn": 8.0,
                         "numImages": 1.0,
                         "fp": 4.0,
-                        "tp": 1.0
+                        "tp": 0.0
                     },
                     "Cardinality": {
                         "pr": NaN,
@@ -2671,13 +2703,13 @@
                         "tp": 0.0
                     },
                     "Object": {
-                        "pr": 0.3333333333333333,
-                        "re": 0.2222222222222222,
-                        "f": 0.26666666666666666,
-                        "fn": 7.0,
+                        "pr": 0.6666666666666666,
+                        "re": 0.4444444444444444,
+                        "f": 0.5333333333333333,
+                        "fn": 5.0,
                         "numImages": 1.0,
-                        "fp": 4.0,
-                        "tp": 2.0
+                        "fp": 2.0,
+                        "tp": 4.0
                     }
                 },
                 "ROUGE_L": 0.49061662198391426,
@@ -2691,10 +2723,10 @@
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
                 "person",
-                "motorcycle",
+                "car",
                 "bicycle",
                 "truck",
-                "car",
+                "motorcycle",
                 "backpack"
             ],
             "mscoco_generated_words": [
@@ -2802,14 +2834,23 @@
         },
         {
             "image_id": 286820,
-            "caption": "A white iPhone 5 and a red iPad mini sit on a green carpet next to each other.",
-            "mscoco_hallucinated_words": [],
-            "mscoco_gt_words": [
-                "cell phone",
-                "dining table"
+            "caption": "A white iPhone 5 and a green apple watch are sitting on a green carpet.",
+            "mscoco_hallucinated_words": [
+                [
+                    "apple",
+                    "apple"
+                ]
             ],
-            "mscoco_generated_words": [],
-            "hallucination_idxs": [],
+            "mscoco_gt_words": [
+                "dining table",
+                "cell phone"
+            ],
+            "mscoco_generated_words": [
+                "apple"
+            ],
+            "hallucination_idxs": [
+                7
+            ],
             "words": [
                 "a",
                 "white",
@@ -2817,27 +2858,24 @@
                 "5",
                 "and",
                 "a",
-                "red",
-                "ipad",
-                "mini",
-                "sit",
+                "green",
+                "apple",
+                "watch",
+                "are",
+                "sitting",
                 "on",
                 "a",
                 "green",
                 "carpet",
-                "next",
-                "to",
-                "each",
-                "other",
                 "."
             ],
             "metrics": {
-                "Bleu_1": 0.388888888867284,
-                "Bleu_2": 0.2619684159828101,
-                "Bleu_3": 0.16247727569275502,
-                "Bleu_4": 2.312446301793853e-05,
-                "METEOR": 0.18237344322581672,
-                "CIDEr": 0.11533690313454324,
+                "Bleu_1": 0.33333333331111115,
+                "Bleu_2": 0.1543033499514377,
+                "Bleu_3": 1.2234957142176963e-06,
+                "Bleu_4": 3.514847831107641e-09,
+                "METEOR": 0.1630508578042135,
+                "CIDEr": 0.06679494602071867,
                 "SPICE": {
                     "All": {
                         "pr": 1.0,
@@ -2903,9 +2941,9 @@
                         "tp": 3.0
                     }
                 },
-                "ROUGE_L": 0.3306233062330623,
-                "CHAIRs": 0,
-                "CHAIRi": 0.0
+                "ROUGE_L": 0.2760180995475113,
+                "CHAIRs": 1,
+                "CHAIRi": 1.0
             }
         },
         {
@@ -3025,9 +3063,9 @@
             "caption": "The image shows a bedroom with a white bed, a dresser, and a window with red curtains.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
+                "chair",
                 "dining table",
-                "bed",
-                "chair"
+                "bed"
             ],
             "mscoco_generated_words": [
                 "bed"
@@ -3137,8 +3175,8 @@
             "caption": "A group of dogs playing in a fenced area with their owners watching them.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
-                "dog"
+                "dog",
+                "person"
             ],
             "mscoco_generated_words": [
                 "dog"
@@ -3248,9 +3286,9 @@
                 ]
             ],
             "mscoco_gt_words": [
-                "surfboard",
+                "person",
                 "kite",
-                "person"
+                "surfboard"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -3367,8 +3405,8 @@
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
                 "backpack",
-                "person",
-                "dog"
+                "dog",
+                "person"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -3471,8 +3509,8 @@
             "caption": "The blue bus is parked in front of a building with a sign that reads \"Welcome to the Hotel\".",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "bus",
-                "person"
+                "person",
+                "bus"
             ],
             "mscoco_generated_words": [],
             "hallucination_idxs": [],
@@ -3579,19 +3617,21 @@
         },
         {
             "image_id": 279769,
-            "caption": "The image shows a ripe on a plate on a tablecloth, with a spoon next to the right of it.",
+            "caption": "The image shows a banana peel on a table next to a pair of scissors and a piece of paper.",
             "mscoco_hallucinated_words": [
                 [
-                    "spoon",
-                    "spoon"
+                    "scissors",
+                    "scissors"
                 ]
             ],
             "mscoco_gt_words": [
-                "banana",
-                "dining table"
+                "dining table",
+                "banana"
             ],
             "mscoco_generated_words": [
-                "spoon"
+                "banana",
+                "dining table",
+                "scissors"
             ],
             "hallucination_idxs": [
                 14
@@ -3601,32 +3641,31 @@
                 "image",
                 "show",
                 "a",
-                "ripe",
+                "banana",
+                "peel",
                 "on",
                 "a",
-                "plate",
-                "on",
-                "a",
-                "tablecloth",
-                ",",
-                "with",
-                "a",
-                "spoon",
+                "table",
                 "next",
                 "to",
-                "the",
-                "right",
+                "a",
+                "pair",
                 "of",
-                "it",
+                "scissors",
+                "and",
+                "a",
+                "piece",
+                "of",
+                "paper",
                 "."
             ],
             "metrics": {
-                "Bleu_1": 0.3999999999800001,
-                "Bleu_2": 0.2051956704065011,
-                "Bleu_3": 1.32745954197656e-06,
-                "Bleu_4": 3.4249460896035026e-09,
-                "METEOR": 0.1285732306180672,
-                "CIDEr": 0.037711137844818034,
+                "Bleu_1": 0.5499999999725,
+                "Bleu_2": 0.41675437671185933,
+                "Bleu_3": 0.3070457069121754,
+                "Bleu_4": 0.2415725260884915,
+                "METEOR": 0.2511098683841856,
+                "CIDEr": 0.3076052951175278,
                 "SPICE": {
                     "All": {
                         "pr": 0.2857142857142857,
@@ -3692,9 +3731,9 @@
                         "tp": 3.0
                     }
                 },
-                "ROUGE_L": 0.34040178571428575,
+                "ROUGE_L": 0.4765625,
                 "CHAIRs": 1,
-                "CHAIRi": 1.0
+                "CHAIRi": 0.3333333333333333
             }
         },
         {
@@ -3702,8 +3741,8 @@
             "caption": "A skier is riding down a snowy slope on a snowboard, wearing a blue and black pants and a helmet.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "snowboard",
-                "person"
+                "person",
+                "snowboard"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -3816,12 +3855,12 @@
             "caption": "The image shows a table set with plates, silverware, and glasses.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "knife",
                 "spoon",
                 "fork",
-                "cup",
                 "toothbrush",
+                "knife",
                 "dining table",
+                "cup",
                 "wine glass"
             ],
             "mscoco_generated_words": [
@@ -3923,7 +3962,7 @@
         },
         {
             "image_id": 303778,
-            "caption": "The image shows a person in a baseball uniform, holding a bat and standing on the field.",
+            "caption": "The image shows a baseball player in a white uniform holding a bat and standing on the field.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
                 "baseball bat",
@@ -3938,12 +3977,12 @@
                 "image",
                 "show",
                 "a",
-                "person",
+                "baseball",
+                "player",
                 "in",
                 "a",
-                "baseball",
+                "white",
                 "uniform",
-                ",",
                 "holding",
                 "a",
                 "bat",
@@ -3955,12 +3994,12 @@
                 "."
             ],
             "metrics": {
-                "Bleu_1": 0.6470588234913496,
-                "Bleu_2": 0.5320603680596521,
-                "Bleu_3": 0.3354441218210638,
-                "Bleu_4": 4.05212776619887e-05,
-                "METEOR": 0.37135350204499434,
-                "CIDEr": 0.876489361980154,
+                "Bleu_1": 0.6111111110771605,
+                "Bleu_2": 0.5016313256758622,
+                "Bleu_3": 0.3613462263106288,
+                "Bleu_4": 4.2113353702720685e-05,
+                "METEOR": 0.43847422213496656,
+                "CIDEr": 0.8888852471839623,
                 "SPICE": {
                     "All": {
                         "pr": 0.3333333333333333,
@@ -4026,7 +4065,7 @@
                         "tp": 2.0
                     }
                 },
-                "ROUGE_L": 0.6216560509554141,
+                "ROUGE_L": 0.6777777777777778,
                 "CHAIRs": 0,
                 "CHAIRi": 0.0
             }
@@ -4036,10 +4075,10 @@
             "caption": "The image shows a kitchen countertop with a blending bowl, a spoon, and a container of strawberries.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
+                "bottle",
                 "spoon",
                 "book",
-                "bowl",
-                "bottle"
+                "bowl"
             ],
             "mscoco_generated_words": [
                 "bowl",
@@ -4187,22 +4226,22 @@
                 "CIDEr": 0.9030543773092394,
                 "SPICE": {
                     "All": {
-                        "pr": 0.2608695652173913,
+                        "pr": 0.3333333333333333,
                         "re": 0.2727272727272727,
-                        "f": 0.2666666666666666,
+                        "f": 0.3,
                         "fn": 16.0,
                         "numImages": 1.0,
-                        "fp": 17.0,
+                        "fp": 12.0,
                         "tp": 6.0
                     },
                     "Relation": {
-                        "pr": 0.0,
-                        "re": 0.0,
-                        "f": 0.0,
-                        "fn": 7.0,
+                        "pr": 0.14285714285714285,
+                        "re": 0.14285714285714285,
+                        "f": 0.14285714285714285,
+                        "fn": 6.0,
                         "numImages": 1.0,
-                        "fp": 7.0,
-                        "tp": 0.0
+                        "fp": 6.0,
+                        "tp": 1.0
                     },
                     "Cardinality": {
                         "pr": NaN,
@@ -4214,13 +4253,13 @@
                         "tp": 0.0
                     },
                     "Attribute": {
-                        "pr": 0.16666666666666666,
-                        "re": 0.14285714285714285,
-                        "f": 0.15384615384615383,
-                        "fn": 6.0,
+                        "pr": 0.0,
+                        "re": 0.0,
+                        "f": 0.0,
+                        "fn": 7.0,
                         "numImages": 1.0,
-                        "fp": 5.0,
-                        "tp": 1.0
+                        "fp": 2.0,
+                        "tp": 0.0
                     },
                     "Size": {
                         "pr": NaN,
@@ -4232,21 +4271,21 @@
                         "tp": 0.0
                     },
                     "Color": {
-                        "pr": 0.2,
-                        "re": 0.25,
-                        "f": 0.22222222222222224,
+                        "pr": 0.0,
+                        "re": 0.0,
+                        "f": 0.0,
+                        "fn": 4.0,
+                        "numImages": 1.0,
+                        "fp": 2.0,
+                        "tp": 0.0
+                    },
+                    "Object": {
+                        "pr": 0.5555555555555556,
+                        "re": 0.625,
+                        "f": 0.5882352941176471,
                         "fn": 3.0,
                         "numImages": 1.0,
                         "fp": 4.0,
-                        "tp": 1.0
-                    },
-                    "Object": {
-                        "pr": 0.5,
-                        "re": 0.625,
-                        "f": 0.5555555555555556,
-                        "fn": 3.0,
-                        "numImages": 1.0,
-                        "fp": 5.0,
                         "tp": 5.0
                     }
                 },
@@ -4261,8 +4300,8 @@
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
                 "person",
-                "train",
-                "tie"
+                "tie",
+                "train"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -4370,8 +4409,8 @@
             "caption": "A small white dog is standing next to a bicycle on a cobestone street.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "bicycle",
-                "dog"
+                "dog",
+                "bicycle"
             ],
             "mscoco_generated_words": [
                 "dog",
@@ -4404,13 +4443,13 @@
                 "CIDEr": 0.7240272655081901,
                 "SPICE": {
                     "All": {
-                        "pr": 0.1,
-                        "re": 0.045454545454545456,
-                        "f": 0.06250000000000001,
-                        "fn": 21.0,
+                        "pr": 0.14285714285714285,
+                        "re": 0.09090909090909091,
+                        "f": 0.1111111111111111,
+                        "fn": 20.0,
                         "numImages": 1.0,
-                        "fp": 9.0,
-                        "tp": 1.0
+                        "fp": 12.0,
+                        "tp": 2.0
                     },
                     "Relation": {
                         "pr": 0.0,
@@ -4418,7 +4457,7 @@
                         "f": 0.0,
                         "fn": 9.0,
                         "numImages": 1.0,
-                        "fp": 4.0,
+                        "fp": 5.0,
                         "tp": 0.0
                     },
                     "Cardinality": {
@@ -4436,7 +4475,7 @@
                         "f": 0.0,
                         "fn": 6.0,
                         "numImages": 1.0,
-                        "fp": 1.0,
+                        "fp": 2.0,
                         "tp": 0.0
                     },
                     "Size": {
@@ -4458,13 +4497,13 @@
                         "tp": 0.0
                     },
                     "Object": {
-                        "pr": 0.2,
-                        "re": 0.14285714285714285,
-                        "f": 0.16666666666666666,
-                        "fn": 6.0,
+                        "pr": 0.2857142857142857,
+                        "re": 0.2857142857142857,
+                        "f": 0.2857142857142857,
+                        "fn": 5.0,
                         "numImages": 1.0,
-                        "fp": 4.0,
-                        "tp": 1.0
+                        "fp": 5.0,
+                        "tp": 2.0
                     }
                 },
                 "ROUGE_L": 0.47805642633228845,
@@ -4477,11 +4516,11 @@
             "caption": "The image shows a man sitting on a bench in the middle of a city street, surrounded by tall buildings and trees.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "bench",
                 "person",
+                "car",
                 "handbag",
                 "truck",
-                "car"
+                "bench"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -4593,54 +4632,51 @@
         },
         {
             "image_id": 362293,
-            "caption": "A black and carriage with two white horses pulling it down the street in front of a group of people.",
+            "caption": "A group of a man rider on a horse pulling a carriage down a city street.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "parking meter",
-                "suitcase",
                 "person",
-                "truck",
-                "traffic light",
                 "horse",
                 "tie",
                 "handbag",
-                "car"
+                "parking meter",
+                "car",
+                "traffic light",
+                "suitcase",
+                "truck"
             ],
             "mscoco_generated_words": [
-                "horse",
-                "person"
+                "person",
+                "person",
+                "horse"
             ],
             "hallucination_idxs": [],
             "words": [
                 "a",
-                "black",
-                "and",
-                "carriage",
-                "with",
-                "two",
-                "white",
-                "horse",
-                "pulling",
-                "it",
-                "down",
-                "the",
-                "street",
-                "in",
-                "front",
-                "of",
-                "a",
                 "group",
                 "of",
-                "person",
+                "a",
+                "man",
+                "rider",
+                "on",
+                "a",
+                "horse",
+                "pulling",
+                "a",
+                "carriage",
+                "down",
+                "a",
+                "city",
+                "street",
                 "."
             ],
             "metrics": {
-                "Bleu_1": 0.6499999999675001,
-                "Bleu_2": 0.41358509591303216,
-                "Bleu_3": 2.1181290583069993e-06,
-                "Bleu_4": 4.862415681567391e-09,
-                "METEOR": 0.29369525551057396,
-                "CIDEr": 0.4348722889609614,
+                "Bleu_1": 0.6874999999140626,
+                "Bleu_2": 0.6422616288516358,
+                "Bleu_3": 0.38914247573807637,
+                "Bleu_4": 0.2594750713732382,
+                "METEOR": 0.3743091326734579,
+                "CIDEr": 1.3102698693573451,
                 "SPICE": {
                     "All": {
                         "pr": 0.2222222222222222,
@@ -4706,7 +4742,7 @@
                         "tp": 2.0
                     }
                 },
-                "ROUGE_L": 0.40848214285714285,
+                "ROUGE_L": 0.53643216080402,
                 "CHAIRs": 0,
                 "CHAIRi": 0.0
             }
@@ -4716,8 +4752,8 @@
             "caption": "The image shows two large vases on display in a museum, one with a red and black design and the other with a blue and white design.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "vase",
-                "person"
+                "person",
+                "vase"
             ],
             "mscoco_generated_words": [
                 "vase"
@@ -4941,7 +4977,7 @@
         },
         {
             "image_id": 142815,
-            "caption": "The image shows a man sitting on a bed, holding a camera and looking at the lens.",
+            "caption": "The image shows a man sitting on a bed, holding a camera and looking at the screen.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
                 "person",
@@ -4970,7 +5006,7 @@
                 "looking",
                 "at",
                 "the",
-                "len",
+                "screen",
                 "."
             ],
             "metrics": {
@@ -4979,7 +5015,7 @@
                 "Bleu_3": 0.26965590887682184,
                 "Bleu_4": 3.440134693110683e-05,
                 "METEOR": 0.31104174714887395,
-                "CIDEr": 0.7175760819727253,
+                "CIDEr": 0.7331473713052208,
                 "SPICE": {
                     "All": {
                         "pr": 0.8571428571428571,
@@ -5052,49 +5088,58 @@
         },
         {
             "image_id": 85292,
-            "caption": "A red train travels down the tracks next to a group of buildings and trees.",
-            "mscoco_hallucinated_words": [],
+            "caption": "A train is a moving train traveling on the tracks with several cars behind it.",
+            "mscoco_hallucinated_words": [
+                [
+                    "car",
+                    "car"
+                ]
+            ],
             "mscoco_gt_words": [
                 "train"
             ],
             "mscoco_generated_words": [
-                "train"
+                "train",
+                "train",
+                "car"
             ],
-            "hallucination_idxs": [],
+            "hallucination_idxs": [
+                12
+            ],
             "words": [
                 "a",
-                "red",
                 "train",
-                "travel",
-                "down",
+                "is",
+                "a",
+                "moving",
+                "train",
+                "traveling",
+                "on",
                 "the",
                 "track",
-                "next",
-                "to",
-                "a",
-                "group",
-                "of",
-                "building",
-                "and",
-                "tree",
+                "with",
+                "several",
+                "car",
+                "behind",
+                "it",
                 "."
             ],
             "metrics": {
-                "Bleu_1": 0.5333333332977779,
-                "Bleu_2": 0.19518001457623005,
-                "Bleu_3": 1.4310092683999854e-06,
-                "Bleu_4": 3.95308837437499e-09,
-                "METEOR": 0.2258780086714697,
-                "CIDEr": 0.6293785638227517,
+                "Bleu_1": 0.5999999999600001,
+                "Bleu_2": 0.4140393355768242,
+                "Bleu_3": 2.3625442483753375e-06,
+                "Bleu_4": 5.75757563577281e-09,
+                "METEOR": 0.2705052445505311,
+                "CIDEr": 0.9731137402875292,
                 "SPICE": {
                     "All": {
-                        "pr": 0.375,
-                        "re": 0.15,
-                        "f": 0.21428571428571425,
-                        "fn": 17.0,
+                        "pr": 0.4444444444444444,
+                        "re": 0.2,
+                        "f": 0.2758620689655173,
+                        "fn": 16.0,
                         "numImages": 1.0,
                         "fp": 5.0,
-                        "tp": 3.0
+                        "tp": 4.0
                     },
                     "Relation": {
                         "pr": 0.0,
@@ -5115,13 +5160,13 @@
                         "tp": 0.0
                     },
                     "Attribute": {
-                        "pr": 0.0,
-                        "re": 0.0,
-                        "f": 0.0,
-                        "fn": 6.0,
+                        "pr": 0.5,
+                        "re": 0.16666666666666666,
+                        "f": 0.25,
+                        "fn": 5.0,
                         "numImages": 1.0,
                         "fp": 1.0,
-                        "tp": 0.0
+                        "tp": 1.0
                     },
                     "Size": {
                         "pr": NaN,
@@ -5138,7 +5183,7 @@
                         "f": NaN,
                         "fn": 0.0,
                         "numImages": 1.0,
-                        "fp": 0.0,
+                        "fp": 1.0,
                         "tp": 0.0
                     },
                     "Object": {
@@ -5151,14 +5196,14 @@
                         "tp": 3.0
                     }
                 },
-                "ROUGE_L": 0.3490701001430615,
-                "CHAIRs": 0,
-                "CHAIRi": 0.0
+                "ROUGE_L": 0.5236051502145923,
+                "CHAIRs": 1,
+                "CHAIRi": 0.3333333333333333
             }
         },
         {
             "image_id": 500423,
-            "caption": "The train is a red and orange train with white stripes on the side, standing in a large, modern train station with high ceilings and marble floors.",
+            "caption": "The orange and white train is parked in the station.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
                 "orange",
@@ -5166,69 +5211,48 @@
                 "train"
             ],
             "mscoco_generated_words": [
-                "train",
                 "orange",
-                "train",
                 "train"
             ],
             "hallucination_idxs": [],
             "words": [
                 "the",
+                "orange",
+                "and",
+                "white",
                 "train",
                 "is",
-                "a",
-                "red",
-                "and",
-                "orange",
-                "train",
-                "with",
-                "white",
-                "stripe",
-                "on",
-                "the",
-                "side",
-                ",",
-                "standing",
+                "parked",
                 "in",
-                "a",
-                "large",
-                ",",
-                "modern",
-                "train",
+                "the",
                 "station",
-                "with",
-                "high",
-                "ceiling",
-                "and",
-                "marble",
-                "floor",
                 "."
             ],
             "metrics": {
-                "Bleu_1": 0.4074074073923183,
-                "Bleu_2": 0.12517793602840982,
-                "Bleu_3": 8.557991578273926e-07,
-                "Bleu_4": 2.260612270720178e-09,
-                "METEOR": 0.17809204123877057,
-                "CIDEr": 0.008208756954608208,
+                "Bleu_1": 0.7999999998400004,
+                "Bleu_2": 0.29814239693868744,
+                "Bleu_3": 2.23144316646742e-06,
+                "Bleu_4": 6.311969076838888e-09,
+                "METEOR": 0.2242933024914006,
+                "CIDEr": 0.9656829084263017,
                 "SPICE": {
                     "All": {
-                        "pr": 0.8888888888888888,
-                        "re": 0.32,
-                        "f": 0.47058823529411764,
-                        "fn": 17.0,
+                        "pr": 0.36363636363636365,
+                        "re": 0.16,
+                        "f": 0.2222222222222222,
+                        "fn": 21.0,
                         "numImages": 1.0,
-                        "fp": 1.0,
-                        "tp": 8.0
+                        "fp": 7.0,
+                        "tp": 4.0
                     },
                     "Relation": {
-                        "pr": 0.75,
-                        "re": 0.375,
-                        "f": 0.5,
-                        "fn": 5.0,
+                        "pr": 0.16666666666666666,
+                        "re": 0.125,
+                        "f": 0.14285714285714288,
+                        "fn": 7.0,
                         "numImages": 1.0,
-                        "fp": 1.0,
-                        "tp": 3.0
+                        "fp": 5.0,
+                        "tp": 1.0
                     },
                     "Cardinality": {
                         "pr": NaN,
@@ -5240,13 +5264,13 @@
                         "tp": 0.0
                     },
                     "Attribute": {
-                        "pr": 1.0,
-                        "re": 0.2222222222222222,
-                        "f": 0.3636363636363636,
-                        "fn": 7.0,
+                        "pr": 0.5,
+                        "re": 0.1111111111111111,
+                        "f": 0.1818181818181818,
+                        "fn": 8.0,
                         "numImages": 1.0,
-                        "fp": 0.0,
-                        "tp": 2.0
+                        "fp": 1.0,
+                        "tp": 1.0
                     },
                     "Size": {
                         "pr": 1.0,
@@ -5267,16 +5291,16 @@
                         "tp": 0.0
                     },
                     "Object": {
-                        "pr": 1.0,
-                        "re": 0.375,
-                        "f": 0.5454545454545454,
-                        "fn": 5.0,
+                        "pr": 0.6666666666666666,
+                        "re": 0.25,
+                        "f": 0.36363636363636365,
+                        "fn": 6.0,
                         "numImages": 1.0,
-                        "fp": 0.0,
-                        "tp": 3.0
+                        "fp": 1.0,
+                        "tp": 2.0
                     }
                 },
-                "ROUGE_L": 0.2533748701973001,
+                "ROUGE_L": 0.47213622291021673,
                 "CHAIRs": 0,
                 "CHAIRi": 0.0
             }
@@ -5291,9 +5315,9 @@
                 ]
             ],
             "mscoco_gt_words": [
-                "bowl",
                 "person",
-                "oven"
+                "oven",
+                "bowl"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -5406,12 +5430,12 @@
         },
         {
             "image_id": 84752,
-            "caption": "The image shows a large, red and old airplane sitting on the ground in front of a building with a sign that reads \"Welcome to the Air Force Museum\".",
+            "caption": "The image shows a large, white and black jet parked on the ground in front of a building with a red roof.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "truck",
                 "car",
-                "airplane"
+                "airplane",
+                "truck"
             ],
             "mscoco_generated_words": [
                 "airplane"
@@ -5424,11 +5448,11 @@
                 "a",
                 "large",
                 ",",
-                "red",
+                "white",
                 "and",
-                "old",
-                "airplane",
-                "sitting",
+                "black",
+                "jet",
+                "parked",
                 "on",
                 "the",
                 "ground",
@@ -5439,34 +5463,25 @@
                 "building",
                 "with",
                 "a",
-                "sign",
-                "that",
-                "read",
-                "``",
-                "welcome",
-                "to",
-                "the",
-                "air",
-                "force",
-                "museum",
-                "'s's",
+                "red",
+                "roof",
                 "."
             ],
             "metrics": {
-                "Bleu_1": 0.4482758620535078,
-                "Bleu_2": 0.3099340466837252,
-                "Bleu_3": 0.2201736563462596,
-                "Bleu_4": 0.16927318969930033,
-                "METEOR": 0.2076023783185038,
-                "CIDEr": 0.003109318688683891,
+                "Bleu_1": 0.4999999999772728,
+                "Bleu_2": 0.3086066999098223,
+                "Bleu_3": 0.2426427503086868,
+                "Bleu_4": 0.19692215901893703,
+                "METEOR": 0.27980649658211537,
+                "CIDEr": 0.12543740457191732,
                 "SPICE": {
                     "All": {
-                        "pr": 0.3333333333333333,
+                        "pr": 0.3,
                         "re": 0.1111111111111111,
-                        "f": 0.16666666666666666,
+                        "f": 0.16216216216216217,
                         "fn": 24.0,
                         "numImages": 1.0,
-                        "fp": 6.0,
+                        "fp": 7.0,
                         "tp": 3.0
                     },
                     "Relation": {
@@ -5493,7 +5508,7 @@
                         "f": 0.0,
                         "fn": 5.0,
                         "numImages": 1.0,
-                        "fp": 0.0,
+                        "fp": 1.0,
                         "tp": 0.0
                     },
                     "Size": {
@@ -5524,7 +5539,7 @@
                         "tp": 3.0
                     }
                 },
-                "ROUGE_L": 0.3935483870967742,
+                "ROUGE_L": 0.5362637362637362,
                 "CHAIRs": 0,
                 "CHAIRi": 0.0
             }
@@ -5534,9 +5549,9 @@
             "caption": "A small brown dog is sitting on top of a couch in a living room with wooden floors and a fireplace.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
+                "dog",
                 "remote",
-                "couch",
-                "dog"
+                "couch"
             ],
             "mscoco_generated_words": [
                 "dog",
@@ -5649,9 +5664,9 @@
             "caption": "The image shows a chocolate cake with a small stream running through it, surrounded by trees and rocks.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "bear",
+                "cake",
                 "dining table",
-                "cake"
+                "bear"
             ],
             "mscoco_generated_words": [
                 "cake"
@@ -5758,12 +5773,12 @@
         },
         {
             "image_id": 526827,
-            "caption": "A pair of scissors are sitting on a green cutting board in a kitchen.",
+            "caption": "A pair of scissors are sitting on a green cutting mat.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
+                "mouse",
                 "scissors",
-                "person",
-                "mouse"
+                "person"
             ],
             "mscoco_generated_words": [
                 "scissors"
@@ -5780,19 +5795,16 @@
                 "a",
                 "green",
                 "cutting",
-                "board",
-                "in",
-                "a",
-                "kitchen",
+                "mat",
                 "."
             ],
             "metrics": {
-                "Bleu_1": 0.5714285713877553,
-                "Bleu_2": 0.4193139346576645,
-                "Bleu_3": 2.4469914284217973e-06,
-                "Bleu_4": 6.041241049999893e-09,
-                "METEOR": 0.21480761581704913,
-                "CIDEr": 0.6998095494774366,
+                "Bleu_1": 0.6640732480845413,
+                "Bleu_2": 0.49248990177428925,
+                "Bleu_3": 2.9086420470902735e-06,
+                "Bleu_4": 7.27989109691788e-09,
+                "METEOR": 0.2215625722892834,
+                "CIDEr": 0.7889397435364133,
                 "SPICE": {
                     "All": {
                         "pr": 0.375,
@@ -5858,20 +5870,20 @@
                         "tp": 2.0
                     }
                 },
-                "ROUGE_L": 0.4680306905370844,
+                "ROUGE_L": 0.5176803394625177,
                 "CHAIRs": 0,
                 "CHAIRi": 0.0
             }
         },
         {
             "image_id": 527529,
-            "caption": "The white cat is sitting on top of a black leather bag in the corner of a room.",
+            "caption": "The white cat is sitting on top of a black bag in the corner of a room.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "book",
-                "cat",
                 "dog",
+                "cat",
                 "handbag",
+                "book",
                 "dining table"
             ],
             "mscoco_generated_words": [
@@ -5889,7 +5901,6 @@
                 "of",
                 "a",
                 "black",
-                "leather",
                 "bag",
                 "in",
                 "the",
@@ -5900,12 +5911,12 @@
                 "."
             ],
             "metrics": {
-                "Bleu_1": 0.49999999997222233,
-                "Bleu_2": 0.24253562502246254,
-                "Bleu_3": 1.543394797405524e-06,
-                "Bleu_4": 3.95671672921152e-09,
-                "METEOR": 0.2727369710197883,
-                "CIDEr": 0.18163876626345837,
+                "Bleu_1": 0.5294117646747406,
+                "Bleu_2": 0.2572478776981582,
+                "Bleu_3": 1.6401017070887658e-06,
+                "Bleu_4": 4.2132873222835864e-09,
+                "METEOR": 0.27827690227188295,
+                "CIDEr": 0.2626493620454369,
                 "SPICE": {
                     "All": {
                         "pr": 0.6666666666666666,
@@ -5971,7 +5982,7 @@
                         "tp": 3.0
                     }
                 },
-                "ROUGE_L": 0.3306233062330623,
+                "ROUGE_L": 0.34221598877980364,
                 "CHAIRs": 0,
                 "CHAIRi": 0.0
             }
@@ -5981,8 +5992,8 @@
             "caption": "The image shows a herd of elephants walking across a dry, dusty field at sunset.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "elephant",
-                "person"
+                "person",
+                "elephant"
             ],
             "mscoco_generated_words": [
                 "elephant"
@@ -6090,9 +6101,9 @@
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
                 "microwave",
-                "cup",
+                "oven",
                 "cat",
-                "oven"
+                "cup"
             ],
             "mscoco_generated_words": [
                 "cat",
@@ -6124,12 +6135,12 @@
                 "CIDEr": 3.5817322913625214,
                 "SPICE": {
                     "All": {
-                        "pr": 0.5,
+                        "pr": 0.5454545454545454,
                         "re": 0.35294117647058826,
-                        "f": 0.41379310344827586,
+                        "f": 0.42857142857142855,
                         "fn": 11.0,
                         "numImages": 1.0,
-                        "fp": 6.0,
+                        "fp": 5.0,
                         "tp": 6.0
                     },
                     "Relation": {
@@ -6156,7 +6167,7 @@
                         "f": 0.0,
                         "fn": 4.0,
                         "numImages": 1.0,
-                        "fp": 1.0,
+                        "fp": 0.0,
                         "tp": 0.0
                     },
                     "Size": {
@@ -6305,8 +6316,8 @@
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
                 "bench",
-                "person",
-                "dog"
+                "dog",
+                "person"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -6412,9 +6423,9 @@
             "caption": "The image shows a red sports car parked in front of a small, rusty old school bus on a dirt road surrounded by trees and mountains in the background.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "bus",
                 "boat",
                 "car",
+                "bus",
                 "horse"
             ],
             "mscoco_generated_words": [
@@ -6463,13 +6474,13 @@
                 "CIDEr": 0.017100266887484967,
                 "SPICE": {
                     "All": {
-                        "pr": 0.3076923076923077,
-                        "re": 0.15384615384615385,
-                        "f": 0.20512820512820515,
-                        "fn": 22.0,
+                        "pr": 0.3,
+                        "re": 0.11538461538461539,
+                        "f": 0.16666666666666669,
+                        "fn": 23.0,
                         "numImages": 1.0,
-                        "fp": 9.0,
-                        "tp": 4.0
+                        "fp": 7.0,
+                        "tp": 3.0
                     },
                     "Relation": {
                         "pr": 0.0,
@@ -6477,7 +6488,7 @@
                         "f": 0.0,
                         "fn": 9.0,
                         "numImages": 1.0,
-                        "fp": 4.0,
+                        "fp": 3.0,
                         "tp": 0.0
                     },
                     "Cardinality": {
@@ -6486,7 +6497,7 @@
                         "f": 0.0,
                         "fn": 1.0,
                         "numImages": 1.0,
-                        "fp": 1.0,
+                        "fp": 0.0,
                         "tp": 0.0
                     },
                     "Attribute": {
@@ -6513,17 +6524,17 @@
                         "f": NaN,
                         "fn": 0.0,
                         "numImages": 1.0,
-                        "fp": 1.0,
+                        "fp": 0.0,
                         "tp": 0.0
                     },
                     "Object": {
-                        "pr": 0.5714285714285714,
-                        "re": 0.3333333333333333,
-                        "f": 0.4210526315789474,
-                        "fn": 8.0,
+                        "pr": 0.6,
+                        "re": 0.25,
+                        "f": 0.35294117647058826,
+                        "fn": 9.0,
                         "numImages": 1.0,
-                        "fp": 3.0,
-                        "tp": 4.0
+                        "fp": 2.0,
+                        "tp": 3.0
                     }
                 },
                 "ROUGE_L": 0.44976958525345617,
@@ -6536,8 +6547,8 @@
             "caption": "The image shows a colorful kite flying in the sky with a cityscape in the background.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "car",
                 "kite",
+                "car",
                 "person"
             ],
             "mscoco_generated_words": [
@@ -6642,24 +6653,16 @@
         },
         {
             "image_id": 524681,
-            "caption": "A group of people are standing on a hill, looking up at a plane flying in the sky.",
-            "mscoco_hallucinated_words": [
-                [
-                    "plane",
-                    "airplane"
-                ]
-            ],
+            "caption": "A group of people are standing on a hill, looking up at a paragl flying in the sky.",
+            "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
                 "kite",
                 "person"
             ],
             "mscoco_generated_words": [
-                "person",
-                "airplane"
+                "person"
             ],
-            "hallucination_idxs": [
-                14
-            ],
+            "hallucination_idxs": [],
             "words": [
                 "a",
                 "group",
@@ -6675,7 +6678,7 @@
                 "up",
                 "at",
                 "a",
-                "plane",
+                "paragl",
                 "flying",
                 "in",
                 "the",
@@ -6688,7 +6691,7 @@
                 "Bleu_3": 0.2998546863243232,
                 "Bleu_4": 0.20590188177204233,
                 "METEOR": 0.28517591762526895,
-                "CIDEr": 0.34527968043635204,
+                "CIDEr": 0.3372153923252915,
                 "SPICE": {
                     "All": {
                         "pr": 0.3076923076923077,
@@ -6755,18 +6758,18 @@
                     }
                 },
                 "ROUGE_L": 0.5271604938271606,
-                "CHAIRs": 1,
-                "CHAIRi": 0.5
+                "CHAIRs": 0,
+                "CHAIRi": 0.0
             }
         },
         {
             "image_id": 265816,
-            "caption": "A man in a white suit and black top hat is sitting on the back of a white carriage with a white horse pulling it down the street in front of a building with a red roof.",
+            "caption": "A man in a white suit and hat is sitting on the back of a horse drawn carriage in front of a building with a red roof.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
                 "person",
-                "potted plant",
-                "horse"
+                "horse",
+                "potted plant"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -6781,8 +6784,6 @@
                 "white",
                 "suit",
                 "and",
-                "black",
-                "top",
                 "hat",
                 "is",
                 "sitting",
@@ -6791,17 +6792,9 @@
                 "back",
                 "of",
                 "a",
-                "white",
-                "carriage",
-                "with",
-                "a",
-                "white",
                 "horse",
-                "pulling",
-                "it",
-                "down",
-                "the",
-                "street",
+                "drawn",
+                "carriage",
                 "in",
                 "front",
                 "of",
@@ -6814,12 +6807,12 @@
                 "."
             ],
             "metrics": {
-                "Bleu_1": 0.5405405405259314,
-                "Bleu_2": 0.4244763599663773,
-                "Bleu_3": 0.3453369002814703,
-                "Bleu_4": 0.2638320235452183,
-                "METEOR": 0.33809305325278555,
-                "CIDEr": 0.00023705727218597262,
+                "Bleu_1": 0.6666666666419753,
+                "Bleu_2": 0.5547001962042897,
+                "Bleu_3": 0.4416635478366959,
+                "Bleu_4": 0.34616316657558927,
+                "METEOR": 0.3719139465068065,
+                "CIDEr": 0.07919617939417116,
                 "SPICE": {
                     "All": {
                         "pr": 0.4166666666666667,
@@ -6885,7 +6878,7 @@
                         "tp": 4.0
                     }
                 },
-                "ROUGE_L": 0.42957746478873243,
+                "ROUGE_L": 0.6208651399491094,
                 "CHAIRs": 0,
                 "CHAIRi": 0.0
             }
@@ -6895,10 +6888,10 @@
             "caption": "The image shows a ski slope with people skiing down it on a sunny day.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
+                "chair",
                 "person",
-                "skis",
                 "snowboard",
-                "chair"
+                "skis"
             ],
             "mscoco_generated_words": [
                 "skis",
@@ -7002,24 +6995,21 @@
         },
         {
             "image_id": 565776,
-            "caption": "The image shows a kitchen with white cabinets and countertops, black appliances, and a wooden island with a sink and stove.",
+            "caption": "The image shows a kitchen with white cabinets and countertops, black appliances, and a wooden island with pinky drawers.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "bowl",
-                "sink",
-                "potted plant",
-                "vase",
                 "apple",
-                "dining table",
                 "oven",
+                "sink",
                 "spoon",
                 "refrigerator",
-                "cup"
+                "vase",
+                "cup",
+                "dining table",
+                "potted plant",
+                "bowl"
             ],
-            "mscoco_generated_words": [
-                "sink",
-                "oven"
-            ],
+            "mscoco_generated_words": [],
             "hallucination_idxs": [],
             "words": [
                 "the",
@@ -7041,19 +7031,17 @@
                 "wooden",
                 "island",
                 "with",
-                "a",
-                "sink",
-                "and",
-                "stove",
+                "pinky",
+                "drawer",
                 "."
             ],
             "metrics": {
-                "Bleu_1": 0.6190476190181406,
-                "Bleu_2": 0.39339789621552007,
-                "Bleu_3": 0.2012040979204394,
-                "Bleu_4": 2.5936387735224197e-05,
-                "METEOR": 0.21392694772021764,
-                "CIDEr": 0.2255473138475395,
+                "Bleu_1": 0.5263157894459835,
+                "Bleu_2": 0.2961744388635251,
+                "Bleu_3": 0.17280199114053302,
+                "Bleu_4": 2.3830412563888828e-05,
+                "METEOR": 0.1941369036068685,
+                "CIDEr": 0.33279942936302553,
                 "SPICE": {
                     "All": {
                         "pr": 0.46153846153846156,
@@ -7119,7 +7107,7 @@
                         "tp": 4.0
                     }
                 },
-                "ROUGE_L": 0.44202898550724634,
+                "ROUGE_L": 0.38812301166489926,
                 "CHAIRs": 0,
                 "CHAIRi": 0.0
             }
@@ -7129,16 +7117,16 @@
             "caption": "A woman is sitting at a table with a plate of food in front of her.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "fork",
-                "bowl",
-                "person",
-                "dining table",
-                "knife",
-                "spoon",
-                "broccoli",
-                "cup",
                 "bottle",
-                "sandwich"
+                "person",
+                "fork",
+                "knife",
+                "broccoli",
+                "spoon",
+                "sandwich",
+                "dining table",
+                "cup",
+                "bowl"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -7251,9 +7239,9 @@
                 ]
             ],
             "mscoco_gt_words": [
+                "dog",
                 "oven",
-                "person",
-                "dog"
+                "person"
             ],
             "mscoco_generated_words": [
                 "dog",
@@ -7298,22 +7286,22 @@
                 "CIDEr": 0.11175538408975158,
                 "SPICE": {
                     "All": {
-                        "pr": 0.2727272727272727,
-                        "re": 0.10714285714285714,
-                        "f": 0.15384615384615383,
-                        "fn": 25.0,
+                        "pr": 0.35714285714285715,
+                        "re": 0.17857142857142858,
+                        "f": 0.2380952380952381,
+                        "fn": 23.0,
                         "numImages": 1.0,
-                        "fp": 8.0,
-                        "tp": 3.0
+                        "fp": 9.0,
+                        "tp": 5.0
                     },
                     "Relation": {
-                        "pr": 0.0,
-                        "re": 0.0,
-                        "f": 0.0,
-                        "fn": 13.0,
+                        "pr": 0.2,
+                        "re": 0.07692307692307693,
+                        "f": 0.1111111111111111,
+                        "fn": 12.0,
                         "numImages": 1.0,
-                        "fp": 3.0,
-                        "tp": 0.0
+                        "fp": 4.0,
+                        "tp": 1.0
                     },
                     "Cardinality": {
                         "pr": NaN,
@@ -7330,7 +7318,7 @@
                         "f": 0.0,
                         "fn": 5.0,
                         "numImages": 1.0,
-                        "fp": 2.0,
+                        "fp": 3.0,
                         "tp": 0.0
                     },
                     "Size": {
@@ -7348,17 +7336,17 @@
                         "f": NaN,
                         "fn": 0.0,
                         "numImages": 1.0,
-                        "fp": 0.0,
+                        "fp": 1.0,
                         "tp": 0.0
                     },
                     "Object": {
-                        "pr": 0.5,
-                        "re": 0.3,
-                        "f": 0.37499999999999994,
-                        "fn": 7.0,
+                        "pr": 0.6666666666666666,
+                        "re": 0.4,
+                        "f": 0.5,
+                        "fn": 6.0,
                         "numImages": 1.0,
-                        "fp": 3.0,
-                        "tp": 3.0
+                        "fp": 2.0,
+                        "tp": 4.0
                     }
                 },
                 "ROUGE_L": 0.407119021134594,
@@ -7368,11 +7356,11 @@
         },
         {
             "image_id": 20536,
-            "caption": "The image shows a white toilet with a roll of toilet paper on the floor next to it.",
+            "caption": "The image shows a toilet with a roll of toilet paper on the floor next to it.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "bowl",
-                "toilet"
+                "toilet",
+                "bowl"
             ],
             "mscoco_generated_words": [
                 "toilet",
@@ -7384,7 +7372,6 @@
                 "image",
                 "show",
                 "a",
-                "white",
                 "toilet",
                 "with",
                 "a",
@@ -7401,12 +7388,12 @@
                 "."
             ],
             "metrics": {
-                "Bleu_1": 0.7222222221820989,
-                "Bleu_2": 0.545330744485416,
-                "Bleu_3": 0.3820384543027434,
-                "Bleu_4": 4.390939918686217e-05,
-                "METEOR": 0.3771062052307364,
-                "CIDEr": 0.787266296305391,
+                "Bleu_1": 0.7058823528996541,
+                "Bleu_2": 0.5144957553963163,
+                "Bleu_3": 0.37548955666810835,
+                "Bleu_4": 4.4097745638572724e-05,
+                "METEOR": 0.405464701815106,
+                "CIDEr": 0.9265407920838664,
                 "SPICE": {
                     "All": {
                         "pr": 0.5,
@@ -7472,7 +7459,7 @@
                         "tp": 3.0
                     }
                 },
-                "ROUGE_L": 0.648936170212766,
+                "ROUGE_L": 0.6686967113276492,
                 "CHAIRs": 0,
                 "CHAIRi": 0.0
             }
@@ -7583,45 +7570,43 @@
         },
         {
             "image_id": 18014,
-            "caption": "The image shows a pizza with various toppings, including vegetables and meat, sitting in a blue box.",
+            "caption": "The pizza box has a slice of pizza with vegetables and meat on top of it.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "dining table",
-                "pizza"
+                "pizza",
+                "dining table"
             ],
             "mscoco_generated_words": [
+                "pizza",
                 "pizza"
             ],
             "hallucination_idxs": [],
             "words": [
                 "the",
-                "image",
-                "show",
+                "pizza",
+                "box",
+                "ha",
                 "a",
+                "slouse",
+                "of",
                 "pizza",
                 "with",
-                "variou",
-                "topping",
-                ",",
-                "including",
                 "vegetable",
                 "and",
                 "meat",
-                ",",
-                "sitting",
-                "in",
-                "a",
-                "blue",
-                "box",
+                "on",
+                "top",
+                "of",
+                "it",
                 "."
             ],
             "metrics": {
-                "Bleu_1": 0.6470588234913496,
-                "Bleu_2": 0.4021998332455238,
-                "Bleu_3": 0.27836043274885724,
-                "Bleu_4": 3.5230890315089664e-05,
-                "METEOR": 0.2578964347608675,
-                "CIDEr": 0.42942057518263804,
+                "Bleu_1": 0.6874999999570314,
+                "Bleu_2": 0.42817441926118477,
+                "Bleu_3": 2.357062687511784e-06,
+                "Bleu_4": 5.6336843687375215e-09,
+                "METEOR": 0.288263887173835,
+                "CIDEr": 0.5992812025555126,
                 "SPICE": {
                     "All": {
                         "pr": 0.5555555555555556,
@@ -7687,7 +7672,7 @@
                         "tp": 4.0
                     }
                 },
-                "ROUGE_L": 0.5611038107752957,
+                "ROUGE_L": 0.5618421052631578,
                 "CHAIRs": 0,
                 "CHAIRi": 0.0
             }
@@ -7697,9 +7682,9 @@
             "caption": "A group of people are standing on a beach with kayaks in the water.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "cell phone",
                 "boat",
-                "person"
+                "person",
+                "cell phone"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -7802,13 +7787,13 @@
         },
         {
             "image_id": 19608,
-            "caption": "A close-be bird stands on the edge of a paddling a red bicycle.",
+            "caption": "A heron stands on the edge of a paddling a red bicycle in the background.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "bicycle",
-                "bird",
+                "bench",
                 "person",
-                "bench"
+                "bird",
+                "bicycle"
             ],
             "mscoco_generated_words": [
                 "bird",
@@ -7817,8 +7802,7 @@
             "hallucination_idxs": [],
             "words": [
                 "a",
-                "close-be",
-                "bird",
+                "heron",
                 "stand",
                 "on",
                 "the",
@@ -7829,15 +7813,18 @@
                 "a",
                 "red",
                 "bicycle",
+                "in",
+                "the",
+                "background",
                 "."
             ],
             "metrics": {
-                "Bleu_1": 0.7692307691124263,
-                "Bleu_2": 0.5063696834623075,
-                "Bleu_3": 0.28565877482850804,
-                "Bleu_4": 3.9073802488089004e-05,
-                "METEOR": 0.21701996068600507,
-                "CIDEr": 0.7535252357878399,
+                "Bleu_1": 0.7333333332355557,
+                "Bleu_2": 0.457737708154942,
+                "Bleu_3": 0.25259805940976277,
+                "Bleu_4": 3.404295069390706e-05,
+                "METEOR": 0.19277332550689316,
+                "CIDEr": 0.248183737770171,
                 "SPICE": {
                     "All": {
                         "pr": 0.3,
@@ -7903,7 +7890,7 @@
                         "tp": 2.0
                     }
                 },
-                "ROUGE_L": 0.38461538461538464,
+                "ROUGE_L": 0.4535315985130111,
                 "CHAIRs": 0,
                 "CHAIRi": 0.0
             }
@@ -7948,13 +7935,13 @@
                 "CIDEr": 0.9216715268243947,
                 "SPICE": {
                     "All": {
-                        "pr": 0.0,
-                        "re": 0.0,
-                        "f": 0.0,
-                        "fn": 18.0,
+                        "pr": 0.1,
+                        "re": 0.05555555555555555,
+                        "f": 0.07142857142857142,
+                        "fn": 17.0,
                         "numImages": 1.0,
                         "fp": 9.0,
-                        "tp": 0.0
+                        "tp": 1.0
                     },
                     "Relation": {
                         "pr": 0.0,
@@ -7980,7 +7967,7 @@
                         "f": 0.0,
                         "fn": 7.0,
                         "numImages": 1.0,
-                        "fp": 1.0,
+                        "fp": 2.0,
                         "tp": 0.0
                     },
                     "Size": {
@@ -8002,13 +7989,13 @@
                         "tp": 0.0
                     },
                     "Object": {
-                        "pr": 0.0,
-                        "re": 0.0,
-                        "f": 0.0,
-                        "fn": 7.0,
+                        "pr": 0.25,
+                        "re": 0.14285714285714285,
+                        "f": 0.18181818181818182,
+                        "fn": 6.0,
                         "numImages": 1.0,
-                        "fp": 4.0,
-                        "tp": 0.0
+                        "fp": 3.0,
+                        "tp": 1.0
                     }
                 },
                 "ROUGE_L": 0.4982497082847141,
@@ -8018,7 +8005,7 @@
         },
         {
             "image_id": 437594,
-            "caption": "A young woman is sitting at a desk in front of a brick wall, looking at a laptop screen with a serious expression on her face.",
+            "caption": "A person is sitting at a desk in front of a laptop computer, looking at the screen.",
             "mscoco_hallucinated_words": [
                 [
                     "desk",
@@ -8026,9 +8013,9 @@
                 ]
             ],
             "mscoco_gt_words": [
-                "laptop",
                 "keyboard",
-                "person"
+                "person",
+                "laptop"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -8036,12 +8023,11 @@
                 "laptop"
             ],
             "hallucination_idxs": [
-                7
+                6
             ],
             "words": [
                 "a",
-                "young",
-                "woman",
+                "person",
                 "is",
                 "sitting",
                 "at",
@@ -8051,30 +8037,21 @@
                 "front",
                 "of",
                 "a",
-                "brick",
-                "wall",
+                "laptop computer",
                 ",",
                 "looking",
                 "at",
-                "a",
-                "laptop",
+                "the",
                 "screen",
-                "with",
-                "a",
-                "seriou",
-                "expression",
-                "on",
-                "her",
-                "face",
                 "."
             ],
             "metrics": {
-                "Bleu_1": 0.5384615384408284,
-                "Bleu_2": 0.3882901373424275,
-                "Bleu_3": 0.2929007539136643,
-                "Bleu_4": 0.23927026017243327,
-                "METEOR": 0.3012393120680294,
-                "CIDEr": 0.10392776903902134,
+                "Bleu_1": 0.6470588234913496,
+                "Bleu_2": 0.5320603680596521,
+                "Bleu_3": 0.45526771682715167,
+                "Bleu_4": 0.28652870217135185,
+                "METEOR": 0.32288262939282325,
+                "CIDEr": 0.7829739958682893,
                 "SPICE": {
                     "All": {
                         "pr": 0.18181818181818182,
@@ -8140,7 +8117,7 @@
                         "tp": 2.0
                     }
                 },
-                "ROUGE_L": 0.48327464788732394,
+                "ROUGE_L": 0.5694282380396732,
                 "CHAIRs": 1,
                 "CHAIRi": 0.3333333333333333
             }
@@ -8150,10 +8127,10 @@
             "caption": "A group of people are walking through a park with benches and trees.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "handbag",
                 "bench",
+                "person",
                 "bird",
-                "person"
+                "handbag"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -8185,12 +8162,12 @@
                 "CIDEr": 2.2907704700473848,
                 "SPICE": {
                     "All": {
-                        "pr": 0.2857142857142857,
+                        "pr": 0.4444444444444444,
                         "re": 0.17391304347826086,
-                        "f": 0.2162162162162162,
+                        "f": 0.25,
                         "fn": 19.0,
                         "numImages": 1.0,
-                        "fp": 10.0,
+                        "fp": 5.0,
                         "tp": 4.0
                     },
                     "Relation": {
@@ -8199,7 +8176,7 @@
                         "f": 0.0,
                         "fn": 6.0,
                         "numImages": 1.0,
-                        "fp": 5.0,
+                        "fp": 3.0,
                         "tp": 0.0
                     },
                     "Cardinality": {
@@ -8212,12 +8189,12 @@
                         "tp": 0.0
                     },
                     "Attribute": {
-                        "pr": 0.25,
+                        "pr": 1.0,
                         "re": 0.16666666666666666,
-                        "f": 0.2,
+                        "f": 0.2857142857142857,
                         "fn": 5.0,
                         "numImages": 1.0,
-                        "fp": 3.0,
+                        "fp": 0.0,
                         "tp": 1.0
                     },
                     "Size": {
@@ -8259,9 +8236,9 @@
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
                 "dining table",
+                "cat",
                 "bed",
-                "suitcase",
-                "cat"
+                "suitcase"
             ],
             "mscoco_generated_words": [
                 "cat",
@@ -8362,48 +8339,43 @@
         },
         {
             "image_id": 530624,
-            "caption": "The image shows a brown and white dog lying under a floral quilt, its head peeking out from under the blanket.",
+            "caption": "The black and brown dog is curled up under the covers on a floral patterned bed.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "bed",
-                "dog"
+                "dog",
+                "bed"
             ],
             "mscoco_generated_words": [
-                "dog"
+                "dog",
+                "bed"
             ],
             "hallucination_idxs": [],
             "words": [
                 "the",
-                "image",
-                "show",
-                "a",
-                "brown",
+                "black",
                 "and",
-                "white",
+                "brown",
                 "dog",
-                "lying",
-                "under",
-                "a",
-                "floral",
-                "quilt",
-                ",",
-                "it",
-                "head",
-                "peeking",
-                "out",
-                "from",
+                "is",
+                "curled",
+                "up",
                 "under",
                 "the",
-                "blanket",
+                "cover",
+                "on",
+                "a",
+                "floral",
+                "patterned",
+                "bed",
                 "."
             ],
             "metrics": {
-                "Bleu_1": 0.38095238093424044,
-                "Bleu_2": 0.23904572185521109,
-                "Bleu_3": 1.443453451904539e-06,
-                "Bleu_4": 3.5952902855672943e-09,
-                "METEOR": 0.2592180201908754,
-                "CIDEr": 0.08258192232549705,
+                "Bleu_1": 0.6249999999609376,
+                "Bleu_2": 0.40824829043749705,
+                "Bleu_3": 0.22833557018287956,
+                "Bleu_4": 3.0934588292167495e-05,
+                "METEOR": 0.36126276959671677,
+                "CIDEr": 0.5740538067120191,
                 "SPICE": {
                     "All": {
                         "pr": 0.26666666666666666,
@@ -8469,7 +8441,7 @@
                         "tp": 2.0
                     }
                 },
-                "ROUGE_L": 0.4135593220338983,
+                "ROUGE_L": 0.4212707182320442,
                 "CHAIRs": 0,
                 "CHAIRi": 0.0
             }
@@ -8479,8 +8451,8 @@
             "caption": "A group of young men play soccer on a dusty field at night.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "sports ball",
-                "person"
+                "person",
+                "sports ball"
             ],
             "mscoco_generated_words": [
                 "person"
@@ -8584,14 +8556,14 @@
             "caption": "The image shows a group of people sitting at a table in a restaurant, enjoying pizza and drinks.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "bowl",
+                "bottle",
                 "pizza",
                 "person",
+                "spoon",
                 "chair",
                 "dining table",
-                "spoon",
-                "bottle",
-                "cup"
+                "cup",
+                "bowl"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -8630,22 +8602,22 @@
                 "CIDEr": 0.3665164692635907,
                 "SPICE": {
                     "All": {
-                        "pr": 0.5,
-                        "re": 0.14285714285714285,
-                        "f": 0.22222222222222224,
-                        "fn": 24.0,
+                        "pr": 0.25,
+                        "re": 0.10714285714285714,
+                        "f": 0.15,
+                        "fn": 25.0,
                         "numImages": 1.0,
-                        "fp": 4.0,
-                        "tp": 4.0
+                        "fp": 9.0,
+                        "tp": 3.0
                     },
                     "Relation": {
-                        "pr": 0.25,
-                        "re": 0.08333333333333333,
-                        "f": 0.125,
-                        "fn": 11.0,
+                        "pr": 0.0,
+                        "re": 0.0,
+                        "f": 0.0,
+                        "fn": 12.0,
                         "numImages": 1.0,
-                        "fp": 3.0,
-                        "tp": 1.0
+                        "fp": 5.0,
+                        "tp": 0.0
                     },
                     "Cardinality": {
                         "pr": NaN,
@@ -8662,7 +8634,7 @@
                         "f": 0.0,
                         "fn": 6.0,
                         "numImages": 1.0,
-                        "fp": 0.0,
+                        "fp": 2.0,
                         "tp": 0.0
                     },
                     "Size": {
@@ -8680,16 +8652,16 @@
                         "f": 0.0,
                         "fn": 1.0,
                         "numImages": 1.0,
-                        "fp": 0.0,
+                        "fp": 1.0,
                         "tp": 0.0
                     },
                     "Object": {
-                        "pr": 0.75,
+                        "pr": 0.6,
                         "re": 0.3,
-                        "f": 0.4285714285714285,
+                        "f": 0.4,
                         "fn": 7.0,
                         "numImages": 1.0,
-                        "fp": 1.0,
+                        "fp": 2.0,
                         "tp": 3.0
                     }
                 },
@@ -8700,16 +8672,18 @@
         },
         {
             "image_id": 482742,
-            "caption": "A group of a man in the middle of a city street, with a red and white striped pole on the sidewalk.",
+            "caption": "A group of a man rider on a bicycle riding down a street with buildings on either side.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "handbag",
-                "bicycle",
+                "person",
                 "traffic light",
-                "person"
+                "bicycle",
+                "handbag"
             ],
             "mscoco_generated_words": [
-                "person"
+                "person",
+                "person",
+                "bicycle"
             ],
             "hallucination_idxs": [],
             "words": [
@@ -8718,42 +8692,37 @@
                 "of",
                 "a",
                 "man",
-                "in",
-                "the",
-                "middle",
-                "of",
-                "a",
-                "city",
-                "street",
-                ",",
-                "with",
-                "a",
-                "red",
-                "and",
-                "white",
-                "striped",
-                "pole",
+                "rider",
                 "on",
-                "the",
-                "sidewalk",
+                "a",
+                "bicycle",
+                "riding",
+                "down",
+                "a",
+                "street",
+                "with",
+                "building",
+                "on",
+                "either",
+                "side",
                 "."
             ],
             "metrics": {
-                "Bleu_1": 0.5454545454049587,
-                "Bleu_2": 0.2791452630938624,
-                "Bleu_3": 1.5735365790321477e-06,
-                "Bleu_4": 3.784157746406081e-09,
-                "METEOR": 0.15384414047435188,
-                "CIDEr": 0.09935260894305814,
+                "Bleu_1": 0.5338249352185581,
+                "Bleu_2": 0.3171392687912844,
+                "Bleu_3": 0.17137865278305986,
+                "Bleu_4": 2.2767600241914113e-05,
+                "METEOR": 0.24334869836857764,
+                "CIDEr": 0.4230642329097982,
                 "SPICE": {
                     "All": {
-                        "pr": 0.13333333333333333,
-                        "re": 0.06060606060606061,
-                        "f": 0.08333333333333333,
-                        "fn": 31.0,
+                        "pr": 0.36363636363636365,
+                        "re": 0.12121212121212122,
+                        "f": 0.18181818181818182,
+                        "fn": 29.0,
                         "numImages": 1.0,
-                        "fp": 13.0,
-                        "tp": 2.0
+                        "fp": 7.0,
+                        "tp": 4.0
                     },
                     "Relation": {
                         "pr": 0.0,
@@ -8761,7 +8730,7 @@
                         "f": 0.0,
                         "fn": 13.0,
                         "numImages": 1.0,
-                        "fp": 5.0,
+                        "fp": 4.0,
                         "tp": 0.0
                     },
                     "Cardinality": {
@@ -8779,7 +8748,7 @@
                         "f": 0.0,
                         "fn": 7.0,
                         "numImages": 1.0,
-                        "fp": 4.0,
+                        "fp": 1.0,
                         "tp": 0.0
                     },
                     "Size": {
@@ -8797,20 +8766,20 @@
                         "f": NaN,
                         "fn": 0.0,
                         "numImages": 1.0,
-                        "fp": 2.0,
+                        "fp": 0.0,
                         "tp": 0.0
                     },
                     "Object": {
-                        "pr": 0.3333333333333333,
-                        "re": 0.15384615384615385,
-                        "f": 0.21052631578947367,
-                        "fn": 11.0,
+                        "pr": 0.6666666666666666,
+                        "re": 0.3076923076923077,
+                        "f": 0.42105263157894735,
+                        "fn": 9.0,
                         "numImages": 1.0,
-                        "fp": 4.0,
-                        "tp": 2.0
+                        "fp": 2.0,
+                        "tp": 4.0
                     }
                 },
-                "ROUGE_L": 0.35952848722986247,
+                "ROUGE_L": 0.3765432098765432,
                 "CHAIRs": 0,
                 "CHAIRi": 0.0
             }
@@ -8820,8 +8789,8 @@
             "caption": "There are three bananas on the counter, each with a different sticker on them.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "banana",
-                "bottle"
+                "bottle",
+                "banana"
             ],
             "mscoco_generated_words": [
                 "banana"
@@ -8960,12 +8929,12 @@
                 "CIDEr": 0.1774195225103289,
                 "SPICE": {
                     "All": {
-                        "pr": 0.3333333333333333,
+                        "pr": 0.375,
                         "re": 0.12,
-                        "f": 0.1764705882352941,
+                        "f": 0.18181818181818182,
                         "fn": 22.0,
                         "numImages": 1.0,
-                        "fp": 6.0,
+                        "fp": 5.0,
                         "tp": 3.0
                     },
                     "Relation": {
@@ -8992,7 +8961,7 @@
                         "f": 0.0,
                         "fn": 10.0,
                         "numImages": 1.0,
-                        "fp": 2.0,
+                        "fp": 1.0,
                         "tp": 0.0
                     },
                     "Size": {
@@ -9033,8 +9002,8 @@
             "caption": "A small brown dog is sitting in a large, furry, and padded bed with a white collar around its neck.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "bed",
-                "dog"
+                "dog",
+                "bed"
             ],
             "mscoco_generated_words": [
                 "dog",
@@ -9180,13 +9149,13 @@
                 "CIDEr": 0.8986201797075721,
                 "SPICE": {
                     "All": {
-                        "pr": 0.14285714285714285,
-                        "re": 0.15789473684210525,
-                        "f": 0.15,
-                        "fn": 16.0,
+                        "pr": 1.0,
+                        "re": 0.21052631578947367,
+                        "f": 0.34782608695652173,
+                        "fn": 15.0,
                         "numImages": 1.0,
-                        "fp": 18.0,
-                        "tp": 3.0
+                        "fp": 0.0,
+                        "tp": 4.0
                     },
                     "Relation": {
                         "pr": 0.0,
@@ -9194,7 +9163,7 @@
                         "f": 0.0,
                         "fn": 5.0,
                         "numImages": 1.0,
-                        "fp": 5.0,
+                        "fp": 0.0,
                         "tp": 0.0
                     },
                     "Cardinality": {
@@ -9207,13 +9176,13 @@
                         "tp": 0.0
                     },
                     "Attribute": {
-                        "pr": 0.1,
-                        "re": 0.1111111111111111,
-                        "f": 0.10526315789473685,
-                        "fn": 8.0,
+                        "pr": 1.0,
+                        "re": 0.2222222222222222,
+                        "f": 0.3636363636363636,
+                        "fn": 7.0,
                         "numImages": 1.0,
-                        "fp": 9.0,
-                        "tp": 1.0
+                        "fp": 0.0,
+                        "tp": 2.0
                     },
                     "Size": {
                         "pr": NaN,
@@ -9221,25 +9190,25 @@
                         "f": NaN,
                         "fn": 0.0,
                         "numImages": 1.0,
-                        "fp": 1.0,
+                        "fp": 0.0,
                         "tp": 0.0
                     },
                     "Color": {
-                        "pr": 0.3333333333333333,
-                        "re": 0.3333333333333333,
-                        "f": 0.3333333333333333,
-                        "fn": 2.0,
+                        "pr": 1.0,
+                        "re": 0.6666666666666666,
+                        "f": 0.8,
+                        "fn": 1.0,
                         "numImages": 1.0,
-                        "fp": 2.0,
-                        "tp": 1.0
+                        "fp": 0.0,
+                        "tp": 2.0
                     },
                     "Object": {
-                        "pr": 0.3333333333333333,
+                        "pr": 1.0,
                         "re": 0.4,
-                        "f": 0.3636363636363636,
+                        "f": 0.5714285714285715,
                         "fn": 3.0,
                         "numImages": 1.0,
-                        "fp": 4.0,
+                        "fp": 0.0,
                         "tp": 2.0
                     }
                 },
@@ -9486,13 +9455,13 @@
                 "CIDEr": 0.14329666946406688,
                 "SPICE": {
                     "All": {
-                        "pr": 0.25,
-                        "re": 0.17647058823529413,
-                        "f": 0.20689655172413793,
-                        "fn": 14.0,
+                        "pr": 0.2222222222222222,
+                        "re": 0.11764705882352941,
+                        "f": 0.15384615384615383,
+                        "fn": 15.0,
                         "numImages": 1.0,
-                        "fp": 9.0,
-                        "tp": 3.0
+                        "fp": 7.0,
+                        "tp": 2.0
                     },
                     "Relation": {
                         "pr": 0.0,
@@ -9500,7 +9469,7 @@
                         "f": 0.0,
                         "fn": 7.0,
                         "numImages": 1.0,
-                        "fp": 5.0,
+                        "fp": 3.0,
                         "tp": 0.0
                     },
                     "Cardinality": {
@@ -9540,13 +9509,13 @@
                         "tp": 0.0
                     },
                     "Object": {
-                        "pr": 0.6,
-                        "re": 0.75,
-                        "f": 0.6666666666666665,
-                        "fn": 1.0,
+                        "pr": 0.5,
+                        "re": 0.5,
+                        "f": 0.5,
+                        "fn": 2.0,
                         "numImages": 1.0,
                         "fp": 2.0,
-                        "tp": 3.0
+                        "tp": 2.0
                     }
                 },
                 "ROUGE_L": 0.3727087576374745,
@@ -9556,7 +9525,7 @@
         },
         {
             "image_id": 304361,
-            "caption": "The little girl is holding a remote control in her hands and looking at it intently.",
+            "caption": "The little girl is holding a remote in her hands and looking at it with a curious expression on her face.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
                 "person",
@@ -9575,7 +9544,6 @@
                 "holding",
                 "a",
                 "remote",
-                "control",
                 "in",
                 "her",
                 "hand",
@@ -9583,16 +9551,22 @@
                 "looking",
                 "at",
                 "it",
-                "intently",
+                "with",
+                "a",
+                "curiou",
+                "expression",
+                "on",
+                "her",
+                "face",
                 "."
             ],
             "metrics": {
-                "Bleu_1": 0.6249999999609376,
-                "Bleu_2": 0.6123724356562456,
-                "Bleu_3": 0.5436901864650923,
-                "Bleu_4": 0.47156632085791905,
-                "METEOR": 0.4813891063335566,
-                "CIDEr": 1.6965704386234575,
+                "Bleu_1": 0.4761904761678005,
+                "Bleu_2": 0.4082482904439367,
+                "Bleu_3": 0.2974441746146045,
+                "Bleu_4": 0.19554016375455724,
+                "METEOR": 0.34843457895251023,
+                "CIDEr": 0.28594998698648455,
                 "SPICE": {
                     "All": {
                         "pr": 0.5555555555555556,
@@ -9658,7 +9632,7 @@
                         "tp": 3.0
                     }
                 },
-                "ROUGE_L": 0.5897790055248618,
+                "ROUGE_L": 0.43109540636042404,
                 "CHAIRs": 0,
                 "CHAIRi": 0.0
             }
@@ -9668,9 +9642,9 @@
             "caption": "The image shows a person wearing a yellow and carrying a banana on their back while riding a bicycle on a street.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
+                "person",
                 "bicycle",
-                "banana",
-                "person"
+                "banana"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -9785,8 +9759,8 @@
             "caption": "A group of people are standing on the beach next to a surfboard.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "surfboard",
-                "person"
+                "person",
+                "surfboard"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -9818,12 +9792,12 @@
                 "CIDEr": 2.0172247458582664,
                 "SPICE": {
                     "All": {
-                        "pr": 0.3333333333333333,
+                        "pr": 0.42857142857142855,
                         "re": 0.13043478260869565,
-                        "f": 0.18750000000000003,
+                        "f": 0.2,
                         "fn": 20.0,
                         "numImages": 1.0,
-                        "fp": 6.0,
+                        "fp": 4.0,
                         "tp": 3.0
                     },
                     "Relation": {
@@ -9832,7 +9806,7 @@
                         "f": 0.0,
                         "fn": 3.0,
                         "numImages": 1.0,
-                        "fp": 2.0,
+                        "fp": 1.0,
                         "tp": 0.0
                     },
                     "Cardinality": {
@@ -9872,12 +9846,12 @@
                         "tp": 0.0
                     },
                     "Object": {
-                        "pr": 0.5,
+                        "pr": 0.6666666666666666,
                         "re": 0.2222222222222222,
-                        "f": 0.30769230769230765,
+                        "f": 0.3333333333333333,
                         "fn": 7.0,
                         "numImages": 1.0,
-                        "fp": 2.0,
+                        "fp": 1.0,
                         "tp": 2.0
                     }
                 },
@@ -9925,12 +9899,12 @@
                 "CIDEr": 0.686526865589713,
                 "SPICE": {
                     "All": {
-                        "pr": 0.2727272727272727,
+                        "pr": 0.3,
                         "re": 0.14285714285714285,
-                        "f": 0.18749999999999997,
+                        "f": 0.19354838709677416,
                         "fn": 18.0,
                         "numImages": 1.0,
-                        "fp": 8.0,
+                        "fp": 7.0,
                         "tp": 3.0
                     },
                     "Relation": {
@@ -9952,12 +9926,12 @@
                         "tp": 0.0
                     },
                     "Attribute": {
-                        "pr": 0.3333333333333333,
+                        "pr": 0.5,
                         "re": 0.25,
-                        "f": 0.28571428571428575,
+                        "f": 0.3333333333333333,
                         "fn": 3.0,
                         "numImages": 1.0,
-                        "fp": 2.0,
+                        "fp": 1.0,
                         "tp": 1.0
                     },
                     "Size": {
@@ -9999,8 +9973,8 @@
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
                 "cake",
-                "airplane",
-                "person"
+                "person",
+                "airplane"
             ],
             "mscoco_generated_words": [
                 "cake",
@@ -10030,13 +10004,13 @@
                 "CIDEr": 1.95216585592244,
                 "SPICE": {
                     "All": {
-                        "pr": 0.3,
-                        "re": 0.1111111111111111,
-                        "f": 0.16216216216216217,
-                        "fn": 24.0,
+                        "pr": 0.4,
+                        "re": 0.14814814814814814,
+                        "f": 0.21621621621621623,
+                        "fn": 23.0,
                         "numImages": 1.0,
-                        "fp": 7.0,
-                        "tp": 3.0
+                        "fp": 6.0,
+                        "tp": 4.0
                     },
                     "Relation": {
                         "pr": 0.0,
@@ -10044,7 +10018,7 @@
                         "f": 0.0,
                         "fn": 9.0,
                         "numImages": 1.0,
-                        "fp": 3.0,
+                        "fp": 2.0,
                         "tp": 0.0
                     },
                     "Cardinality": {
@@ -10057,12 +10031,12 @@
                         "tp": 0.0
                     },
                     "Attribute": {
-                        "pr": 0.5,
+                        "pr": 0.3333333333333333,
                         "re": 0.1,
-                        "f": 0.16666666666666669,
+                        "f": 0.15384615384615383,
                         "fn": 9.0,
                         "numImages": 1.0,
-                        "fp": 1.0,
+                        "fp": 2.0,
                         "tp": 1.0
                     },
                     "Size": {
@@ -10080,17 +10054,17 @@
                         "f": 0.0,
                         "fn": 2.0,
                         "numImages": 1.0,
-                        "fp": 0.0,
+                        "fp": 1.0,
                         "tp": 0.0
                     },
                     "Object": {
-                        "pr": 0.4,
-                        "re": 0.25,
-                        "f": 0.3076923076923077,
-                        "fn": 6.0,
+                        "pr": 0.6,
+                        "re": 0.375,
+                        "f": 0.4615384615384615,
+                        "fn": 5.0,
                         "numImages": 1.0,
-                        "fp": 3.0,
-                        "tp": 2.0
+                        "fp": 2.0,
+                        "tp": 3.0
                     }
                 },
                 "ROUGE_L": 0.7584369449378331,
@@ -10108,11 +10082,11 @@
                 ]
             ],
             "mscoco_gt_words": [
-                "book",
                 "tv",
-                "chair",
                 "person",
                 "cat",
+                "book",
+                "chair",
                 "dining table"
             ],
             "mscoco_generated_words": [
@@ -10228,8 +10202,8 @@
             "caption": "The image shows a cartoon character holding a skateboard in front of a pile of leaves on the ground.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "skateboard",
-                "person"
+                "person",
+                "skateboard"
             ],
             "mscoco_generated_words": [
                 "skateboard"
@@ -10339,8 +10313,8 @@
             "caption": "The image shows two elephants standing on a rocky beach, with one of them holding a small rock in its trunk.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "elephant",
-                "person"
+                "person",
+                "elephant"
             ],
             "mscoco_generated_words": [
                 "elephant"
@@ -10380,13 +10354,13 @@
                 "CIDEr": 0.18120658992567898,
                 "SPICE": {
                     "All": {
-                        "pr": 0.25,
-                        "re": 0.21428571428571427,
-                        "f": 0.23076923076923075,
-                        "fn": 11.0,
+                        "pr": 0.5,
+                        "re": 0.2857142857142857,
+                        "f": 0.36363636363636365,
+                        "fn": 10.0,
                         "numImages": 1.0,
-                        "fp": 9.0,
-                        "tp": 3.0
+                        "fp": 4.0,
+                        "tp": 4.0
                     },
                     "Relation": {
                         "pr": 0.0,
@@ -10394,7 +10368,7 @@
                         "f": 0.0,
                         "fn": 6.0,
                         "numImages": 1.0,
-                        "fp": 4.0,
+                        "fp": 1.0,
                         "tp": 0.0
                     },
                     "Cardinality": {
@@ -10407,12 +10381,12 @@
                         "tp": 0.0
                     },
                     "Attribute": {
-                        "pr": 0.3333333333333333,
+                        "pr": 0.25,
                         "re": 1.0,
-                        "f": 0.5,
+                        "f": 0.4,
                         "fn": 0.0,
                         "numImages": 1.0,
-                        "fp": 2.0,
+                        "fp": 3.0,
                         "tp": 1.0
                     },
                     "Size": {
@@ -10434,13 +10408,13 @@
                         "tp": 1.0
                     },
                     "Object": {
-                        "pr": 0.4,
-                        "re": 0.2857142857142857,
-                        "f": 0.3333333333333333,
-                        "fn": 5.0,
+                        "pr": 1.0,
+                        "re": 0.42857142857142855,
+                        "f": 0.6,
+                        "fn": 4.0,
                         "numImages": 1.0,
-                        "fp": 3.0,
-                        "tp": 2.0
+                        "fp": 0.0,
+                        "tp": 3.0
                     }
                 },
                 "ROUGE_L": 0.3071500503524673,
@@ -10450,31 +10424,23 @@
         },
         {
             "image_id": 528705,
-            "caption": "A young girl is sitting on the back of a man's horse, holding a stuffed animal.",
-            "mscoco_hallucinated_words": [
-                [
-                    "horse",
-                    "horse"
-                ]
-            ],
+            "caption": "A young woman is sitting on the back of a person wearing a red coat, holding a stuffed animal.",
+            "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "bear",
-                "teddy bear",
                 "backpack",
-                "person"
+                "person",
+                "bear",
+                "teddy bear"
             ],
             "mscoco_generated_words": [
                 "person",
-                "person",
-                "horse"
+                "person"
             ],
-            "hallucination_idxs": [
-                12
-            ],
+            "hallucination_idxs": [],
             "words": [
                 "a",
                 "young",
-                "girl",
+                "woman",
                 "is",
                 "sitting",
                 "on",
@@ -10482,9 +10448,11 @@
                 "back",
                 "of",
                 "a",
-                "man",
-                "'",
-                "horse",
+                "person",
+                "wearing",
+                "a",
+                "red",
+                "coat",
                 ",",
                 "holding",
                 "a",
@@ -10493,12 +10461,12 @@
                 "."
             ],
             "metrics": {
-                "Bleu_1": 0.5882352940830451,
-                "Bleu_2": 0.3834824944004226,
-                "Bleu_3": 0.214026036710254,
-                "Bleu_4": 2.8927969314267106e-05,
-                "METEOR": 0.27179773825441,
-                "CIDEr": 0.37942134874595107,
+                "Bleu_1": 0.5789473683905818,
+                "Bleu_2": 0.4010220859664639,
+                "Bleu_3": 0.21149294627072776,
+                "Bleu_4": 2.7729492407550513e-05,
+                "METEOR": 0.26229432083292714,
+                "CIDEr": 0.2716978229558227,
                 "SPICE": {
                     "All": {
                         "pr": 0.45454545454545453,
@@ -10564,14 +10532,14 @@
                         "tp": 3.0
                     }
                 },
-                "ROUGE_L": 0.3885350318471337,
-                "CHAIRs": 1,
-                "CHAIRi": 0.3333333333333333
+                "ROUGE_L": 0.3652694610778443,
+                "CHAIRs": 0,
+                "CHAIRi": 0.0
             }
         },
         {
             "image_id": 319221,
-            "caption": "A server is carrying a tray of food to a table in a restaurant.",
+            "caption": "A server is carrying a tray of food to a table in a dimly lit room.",
             "mscoco_hallucinated_words": [
                 [
                     "table",
@@ -10579,13 +10547,13 @@
                 ]
             ],
             "mscoco_gt_words": [
-                "spoon",
                 "broccoli",
-                "fork",
-                "bowl",
-                "knife",
                 "person",
-                "tie"
+                "tie",
+                "spoon",
+                "fork",
+                "knife",
+                "bowl"
             ],
             "mscoco_generated_words": [
                 "dining table"
@@ -10607,16 +10575,18 @@
                 "table",
                 "in",
                 "a",
-                "restaurant",
+                "dimly",
+                "lit",
+                "room",
                 "."
             ],
             "metrics": {
-                "Bleu_1": 0.42857142854081637,
-                "Bleu_2": 0.18156825978717286,
-                "Bleu_3": 1.400552969760177e-06,
-                "Bleu_4": 3.975360175943345e-09,
-                "METEOR": 0.2327170227516634,
-                "CIDEr": 0.3237217847235973,
+                "Bleu_1": 0.3749999999765626,
+                "Bleu_2": 0.15811388299820756,
+                "Bleu_3": 1.2132137515201732e-06,
+                "Bleu_4": 3.4234749556315017e-09,
+                "METEOR": 0.22114823703850434,
+                "CIDEr": 0.22581578995980173,
                 "SPICE": {
                     "All": {
                         "pr": 0.16666666666666666,
@@ -10682,20 +10652,20 @@
                         "tp": 2.0
                     }
                 },
-                "ROUGE_L": 0.28683385579937304,
+                "ROUGE_L": 0.2659883720930233,
                 "CHAIRs": 1,
                 "CHAIRi": 1.0
             }
         },
         {
             "image_id": 338903,
-            "caption": "The image shows a bowl of cereal with bananas and milk on a wooden table.",
+            "caption": "The image shows a bowl of cereal with bananas and milk on a table.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
                 "spoon",
-                "banana",
+                "dining table",
                 "bowl",
-                "dining table"
+                "banana"
             ],
             "mscoco_generated_words": [
                 "bowl",
@@ -10717,17 +10687,16 @@
                 "milk",
                 "on",
                 "a",
-                "wooden",
                 "table",
                 "."
             ],
             "metrics": {
-                "Bleu_1": 0.7333333332844446,
-                "Bleu_2": 0.5117663156838228,
-                "Bleu_3": 0.3428283112126285,
-                "Bleu_4": 0.24072001288865766,
-                "METEOR": 0.39755823215296043,
-                "CIDEr": 1.2445550974153736,
+                "Bleu_1": 0.7857142856581634,
+                "Bleu_2": 0.6021937915518267,
+                "Bleu_3": 0.449232173148337,
+                "Bleu_4": 0.3013040489035573,
+                "METEOR": 0.42703145619203187,
+                "CIDEr": 1.548165451771727,
                 "SPICE": {
                     "All": {
                         "pr": 0.23809523809523808,
@@ -10793,7 +10762,7 @@
                         "tp": 3.0
                     }
                 },
-                "ROUGE_L": 0.6639455782312924,
+                "ROUGE_L": 0.6873239436619719,
                 "CHAIRs": 0,
                 "CHAIRi": 0.0
             }
@@ -10803,9 +10772,9 @@
             "caption": "The image shows a person holding a sandwich in their hand, with the bread visible on the plate.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
+                "hot dog",
                 "sandwich",
-                "person",
-                "hot dog"
+                "person"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -10921,14 +10890,14 @@
                 ]
             ],
             "mscoco_gt_words": [
-                "bowl",
-                "microwave",
-                "vase",
-                "potted plant",
                 "person",
-                "chair",
+                "microwave",
+                "couch",
+                "vase",
                 "cup",
-                "couch"
+                "chair",
+                "potted plant",
+                "bowl"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -10974,13 +10943,13 @@
                 "CIDEr": 0.2143622960898357,
                 "SPICE": {
                     "All": {
-                        "pr": 0.375,
-                        "re": 0.20689655172413793,
-                        "f": 0.26666666666666666,
-                        "fn": 23.0,
+                        "pr": 0.26666666666666666,
+                        "re": 0.13793103448275862,
+                        "f": 0.18181818181818182,
+                        "fn": 25.0,
                         "numImages": 1.0,
-                        "fp": 10.0,
-                        "tp": 6.0
+                        "fp": 11.0,
+                        "tp": 4.0
                     },
                     "Relation": {
                         "pr": 0.0,
@@ -10988,7 +10957,7 @@
                         "f": 0.0,
                         "fn": 7.0,
                         "numImages": 1.0,
-                        "fp": 6.0,
+                        "fp": 5.0,
                         "tp": 0.0
                     },
                     "Cardinality": {
@@ -11001,12 +10970,12 @@
                         "tp": 0.0
                     },
                     "Attribute": {
-                        "pr": 0.3333333333333333,
+                        "pr": 0.25,
                         "re": 0.1111111111111111,
-                        "f": 0.16666666666666666,
+                        "f": 0.15384615384615383,
                         "fn": 8.0,
                         "numImages": 1.0,
-                        "fp": 2.0,
+                        "fp": 3.0,
                         "tp": 1.0
                     },
                     "Size": {
@@ -11028,13 +10997,13 @@
                         "tp": 1.0
                     },
                     "Object": {
-                        "pr": 0.7142857142857143,
-                        "re": 0.38461538461538464,
-                        "f": 0.5,
-                        "fn": 8.0,
+                        "pr": 0.5,
+                        "re": 0.23076923076923078,
+                        "f": 0.3157894736842105,
+                        "fn": 10.0,
                         "numImages": 1.0,
-                        "fp": 2.0,
-                        "tp": 5.0
+                        "fp": 3.0,
+                        "tp": 3.0
                     }
                 },
                 "ROUGE_L": 0.6282183316168897,
@@ -11044,52 +11013,54 @@
         },
         {
             "image_id": 157756,
-            "caption": "The old brick building has a clock tower in the center of the town square, surrounded by shops and restaurants.",
+            "caption": "The old clock tower stands tall in the middle of the town square, its face illuminated by the streetlights at night.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "clock",
                 "person",
-                "bicycle",
-                "handbag",
-                "truck",
+                "car",
                 "traffic light",
-                "car"
+                "handbag",
+                "bicycle",
+                "truck",
+                "clock"
             ],
             "mscoco_generated_words": [
-                "clock"
+                "clock",
+                "traffic light"
             ],
             "hallucination_idxs": [],
             "words": [
                 "the",
                 "old",
-                "brick",
-                "building",
-                "ha",
-                "a",
                 "clock",
                 "tower",
+                "stand",
+                "tall",
                 "in",
                 "the",
-                "center",
+                "middle",
                 "of",
                 "the",
                 "town",
                 "square",
                 ",",
-                "surrounded",
+                "it",
+                "face",
+                "illuminated",
                 "by",
-                "shop",
-                "and",
-                "restaurant",
+                "the",
+                "streetlight",
+                "at",
+                "night",
                 "."
             ],
             "metrics": {
-                "Bleu_1": 0.3999999999800001,
-                "Bleu_2": 0.3244428422448761,
-                "Bleu_3": 0.25984142029224355,
-                "Bleu_4": 0.21314568969954792,
-                "METEOR": 0.32382312794771867,
-                "CIDEr": 0.5508408856230971,
+                "Bleu_1": 0.4761904761678005,
+                "Bleu_2": 0.377964472990779,
+                "Bleu_3": 0.2825464605197286,
+                "Bleu_4": 0.2237467707633438,
+                "METEOR": 0.31866370209498296,
+                "CIDEr": 0.4724091160265179,
                 "SPICE": {
                     "All": {
                         "pr": 0.15384615384615385,
@@ -11155,39 +11126,19 @@
                         "tp": 2.0
                     }
                 },
-                "ROUGE_L": 0.4581545064377682,
+                "ROUGE_L": 0.509926854754441,
                 "CHAIRs": 0,
                 "CHAIRi": 0.0
             }
         },
         {
             "image_id": 516508,
-            "caption": "The image shows a large, ornate clock hanging on the wall of a building with a large, ornate clock hanging on the wall of a building with a large, ornate clock hanging on the wall of a building with a large, ornate clock hanging on the wall of a with a large, ornate clock hanging on the wall of a with a large, ornate clock hanging on the wall of a with a large, ornate clock hanging on the wall of a with a large, ornate clock hanging on the wall of a with a large, ornate clock hanging on the wall of a with a large, ornate clock hanging on the wall of a with a large, ornate clock hanging on the wall of a with a large, ornate clock hanging on the wall of a with a large, ornate clock hanging on the wall of a with a large, ornate clock hanging on the wall of a with a large, ornate clock hanging on the wall of a with a large, ornate clock hanging on the wall of a with a large, ornate clock hanging on the wall of a with a large, ornate clock hanging on the wall of a with a large, ornate clock hanging on the wall of a with a large, ornate clock hanging on the wall of a with a large, ornate clock hanging on the wall of a with",
+            "caption": "The image shows a large, ornate clock hanging on the wall of a church.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
                 "clock"
             ],
             "mscoco_generated_words": [
-                "clock",
-                "clock",
-                "clock",
-                "clock",
-                "clock",
-                "clock",
-                "clock",
-                "clock",
-                "clock",
-                "clock",
-                "clock",
-                "clock",
-                "clock",
-                "clock",
-                "clock",
-                "clock",
-                "clock",
-                "clock",
-                "clock",
-                "clock",
                 "clock"
             ],
             "hallucination_idxs": [],
@@ -11206,266 +11157,24 @@
                 "wall",
                 "of",
                 "a",
-                "building",
-                "with",
-                "a",
-                "large",
-                ",",
-                "ornate",
-                "clock",
-                "hanging",
-                "on",
-                "the",
-                "wall",
-                "of",
-                "a",
-                "building",
-                "with",
-                "a",
-                "large",
-                ",",
-                "ornate",
-                "clock",
-                "hanging",
-                "on",
-                "the",
-                "wall",
-                "of",
-                "a",
-                "building",
-                "with",
-                "a",
-                "large",
-                ",",
-                "ornate",
-                "clock",
-                "hanging",
-                "on",
-                "the",
-                "wall",
-                "of",
-                "a",
-                "with",
-                "a",
-                "large",
-                ",",
-                "ornate",
-                "clock",
-                "hanging",
-                "on",
-                "the",
-                "wall",
-                "of",
-                "a",
-                "with",
-                "a",
-                "large",
-                ",",
-                "ornate",
-                "clock",
-                "hanging",
-                "on",
-                "the",
-                "wall",
-                "of",
-                "a",
-                "with",
-                "a",
-                "large",
-                ",",
-                "ornate",
-                "clock",
-                "hanging",
-                "on",
-                "the",
-                "wall",
-                "of",
-                "a",
-                "with",
-                "a",
-                "large",
-                ",",
-                "ornate",
-                "clock",
-                "hanging",
-                "on",
-                "the",
-                "wall",
-                "of",
-                "a",
-                "with",
-                "a",
-                "large",
-                ",",
-                "ornate",
-                "clock",
-                "hanging",
-                "on",
-                "the",
-                "wall",
-                "of",
-                "a",
-                "with",
-                "a",
-                "large",
-                ",",
-                "ornate",
-                "clock",
-                "hanging",
-                "on",
-                "the",
-                "wall",
-                "of",
-                "a",
-                "with",
-                "a",
-                "large",
-                ",",
-                "ornate",
-                "clock",
-                "hanging",
-                "on",
-                "the",
-                "wall",
-                "of",
-                "a",
-                "with",
-                "a",
-                "large",
-                ",",
-                "ornate",
-                "clock",
-                "hanging",
-                "on",
-                "the",
-                "wall",
-                "of",
-                "a",
-                "with",
-                "a",
-                "large",
-                ",",
-                "ornate",
-                "clock",
-                "hanging",
-                "on",
-                "the",
-                "wall",
-                "of",
-                "a",
-                "with",
-                "a",
-                "large",
-                ",",
-                "ornate",
-                "clock",
-                "hanging",
-                "on",
-                "the",
-                "wall",
-                "of",
-                "a",
-                "with",
-                "a",
-                "large",
-                ",",
-                "ornate",
-                "clock",
-                "hanging",
-                "on",
-                "the",
-                "wall",
-                "of",
-                "a",
-                "with",
-                "a",
-                "large",
-                ",",
-                "ornate",
-                "clock",
-                "hanging",
-                "on",
-                "the",
-                "wall",
-                "of",
-                "a",
-                "with",
-                "a",
-                "large",
-                ",",
-                "ornate",
-                "clock",
-                "hanging",
-                "on",
-                "the",
-                "wall",
-                "of",
-                "a",
-                "with",
-                "a",
-                "large",
-                ",",
-                "ornate",
-                "clock",
-                "hanging",
-                "on",
-                "the",
-                "wall",
-                "of",
-                "a",
-                "with",
-                "a",
-                "large",
-                ",",
-                "ornate",
-                "clock",
-                "hanging",
-                "on",
-                "the",
-                "wall",
-                "of",
-                "a",
-                "with",
-                "a",
-                "large",
-                ",",
-                "ornate",
-                "clock",
-                "hanging",
-                "on",
-                "the",
-                "wall",
-                "of",
-                "a",
-                "with",
-                "a",
-                "large",
-                ",",
-                "ornate",
-                "clock",
-                "hanging",
-                "on",
-                "the",
-                "wall",
-                "of",
-                "a",
-                "with"
+                "church",
+                "."
             ],
             "metrics": {
-                "Bleu_1": 0.04219409282682619,
-                "Bleu_2": 0.02315956793162205,
-                "Bleu_3": 0.01316631823112996,
-                "Bleu_4": 1.7672349690076723e-06,
-                "METEOR": 0.0788344476357301,
-                "CIDEr": 1.2083392202821e-310,
+                "Bleu_1": 0.5714285713877553,
+                "Bleu_2": 0.3631365195743456,
+                "Bleu_3": 0.22232392575344898,
+                "Bleu_4": 3.1614875842339754e-05,
+                "METEOR": 0.2540247569599537,
+                "CIDEr": 0.5356245523120176,
                 "SPICE": {
                     "All": {
-                        "pr": 0.6,
+                        "pr": 0.3333333333333333,
                         "re": 0.15,
-                        "f": 0.24,
+                        "f": 0.20689655172413793,
                         "fn": 17.0,
                         "numImages": 1.0,
-                        "fp": 2.0,
+                        "fp": 6.0,
                         "tp": 3.0
                     },
                     "Relation": {
@@ -11474,7 +11183,7 @@
                         "f": 0.0,
                         "fn": 6.0,
                         "numImages": 1.0,
-                        "fp": 2.0,
+                        "fp": 4.0,
                         "tp": 0.0
                     },
                     "Cardinality": {
@@ -11492,7 +11201,7 @@
                         "f": 0.0,
                         "fn": 5.0,
                         "numImages": 1.0,
-                        "fp": 0.0,
+                        "fp": 1.0,
                         "tp": 0.0
                     },
                     "Size": {
@@ -11510,20 +11219,20 @@
                         "f": 0.0,
                         "fn": 1.0,
                         "numImages": 1.0,
-                        "fp": 0.0,
+                        "fp": 1.0,
                         "tp": 0.0
                     },
                     "Object": {
-                        "pr": 1.0,
+                        "pr": 0.75,
                         "re": 0.3333333333333333,
-                        "f": 0.5,
+                        "f": 0.46153846153846156,
                         "fn": 6.0,
                         "numImages": 1.0,
-                        "fp": 0.0,
+                        "fp": 1.0,
                         "tp": 3.0
                     }
                 },
-                "ROUGE_L": 0.06819996805622104,
+                "ROUGE_L": 0.5261644623346751,
                 "CHAIRs": 0,
                 "CHAIRi": 0.0
             }
@@ -11533,9 +11242,9 @@
             "caption": "The young boy is throwing a baseball in a grassy field during a game.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "sports ball",
                 "person",
-                "baseball glove"
+                "baseball glove",
+                "sports ball"
             ],
             "mscoco_generated_words": [
                 "person"
@@ -11637,15 +11346,15 @@
         }
     ],
     "overall_metrics": {
-        "Bleu_1": 0.48003942828956137,
-        "Bleu_2": 0.3434484114185528,
-        "Bleu_3": 0.2449898293203392,
-        "Bleu_4": 0.17488818245466026,
-        "METEOR": 0.27131229106680765,
-        "CIDEr": 0.688657477182431,
-        "SPICE": 0.2173179815822057,
-        "ROUGE_L": 0.4809902113340214,
-        "CHAIRs": 0.13,
-        "CHAIRi": 0.06951871657754011
+        "Bleu_1": 0.547914317925283,
+        "Bleu_2": 0.3980166854355639,
+        "Bleu_3": 0.2858217483406354,
+        "Bleu_4": 0.20431264868738172,
+        "METEOR": 0.28495842792886605,
+        "CIDEr": 0.7082381196532258,
+        "SPICE": 0.21736347531426886,
+        "ROUGE_L": 0.49550628237999456,
+        "CHAIRs": 0.14,
+        "CHAIRi": 0.08092485549132948
     }
 }

@@ -125,7 +125,7 @@ COCO_DIR (val2014 for example)
 Upon completion, two files, `minigpt4_pretrain-llama2_coco_2000_generated_captions.json` and `minigpt4_pretrain-llama2_coco_2000_chair.json` should be generated under `generated_captions/minigpt4_pretrain-llama2/coco/` if `llama2` is the `model_type` used for `minigpt4`.
 
 
-### :man_in_tuxedo:: POPE Evaluation of LVLMs Object Hallucination
+### :man_in_tuxedo: POPE Evaluation of LVLMs Object Hallucination
 
 #### Running LVLM to generate captions and result file format-ready for POPE
 

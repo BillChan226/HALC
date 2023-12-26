@@ -95,22 +95,21 @@ The [toy example](hallucinatory_image/beach_on_a_clock.png) is projected into th
 
 
 ## :hourglass: Benchmarks
-### :chair: CHAIR Evaluation of DoLa-based Contrastive Decoding LVLMs
+### :chair: CHAIR Evaluation of LVLMs Object Hallucination
 
-The evaluation pipeline includes 2 steps.
 
 #### Running LVLM to generate captions and result file format-ready for CHAIR
 
 Following [Evaluating Object Hallucination in Large Vision-Language Models](https://arxiv.org/pdf/2305.10355.pdf), we used "Generate a short caption of the image" as the prompt to query LVLM for captions of the `2,000` images randomly sampled from [COCO 2014 Val](https://cocodataset.org/#download) datast. Under root directory, run
 
 ```
-python generate_chair_input.py --num_samples 2000 --dataset_name coco --data_dir [COCO_DIR] --output_dir ./generated_captions/ -v -d [Decoding Strategy]
+python generate_chair_input.py --num_samples 2000 --dataset_name coco --data_dir [COCO_DIR] --output_dir ./generated_captions/ --gpu-id 0 -v -d [Decoding Strategy]
 ```
 
 For a full list of command line input, run `python generate_chair_input.py -h`. Note that `[COCO_DIR]` is expected to contain both images and annotation files within the `annotations` subfolder. In other words, `[COCO_DIR]` should the the following structure:
 
 ```
-COCO_DIR (val2024 for example)
+COCO_DIR (val2014 for example)
   - annotations
     - captions_val2014.json
     - captions_val2014.json
@@ -125,12 +124,30 @@ COCO_DIR (val2024 for example)
 
 Upon completion, two files, `minigpt4_pretrain-llama2_coco_2000_generated_captions.json` and `minigpt4_pretrain-llama2_coco_2000_chair.json` should be generated under `generated_captions/minigpt4_pretrain-llama2/coco/` if `llama2` is the `model_type` used for `minigpt4`.
 
-#### Evaluate with CHAIR
 
+### :man_in_tuxedo:: POPE Evaluation of LVLMs Object Hallucination
+
+#### Running LVLM to generate captions and result file format-ready for POPE
+
+Under root directory, run
+
+```
+python generate_pope_input.py --num_images 2000 --dataset_name coco --data_dir [COCO_DIR] --output_dir ./generated_captions/ --gpu-id 0 -v -d [Decoding Strategy]
+```
+
+### Evaluation
+
+#### CHAIR Evaluation
 We use the generated `_chair.json` file, for example, `minigpt4_pretrain-llama2_coco_2000_chair.json` for the CHAIR evaluation. Under root directory, run
 
 ```
 python eval_hallucination.py --metric chair --chair_input_path [PATH_TO_.JSON_FILE] -v
+```
+
+#### POPE Evaluation
+
+```
+python eval_hallucination.py --metric pope --pope_answer_path [PATH_TO_MODEL_OUTPUT] --pope_question_path [PATH_TO_.POPE_QUESTION] -v
 ```
 
 The evaluation results will be printed in terminal.

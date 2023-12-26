@@ -89,10 +89,6 @@ parser.add_argument("--penalty_weights", type=float, default=1.0)
 args = parser.parse_known_args()[0]
 
 
-
-
-
-
 os.environ["CUDA_VISIBLE_DEVICES"] = str(args.gpu_id)
 args.cfg_path = MODEL_EVAL_CONFIG_PATH[args.model]
 cfg = Config(args)
@@ -121,9 +117,13 @@ norm = transforms.Normalize(mean, std)
 
 
 img_files = os.listdir(args.data_path)
-random.shuffle(img_files)
+# random.shuffle(img_files)
 
-with open(args.data_path + '../annotations_trainval2014/annotations/instances_val2014.json', 'r') as f:
+num_samples = 50
+img_files = random.sample(img_files, num_samples)
+
+# with open(args.data_path + '../annotations_trainval2014/annotations/instances_val2014.json', 'r') as f:
+with open(args.data_path + 'annotations/instances_val2014.json', 'r') as f:
     lines = f.readlines()
 coco_anns = json.loads(lines[0])
 
@@ -148,8 +148,8 @@ if not os.path.exists(base_dir):
 
 
 for img_id in tqdm(range(len(img_files))):
-    if img_id == 20:
-        break
+    # if img_id == 20:
+    #     break
     img_file = img_files[img_id]
     img_id = int(img_file.split(".jpg")[0][-6:])
     img_info = img_dict[img_id]
@@ -163,7 +163,9 @@ for img_id in tqdm(range(len(img_files))):
     image = vis_processors["eval"](raw_image).unsqueeze(0)
     image = image.to(device)
     
-    qu = "Please describe this image in detail."
+    # qu = "Please describe this image in detail."
+    qu = "Generate a one sentence caption of the image."
+
     template = INSTRUCTION_TEMPLATE[args.model]
     qu = template.replace("<question>", qu)
     

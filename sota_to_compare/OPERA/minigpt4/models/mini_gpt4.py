@@ -26,7 +26,7 @@ class MiniGPT4(Blip2Base):
     """
 
     PRETRAINED_MODEL_CONFIG_DICT = {
-        "pretrain_vicuna0": "configs/models/minigpt4_vicuna0.yaml",
+        # "pretrain_vicuna0": "configs/models/minigpt4_vicuna0.yaml",
         "pretrain_llama2": "configs/models/minigpt4_llama2.yaml",
     }
 

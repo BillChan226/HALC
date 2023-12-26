@@ -145,3 +145,33 @@ still running:
     | SPICE | METEOR | CIDEr | CHAIRs | CHAIRi |
     |-------|--------|-------|--------|--------|
     | 21.7  | 28.3   | 71.5  | 16.0   | 9.2    |
+
+
+    | SPICE | METEOR | CIDEr | CHAIRs | CHAIRi |
+    |-------|--------|-------|--------|--------|
+    | 21.6  | 27.9   | 71.1  | 14.0   | 8.2    |
+
+### Comparison Experiment
+
+prompt: Generate a one sentence caption of the image.
+
+seed 0, num_samples 500:
+
++ Greedy
+
+
+    | SPICE | METEOR | CIDEr | CHAIRs | CHAIRi |
+    |-------|--------|-------|--------|--------|
+    | 19.7  | 25.7   | 52.9  | 11.6   | 6.9    |
+
+
++ DoLa
+
+    | SPICE | METEOR | CIDEr | CHAIRs | CHAIRi |
+    |-------|--------|-------|--------|--------|
+    | 19.7  | 25.9   | 52.4  | 11.8   | 6.9    |
+
+
+prompt: Please describe this image in detail.
+
+seed 0, num_samples 100:

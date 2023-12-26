@@ -184,7 +184,7 @@ class Chat:
             self.stopping_criteria = StoppingCriteriaList(
                 [StoppingCriteriaSub(stops=stop_words_ids)]
             )
-        halc_params = hyper_params["halc_params"]
+        self.halc_params = hyper_params["halc_params"]
         self.halc_assistant = halc_assistant(self.model, vis_processor=self.vis_processor, device=self.device, halc_params=halc_params)
 
     def ask(self, text, conv):
@@ -272,7 +272,8 @@ class Chat:
             candidate_premature_layers=candidate_premature_layers,
             mature_layer=mature_layer,
             return_dict_in_generate=False,
-            halc_assistant=self.halc_assistant
+            halc_assistant=self.halc_assistant,
+            beam_size=self.halc_params["beam_size"],
         )
         return generation_kwargs
 

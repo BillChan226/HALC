@@ -74,7 +74,7 @@ def initialize_mini_gpt_4(parser):
         [StoppingCriteriaSub(stops=stop_words_ids)]
     )
 
-    halc_params = {"context_domain": "upper", "contrast_weight": 0.05, "context_window": 4, "expand_ratio": 0.15}
+    halc_params = {"context_domain": "upper", "contrast_weight": 0.05, "context_window": 4, "expand_ratio": 0.15, "beam_size": args.beam_size, "k_candidate_num": args.k_num}
     hyper_params = {"halc_params": halc_params}
     chat = Chat(
         model,
@@ -114,7 +114,7 @@ def main():
     parser.add_argument(
         "--data_dir",
         type=str,
-        default="/media/zhuokai/SN850X_4TB/Data/coco/val2014",
+        default="eval_dataset/val2014",
         help="Test data directory. Default is '/media/zhuokai/SN850X_4TB/Data/coco/val2014'.",
     )
     parser.add_argument(
@@ -150,6 +150,20 @@ def main():
         default=0,
         help="specify the gpu to load the model.",
     )
+    parser.add_argument(
+        "-b",
+        "--beam-size",
+        type=int,
+        default=1,
+        help="specify the beam size for halc.",
+    )
+    parser.add_argument(
+        "-k",
+        "--k-candidate-num",
+        type=int,
+        default=2,
+        help="specify the k candidate number for halc.",
+    )
 
     # load program level arguments
     args = parser.parse_args()
@@ -177,27 +191,27 @@ def main():
     torch.manual_seed(seed)
     np.random.seed(seed)
 
-    # load model
-    if model_name == "minigpt4":
-        model, CONV_VISION, cfg = initialize_mini_gpt_4(parser)
+    # # load model
+    # if model_name == "minigpt4":
+    #     model, CONV_VISION, cfg = initialize_mini_gpt_4(parser)
+    #     pass
+    # if verbosity:
+    #     print(f"\n{model_name} model initialized successfully.")
 
-    if verbosity:
-        print(f"\n{model_name} model initialized successfully.")
+    # # set output dir
+    # model_type = cfg.model_cfg.model_type.replace("_", "-")
+    # output_dir = os.path.join(
+    #     output_dir, f"{model_name}_{model_type}", decoding_strategy, dataset_name
+    # )
+    # if not os.path.exists(output_dir):
+    #     os.makedirs(output_dir)
 
-    # set output dir
-    model_type = cfg.model_cfg.model_type.replace("_", "-")
-    output_dir = os.path.join(
-        output_dir, f"{model_name}_{model_type}", decoding_strategy, dataset_name
-    )
-    if not os.path.exists(output_dir):
-        os.makedirs(output_dir)
-
-    # generated caption file path
-    generated_captions_path = os.path.join(
-        output_dir,
-        f"{model_name}_{model_type}_{decoding_strategy}_{dataset_name}_{num_samples}_generated_captions.json",
-    )
-
+    # # generated caption file path
+    # generated_captions_path = os.path.join(
+    #     output_dir,
+    #     f"{model_name}_{model_type}_{decoding_strategy}_{dataset_name}_{num_samples}_generated_captions.json",
+    # )
+    generated_captions_path = "/home/czr/contrast_decoding_LVLMs/paper_exp/minigpt4_pretrain-llama2/halc-beam/coco/minigpt4_pretrain-llama2_halc-beam_coco_19_generated_captions.json"
     # chair input varies by dataset
     if dataset_name == "coco":
         annotation_file_path = os.path.join(
@@ -243,8 +257,10 @@ def main():
                 
                 model.encode_img(img_list, 38)  # -1 means the last layer
                 # question taken from https://arxiv.org/pdf/2305.10355.pdf
-                model.ask("Generate a one sentence caption of the image.", CONV_VISION)
-                # model.ask("Generate a caption of the image with rich details.", CONV_VISION)
+                # model.ask("Generate a one sentence caption of the image.", CONV_VISION)
+                # model.ask("Please describe this image in detail.", CONV_VISION)
+                model.ask("Please briefly describe this image.", CONV_VISION)
+
                 output_text, _, _ = model.answer(
                     CONV_VISION,
                     img_list,
@@ -337,11 +353,12 @@ def main():
                 f"\nGenerated {len(img_to_eval_dict)} samples results in CHAIR format."
             )
 
-        # save the formulated output dict
-        formulated_output_path = os.path.join(
-            output_dir,
-            f"{model_name}_{model_type}_{decoding_strategy}_{dataset_name}_{num_samples}_chair.json",
-        )
+        # # save the formulated output dict
+        # formulated_output_path = os.path.join(
+        #     output_dir,
+        #     f"{model_name}_{model_type}_{decoding_strategy}_{dataset_name}_{num_samples}_chair.json",
+        # )
+        formulated_output_path = "/home/czr/contrast_decoding_LVLMs/paper_exp/minigpt4_pretrain-llama2/halc-beam/coco/minigpt4_pretrain-llama2_halc-beam_coco_19_chair.json"
         with open(formulated_output_path, "w") as f:
             json.dump(formulated_output_dict, f)
         if verbosity:

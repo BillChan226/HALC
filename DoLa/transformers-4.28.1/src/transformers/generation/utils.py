@@ -26,6 +26,7 @@ from torch import nn
 from torch.nn import functional as F
 import numpy as np
 import random
+import gc
 
 from ..deepspeed import is_deepspeed_zero3_enabled
 from ..modeling_outputs import CausalLMOutputWithPast, Seq2SeqLMOutput
@@ -1140,6 +1141,7 @@ class GenerationMixin:
         student_model=None,
         streamer: Optional["BaseStreamer"] = None,
         halc_assistant=None,
+        beam_size=1,
         **kwargs,
     ) -> Union[GenerateOutput, torch.LongTensor]:
         r"""
@@ -1492,6 +1494,7 @@ class GenerationMixin:
                 candidate_premature_layers=candidate_premature_layers,
                 relative_top=relative_top,
                 streamer=streamer,
+                beam_size=beam_size,
                 **model_kwargs,
             )
         
@@ -1580,7 +1583,7 @@ class GenerationMixin:
                     f"num_return_sequences has to be 1, but is {generation_config.num_return_sequences} when doing"
                     " greedy search."
                 )
-            print("\033[41m!!!!! Greedy Decoding !!!!!!\033[0m")
+            # print("\033[41m!!!!! Greedy Decoding !!!!!!\033[0m")
             # 11. run greedy search
             return self.greedy_search(
                 input_ids,
@@ -4656,9 +4659,9 @@ class GenerationMixin:
                     model_kwargs = copy.copy(last_model_kwargs)
 
                     # ### bug fixed ### may consider remove this though!
-                    # model_kwargs = self._update_model_kwargs_for_generation(
-                    #     intermediate_outputs, model_kwargs, is_encoder_decoder=self.config.is_encoder_decoder
-                    # )
+                    model_kwargs = self._update_model_kwargs_for_generation(
+                        intermediate_outputs, model_kwargs, is_encoder_decoder=self.config.is_encoder_decoder
+                    )
                     # ### bug fixed ###
 
                 else:
@@ -5316,7 +5319,7 @@ class GenerationMixin:
         relative_top: float = 0.1,
         logits_processor: Optional[LogitsProcessorList] = None,
         stopping_criteria: Optional[StoppingCriteriaList] = None,
-        max_length: Optional[int] = None,
+        max_length: Optional[int] = 10,
         pad_token_id: Optional[int] = None,
         eos_token_id: Optional[Union[int, List[int]]] = None,
         output_attentions: Optional[bool] = None,
@@ -5325,6 +5328,7 @@ class GenerationMixin:
         return_dict_in_generate: Optional[bool] = None,
         synced_gpus: Optional[bool] = False,
         streamer: Optional["BaseStreamer"] = None,
+        beam_size: int,
         **model_kwargs,
     ) -> Union[GreedySearchOutput, torch.LongTensor]:
         r"""
@@ -5421,6 +5425,8 @@ class GenerationMixin:
         # init values
         logits_processor = logits_processor if logits_processor is not None else LogitsProcessorList()
         stopping_criteria = stopping_criteria if stopping_criteria is not None else StoppingCriteriaList()
+        # print("max_length", max_length)
+        # input()
         if max_length is not None:
             warnings.warn(
                 "`max_length` is deprecated in this function, use"
@@ -5478,7 +5484,7 @@ class GenerationMixin:
         # info to go back to main for debug
         info_dict = {}
 
-        beam_size = 3
+        beam_size = beam_size
         initial_model_kwargs = copy.copy(model_kwargs)
         initial_input_ids = copy.copy(input_ids)
 
@@ -5529,6 +5535,7 @@ class GenerationMixin:
         beam_once_flag = [False] * beam_size
         beam_next_tokens = [None] * beam_size
         beam_finished = [False] * beam_size
+        valid_length_max = 80
  
         while True:
 
@@ -5543,7 +5550,7 @@ class GenerationMixin:
                     break
 
             # print("beam_finished: ", beam_finished)
-            if beam_finished == [True] * beam_size:
+            if beam_finished == [True] * beam_size or valid_length_max <= len(beam_intermediate_token_lists[0][0]):
                 # print("#####\nfinal top k:\n", beam_intermediate_token_lists)
                 # print("ALL FINISHED")
                 input_ids = beam_intermediate_token_lists[0]
@@ -5649,23 +5656,18 @@ class GenerationMixin:
                         raise ValueError("If `eos_token_id` is defined, make sure that `pad_token_id` is defined.")
                     beam_next_tokens[bs] = beam_next_tokens[bs] * beam_unfinished_sequences[bs] + pad_token_id * (1 - beam_unfinished_sequences[bs])
 
-                # print("FIRST beam_next_tokens[bs]", beam_next_tokens[bs])
                 beam_last_word_flag[bs] = self.halc_assistant.check_word_complete(beam_next_tokens[bs][:, None])
                 
-                # print("FIRST beam_last_word_flag[bs]", beam_last_word_flag[bs])
                 if beam_last_word_flag[bs] == False:
-                    # beam_token_to_append[bs] = None
                     candidate_token_to_append = []
                     for candidate_contrast_logits in range(self.halc_assistant.k_candidate_num):
                         candidate_token_to_append.append(None)
                     beam_candidate_token_to_append[bs] = candidate_token_to_append
 
-                    # if beam_once_flag[bs] == False:
-                    #     beam_once_flag[bs] = True
-                    #     beam_last_model_kwargs[bs] = copy.copy(beam_model_kwargs[bs])
                 else:
                     beam_once_flag[bs] = False
-                    beam_last_model_kwargs[bs] = copy.copy(beam_model_kwargs[bs])
+
+                    # beam_last_model_kwargs[bs] = copy.copy(beam_model_kwargs[bs])
 
                     if len(beam_last_tokens[bs]) == 0:
                         # beam_token_to_append[bs] = None
@@ -5697,21 +5699,38 @@ class GenerationMixin:
                                 sub_model_kwargs = deep_copy_tensor_structure(initial_model_kwargs)
                                 sub_model_kwargs['inputs_embeds'] = context_embed
 
+                                # context_logits, _ = self.get_intermediate_logits(
+                                #     beam_intermediate_token_lists[bs],
+                                #     initial_input_ids,
+                                #     logits_processor,
+                                #     stopping_criteria,
+                                #     max_length,
+                                #     pad_token_id,
+                                #     eos_token_id,
+                                #     output_attentions,
+                                #     output_hidden_states,
+                                #     output_scores,
+                                #     return_dict_in_generate,
+                                #     synced_gpus,
+                                #     streamer,
+                                #     **sub_model_kwargs,
+                                # )
                                 context_logits, _ = self.get_intermediate_logits(
-                                    beam_intermediate_token_lists[bs],
-                                    initial_input_ids,
-                                    logits_processor,
-                                    stopping_criteria,
-                                    max_length,
-                                    pad_token_id,
-                                    eos_token_id,
-                                    output_attentions,
-                                    output_hidden_states,
-                                    output_scores,
-                                    return_dict_in_generate,
-                                    synced_gpus,
-                                    streamer,
-                                    **sub_model_kwargs,
+                                teacher_forcing_tokens = beam_intermediate_token_lists[bs],
+                                input_ids = initial_input_ids,
+                                logits_processor = logits_processor,
+                                stopping_criteria = stopping_criteria,
+                                logits_warper = None,
+                                max_length = max_length,
+                                pad_token_id = pad_token_id,
+                                eos_token_id = eos_token_id,
+                                output_attentions = output_attentions,
+                                output_hidden_states = output_hidden_states,
+                                output_scores = output_scores,
+                                return_dict_in_generate = return_dict_in_generate,
+                                synced_gpus = synced_gpus,
+                                streamer = streamer,
+                                **sub_model_kwargs,
                                 )
 
                                 context_logits_list.append(context_logits)
@@ -5721,7 +5740,9 @@ class GenerationMixin:
                             # contrast_logits = self.halc_assistant.context_curve_contrastive_decoding(context_logits_list)
                             # skip_flag, contrast_logits = self.halc_assistant.context_contrastive_decoding(context_logits_list, last_tokens)
                             # skip_flag, contrast_logits = self.halc_assistant.auto_regressive_decoding(context_logits_list)
-                            skip_flag, contrast_logits_array = self.halc_assistant.context_layer_multi_contrastive_decoding(context_logits_list, [beam_last_tokens[bs]])
+                            # skip_flag, contrast_logits_array = self.halc_assistant.context_layer_multi_contrastive_decoding(context_logits_list, [beam_last_tokens[bs]])
+                            skip_flag, contrast_logits_array = self.halc_assistant.context_layer_double_multi_contrastive_decoding(context_logits_list, [beam_last_tokens[bs]])
+
                             # skip_flag, contrast_logits = self.halc_assistant.auto_contrastive_context_decoding(context_logits_list, last_tokens)
                             ############ Contrast Decoding Policy ############
 
@@ -5764,6 +5785,7 @@ class GenerationMixin:
             candidate_intermediate_token_lists_array = []
             candidate_token_to_append_lists = []
 
+            # print("beam_candidate_token_to_append", beam_candidate_token_to_append)
             for bs in range(beam_size):
                 # print("beam_candidate_token_to_append[bs]", beam_candidate_token_to_append[bs])
                 if beam_candidate_token_to_append[bs] != None:
@@ -5784,67 +5806,61 @@ class GenerationMixin:
             # random select number of batch size elements in candidate_intermediate_token_lists_array
             if len(candidate_intermediate_token_lists_array) > 0:
                 
-            
+                if len(candidate_intermediate_token_lists_array) != beam_size * self.halc_assistant.k_candidate_num:
+                    raise ValueError("candidate_intermediate_token_lists_array length error")
                 ############ Beam Search Score ############
                 # candidate_index = self.halc_assistant.random_selection(candidate_intermediate_token_lists_array, beam_size)
                 candidate_index = self.halc_assistant.clip_score_selection(candidate_intermediate_token_lists_array, beam_size)
                 ############ Beam Search Score ############
 
                 # print("random_index", random_index)
-
+                temporary_beam_intermediate_token_lists = deep_copy_tensor_structure(beam_intermediate_token_lists)
+                temporary_beam_input_ids = deep_copy_tensor_structure(beam_input_ids)
+                temporary_beam_unfinished_sequences = deep_copy_tensor_structure(beam_unfinished_sequences)
+                temporary_beam_model_kwargs = deep_copy_tensor_structure(beam_model_kwargs)
+                temporary_beam_last_model_kwargs = deep_copy_tensor_structure(beam_last_model_kwargs)
+                temporary_beam_outputs = copy.deepcopy(beam_outputs)
+                temporary_beam_last_word_flag = deep_copy_tensor_structure(beam_last_word_flag)
+                temporary_beam_dict_outputs = deep_copy_tensor_structure(beam_dict_outputs)
+                temporary_beam_current_word = deep_copy_tensor_structure(beam_current_word)
+                temporary_beam_last_tokens = deep_copy_tensor_structure(beam_last_tokens)
+                temporary_beam_once_flag = deep_copy_tensor_structure(beam_once_flag)
+                temporary_beam_next_tokens = deep_copy_tensor_structure(beam_next_tokens)
                 for index, bs in zip(candidate_index, range(beam_size)):
                     
                     row_index = index//(len(candidate_intermediate_token_lists_array)//beam_size)
                     # print("row_index", row_index)
-                    beam_intermediate_token_lists[bs] = deep_copy_tensor_structure(beam_intermediate_token_lists[row_index])
-                    beam_input_ids[bs] = deep_copy_tensor_structure(beam_input_ids[row_index])
-                    beam_outputs[bs] = beam_outputs[row_index]
-                    beam_dict_outputs[bs] = beam_dict_outputs[row_index]
-                    beam_unfinished_sequences[bs] = deep_copy_tensor_structure(beam_unfinished_sequences[row_index])
-                    beam_model_kwargs[bs] = deep_copy_tensor_structure(beam_model_kwargs[row_index])
-                    beam_last_model_kwargs[bs] = deep_copy_tensor_structure(beam_last_model_kwargs[row_index])
-                    beam_last_word_flag[bs] = deep_copy_tensor_structure(beam_last_word_flag[row_index])
-                    beam_current_word[bs] = beam_current_word[row_index]
-                    beam_last_tokens[bs] = deep_copy_tensor_structure(beam_last_tokens[row_index])
-                    beam_once_flag[bs] = beam_once_flag[row_index]
-                    beam_next_tokens[bs] = deep_copy_tensor_structure(beam_next_tokens[row_index])
+                    beam_intermediate_token_lists[bs] = deep_copy_tensor_structure(temporary_beam_intermediate_token_lists[row_index])
+                    beam_input_ids[bs] = deep_copy_tensor_structure(temporary_beam_input_ids[row_index])
+                    beam_outputs[bs] = copy.deepcopy(temporary_beam_outputs[row_index])
+                    beam_dict_outputs[bs] = copy.deepcopy(temporary_beam_dict_outputs[row_index])
+                    beam_unfinished_sequences[bs] = deep_copy_tensor_structure(temporary_beam_unfinished_sequences[row_index])
+                    beam_model_kwargs[bs] = deep_copy_tensor_structure(temporary_beam_model_kwargs[row_index])
+                    beam_last_model_kwargs[bs] = deep_copy_tensor_structure(temporary_beam_last_model_kwargs[row_index])
+                    beam_last_word_flag[bs] = deep_copy_tensor_structure(temporary_beam_last_word_flag[row_index])
+                    beam_current_word[bs] = deep_copy_tensor_structure(temporary_beam_current_word[row_index])
+                    beam_last_tokens[bs] = deep_copy_tensor_structure(temporary_beam_last_tokens[row_index])
+                    beam_once_flag[bs] = deep_copy_tensor_structure(temporary_beam_once_flag[row_index])
+                    beam_next_tokens[bs] = deep_copy_tensor_structure(temporary_beam_next_tokens[row_index])
 
-                    # beam_token_to_append[bs] = deep_copy_tensor_structure(beam_token_to_append[row_index])
-                    # if candidate_intermediate_token_lists_array[index] != None:
-                    #     # beam_token_to_append[bs] = candidate_intermediate_token_lists_array[index][:, -1].unsqueeze(0)
-                    #     beam_token_to_append[bs] = candidate_token_to_append_lists[index]
-                    # else:
-                    #     beam_token_to_append[bs] = None
                     beam_token_to_append[bs] = candidate_token_to_append_lists[index]
-                    
-
-            # print("candidate_intermediate_token_lists_array", candidate_intermediate_token_lists_array)
-            # print("candidates\n")
-            # print("beam_token_to_append", beam_token_to_append)
-            # print("beam_intermediate_token_lists", beam_intermediate_token_lists)
-
-            # if len(candidate_intermediate_token_lists_array) == 0:
-            #     for candidate_lists in candidate_intermediate_token_lists_array:
-            #         pass
-            # else:
             
-            if True:
-                for bs in range(beam_size):
-                    if beam_token_to_append[bs] != None and beam_finished[bs] == False:
-                        beam_intermediate_token_lists[bs] = torch.cat([beam_intermediate_token_lists[bs], beam_token_to_append[bs]], dim=-1)
-
+            # print("if beam_outputs[0] is beam_outputs[1]", beam_outputs[0] is beam_outputs[1])
             # print("beam_intermediate_token_lists", beam_intermediate_token_lists)
-            # print("beam_input_ids", beam_input_ids)
-            # input("\n\n")
+            for bs in range(beam_size):
+                if beam_token_to_append[bs] != None and beam_finished[bs] == False:
+                    beam_intermediate_token_lists[bs] = torch.cat([beam_intermediate_token_lists[bs], beam_token_to_append[bs]], dim=-1)
 
             for bs in range(beam_size):
-
+                # print(f"BEFORE beam_model_kwargs {bs}:", np.shape(beam_model_kwargs[bs]["attention_mask"]))
                 if beam_token_to_append[bs] != None:
-                    beam_input_ids[bs] = beam_intermediate_token_lists[bs]
+                    # beam_input_ids[bs] = beam_intermediate_token_lists[bs]
+                    beam_input_ids[bs] = deep_copy_tensor_structure(beam_intermediate_token_lists[bs])
                     last_word = self.halc_assistant.get_last_word(beam_token_to_append[bs][0])
 
                     # print("CONTRAST WORD: ", last_word)
-
+                    # print("last_word", last_word)
+                    # print("beam_current_word", beam_current_word)
                     if last_word != beam_current_word[bs]:
                         # print("\033[41m!!!!! Hallucination Detected !!!!!!\033[0m")
                         # which means hallucination has been corrected, then resample a last token
@@ -5873,30 +5889,39 @@ class GenerationMixin:
                         # pre-process distribution
                         next_tokens_scores = logits_processor(beam_intermediate_token_lists[bs], resample_logits)
 
-
-                        # print("\next_tokens_scores", next_tokens_scores)
                         beam_next_tokens[bs] = torch.argmax(next_tokens_scores, dim=-1)
                         beam_last_word_flag[bs] = self.halc_assistant.check_word_complete(beam_next_tokens[bs][:, None])
                         # print("resample token", next_tokens)
                         beam_last_tokens[bs] = []
-                        # model_kwargs = copy.copy(beam_last_model_kwargs[bs])
-                        model_kwargs = deep_copy_tensor_structure(beam_last_model_kwargs[bs])
-
+                        # print("CASE 1")
                         beam_model_kwargs[bs] = self._update_model_kwargs_for_generation(
-                            intermediate_outputs, model_kwargs, is_encoder_decoder=self.config.is_encoder_decoder
+                            intermediate_outputs, deep_copy_tensor_structure(beam_last_model_kwargs[bs]), is_encoder_decoder=self.config.is_encoder_decoder
                         )
-
-                        # beam_model_kwargs[bs] = model_kwargs
+                        # beam_model_kwargs[bs] = deep_copy_tensor_structure(beam_last_model_kwargs[bs])
                         # input()
-                        # print("last_word", last_word)
+                        
                     else:
+                        # print("CASE 2")
+                        # beam_model_kwargs[bs] = self._update_model_kwargs_for_generation(
+                        #     beam_outputs[bs], beam_model_kwargs[bs], is_encoder_decoder=self.config.is_encoder_decoder
+                        # )
                         beam_model_kwargs[bs] = self._update_model_kwargs_for_generation(
-                            beam_outputs[bs], beam_model_kwargs[bs], is_encoder_decoder=self.config.is_encoder_decoder
+                            beam_outputs[bs], deep_copy_tensor_structure(beam_model_kwargs[bs]), is_encoder_decoder=self.config.is_encoder_decoder
                         )
                 else:
+                    # print("CASE 3")
+                    # beam_model_kwargs[bs] = self._update_model_kwargs_for_generation(
+                    #     beam_outputs[bs], beam_model_kwargs[bs], is_encoder_decoder=self.config.is_encoder_decoder
+                    # )
                     beam_model_kwargs[bs] = self._update_model_kwargs_for_generation(
-                        beam_outputs[bs], beam_model_kwargs[bs], is_encoder_decoder=self.config.is_encoder_decoder
+                        beam_outputs[bs], deep_copy_tensor_structure(beam_model_kwargs[bs]), is_encoder_decoder=self.config.is_encoder_decoder
                     )
+                
+
+                
+                # print(f"beam_model_kwargs {bs}:", np.shape(beam_model_kwargs[bs]["attention_mask"]))
+                
+                # print(f"beam_next_tokens {bs}", beam_next_tokens[bs])
                 
                 beam_last_tokens[bs].append(beam_next_tokens[bs][:, None].cpu().numpy().tolist()[0][0])
                 if beam_finished[bs] == False:
@@ -5909,16 +5934,20 @@ class GenerationMixin:
                 if beam_last_word_flag[bs] == False:
                     if beam_once_flag[bs] == False:
                         beam_once_flag[bs] = True
-                        beam_last_model_kwargs[bs] = copy.copy(beam_model_kwargs[bs])
-                # else:
-                #     beam_last_model_kwargs[bs] = copy.copy(beam_model_kwargs[bs])
-
+                        # beam_last_model_kwargs[bs] = copy.copy(beam_model_kwargs[bs])
+                        # print("\n!!!!!!SPECIAL CASE!!!!!\n")
+                        beam_last_model_kwargs[bs] = deep_copy_tensor_structure(beam_model_kwargs[bs])
+                else:
+                    # beam_last_model_kwargs[bs] = copy.copy(beam_model_kwargs[bs])
+                    beam_last_model_kwargs[bs] = deep_copy_tensor_structure(beam_model_kwargs[bs])
+                # print(f"beam_input_ids {bs}:", np.shape(beam_input_ids[bs]))
+                # print(f"beam_last_model_kwargs {bs}:", np.shape(beam_last_model_kwargs[bs]["attention_mask"]))
                 # if eos_token was found in one sentence, set sentence to finished
                 if eos_token_id_tensor is not None:
                     beam_unfinished_sequences[bs] = beam_unfinished_sequences[bs].mul(
                         beam_next_tokens[bs].tile(eos_token_id_tensor.shape[0], 1).ne(eos_token_id_tensor.unsqueeze(1)).prod(dim=0)
                     )
-
+                # input()
                 # # stop when each sentence is finished, or if we exceed the maximum length
                 # if beam_unfinished_sequences[bs].max() == 0 or stopping_criteria(beam_input_ids[bs], scores):
                 #     if not synced_gpus:
@@ -5932,7 +5961,8 @@ class GenerationMixin:
                 #     beam_finished[bs] = True
 
                 if beam_input_ids[bs][0][-1].cpu().numpy().tolist() == eos_token_id[0]:
-                    beam_intermediate_token_lists[bs] = beam_input_ids[bs]
+                    # beam_intermediate_token_lists[bs] = beam_input_ids[bs]
+                    beam_intermediate_token_lists[bs] = deep_copy_tensor_structure(beam_input_ids[bs])
                     # input(f"{bs} finished\n")
                     beam_finished[bs] = True
 
@@ -5943,8 +5973,21 @@ class GenerationMixin:
             print(f"\033[1;4{bs+5}m Beam Search Candidate: {bs+1} {text} \033[0m")
             # print("beam_last_tokens", beam_last_tokens)
 
-        # reset states for halc
+        # RESET HALC STATE
         self.halc_assistant.original_image = None
+
+        del (beam_intermediate_token_lists, beam_input_ids, beam_outputs, beam_dict_outputs, 
+            beam_unfinished_sequences, beam_model_kwargs, beam_last_model_kwargs, beam_last_word_flag, 
+            beam_current_word, beam_last_tokens, beam_once_flag, beam_next_tokens, beam_finished, 
+            beam_token_to_append, beam_candidate_token_to_append, candidate_intermediate_token_lists_array, 
+            candidate_token_to_append_lists, temporary_beam_intermediate_token_lists, temporary_beam_input_ids, 
+            temporary_beam_unfinished_sequences, temporary_beam_model_kwargs, temporary_beam_last_model_kwargs, 
+            temporary_beam_outputs, temporary_beam_last_word_flag, temporary_beam_dict_outputs, 
+            temporary_beam_current_word, temporary_beam_last_tokens, temporary_beam_once_flag, 
+            temporary_beam_next_tokens, candidate_index)
+
+        gc.collect()
+
 
         if streamer is not None:
             streamer.end()
@@ -6254,21 +6297,23 @@ class GenerationMixin:
                             sub_model_kwargs["inputs_embeds"] = context_embed
 
                             context_logits, _ = self.get_intermediate_logits(
-                                intermediate_token_lists,
-                                initial_input_ids,
-                                logits_processor,
-                                stopping_criteria,
-                                max_length,
-                                pad_token_id,
-                                eos_token_id,
-                                output_attentions,
-                                output_hidden_states,
-                                output_scores,
-                                return_dict_in_generate,
-                                synced_gpus,
-                                streamer,
+                                teacher_forcing_tokens = intermediate_token_lists,
+                                input_ids = initial_input_ids,
+                                logits_processor = logits_processor,
+                                stopping_criteria = stopping_criteria,
+                                logits_warper = None,
+                                max_length = max_length,
+                                pad_token_id = pad_token_id,
+                                eos_token_id = eos_token_id,
+                                output_attentions = output_attentions,
+                                output_hidden_states = output_hidden_states,
+                                output_scores = output_scores,
+                                return_dict_in_generate = return_dict_in_generate,
+                                synced_gpus = synced_gpus,
+                                streamer = streamer,
                                 **sub_model_kwargs,
                             )
+
 
                             context_logits_list.append(context_logits)
 
@@ -6542,7 +6587,6 @@ class GenerationMixin:
                 continue  # don't waste resources running the code we don't need
 
             next_token_logits = outputs.logits[:, -1, :]
-
             # pre-process distribution
             next_token_scores = logits_processor(input_ids, next_token_logits)
             next_token_scores = logits_warper(input_ids, next_token_scores)

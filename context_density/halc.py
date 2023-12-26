@@ -35,10 +35,9 @@ class halc_assistant:
         self.tagging = spacy.load("en_core_web_sm")
         self.tokenizer = self.model.llama_tokenizer
         self.halc_params = halc_params
-        self.k_candidate_num = 4
+        self.k_candidate_num = halc_params["k_candidate_num"]
         self.original_image = None
         token_vocab_dir = "./model_checkpoints/models--meta-llama--Llama-2-7b-chat-hf/snapshots/c1b0db933684edbfe29a06fa47eb19cc48025e93/tokenizer.json"
-        # token_vocab_dir = "/media/zhuokai/SN850X_4TB/contrast_decoding_LVLMs/model_checkpoints/models--meta-llama--Llama-2-7b-chat-hf/snapshots/c1b0db933684edbfe29a06fa47eb19cc48025e93/tokenizer.json"
         if not os.path.exists(token_vocab_dir):
             temp = AutoTokenizer.from_pretrained(
                 "meta-llama/Llama-2-7b-chat-hf",  # official model name for llama2-7b-chat-hf
@@ -652,7 +651,71 @@ class halc_assistant:
             # contrast_logits = final_logits - base_logits * 0.05
             contrast_logits = final_logits - base_logits * contrast_weight
             contrast_logits_array.append(contrast_logits)
+            
 
+        return skip_flag, contrast_logits_array
+
+
+    def context_layer_double_multi_contrastive_decoding(self, context_logits_list, last_tokens):
+        """
+        The method uses a list of context windows rooted from the DINO detection one and apply the contrastive decoding method to each context-window pair to get a list of contrastive logits. Then we use the contrastive logits to do the decoding.
+        """
+        skip_flag = False
+        if self.k_candidate_num % 2 != 0:
+            raise ValueError("k_candidate_num must be even!")
+        k_candidate = int(self.k_candidate_num/2)
+        all_layer_indices = range(len(context_logits_list))
+
+
+        stacked_premature_layers = torch.stack(
+            [context_logits_list[i] for i in all_layer_indices],
+            dim=0,
+        )
+
+        num_layers = len(stacked_premature_layers)
+        jsd_matrix = torch.zeros((num_layers, num_layers))
+
+        for i in range(num_layers):
+            for j in range(i+1, num_layers):
+                M = 0.5 * (F.softmax(stacked_premature_layers[i], dim=-1) + F.softmax(stacked_premature_layers[j], dim=-1))
+                kl1 = F.kl_div(F.log_softmax(stacked_premature_layers[i], dim=-1), M, reduction="batchmean")
+                kl2 = F.kl_div(F.log_softmax(stacked_premature_layers[j], dim=-1), M, reduction="batchmean")
+                jsd = 0.5 * (kl1 + kl2)
+                jsd_matrix[i, j] = jsd
+                jsd_matrix[j, i] = jsd  # Symmetric matrix
+
+
+        # Find indices of top k_candidate JSD values
+        upper_tri_flat = jsd_matrix.triu(diagonal=1).flatten()
+        top_k_indices_flat = torch.topk(upper_tri_flat, k_candidate).indices
+        rows = top_k_indices_flat // jsd_matrix.size(1)
+        cols = top_k_indices_flat % jsd_matrix.size(1)
+        top_k_indices = list(zip(rows.tolist(), cols.tolist()))
+
+        contrast_logits_array = []
+        context_domain = self.halc_params["context_domain"]
+        contrast_weight = self.halc_params["contrast_weight"]
+
+        for (layer_idx1, layer_idx2) in top_k_indices:
+
+            base_logits = context_logits_list[layer_idx1]
+            final_logits = context_logits_list[layer_idx2]
+
+            mask = final_logits[0] < -1e3
+            base_logits[0][mask] = -1e3
+
+            contrast_logits = final_logits - base_logits * contrast_weight
+            contrast_logits_array.append(contrast_logits)
+
+            base_logits = context_logits_list[layer_idx2]
+            final_logits = context_logits_list[layer_idx1]
+
+            mask = final_logits[0] < -1e3
+            base_logits[0][mask] = -1e3
+
+            contrast_logits = final_logits - base_logits * contrast_weight
+            contrast_logits_array.append(contrast_logits)
+            
         return skip_flag, contrast_logits_array
 
 
@@ -663,7 +726,7 @@ class halc_assistant:
             # print("identical candidate lists: ", candidate_intermediate_token_lists_array)
             # input()
             random.seed(8)
-            candidate_index = random.sample(range(len(candidate_intermediate_token_lists_array)), beam_size)
+            selected_candidates = random.sample(range(len(candidate_intermediate_token_lists_array)), beam_size)
         else:
             candidate_texts = []
             for candidate_intermediate_token_lists in candidate_intermediate_token_lists_array:
@@ -671,6 +734,7 @@ class halc_assistant:
 
             original_image = self.original_image
             
+            # print("candidate_texts", candidate_texts)
             clip_inputs = self.clip_processor(text=candidate_texts, images=original_image, return_tensors="pt", padding=True, truncation=True)
 
             clip_outputs = self.clip_model(**clip_inputs)
@@ -680,11 +744,36 @@ class halc_assistant:
             # print("candidate lists:", candidate_intermediate_token_lists_array)
             # print("clip_probs:", clip_probs)
             
-            # get the top beam_size candidates
+            # # get the top beam_size candidates
             clip_probs = clip_probs.cpu().numpy()
-            candidate_index = clip_probs.argsort()[-beam_size:][::-1]
-            # print("candidate_index:", candidate_index)
-            # input()
+            # candidate_index = clip_probs.argsort()[-beam_size:][::-1]
+            
+            sorted_indices = clip_probs.argsort()[-len(candidate_intermediate_token_lists_array):][::-1]
+            selected_texts = set()
+            selected_candidates = []
+            # print("sorted_indices:", sorted_indices)
+            for idx in sorted_indices:
+
+                candidate_text = self.get_sequence_text(candidate_intermediate_token_lists_array[idx][0])
+            
+                # Check for uniqueness
+                if candidate_text not in selected_texts:
+                    selected_texts.add(candidate_text)
+                    selected_candidates.append(idx)
+                
+                # Stop if enough candidates have been selected
+                if len(selected_candidates) == beam_size:
+                    break
+
+        # print("selected_candidates:", selected_candidates)
+        if len(selected_candidates) < beam_size:
+            # copy the first one
+            for _ in range(beam_size - len(selected_candidates)):
+                selected_candidates.append(selected_candidates[0])
+
+        candidate_index = selected_candidates
+        # print("candidate_index:", candidate_index)
+        # input()
 
         return candidate_index
 

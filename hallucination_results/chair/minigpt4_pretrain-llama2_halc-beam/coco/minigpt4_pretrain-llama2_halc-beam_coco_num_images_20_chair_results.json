@@ -2,7 +2,7 @@
     "sentences": [
         {
             "image_id": 281533,
-            "caption": "A small brown dog is sitting in front of a white the television is showing a nature documentary.",
+            "caption": "A small brown dog sits in front of a television, watching a show.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
                 "potted plant",
@@ -19,38 +19,34 @@
                 "small",
                 "brown",
                 "dog",
-                "is",
-                "sitting",
+                "sit",
                 "in",
                 "front",
                 "of",
                 "a",
-                "white",
-                "the",
                 "television",
-                "is",
-                "showing",
+                ",",
+                "watching",
                 "a",
-                "nature",
-                "documentary",
+                "show",
                 "."
             ],
             "metrics": {
-                "Bleu_1": 0.6111111110771605,
-                "Bleu_2": 0.536266444329227,
-                "Bleu_3": 0.4759896445088251,
-                "Bleu_4": 0.41180376354408454,
-                "METEOR": 0.43732188933229016,
-                "CIDEr": 0.5887905965217162,
+                "Bleu_1": 0.6595414761757948,
+                "Bleu_2": 0.57434412775353,
+                "Bleu_3": 0.4256828314527476,
+                "Bleu_4": 0.33913176172853027,
+                "METEOR": 0.4469659505525509,
+                "CIDEr": 1.391976264678049,
                 "SPICE": {
                     "All": {
-                        "pr": 0.38461538461538464,
-                        "re": 0.19230769230769232,
-                        "f": 0.2564102564102564,
-                        "fn": 21.0,
+                        "pr": 0.16666666666666666,
+                        "re": 0.038461538461538464,
+                        "f": 0.0625,
+                        "fn": 25.0,
                         "numImages": 1.0,
-                        "fp": 8.0,
-                        "tp": 5.0
+                        "fp": 5.0,
+                        "tp": 1.0
                     },
                     "Relation": {
                         "pr": 0.0,
@@ -58,7 +54,7 @@
                         "f": 0.0,
                         "fn": 7.0,
                         "numImages": 1.0,
-                        "fp": 5.0,
+                        "fp": 2.0,
                         "tp": 0.0
                     },
                     "Cardinality": {
@@ -71,13 +67,13 @@
                         "tp": 0.0
                     },
                     "Attribute": {
-                        "pr": 0.5,
-                        "re": 0.1,
-                        "f": 0.16666666666666669,
-                        "fn": 9.0,
+                        "pr": 0.0,
+                        "re": 0.0,
+                        "f": 0.0,
+                        "fn": 10.0,
                         "numImages": 1.0,
                         "fp": 1.0,
-                        "tp": 1.0
+                        "tp": 0.0
                     },
                     "Size": {
                         "pr": 0.0,
@@ -98,16 +94,16 @@
                         "tp": 0.0
                     },
                     "Object": {
-                        "pr": 0.6666666666666666,
-                        "re": 0.4444444444444444,
-                        "f": 0.5333333333333333,
-                        "fn": 5.0,
+                        "pr": 0.3333333333333333,
+                        "re": 0.1111111111111111,
+                        "f": 0.16666666666666666,
+                        "fn": 8.0,
                         "numImages": 1.0,
                         "fp": 2.0,
-                        "tp": 4.0
+                        "tp": 1.0
                     }
                 },
-                "ROUGE_L": 0.7093023255813954,
+                "ROUGE_L": 0.657935285053929,
                 "CHAIRs": 0,
                 "CHAIRi": 0.0
             }
@@ -117,9 +113,9 @@
             "caption": "The baby is sitting on the floor, holding a toothbrush in her mouth and looking up at the camera with a big smile on her face.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
                 "book",
-                "toothbrush"
+                "toothbrush",
+                "person"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -235,13 +231,13 @@
         },
         {
             "image_id": 448320,
-            "caption": "The image shows a toilet with a sink and a mirror hanging on the wall.",
+            "caption": "The image shows a toilet with a sink and mirror above it in a tiled bathroom.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
+                "bowl",
                 "toilet",
-                "sink",
                 "boat",
-                "bowl"
+                "sink"
             ],
             "mscoco_generated_words": [
                 "toilet",
@@ -258,21 +254,22 @@
                 "a",
                 "sink",
                 "and",
-                "a",
                 "mirror",
-                "hanging",
-                "on",
-                "the",
-                "wall",
+                "above",
+                "it",
+                "in",
+                "a",
+                "tiled",
+                "bathroom",
                 "."
             ],
             "metrics": {
-                "Bleu_1": 0.6236713232712557,
-                "Bleu_2": 0.5401152095634785,
-                "Bleu_3": 0.4379039163177145,
-                "Bleu_4": 0.3382657819508906,
-                "METEOR": 0.27980649658211537,
-                "CIDEr": 1.2104286776831883,
+                "Bleu_1": 0.624999999921875,
+                "Bleu_2": 0.4082482904119815,
+                "Bleu_3": 0.28768479129517777,
+                "Bleu_4": 0.20687206007531195,
+                "METEOR": 0.2997950798145785,
+                "CIDEr": 1.06492603068724,
                 "SPICE": {
                     "All": {
                         "pr": 0.5,
@@ -338,7 +335,7 @@
                         "tp": 3.0
                     }
                 },
-                "ROUGE_L": 0.5538261997405965,
+                "ROUGE_L": 0.4639959432048682,
                 "CHAIRs": 0,
                 "CHAIRi": 0.0
             }
@@ -353,11 +350,11 @@
                 ]
             ],
             "mscoco_gt_words": [
-                "laptop",
-                "bottle",
                 "person",
                 "chair",
-                "tv"
+                "tv",
+                "bottle",
+                "laptop"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -689,11 +686,11 @@
         },
         {
             "image_id": 285258,
-            "caption": "A group of dogs playing in a fenced area with their owners watching them.",
+            "caption": "A group of dogs playing in a fenced area with a small pond in the background.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
-                "dog"
+                "dog",
+                "person"
             ],
             "mscoco_generated_words": [
                 "dog"
@@ -710,37 +707,39 @@
                 "fenced",
                 "area",
                 "with",
-                "their",
-                "owner",
-                "watching",
-                "them",
+                "a",
+                "small",
+                "pond",
+                "in",
+                "the",
+                "background",
                 "."
             ],
             "metrics": {
-                "Bleu_1": 0.6428571428112246,
-                "Bleu_2": 0.3851644432312519,
-                "Bleu_3": 0.23122620071857092,
-                "Bleu_4": 3.255964125937714e-05,
-                "METEOR": 0.2225075195018709,
-                "CIDEr": 0.6642932692924274,
+                "Bleu_1": 0.4999999999687501,
+                "Bleu_2": 0.316227765996415,
+                "Bleu_3": 0.19258567854254074,
+                "Bleu_4": 2.722589422880811e-05,
+                "METEOR": 0.2184582869503031,
+                "CIDEr": 0.47503437812303195,
                 "SPICE": {
                     "All": {
-                        "pr": 0.4444444444444444,
-                        "re": 0.21052631578947367,
-                        "f": 0.2857142857142857,
-                        "fn": 15.0,
+                        "pr": 0.625,
+                        "re": 0.2631578947368421,
+                        "f": 0.37037037037037035,
+                        "fn": 14.0,
                         "numImages": 1.0,
-                        "fp": 5.0,
-                        "tp": 4.0
+                        "fp": 3.0,
+                        "tp": 5.0
                     },
                     "Relation": {
-                        "pr": 0.0,
-                        "re": 0.0,
-                        "f": 0.0,
-                        "fn": 7.0,
+                        "pr": 0.5,
+                        "re": 0.14285714285714285,
+                        "f": 0.22222222222222224,
+                        "fn": 6.0,
                         "numImages": 1.0,
                         "fp": 1.0,
-                        "tp": 0.0
+                        "tp": 1.0
                     },
                     "Cardinality": {
                         "pr": NaN,
@@ -752,12 +751,12 @@
                         "tp": 0.0
                     },
                     "Attribute": {
-                        "pr": 0.25,
+                        "pr": 0.5,
                         "re": 0.2,
-                        "f": 0.22222222222222224,
+                        "f": 0.28571428571428575,
                         "fn": 4.0,
                         "numImages": 1.0,
-                        "fp": 3.0,
+                        "fp": 1.0,
                         "tp": 1.0
                     },
                     "Size": {
@@ -788,14 +787,14 @@
                         "tp": 3.0
                     }
                 },
-                "ROUGE_L": 0.42957746478873243,
+                "ROUGE_L": 0.4013157894736842,
                 "CHAIRs": 0,
                 "CHAIRi": 0.0
             }
         },
         {
             "image_id": 541474,
-            "caption": "A skier is riding down a snowy slope on a snowboard, wearing a blue and black pants and a helmet.",
+            "caption": "A skier is riding down a snowy slope on a snowboard, wearing a blue and black pants.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
                 "snowboard",
@@ -825,26 +824,23 @@
                 "and",
                 "black",
                 "pant",
-                "and",
-                "a",
-                "helmet",
                 "."
             ],
             "metrics": {
-                "Bleu_1": 0.44999999997750006,
-                "Bleu_2": 0.3441236007881837,
-                "Bleu_3": 0.2702459674543633,
-                "Bleu_4": 3.282518529551091e-05,
-                "METEOR": 0.32801350181790595,
-                "CIDEr": 0.20963610757849171,
+                "Bleu_1": 0.5294117646747406,
+                "Bleu_2": 0.40674460838530657,
+                "Bleu_3": 0.3210390550653809,
+                "Bleu_4": 3.920905654910379e-05,
+                "METEOR": 0.33892304178967664,
+                "CIDEr": 0.4761871553002264,
                 "SPICE": {
                     "All": {
-                        "pr": 0.2222222222222222,
+                        "pr": 0.18181818181818182,
                         "re": 0.13333333333333333,
-                        "f": 0.16666666666666669,
+                        "f": 0.15384615384615383,
                         "fn": 13.0,
                         "numImages": 1.0,
-                        "fp": 7.0,
+                        "fp": 9.0,
                         "tp": 2.0
                     },
                     "Relation": {
@@ -871,7 +867,7 @@
                         "f": 0.0,
                         "fn": 8.0,
                         "numImages": 1.0,
-                        "fp": 1.0,
+                        "fp": 2.0,
                         "tp": 0.0
                     },
                     "Size": {
@@ -880,7 +876,7 @@
                         "f": NaN,
                         "fn": 0.0,
                         "numImages": 1.0,
-                        "fp": 0.0,
+                        "fp": 1.0,
                         "tp": 0.0
                     },
                     "Color": {
@@ -893,16 +889,16 @@
                         "tp": 0.0
                     },
                     "Object": {
-                        "pr": 0.5,
+                        "pr": 0.4,
                         "re": 0.5,
-                        "f": 0.5,
+                        "f": 0.4444444444444445,
                         "fn": 2.0,
                         "numImages": 1.0,
-                        "fp": 2.0,
+                        "fp": 3.0,
                         "tp": 2.0
                     }
                 },
-                "ROUGE_L": 0.40558510638297873,
+                "ROUGE_L": 0.4505169867060562,
                 "CHAIRs": 0,
                 "CHAIRi": 0.0
             }
@@ -912,9 +908,9 @@
             "caption": "A group of people are standing next to a train that is parked on the tracks.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
+                "tie",
                 "train",
-                "tie"
+                "person"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -1019,7 +1015,7 @@
         },
         {
             "image_id": 326911,
-            "caption": "A small white dog is standing next to a bicycle on a cobblestone street.",
+            "caption": "A small white dog is standing next to a black bicycle on a cobblestone street.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
                 "bicycle",
@@ -1040,6 +1036,7 @@
                 "next",
                 "to",
                 "a",
+                "black",
                 "bicycle",
                 "on",
                 "a",
@@ -1048,20 +1045,20 @@
                 "."
             ],
             "metrics": {
-                "Bleu_1": 0.5714285713877553,
-                "Bleu_2": 0.4193139346576645,
-                "Bleu_3": 0.3083016009580945,
-                "Bleu_4": 0.227187097787101,
-                "METEOR": 0.28744932009377555,
-                "CIDEr": 0.9762418881809111,
+                "Bleu_1": 0.5333333332977779,
+                "Bleu_2": 0.33806170186806433,
+                "Bleu_3": 0.20638725024557966,
+                "Bleu_4": 2.9256127305132916e-05,
+                "METEOR": 0.26786757664234667,
+                "CIDEr": 0.5472077646475362,
                 "SPICE": {
                     "All": {
-                        "pr": 0.375,
+                        "pr": 0.3333333333333333,
                         "re": 0.17647058823529413,
-                        "f": 0.24,
+                        "f": 0.23076923076923078,
                         "fn": 14.0,
                         "numImages": 1.0,
-                        "fp": 5.0,
+                        "fp": 6.0,
                         "tp": 3.0
                     },
                     "Relation": {
@@ -1083,12 +1080,12 @@
                         "tp": 0.0
                     },
                     "Attribute": {
-                        "pr": 0.3333333333333333,
+                        "pr": 0.25,
                         "re": 0.16666666666666666,
-                        "f": 0.2222222222222222,
+                        "f": 0.2,
                         "fn": 5.0,
                         "numImages": 1.0,
-                        "fp": 2.0,
+                        "fp": 3.0,
                         "tp": 1.0
                     },
                     "Size": {
@@ -1106,7 +1103,7 @@
                         "f": NaN,
                         "fn": 0.0,
                         "numImages": 1.0,
-                        "fp": 1.0,
+                        "fp": 2.0,
                         "tp": 0.0
                     },
                     "Object": {
@@ -1119,7 +1116,7 @@
                         "tp": 2.0
                     }
                 },
-                "ROUGE_L": 0.47805642633228845,
+                "ROUGE_L": 0.46003016591251883,
                 "CHAIRs": 0,
                 "CHAIRi": 0.0
             }
@@ -1129,10 +1126,10 @@
             "caption": "The white cat is sitting on top of a black bag in the corner of a room.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "book",
-                "cat",
                 "dining table",
                 "handbag",
+                "book",
+                "cat",
                 "dog"
             ],
             "mscoco_generated_words": [
@@ -1241,10 +1238,10 @@
             "caption": "A cat sits on top of a microwave oven in a kitchen.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "microwave",
-                "cup",
                 "oven",
-                "cat"
+                "microwave",
+                "cat",
+                "cup"
             ],
             "mscoco_generated_words": [
                 "cat",
@@ -1349,16 +1346,16 @@
             "caption": "A woman is sitting at a table with a plate of food in front of her.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "spoon",
-                "bottle",
-                "person",
-                "broccoli",
                 "sandwich",
+                "person",
+                "spoon",
+                "bowl",
                 "dining table",
                 "fork",
-                "knife",
+                "bottle",
                 "cup",
-                "bowl"
+                "broccoli",
+                "knife"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -1497,13 +1494,13 @@
                 "CIDEr": 0.8934613212904123,
                 "SPICE": {
                     "All": {
-                        "pr": 0.375,
-                        "re": 0.10714285714285714,
-                        "f": 0.16666666666666666,
-                        "fn": 25.0,
+                        "pr": 0.25,
+                        "re": 0.07142857142857142,
+                        "f": 0.11111111111111112,
+                        "fn": 26.0,
                         "numImages": 1.0,
-                        "fp": 5.0,
-                        "tp": 3.0
+                        "fp": 6.0,
+                        "tp": 2.0
                     },
                     "Relation": {
                         "pr": 0.0,
@@ -1511,7 +1508,7 @@
                         "f": 0.0,
                         "fn": 12.0,
                         "numImages": 1.0,
-                        "fp": 3.0,
+                        "fp": 4.0,
                         "tp": 0.0
                     },
                     "Cardinality": {
@@ -1529,7 +1526,7 @@
                         "f": 0.0,
                         "fn": 6.0,
                         "numImages": 1.0,
-                        "fp": 0.0,
+                        "fp": 1.0,
                         "tp": 0.0
                     },
                     "Size": {
@@ -1551,13 +1548,13 @@
                         "tp": 0.0
                     },
                     "Object": {
-                        "pr": 0.6,
-                        "re": 0.3,
-                        "f": 0.4,
-                        "fn": 7.0,
+                        "pr": 0.6666666666666666,
+                        "re": 0.2,
+                        "f": 0.30769230769230765,
+                        "fn": 8.0,
                         "numImages": 1.0,
-                        "fp": 2.0,
-                        "tp": 3.0
+                        "fp": 1.0,
+                        "tp": 2.0
                     }
                 },
                 "ROUGE_L": 0.4699537750385208,
@@ -1567,7 +1564,7 @@
         },
         {
             "image_id": 18014,
-            "caption": "The image shows a pizza with various toppings, including vegetables and meat, sitting in a blue box.",
+            "caption": "The pizza is sitting on a blue tray with a slice missing.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
                 "pizza",
@@ -1579,42 +1576,35 @@
             "hallucination_idxs": [],
             "words": [
                 "the",
-                "image",
-                "show",
-                "a",
                 "pizza",
-                "with",
-                "variou",
-                "topping",
-                ",",
-                "including",
-                "vegetable",
-                "and",
-                "meat",
-                ",",
+                "is",
                 "sitting",
-                "in",
+                "on",
                 "a",
                 "blue",
-                "box",
+                "tray",
+                "with",
+                "a",
+                "slouse",
+                "missing",
                 "."
             ],
             "metrics": {
-                "Bleu_1": 0.6470588234913496,
-                "Bleu_2": 0.4021998332455238,
-                "Bleu_3": 0.27836043274885724,
-                "Bleu_4": 3.5230890315089664e-05,
-                "METEOR": 0.2578964347608675,
-                "CIDEr": 0.4829993181201907,
+                "Bleu_1": 0.5833333332847223,
+                "Bleu_2": 0.32566947361109216,
+                "Bleu_3": 2.1971078112918733e-06,
+                "Bleu_4": 5.859059369587253e-09,
+                "METEOR": 0.1693121693121693,
+                "CIDEr": 0.5976312076092377,
                 "SPICE": {
                     "All": {
-                        "pr": 0.375,
-                        "re": 0.13043478260869565,
-                        "f": 0.19354838709677416,
-                        "fn": 20.0,
+                        "pr": 0.4,
+                        "re": 0.08695652173913043,
+                        "f": 0.14285714285714285,
+                        "fn": 21.0,
                         "numImages": 1.0,
-                        "fp": 5.0,
-                        "tp": 3.0
+                        "fp": 3.0,
+                        "tp": 2.0
                     },
                     "Relation": {
                         "pr": 0.0,
@@ -1622,7 +1612,7 @@
                         "f": 0.0,
                         "fn": 9.0,
                         "numImages": 1.0,
-                        "fp": 2.0,
+                        "fp": 1.0,
                         "tp": 0.0
                     },
                     "Cardinality": {
@@ -1662,23 +1652,23 @@
                         "tp": 0.0
                     },
                     "Object": {
-                        "pr": 0.6,
-                        "re": 0.42857142857142855,
-                        "f": 0.5,
-                        "fn": 4.0,
+                        "pr": 0.6666666666666666,
+                        "re": 0.2857142857142857,
+                        "f": 0.4,
+                        "fn": 5.0,
                         "numImages": 1.0,
-                        "fp": 2.0,
-                        "tp": 3.0
+                        "fp": 1.0,
+                        "tp": 2.0
                     }
                 },
-                "ROUGE_L": 0.5611038107752957,
+                "ROUGE_L": 0.3696969696969697,
                 "CHAIRs": 0,
                 "CHAIRi": 0.0
             }
         },
         {
             "image_id": 497348,
-            "caption": "An empty street with a sign that reads \"no through traffic\" on the side of the road.",
+            "caption": "An empty street with a sign that reads \"no through traffic\"",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
                 "car"
@@ -1698,22 +1688,15 @@
                 "no",
                 "through",
                 "traffic",
-                "'s's",
-                "on",
-                "the",
-                "side",
-                "of",
-                "the",
-                "road",
-                "."
+                "'s's"
             ],
             "metrics": {
-                "Bleu_1": 0.7058823528996541,
-                "Bleu_2": 0.5144957553963163,
-                "Bleu_3": 0.37548955666810835,
-                "Bleu_4": 0.24797984720301927,
-                "METEOR": 0.3019945768450708,
-                "CIDEr": 1.0700693037961537,
+                "Bleu_1": 0.7272727271404961,
+                "Bleu_2": 0.6030226890431458,
+                "Bleu_3": 0.4948976030651392,
+                "Bleu_4": 0.35084396949451946,
+                "METEOR": 0.3140841613297483,
+                "CIDEr": 1.265544340136289,
                 "SPICE": {
                     "All": {
                         "pr": 0.7142857142857143,
@@ -1779,7 +1762,7 @@
                         "tp": 4.0
                     }
                 },
-                "ROUGE_L": 0.4982497082847141,
+                "ROUGE_L": 0.5176803394625177,
                 "CHAIRs": 0,
                 "CHAIRi": 0.0
             }
@@ -1789,10 +1772,10 @@
             "caption": "A group of people are walking through a park with benches and trees.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "handbag",
                 "bench",
-                "person",
-                "bird"
+                "bird",
+                "handbag",
+                "person"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -1894,7 +1877,7 @@
         },
         {
             "image_id": 530624,
-            "caption": "The dog is curled up under the covers on the bed, looking comfortable and relaxed.",
+            "caption": "The black and brown dog is curled up under the covers on the bed with a floral patterned blanket.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
                 "bed",
@@ -1907,6 +1890,9 @@
             "hallucination_idxs": [],
             "words": [
                 "the",
+                "black",
+                "and",
+                "brown",
                 "dog",
                 "is",
                 "curled",
@@ -1917,20 +1903,20 @@
                 "on",
                 "the",
                 "bed",
-                ",",
-                "looking",
-                "comfortable",
-                "and",
-                "relaxed",
+                "with",
+                "a",
+                "floral",
+                "patterned",
+                "blanket",
                 "."
             ],
             "metrics": {
-                "Bleu_1": 0.5333333332977779,
-                "Bleu_2": 0.2760262237178828,
-                "Bleu_3": 0.1802958699851803,
-                "Bleu_4": 2.6435895250782795e-05,
-                "METEOR": 0.26784983055903594,
-                "CIDEr": 0.7146981882573806,
+                "Bleu_1": 0.5789473683905818,
+                "Bleu_2": 0.31063037208189476,
+                "Bleu_3": 0.17838005936563955,
+                "Bleu_4": 2.4405051723208498e-05,
+                "METEOR": 0.3327475887437543,
+                "CIDEr": 0.34434132338248596,
                 "SPICE": {
                     "All": {
                         "pr": 0.3,
@@ -1996,7 +1982,7 @@
                         "tp": 2.0
                     }
                 },
-                "ROUGE_L": 0.3490701001430615,
+                "ROUGE_L": 0.3652694610778443,
                 "CHAIRs": 0,
                 "CHAIRi": 0.0
             }
@@ -2006,8 +1992,8 @@
             "caption": "The image shows two elephants standing on a rocky beach, with one of them holding a small rock in its trunk.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
-                "elephant"
+                "elephant",
+                "person"
             ],
             "mscoco_generated_words": [
                 "elephant"
@@ -2047,13 +2033,13 @@
                 "CIDEr": 0.18503212927947288,
                 "SPICE": {
                     "All": {
-                        "pr": 1.0,
-                        "re": 0.21428571428571427,
-                        "f": 0.35294117647058826,
-                        "fn": 11.0,
+                        "pr": 0.5,
+                        "re": 0.2857142857142857,
+                        "f": 0.36363636363636365,
+                        "fn": 10.0,
                         "numImages": 1.0,
-                        "fp": 0.0,
-                        "tp": 3.0
+                        "fp": 4.0,
+                        "tp": 4.0
                     },
                     "Relation": {
                         "pr": 0.0,
@@ -2061,7 +2047,7 @@
                         "f": 0.0,
                         "fn": 6.0,
                         "numImages": 1.0,
-                        "fp": 0.0,
+                        "fp": 1.0,
                         "tp": 0.0
                     },
                     "Cardinality": {
@@ -2074,13 +2060,13 @@
                         "tp": 0.0
                     },
                     "Attribute": {
-                        "pr": 0.0,
-                        "re": 0.0,
-                        "f": 0.0,
-                        "fn": 1.0,
+                        "pr": 0.25,
+                        "re": 1.0,
+                        "f": 0.4,
+                        "fn": 0.0,
                         "numImages": 1.0,
-                        "fp": 0.0,
-                        "tp": 0.0
+                        "fp": 3.0,
+                        "tp": 1.0
                     },
                     "Size": {
                         "pr": NaN,
@@ -2092,13 +2078,13 @@
                         "tp": 0.0
                     },
                     "Color": {
-                        "pr": 0.0,
-                        "re": 0.0,
-                        "f": 0.0,
-                        "fn": 1.0,
+                        "pr": 0.5,
+                        "re": 1.0,
+                        "f": 0.6666666666666666,
+                        "fn": 0.0,
                         "numImages": 1.0,
-                        "fp": 0.0,
-                        "tp": 0.0
+                        "fp": 1.0,
+                        "tp": 1.0
                     },
                     "Object": {
                         "pr": 1.0,
@@ -2153,12 +2139,12 @@
                 "CIDEr": 0.6837790398661621,
                 "SPICE": {
                     "All": {
-                        "pr": 0.16666666666666666,
+                        "pr": 0.2,
                         "re": 0.13333333333333333,
-                        "f": 0.14814814814814814,
+                        "f": 0.16,
                         "fn": 13.0,
                         "numImages": 1.0,
-                        "fp": 10.0,
+                        "fp": 8.0,
                         "tp": 2.0
                     },
                     "Relation": {
@@ -2167,7 +2153,7 @@
                         "f": 0.0,
                         "fn": 6.0,
                         "numImages": 1.0,
-                        "fp": 4.0,
+                        "fp": 3.0,
                         "tp": 0.0
                     },
                     "Cardinality": {
@@ -2207,12 +2193,12 @@
                         "tp": 0.0
                     },
                     "Object": {
-                        "pr": 0.4,
+                        "pr": 0.5,
                         "re": 0.2857142857142857,
-                        "f": 0.3333333333333333,
+                        "f": 0.36363636363636365,
                         "fn": 5.0,
                         "numImages": 1.0,
-                        "fp": 3.0,
+                        "fp": 2.0,
                         "tp": 2.0
                     }
                 },
@@ -2223,14 +2209,14 @@
         }
     ],
     "overall_metrics": {
-        "Bleu_1": 0.6049382716030712,
-        "Bleu_2": 0.43707337873673047,
-        "Bleu_3": 0.33720065436270025,
-        "Bleu_4": 0.2569186542594858,
-        "METEOR": 0.29916478713182715,
-        "CIDEr": 0.9757400844172484,
-        "SPICE": 0.2398737161336839,
-        "ROUGE_L": 0.5067015980917381,
+        "Bleu_1": 0.6038338658127673,
+        "Bleu_2": 0.4282722414808685,
+        "Bleu_3": 0.3204973394352263,
+        "Bleu_4": 0.24117457849532659,
+        "METEOR": 0.29869182886468815,
+        "CIDEr": 0.9880246401739304,
+        "SPICE": 0.2291234554045333,
+        "ROUGE_L": 0.4917850880197044,
         "CHAIRs": 0.05,
         "CHAIRi": 0.03125
     }

@@ -1,0 +1,72 @@
+{"question_id": 1, "image": "COCO_val2014_000000153578.jpg", "text": "Is there a person in the image?", "label": "yes"}
+{"question_id": 2, "image": "COCO_val2014_000000153578.jpg", "text": "Is there a tv in the image?", "label": "no"}
+{"question_id": 3, "image": "COCO_val2014_000000153578.jpg", "text": "Is there a cup in the image?", "label": "yes"}
+{"question_id": 4, "image": "COCO_val2014_000000153578.jpg", "text": "Is there a sink in the image?", "label": "no"}
+{"question_id": 5, "image": "COCO_val2014_000000153578.jpg", "text": "Is there a cell phone in the image?", "label": "yes"}
+{"question_id": 6, "image": "COCO_val2014_000000153578.jpg", "text": "Is there a bus in the image?", "label": "no"}
+{"question_id": 7, "image": "COCO_val2014_000000105014.jpg", "text": "Is there a bowl in the image?", "label": "yes"}
+{"question_id": 8, "image": "COCO_val2014_000000105014.jpg", "text": "Is there a person in the image?", "label": "no"}
+{"question_id": 9, "image": "COCO_val2014_000000105014.jpg", "text": "Is there a broccoli in the image?", "label": "yes"}
+{"question_id": 10, "image": "COCO_val2014_000000105014.jpg", "text": "Is there a stop sign in the image?", "label": "no"}
+{"question_id": 11, "image": "COCO_val2014_000000105014.jpg", "text": "Is there a fork in the image?", "label": "yes"}
+{"question_id": 12, "image": "COCO_val2014_000000105014.jpg", "text": "Is there a car in the image?", "label": "no"}
+{"question_id": 13, "image": "COCO_val2014_000000403758.jpg", "text": "Is there a dog in the image?", "label": "yes"}
+{"question_id": 14, "image": "COCO_val2014_000000403758.jpg", "text": "Is there a book in the image?", "label": "no"}
+{"question_id": 15, "image": "COCO_val2014_000000403758.jpg", "text": "Is there a person in the image?", "label": "yes"}
+{"question_id": 16, "image": "COCO_val2014_000000403758.jpg", "text": "Is there a fork in the image?", "label": "no"}
+{"question_id": 17, "image": "COCO_val2014_000000403758.jpg", "text": "Is there a horse in the image?", "label": "yes"}
+{"question_id": 18, "image": "COCO_val2014_000000403758.jpg", "text": "Is there a bed in the image?", "label": "no"}
+{"question_id": 19, "image": "COCO_val2014_000000173565.jpg", "text": "Is there a wine glass in the image?", "label": "yes"}
+{"question_id": 20, "image": "COCO_val2014_000000173565.jpg", "text": "Is there a cup in the image?", "label": "no"}
+{"question_id": 21, "image": "COCO_val2014_000000173565.jpg", "text": "Is there a bowl in the image?", "label": "yes"}
+{"question_id": 22, "image": "COCO_val2014_000000173565.jpg", "text": "Is there an airplane in the imange?", "label": "no"}
+{"question_id": 23, "image": "COCO_val2014_000000173565.jpg", "text": "Is there a book in the image?", "label": "yes"}
+{"question_id": 24, "image": "COCO_val2014_000000173565.jpg", "text": "Is there a person in the image?", "label": "no"}
+{"question_id": 25, "image": "COCO_val2014_000000019624.jpg", "text": "Is there a backpack in the image?", "label": "yes"}
+{"question_id": 26, "image": "COCO_val2014_000000019624.jpg", "text": "Is there a sink in the image?", "label": "no"}
+{"question_id": 27, "image": "COCO_val2014_000000019624.jpg", "text": "Is there a person in the image?", "label": "yes"}
+{"question_id": 28, "image": "COCO_val2014_000000019624.jpg", "text": "Is there a wine glass in the image?", "label": "no"}
+{"question_id": 29, "image": "COCO_val2014_000000019624.jpg", "text": "Is there a motorcycle in the image?", "label": "yes"}
+{"question_id": 30, "image": "COCO_val2014_000000019624.jpg", "text": "Is there a bus in the image?", "label": "no"}
+{"question_id": 31, "image": "COCO_val2014_000000482994.jpg", "text": "Is there a backpack in the image?", "label": "yes"}
+{"question_id": 32, "image": "COCO_val2014_000000482994.jpg", "text": "Is there a cup in the image?", "label": "no"}
+{"question_id": 33, "image": "COCO_val2014_000000482994.jpg", "text": "Is there a chair in the image?", "label": "yes"}
+{"question_id": 34, "image": "COCO_val2014_000000482994.jpg", "text": "Is there a keyboard in the image?", "label": "no"}
+{"question_id": 35, "image": "COCO_val2014_000000482994.jpg", "text": "Is there a suitcase in the image?", "label": "yes"}
+{"question_id": 36, "image": "COCO_val2014_000000482994.jpg", "text": "Is there a book in the image?", "label": "no"}
+{"question_id": 37, "image": "COCO_val2014_000000210855.jpg", "text": "Is there a vase in the image?", "label": "yes"}
+{"question_id": 38, "image": "COCO_val2014_000000210855.jpg", "text": "Is there a stop sign in the image?", "label": "no"}
+{"question_id": 39, "image": "COCO_val2014_000000210855.jpg", "text": "Is there a sink in the image?", "label": "yes"}
+{"question_id": 40, "image": "COCO_val2014_000000210855.jpg", "text": "Is there a tv in the image?", "label": "no"}
+{"question_id": 41, "image": "COCO_val2014_000000210855.jpg", "text": "Is there a bottle in the image?", "label": "yes"}
+{"question_id": 42, "image": "COCO_val2014_000000210855.jpg", "text": "Is there a book in the image?", "label": "no"}
+{"question_id": 43, "image": "COCO_val2014_000000346904.jpg", "text": "Is there a person in the image?", "label": "yes"}
+{"question_id": 44, "image": "COCO_val2014_000000346904.jpg", "text": "Is there an orange in the imange?", "label": "no"}
+{"question_id": 45, "image": "COCO_val2014_000000346904.jpg", "text": "Is there a car in the image?", "label": "yes"}
+{"question_id": 46, "image": "COCO_val2014_000000346904.jpg", "text": "Is there a book in the image?", "label": "no"}
+{"question_id": 47, "image": "COCO_val2014_000000346904.jpg", "text": "Is there a bus in the image?", "label": "yes"}
+{"question_id": 48, "image": "COCO_val2014_000000346904.jpg", "text": "Is there a surfboard in the image?", "label": "no"}
+{"question_id": 49, "image": "COCO_val2014_000000515585.jpg", "text": "Is there a chair in the image?", "label": "yes"}
+{"question_id": 50, "image": "COCO_val2014_000000515585.jpg", "text": "Is there a cup in the image?", "label": "no"}
+{"question_id": 51, "image": "COCO_val2014_000000515585.jpg", "text": "Is there a bed in the image?", "label": "yes"}
+{"question_id": 52, "image": "COCO_val2014_000000515585.jpg", "text": "Is there a toilet in the image?", "label": "no"}
+{"question_id": 53, "image": "COCO_val2014_000000515585.jpg", "text": "Is there a cat in the image?", "label": "yes"}
+{"question_id": 54, "image": "COCO_val2014_000000515585.jpg", "text": "Is there a fork in the image?", "label": "no"}
+{"question_id": 55, "image": "COCO_val2014_000000327005.jpg", "text": "Is there a person in the image?", "label": "yes"}
+{"question_id": 56, "image": "COCO_val2014_000000327005.jpg", "text": "Is there a horse in the image?", "label": "no"}
+{"question_id": 57, "image": "COCO_val2014_000000327005.jpg", "text": "Is there a surfboard in the image?", "label": "yes"}
+{"question_id": 58, "image": "COCO_val2014_000000327005.jpg", "text": "Is there a chair in the image?", "label": "no"}
+{"question_id": 59, "image": "COCO_val2014_000000327005.jpg", "text": "Is there a boat in the image?", "label": "yes"}
+{"question_id": 60, "image": "COCO_val2014_000000327005.jpg", "text": "Is there a cat in the image?", "label": "no"}
+{"question_id": 61, "image": "COCO_val2014_000000166244.jpg", "text": "Is there a laptop in the image?", "label": "yes"}
+{"question_id": 62, "image": "COCO_val2014_000000166244.jpg", "text": "Is there a bus in the image?", "label": "no"}
+{"question_id": 63, "image": "COCO_val2014_000000166244.jpg", "text": "Is there a dining table in the image?", "label": "yes"}
+{"question_id": 64, "image": "COCO_val2014_000000166244.jpg", "text": "Is there a tie in the image?", "label": "no"}
+{"question_id": 65, "image": "COCO_val2014_000000166244.jpg", "text": "Is there a tv in the image?", "label": "yes"}
+{"question_id": 66, "image": "COCO_val2014_000000166244.jpg", "text": "Is there a suitcase in the image?", "label": "no"}
+{"question_id": 67, "image": "COCO_val2014_000000409052.jpg", "text": "Is there a person in the image?", "label": "yes"}
+{"question_id": 68, "image": "COCO_val2014_000000409052.jpg", "text": "Is there a chair in the image?", "label": "no"}
+{"question_id": 69, "image": "COCO_val2014_000000409052.jpg", "text": "Is there an airplane in the imange?", "label": "yes"}
+{"question_id": 70, "image": "COCO_val2014_000000409052.jpg", "text": "Is there a tv in the image?", "label": "no"}
+{"question_id": 71, "image": "COCO_val2014_000000409052.jpg", "text": "Is there a car in the image?", "label": "yes"}
+{"question_id": 72, "image": "COCO_val2014_000000409052.jpg", "text": "Is there a mouse in the image?", "label": "no"}

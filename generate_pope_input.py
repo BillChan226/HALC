@@ -43,6 +43,7 @@ def initialize_mini_gpt_4(parser):
 
     args = parser.parse_args()
 
+    decoding_strategy = args.decoder
     # load config
     cfg = Config(args)
     model_config = cfg.model_cfg
@@ -71,11 +72,16 @@ def initialize_mini_gpt_4(parser):
         [StoppingCriteriaSub(stops=stop_words_ids)]
     )
 
+    halc_params = {"context_domain": "upper", "contrast_weight": 0.05, "context_window": 4, "expand_ratio": 0.15}
+    hyper_params = {"halc_params": halc_params}
+
     chat = Chat(
         model,
         vis_processor,
         device="cuda:{}".format(args.gpu_id),
         stopping_criteria=stopping_criteria,
+        decoding_strategy = decoding_strategy,
+        hyper_params=hyper_params,
     )
 
     return chat, CONV_VISION, cfg
@@ -92,6 +98,13 @@ def main():
         help="Name of the model. Default is 'minigpt4'.",
     )
     parser.add_argument(
+        "-d",
+        "--decoder",
+        type=str,
+        default="greedy",
+        help="Decoding strategy to use. You can choose from 'greedy', 'dola', 'halc'. Default is 'greedy'.",
+    )
+    parser.add_argument(
         "--type",
         type=str,
         default="random",
@@ -106,7 +119,7 @@ def main():
     parser.add_argument(
         "--data_dir",
         type=str,
-        default="/media/zhuokai/SN850X_4TB/Data/coco/val2014",
+        default="eval_dataset/val2014",
         help="Test data directory. Default is '/media/zhuokai/SN850X_4TB/Data/coco/val2014'.",
     )
     parser.add_argument(
@@ -153,6 +166,13 @@ def main():
         default=False,
         help="Verbosity. Default: False.",
     )
+    parser.add_argument(
+        "-g",
+        "--gpu-id",
+        type=int,
+        default=0,
+        help="specify the gpu to load the model.",
+    )
 
     # load program level arguments
     args = parser.parse_args()
@@ -167,6 +187,7 @@ def main():
     output_dir = args.output_dir
     seed = args.seed
     verbosity = args.verbosity
+    decoding_strategy = args.decoder
 
     # print program level arguments
     if verbosity:
@@ -279,14 +300,21 @@ def main():
     if verbosity:
         print(f"\n{model_name} model initialized successfully.")
 
+    # # set output dir
+    # model_type = cfg.model_cfg.model_type.replace("_", "-")
+    # if cfg.model_cfg.dola_decoding is True:
+    #     dola_name = "dola"
+    #     for layer_index in cfg.model_cfg.early_exit_layers:
+    #         dola_name += f"_{layer_index}"
+    #     model_type += f"_{dola_name}"
+    # output_dir = os.path.join(output_dir, f"{model_name}_{model_type}", dataset_name)
+
     # set output dir
     model_type = cfg.model_cfg.model_type.replace("_", "-")
-    if cfg.model_cfg.dola_decoding is True:
-        dola_name = "dola"
-        for layer_index in cfg.model_cfg.early_exit_layers:
-            dola_name += f"_{layer_index}"
-        model_type += f"_{dola_name}"
-    output_dir = os.path.join(output_dir, f"{model_name}_{model_type}", dataset_name)
+    output_dir = os.path.join(
+        output_dir, f"{model_name}_{model_type}", decoding_strategy, dataset_name
+    )
+
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
@@ -309,7 +337,7 @@ def main():
         output_text, _, _ = model.answer(
             CONV_VISION,
             img_list,
-            dola_decoding=cfg.model_cfg.dola_decoding,
+            # dola_decoding=cfg.model_cfg.dola_decoding,
         )
 
         # append the generated caption to the list

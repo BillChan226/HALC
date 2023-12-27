@@ -366,6 +366,7 @@ class MiniGPT4(Blip2Base):
         threshold=1,
         num_attn_candidates=5,
         penalty_weights=1.0,
+        k_candidate_num=1,
     ):
         self.llama_tokenizer.padding_side = "left"
 

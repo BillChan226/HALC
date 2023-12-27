@@ -282,14 +282,15 @@ for img_id in tqdm(range(len(img_files))):
                 mature_layer=mature_layer,
                 beam_search=True,
                 dola_decoding=False,
-                opera_decoding=True,
-                halc_decoding=False,
+                opera_decoding=False,
+                halc_decoding=True,
                 halc_assistant=halc_assistant_helper,
                 key_position=None,
                 scale_factor=args.scale_factor,
                 threshold=args.threshold,
                 num_attn_candidates=args.num_attn_candidates,
                 penalty_weights=args.penalty_weights,
+                k_candidate_num=k_candidate_num,
             )
     img_save["caption"] = out[0]
 

@@ -32,7 +32,7 @@ from torchvision.utils import save_image
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 import seaborn
-import json
+import json, jsonlines
 
 from decoder_zoo.Woodpecker.vis_corrector import Corrector
 from decoder_zoo.HaLC.context_density.halc import halc_assistant
@@ -166,6 +166,7 @@ model_config.device_8bit = args.gpu_id
 model_cls = registry.get_model_class(model_config.arch)
 model = model_cls.from_config(model_config).to(device)
 model.eval()
+
 processor_cfg = cfg.get_config().preprocess
 processor_cfg.vis_processor.eval.do_normalize = False
 vis_processors, txt_processors = load_preprocess(processor_cfg)
@@ -211,7 +212,6 @@ if post_correction == "woodpecker":
 print(f"\033[42m####### Current Decoding Strategy: {decoding_strategy} #######\033[0m")
 
 
-
 if verbosity:
     print("\ndecoding strategy: ", decoding_strategy)
     print("backbone model_name: ", args.model)
@@ -228,15 +228,14 @@ mean = (0.48145466, 0.4578275, 0.40821073)
 std = (0.26862954, 0.26130258, 0.27577711)
 norm = transforms.Normalize(mean, std)
 
-
 annotation_file_path = args.data_path + 'annotations/instances_val2014.json'
+caption_file_path = args.data_path + 'annotations/captions_val2014.json'
 # with open(args.data_path + '../annotations_trainval2014/annotations/instances_val2014.json', 'r') as f:
 with open(annotation_file_path, 'r') as f:
     lines = f.readlines()
 coco_anns = json.loads(lines[0])
 
-coco = COCO(annotation_file_path)
-
+coco = COCO(caption_file_path)
 
 img_ids = coco.getImgIds()
 # sample image ids
@@ -369,16 +368,20 @@ for img_id in tqdm(range(len(img_files))):
 
 
     # dump metric file
-    generated_captions_path = os.path.join(base_dir, f"{model_name}_{decoding_strategy}_{num_beams}_{k_candidate_num}_{dataset_name}_{seed}_{num_samples}_generated_captions.json")
+    generated_captions_path = os.path.join(base_dir, f"{model_name}_{decoding_strategy}_beams_{num_beams}_k_{k_candidate_num}_{dataset_name}_seed_{seed}_samples_{num_samples}_generated_captions.json")
     with open(generated_captions_path, "a") as f:
         json.dump(img_save, f)
         f.write('\n')
     
 
+##################  EVALUATION  #####################
 
+loaded_json = []
+with open(generated_captions_path, 'r') as f:
+    lines = f.readlines()
+    for line in lines:
+        loaded_json.append(json.loads(line))
 
-# check the length of the generated captions
-loaded_json = json.load(open(generated_captions_path))
 # construct output file as input to CHAIR evaluation
 # output format follows https://github.com/ruotianluo/self-critical.pytorch
 formulated_output_dict = {}

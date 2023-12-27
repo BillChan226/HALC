@@ -179,6 +179,7 @@ elif decoding_strategy == "halc-greedy":
     halc_decoding = True
 elif decoding_strategy == "halc-beam":
     halc_decoding = True
+    dola_decoding = True
     beam_search = True
 elif decoding_strategy == "opera-beam":
     beam_search = True
@@ -193,11 +194,15 @@ if post_correction == "woodpecker":
 print(f"\033[42m####### Current Decoding Strategy: {decoding_strategy} #######\033[0m")
 
 
+mean = (0.48145466, 0.4578275, 0.40821073)
+std = (0.26862954, 0.26130258, 0.27577711)
+norm = transforms.Normalize(mean, std)
+
+
 
 if verbosity:
     print("\ndecoding strategy: ", decoding_strategy)
     print("backbone model_name: ", args.model)
-    print("num_samples: ", num_samples)
     print("num_beams: ", num_beams)
     print("seed: ", seed)
     print(vis_processors["eval"].transform)
@@ -286,11 +291,8 @@ if post_correction == "woodpecker":
     corrected_sample = corrector.correct(sample)
     output_text = corrected_sample['output']
     print("corrected output_text", output_text)
-    input()
 
 
-
-print("img_id: ", img_id)
 print("caption: ", output_text)
-# input("done")
+
 

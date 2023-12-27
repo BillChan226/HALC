@@ -7,7 +7,8 @@ import torch.nn as nn
 
 from minigpt4.common.registry import registry
 from minigpt4.models.blip2 import Blip2Base, disabled_train
-from minigpt4.models.modeling_llama import LlamaForCausalLM
+# from minigpt4.models.modeling_llama import LlamaForCausalLM
+from transformers.models.llama.modeling_llama import LlamaForCausalLM
 from transformers import LlamaTokenizer
 
 # from peft import (

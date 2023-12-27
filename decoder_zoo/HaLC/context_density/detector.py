@@ -8,7 +8,7 @@ import shortuuid
 from torchvision.ops import box_convert
 import torch
 from models.utils import compute_iou
-from GroundingDINO.groundingdino.util.inference import (
+from decoder_zoo.GroundingDINO.groundingdino.util.inference import (
     load_model,
     load_image,
     predict,

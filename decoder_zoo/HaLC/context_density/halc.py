@@ -8,7 +8,7 @@ import torch.backends.cudnn as cudnn
 import seaborn as sns
 import matplotlib.pyplot as plt
 import json
-from context_density.detector import Detector
+from decoder_zoo.HaLC.context_density.detector import Detector
 from types import SimpleNamespace
 from PIL import Image, ImageDraw
 import spacy
@@ -19,9 +19,9 @@ from transformers import AutoTokenizer
 
 # initialize detector
 args_dict = {
-    "detector_config": "./GroundingDINO/groundingdino/config/GroundingDINO_SwinT_OGC.py",
-    "detector_model_path": "./GroundingDINO/weights/groundingdino_swint_ogc.pth",
-    "cache_dir": "./cache_dir",
+    "detector_config": "decoder_zoo/GroundingDINO/groundingdino/config/GroundingDINO_SwinT_OGC.py",
+    "detector_model_path": "decoder_zoo/GroundingDINO/weights/groundingdino_swint_ogc.pth",
+    "cache_dir": "decoder_zoo/HaLC/cache_dir",
 }
 
 
@@ -53,12 +53,10 @@ class halc_assistant:
         self.clip_processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32")
 
 
-    def update_img_path(self, img_path):
+    def update_input(self, img_path, input_prompt):
         # print("img_path", img_path)
         self.detector_dict = {"img_path": img_path, "box_threshold": 0.1}
-
-    def update_conv(self, conv):
-        self.conv = conv
+        self.prompt = input_prompt
 
     def check_word_complete(self, input_id):
         input_id = input_id.cpu().numpy().tolist()
@@ -282,7 +280,7 @@ class halc_assistant:
             for i, cropped_img in enumerate(cropped_images, start=1):
                 image = self.vis_processor(cropped_img).unsqueeze(0).to(self.device)
                 image_emb, _ = self.model.encode_img(image, 38)
-                prompt = self.conv.get_prompt()
+                prompt = self.prompt
                 # print("prompt: ", prompt)
                 embs = self.model.get_context_emb(prompt, [image_emb])
                 current_max_len = embs.shape[1] + max_new_tokens

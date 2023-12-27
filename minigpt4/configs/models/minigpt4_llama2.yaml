@@ -12,8 +12,8 @@ model:
   # generation configs
   prompt: ""
 
-  # llama_model: "/home/czr/contrast_decoding_LVLMs/model_checkpoints/models--meta-llama--Llama-2-7b-chat-hf/snapshots/c1b0db933684edbfe29a06fa47eb19cc48025e93"
-  llama_model: "meta-llama/Llama-2-7b-chat-hf"
+  llama_model: "/home/czr/.cache/huggingface/hub/models--meta-llama--Llama-2-7b-chat-hf/snapshots/c1b0db933684edbfe29a06fa47eb19cc48025e93"
+  # llama_model: "meta-llama/Llama-2-7b-chat-hf"
 preprocess:
     vis_processor:
         train:

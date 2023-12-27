@@ -1,5 +1,5 @@
-import os
-
+import os, sys
+sys.path.append("decoder_zoo/GroundingDINO")
 from typing import Dict
 from tqdm import tqdm
 from PIL import Image

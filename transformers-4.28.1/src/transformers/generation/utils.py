@@ -1374,7 +1374,7 @@ class GenerationMixin:
             generation_config.constraints is not None or generation_config.force_words_ids is not None
         )
 
-        print("generation_config", generation_config)
+        # print("generation_config", generation_config)
  
 
         is_contrastive_search_gen_mode = (
@@ -1503,7 +1503,7 @@ class GenerationMixin:
                 candidate_premature_layers=candidate_premature_layers,
                 relative_top=relative_top,
                 streamer=streamer,
-                beam_size=num_beams,
+                beam_size=generation_config.num_beams,
                 **model_kwargs,
             )
         
@@ -4994,8 +4994,6 @@ class GenerationMixin:
 
         beam_size = beam_size
 
-        print("beam_size", beam_size)
-        input()
         initial_model_kwargs = copy.copy(model_kwargs)
         initial_input_ids = copy.copy(input_ids)
 
@@ -5499,8 +5497,8 @@ class GenerationMixin:
             intermediate_outputs, intermediate_base_logits, intermediate_final_logits, logits, resample_logits,
             next_tokens_scores, row_index, skip_flag, contrast_logits_array, candidate_token_to_append,
             base_logits, final_logits, M, softmax_mature_layer, softmax_premature_layers, log_softmax_mature_layer,
-            log_softmax_premature_layers, kl1, kl2, js_divs, stacked_premature_layers, contrast_logits,
-            next_token_logits, next_tokens, text)
+            log_softmax_premature_layers, kl1, kl2, js_divs, stacked_premature_layers,
+            next_token_logits)
         
 
         gc.collect()
@@ -5535,7 +5533,7 @@ class GenerationMixin:
                     info_dict,
                 )
         else:
-            return input_ids, info_dict
+            return input_ids #, info_dict
 
 
 
@@ -6296,6 +6294,8 @@ class GenerationMixin:
         >>> tokenizer.batch_decode(outputs, skip_special_tokens=True)
         ['Wie alt bist du?']
         ```"""
+
+        print("OPERA DECODING")
         # init values
         logits_processor = logits_processor if logits_processor is not None else LogitsProcessorList()
         stopping_criteria = stopping_criteria if stopping_criteria is not None else StoppingCriteriaList()

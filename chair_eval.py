@@ -103,6 +103,7 @@ parser.add_argument("--num_attn_candidates", type=int, default=5)
 parser.add_argument("--penalty_weights", type=float, default=1.0)
 parser.add_argument("--seed", type=int, default=0)
 parser.add_argument("-n", "--num_samples", type=int, default=100)
+parser.add_argument("-m", "--max_new_tokens", type=int, default=64)
 parser.add_argument(
     "-v",
     "--verbosity",
@@ -154,6 +155,7 @@ num_beams = args.beam
 num_workers = args.num_workers
 batch_size = args.batch_size
 post_correction = args.post_correction
+max_new_tokens = args.max_new_tokens
 
 
 # ========================================
@@ -198,6 +200,7 @@ elif decoding_strategy == "halc-greedy":
     halc_decoding = True
 elif decoding_strategy == "halc-beam":
     halc_decoding = True
+    dola_decoding = True
     beam_search = True
 elif decoding_strategy == "opera-beam":
     beam_search = True
@@ -268,6 +271,9 @@ base_dir  = output_dir + args.model
 if not os.path.exists(base_dir):
     os.mkdir(base_dir)
 
+halc_params = {"context_domain": "upper", "contrast_weight": 0.05, "context_window": 4, "expand_ratio": 0.8, "beam_size": num_beams, "k_candidate_num": args.k_candidate_num}
+halc_assistant_helper = halc_assistant(model, vis_processor=vis_processor, device=device, halc_params=halc_params)
+
 
 for img_id in tqdm(range(len(img_files))):
     img_file = img_files[img_id]
@@ -291,8 +297,6 @@ for img_id in tqdm(range(len(img_files))):
     qu = template.replace("<question>", qu)
 
 
-    halc_params = {"context_domain": "upper", "contrast_weight": 0.05, "context_window": 4, "expand_ratio": 0.15, "beam_size": num_beams, "k_candidate_num": args.k_candidate_num}
-    halc_assistant_helper = halc_assistant(model, vis_processor=vis_processor, device=device, halc_params=halc_params)
 
     lm_early_exit_layers = [
         0,
@@ -327,7 +331,7 @@ for img_id in tqdm(range(len(img_files))):
                 {"image": norm(image), "prompt":qu}, 
                 use_nucleus_sampling=args.sample, 
                 num_beams=num_beams,
-                max_new_tokens=512,
+                max_new_tokens=max_new_tokens,
                 output_attentions=True,
                 premature_layer=premature_layer,
                 candidate_premature_layers=candidate_premature_layers,
@@ -362,13 +366,13 @@ for img_id in tqdm(range(len(img_files))):
 
     img_save["caption"] = output_text
 
-    print("img_id: ", img_id)
+    # print("img_id: ", img_id)
+    print("img_file: ", img_file)
     print("caption: ", output_text)
     # input("done")
 
-
     # dump metric file
-    generated_captions_path = os.path.join(base_dir, f"{model_name}_{decoding_strategy}_beams_{num_beams}_k_{k_candidate_num}_{dataset_name}_seed_{seed}_samples_{num_samples}_generated_captions.json")
+    generated_captions_path = os.path.join(base_dir, f"{model_name}_{decoding_strategy}_beams_{num_beams}_k_{k_candidate_num}_{dataset_name}_seed_{seed}_max_tokens_{max_new_tokens}_samples_{num_samples}_generated_captions.json")
     with open(generated_captions_path, "a") as f:
         json.dump(img_save, f)
         f.write('\n')
@@ -381,6 +385,15 @@ with open(generated_captions_path, 'r') as f:
     lines = f.readlines()
     for line in lines:
         loaded_json.append(json.loads(line))
+
+# eliminate the items in loaded_json with the same key:
+for i in range(len(loaded_json)):
+    for j in range(i+1, len(loaded_json)):
+        if loaded_json[i]['image_id'] == loaded_json[j]['image_id']:
+            loaded_json.pop(j)
+            break
+
+print("loaded_json:", len(loaded_json))
 
 # construct output file as input to CHAIR evaluation
 # output format follows https://github.com/ruotianluo/self-critical.pytorch
@@ -434,7 +447,7 @@ if verbosity:
 # save the formulated output dict
 formulated_output_path = os.path.join(
     base_dir,
-    f"{model_name}_{decoding_strategy}_{num_beams}_{k_candidate_num}_{dataset_name}_{seed}_{num_samples}_chair.json",
+    f"{model_name}_{decoding_strategy}_beams_{num_beams}_k_{k_candidate_num}_{dataset_name}_seed_{seed}_max_tokens_{max_new_tokens}_samples_{num_samples}_chair.json",
 )
 
 with open(formulated_output_path, "w") as f:

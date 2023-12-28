@@ -1496,6 +1496,7 @@ class GenerationMixin:
                 pad_token_id=generation_config.pad_token_id,
                 eos_token_id=generation_config.eos_token_id,
                 output_scores=generation_config.output_scores,
+                max_length=generation_config.max_length,
                 return_dict_in_generate=generation_config.return_dict_in_generate,
                 synced_gpus=synced_gpus,
                 mature_layer=mature_layer,
@@ -4827,7 +4828,7 @@ class GenerationMixin:
         relative_top: float = 0.1,
         logits_processor: Optional[LogitsProcessorList] = None,
         stopping_criteria: Optional[StoppingCriteriaList] = None,
-        max_length: Optional[int] = 10,
+        max_length: Optional[int] = None,
         pad_token_id: Optional[int] = None,
         eos_token_id: Optional[Union[int, List[int]]] = None,
         output_attentions: Optional[bool] = None,
@@ -5044,7 +5045,7 @@ class GenerationMixin:
         beam_once_flag = [False] * beam_size
         beam_next_tokens = [None] * beam_size
         beam_finished = [False] * beam_size
-        valid_length_max = 32
+        valid_length_max = max_length
  
         while True:
 
@@ -5191,6 +5192,8 @@ class GenerationMixin:
                         # print("CURRENT WORD: ", beam_current_word[bs])
                         entity = beam_current_word[bs]
                         embeds_list, detect_info = self.halc_assistant.context_density_embedding(entity)
+        
+                        # embeds_list, detect_info = self.halc_assistant.context_density_distortion_embedding(entity)
 
                         if detect_info["status"] == "invalid":
                             # print("CURRENT WORD: ", beam_current_word[bs],"detect: ", detect_info["status"])
@@ -5468,13 +5471,24 @@ class GenerationMixin:
                 # if beam_intermediate_token_lists[bs][0][-1].cpu().numpy().tolist() == eos_token_id[0]:
                 #     input("{bs} finished")
                 #     beam_finished[bs] = True
-
-                if beam_input_ids[bs][0][-1].cpu().numpy().tolist() == eos_token_id[0]:
+                # print("len(beam_input_ids[bs][0])", len(beam_input_ids[bs][0]))
+                # print("valid_length_max", valid_length_max)
+                if beam_input_ids[bs][0][-1].cpu().numpy().tolist() == eos_token_id[0] or valid_length_max + 3 <= len(beam_input_ids[bs][0]):
                     # beam_intermediate_token_lists[bs] = beam_input_ids[bs]
                     beam_intermediate_token_lists[bs] = deep_copy_tensor_structure(beam_input_ids[bs])
                     # input(f"{bs} finished\n")
                     beam_finished[bs] = True
 
+                
+
+                # for bs in range(beam_size):
+                #     print("eos_token_id[0]", eos_token_id[0])
+                #     print(f"beam_input_ids {bs}:", beam_input_ids[bs])
+                #     text = self.halc_assistant.get_sequence_text(beam_intermediate_token_lists[bs][0].cpu().numpy().tolist())
+                    
+                #     print(f"\033[1;4{bs+5}m Beam Search Candidate: {bs+1} {text} \033[0m")
+
+            gc.collect()
 
         for bs in range(beam_size):
             text = self.halc_assistant.get_sequence_text(beam_intermediate_token_lists[bs][0].cpu().numpy().tolist())
@@ -5485,22 +5499,24 @@ class GenerationMixin:
         # RESET HALC STATE
         self.halc_assistant.original_image = None
 
-        del (beam_intermediate_token_lists, beam_input_ids, beam_outputs, beam_dict_outputs, 
-            beam_unfinished_sequences, beam_model_kwargs, beam_last_model_kwargs, beam_last_word_flag, 
-            beam_current_word, beam_last_tokens, beam_once_flag, beam_next_tokens, beam_finished, 
-            beam_token_to_append, beam_candidate_token_to_append, candidate_intermediate_token_lists_array, 
-            candidate_token_to_append_lists, temporary_beam_intermediate_token_lists, temporary_beam_input_ids, 
-            temporary_beam_unfinished_sequences, temporary_beam_model_kwargs, temporary_beam_last_model_kwargs, 
-            temporary_beam_outputs, temporary_beam_last_word_flag, temporary_beam_dict_outputs, 
-            temporary_beam_current_word, temporary_beam_last_tokens, temporary_beam_once_flag, 
-            temporary_beam_next_tokens, candidate_index, last_word, model_inputs, intermediate_dict_outputs,
-            intermediate_outputs, intermediate_base_logits, intermediate_final_logits, logits, resample_logits,
-            next_tokens_scores, row_index, skip_flag, contrast_logits_array, candidate_token_to_append,
-            base_logits, final_logits, M, softmax_mature_layer, softmax_premature_layers, log_softmax_mature_layer,
-            log_softmax_premature_layers, kl1, kl2, js_divs, stacked_premature_layers,
-            next_token_logits)
-        
-
+        try:
+            del (beam_intermediate_token_lists, beam_input_ids, beam_outputs, beam_dict_outputs, 
+                beam_unfinished_sequences, beam_model_kwargs, beam_last_model_kwargs, beam_last_word_flag, 
+                beam_current_word, beam_last_tokens, beam_once_flag, beam_next_tokens, beam_finished, 
+                beam_token_to_append, beam_candidate_token_to_append, candidate_intermediate_token_lists_array, 
+                candidate_token_to_append_lists, temporary_beam_intermediate_token_lists, temporary_beam_input_ids, 
+                temporary_beam_unfinished_sequences, temporary_beam_model_kwargs, temporary_beam_last_model_kwargs, 
+                temporary_beam_outputs, temporary_beam_last_word_flag, temporary_beam_dict_outputs, 
+                temporary_beam_current_word, temporary_beam_last_tokens, temporary_beam_once_flag, 
+                temporary_beam_next_tokens, candidate_index, last_word, model_inputs, intermediate_dict_outputs,
+                intermediate_outputs, intermediate_base_logits, intermediate_final_logits, logits, resample_logits,
+                next_tokens_scores, row_index, skip_flag, contrast_logits_array, candidate_token_to_append,
+                base_logits, final_logits, M, softmax_mature_layer, softmax_premature_layers, log_softmax_mature_layer,
+                log_softmax_premature_layers, kl1, kl2, js_divs, stacked_premature_layers,
+                next_token_logits)
+        except:
+            pass
+    
         gc.collect()
 
 

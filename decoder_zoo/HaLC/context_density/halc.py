@@ -16,6 +16,8 @@ from torch.nn import functional as F
 from transformers import CLIPProcessor, CLIPModel
 import random
 from transformers import AutoTokenizer
+from PIL import Image, ImageFilter
+
 
 # initialize detector
 args_dict = {
@@ -197,16 +199,6 @@ class halc_assistant:
             if context_window == 1:
                 # only the original one
                 expanded_bboxes = [target_bbox]
-            # elif context_window == 3:
-            #     # one smaller one larger
-            #     expanded_bboxes = [target_bbox]  # original bbox
-            #     expanded_bboxes.append(
-            #         self.expand_bbox(expanded_bboxes[-1], -0.5)
-            #     )  # smaller
-            #     expanded_bboxes.append(
-            #         self.expand_bbox(expanded_bboxes[-1], 5)
-            #     )  # larger
-            # # for the auto_context_contrastive_decoding method
             else:
                 # check on the target box's size
                 target_bbox_size = self.compute_bbox_size(target_bbox)
@@ -242,10 +234,6 @@ class halc_assistant:
                         range(len(all_box_sizes)),
                         key=lambda i: abs(all_box_sizes[i] - target_bbox_size),
                     )
-
-            # for _ in range(1, context_window):
-            #     # Each expansion is double the size of the previous level
-            #     expanded_bboxes.append(self.expand_bbox(expanded_bboxes[-1], 1.5))
 
             # Load the original image
             image_path = sample["img_path"]
@@ -300,6 +288,167 @@ class halc_assistant:
             embeds_list = None
 
         return embeds_list, detect_info
+
+
+
+
+    def context_density_distortion_embedding(self, entity):
+        # context_window specifies the number of context windows
+
+        context_window = self.halc_params["context_window"]
+        # expand_ratio = 0.1
+        expand_ratio = self.halc_params["expand_ratio"]
+
+        entity = entity.strip(".")
+        doc = self.tagging(entity)
+        detect_info = {}
+
+        
+        if len(doc) < 1:
+            detect_info["pos"] = "PUNC"
+        else:
+            detect_info["pos"] = doc[0].pos_
+
+        # print("entity", entity)
+        # print("pos", detect_info["pos"])
+
+        valid_list = ["NOUN", "PROPN"]
+
+        if detect_info["pos"] in valid_list:
+            detect_info["status"] = "acctivated"
+            self.detector_dict["named_entity"] = [entity]
+            sample = self.detector.detect_objects(self.detector_dict)
+
+            # print("Detection: ", sample)
+            # Assuming the first detected bounding box is the one related to the entity
+
+            original_bbox = sample["entity_info"][entity]["bbox"]
+            if len(original_bbox) > 2:
+                detect_info["status"] = "invalid"
+                embeds_list = None
+                return embeds_list, detect_info
+
+            if len(original_bbox) == 0:
+                target_bbox = [0.3, 0.3, 0.6, 0.6]
+                detect_info["status"] = "bounding box not detected"
+            else:
+                area_list = [
+                    (bbox[2] - bbox[0]) * (bbox[3] - bbox[1]) for bbox in original_bbox
+                ]
+
+                # get the index of the smallest bbox
+                target_bbox_index = area_list.index(min(area_list))
+                target_bbox = original_bbox[target_bbox_index]
+
+            # target_bbox = original_bbox[0]
+
+            # Calculate expanded bounding boxes for the given context window
+            if context_window == 1:
+                # only the original one
+                expanded_bboxes = [target_bbox]
+            else:
+                # check on the target box's size
+                target_bbox_size = self.compute_bbox_size(target_bbox)
+                # smallest size should be 0.2
+                if target_bbox_size < 0.2:
+                    # only increase the size
+                    expanded_bboxes = [self.expand_bbox(target_bbox, -expand_ratio), target_bbox]
+                    for _ in range(1, context_window-1):
+                        # Each expansion is double the size of the previous level
+                        expanded_bboxes.append(
+                            self.expand_bbox(expanded_bboxes[-1], expand_ratio)
+                        )
+
+                    # index of the original target box
+                    self.target_bbox_index = 0
+                else:
+                    initial_ratio = np.sqrt(0.2 / target_bbox_size)
+                    # expanded_bboxes = [self.expand_bbox(target_bbox, -initial_ratio)]
+                    expanded_bboxes = [self.expand_bbox(target_bbox, -expand_ratio), target_bbox]
+                    all_box_sizes = [self.compute_bbox_size(expanded_bboxes[0]), self.compute_bbox_size(expanded_bboxes[1])]
+                    
+                    for _ in range(1, context_window-1):
+                        # Each expansion is double the size of the previous level
+                        expanded_bboxes.append(
+                            self.expand_bbox(expanded_bboxes[-1], expand_ratio)
+                        )
+                        all_box_sizes.append(
+                            self.compute_bbox_size(expanded_bboxes[-1])
+                        )
+
+                    # index of the original target box
+                    self.target_bbox_index = min(
+                        range(len(all_box_sizes)),
+                        key=lambda i: abs(all_box_sizes[i] - target_bbox_size),
+                    )
+
+            # Load the original image
+            image_path = sample["img_path"]
+            self.original_image = Image.open(image_path)
+            original_image = self.original_image.convert("RGB")
+
+
+            im_width, im_height = original_image.size
+
+            final_images = []  # List to store each modified image
+
+            for bbox in expanded_bboxes:
+                # original_image = self.original_image.convert("RGB")
+
+                # original_image = self.draw_bbox(original_image, bbox, color="red", width=3)
+                # Apply blur to the entire image
+                blurred_image = original_image.filter(ImageFilter.GaussianBlur(radius=15))
+
+                # Create a mask for the expanded bounding box
+                left, top, right, bottom = [int(coord) for coord in (bbox[0] * im_width, bbox[1] * im_height, bbox[2] * im_width, bbox[3] * im_height)]
+                mask = np.zeros((im_height, im_width), dtype=np.uint8)
+                mask[top:bottom, left:right] = 255
+                mask = Image.fromarray(mask)
+
+                # Overlay the clear area over the blurred image
+                final_image = Image.composite(original_image, blurred_image, mask)
+                final_images.append(final_image)
+
+            # # Save the distorted images
+            saved_paths = []
+            for i, cropped_img in enumerate(final_images, start=1):
+                save_path = f"decoder_zoo/HaLC/mnt/cropped_level_{i}.png"
+                cropped_img.save(save_path)
+                saved_paths.append(save_path)
+            # input("img saved!")
+
+            # get decoding for each context window
+            max_new_tokens = 300
+            max_length = 2000
+            embeds_list = []
+            for i, cropped_img in enumerate(final_images, start=1):
+                image = self.vis_processor(cropped_img).unsqueeze(0).to(self.device)
+                image_emb, _ = self.model.encode_img(image, 38)
+                prompt = self.prompt
+                # print("prompt: ", prompt)
+                embs = self.model.get_context_emb(prompt, [image_emb])
+                current_max_len = embs.shape[1] + max_new_tokens
+
+                if current_max_len - max_length > 0:
+                    print(
+                        "Warning: The number of tokens in current conversation exceeds the max length. "
+                        "The model will not see the contexts outside the range."
+                    )
+
+                begin_idx = max(0, current_max_len - max_length)
+                embs = embs[:, begin_idx:]
+                embeds_list.append(embs)
+
+        else:
+            detect_info["status"] = "invalid"
+            embeds_list = None
+
+        return embeds_list, detect_info
+
+
+
+
+
 
     def naive_focus_decoding(self, context_logits_list):
         """

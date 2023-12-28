@@ -219,13 +219,15 @@ image = image.to(device)
 
 # qu = "Please describe this image in detail."
 # qu = "Generate a one sentence caption of the image."
-qu = "Generate a short caption of the image."
+# qu = "Generate a short caption of the image."
+qu = "What is the man holding in his hand?"
+
 
 template = INSTRUCTION_TEMPLATE[args.model]
 qu = template.replace("<question>", qu)
 
 
-halc_params = {"context_domain": "upper", "contrast_weight": 0.05, "context_window": 4, "expand_ratio": 0.15, "beam_size": num_beams, "k_candidate_num": args.k_candidate_num}
+halc_params = {"context_domain": "upper", "contrast_weight": 0.05, "context_window": 4, "expand_ratio": 0.1, "beam_size": num_beams, "k_candidate_num": args.k_candidate_num}
 halc_assistant_helper = halc_assistant(model, vis_processor=vis_processor, device=device, halc_params=halc_params)
 
 lm_early_exit_layers = [
@@ -261,7 +263,7 @@ with torch.inference_mode():
             {"image": norm(image), "prompt":qu}, 
             use_nucleus_sampling=args.sample, 
             num_beams=num_beams,
-            max_new_tokens=512,
+            max_new_tokens=64,
             output_attentions=True,
             premature_layer=premature_layer,
             candidate_premature_layers=candidate_premature_layers,

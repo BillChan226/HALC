@@ -39,7 +39,7 @@ class halc_assistant:
         self.halc_params = halc_params
         self.k_candidate_num = halc_params["k_candidate_num"]
         self.original_image = None
-        token_vocab_dir = "/home/czr/contrast_decoding_LVLMs/model_checkpoints/models--meta-llama--Llama-2-7b-chat-hf/snapshots/c1b0db933684edbfe29a06fa47eb19cc48025e93/tokenizer.json"
+        token_vocab_dir = "/home/czr/.cache/huggingface/hub/models--meta-llama--Llama-2-7b-chat-hf/snapshots/c1b0db933684edbfe29a06fa47eb19cc48025e93/tokenizer.json"
         if not os.path.exists(token_vocab_dir):
             temp = AutoTokenizer.from_pretrained(
                 "meta-llama/Llama-2-7b-chat-hf",  # official model name for llama2-7b-chat-hf

@@ -44,7 +44,7 @@ from collections import defaultdict
 
 
 # generated_captions_path = "/home/czr/HaLC/log/minigpt4/minigpt4_halc-beam_2_2_coco_0_2_generated_captions.json"
-generated_captions_path = "/home/czr/HaLC/log/minigpt4/minigpt4_halc-beam_beams_2_k_2_coco_seed_0_samples_100_generated_captions.json"
+generated_captions_path = "/home/czr/HaLC/paper_result/minigpt4/minigpt4_halc-beam_beams_2_k_2_coco_seed_0_max_tokens_32_samples_100_generated_captions.json"
 
 loaded_json = []
 with open(generated_captions_path, 'r') as f:
@@ -116,7 +116,7 @@ formulated_output_dict["imgToEval"] = img_to_eval_dict
 
 # save the formulated output dict
 formulated_output_path = os.path.join(
-    "/home/czr/HaLC/log/minigpt4/minigpt4_halc-beam_beams_2_k_2_coco_seed_0_samples_100_chair.json",
+    "/home/czr/HaLC/paper_result/minigpt4/minigpt4_halc-beam_beams_2_k_2_coco_seed_0_max_tokens_32_samples_100_chair.json",
 )
 
 with open(formulated_output_path, "w") as f:

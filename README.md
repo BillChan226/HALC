@@ -2,7 +2,7 @@
 # HaLC: Mitigating LVLMs Object Hallucination via Context-Density-Layer Contrastive Decoding
 
 <div align="center">
-  <img src="https://github.com/BillChan226/contrast_decoding_LVLMs/blob/main/.assets/hawk_logo.png" width="35%">
+  <img src="https://github.com/BillChan226/HaLC/blob/main/.assets/hawk_logo.png" width="35%">
 </div>
 
 <!-- <a href='https://minigpt-v2.github.io'><img src='https://img.shields.io/badge/Project-Page-Green'></a> <a href='https://arxiv.org/abs/2310.09478.pdf'><img src='https://img.shields.io/badge/Paper-Arxiv-red'></a>  <a href='https://huggingface.co/spaces/Vision-CAIR/MiniGPT-v2'><img src='https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Spaces-blue'> <a href='https://minigpt-v2.github.io'><img src='https://img.shields.io/badge/Gradio-Demo-blue'></a> [![YouTube](https://badges.aleen42.com/src/youtube.svg)](https://www.youtube.com/watch?v=atFCwV2hSY4) -->
@@ -15,10 +15,10 @@ We use the MiniGPT-4 SOTA as the LVLM backbone for HALC. Please refer to the [In
 Briefly, run the following commands to install the required packages:
 
 ```
-git clone https://github.com/BillChan226/contrast_decoding_LVLMs.git
+git clone https://github.com/BillChan226/HaLC.git
 cd contrast_decoding_LVLMs
 conda env create -f environment.yml
-conda activate minigptv
+conda activate halc
 
 cd DoLa
 pip install -e transformers-4.28.1

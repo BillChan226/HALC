@@ -20,14 +20,13 @@ def run_eval(file_path):
     # Returning the extracted metrics
     return metrics if metrics else None
 
-# Function to extract the decoder, beam size, k number, and seed number from the filename
 def extract_info_from_filename(filename):
-    match = re.search(r'(halc-\w+)_beams_(\d+)_k_(\d+)_coco_seed_(\d+)', filename)
+    match = re.search(r'(halc-\w+)_beams_(\d+)_k_(\d+)_coco_seed_(\d+)_max', filename)
     if match:
-        return match.groups()
+        # Convert beam size, k number, and seed number to integers for proper numerical sorting
+        return match.group(1), int(match.group(2)), int(match.group(3)), int(match.group(4))
     else:
-        return ('-', '-', '-', '-')
-
+        return '-', -1, -1, -1  # Use -1 for numerical fields to ensure they sort before numbers
 
 
 # Initialize the markdown table with headers

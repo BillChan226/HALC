@@ -160,6 +160,12 @@ Error installing `pattern`:
 conda install -c conda-forge pattern
 ```
 
+CUDA Error installing `GroundingDINO`:
+
+```
+conda install pytorch torchvision torchaudio pytorch-cuda=[YOUR NVIDIA CUDA VERSION] -c pytorch -c nvidia
+```
+
 ## :key: License
 
 This repository is under [BSD 3-Clause License](LICENSE.md).

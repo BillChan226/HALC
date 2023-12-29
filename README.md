@@ -20,9 +20,6 @@ cd contrast_decoding_LVLMs
 conda env create -f environment.yml
 conda activate halc
 
-cd DoLa
-pip install -e transformers-4.28.1
-pip install datasets
 ```
 
 We employ [Grounding DINO](https://github.com/IDEA-Research/GroundingDINO) as the external detector to bound hallucinatory objects. For quick installation:

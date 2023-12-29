@@ -1,6 +1,7 @@
 import os
 import re
 import subprocess
+import csv
 
 # Set the directory where the chair.json files are located
 directory = './paper_result/minigpt4/'
@@ -11,6 +12,7 @@ def run_eval(file_path):
     result = subprocess.run(['python', 'eval_hallucination.py', '--chair_input_path', file_path],
                             stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
     # print(result.stdout)
+    # input()
     # Using regex to extract the metrics from the command output
     # metrics = re.findall(r'SPICE\s*(\d+\.\d+)\s*METEOR\s*(\d+\.\d+)\s*CIDEr\s*(\d+\.\d+)\s*CHAIRs\s*(\d+\.\d+)\s*CHAIRi\s*(\d+\.\d+)', 
     #                      result.stdout)
@@ -32,23 +34,47 @@ def extract_info_from_filename(filename):
 markdown_table = "| Decoder | Beam | K | Seed | SPICE | METEOR | CIDEr | CHAIRs | CHAIRi |\n"
 markdown_table += "|---------|-----------|----------|------------|-------|--------|-------|--------|--------|\n"
 
-file_names = os.listdir(directory)
-# Sort the file names by beam size, then by k number, then by seed number
-sorted_file_names = sorted(file_names, key=lambda name: extract_info_from_filename(name)[1:])
+# Prepare the CSV file
+csv_file_path = 'eval/eval_results.csv'
+csv_columns = ['Decoder', 'Beam', 'K', 'Seed', 'SPICE', 'METEOR', 'CIDEr', 'CHAIRs', 'CHAIRi']
+
+# Start writing to the CSV file
+with open(csv_file_path, 'w', newline='') as csvfile:
+    writer = csv.DictWriter(csvfile, fieldnames=csv_columns)
+    writer.writeheader()  # write the header
 
 
-# Loop through each file in the directory and process it
-for file_name in sorted_file_names:
-    if file_name.endswith('_chair.json'):
-        file_path = os.path.join(directory, file_name)
-        print(file_path)
-        # Extract information from filename
-        decoder, beam_size, k_number, seed_number = extract_info_from_filename(file_name)
-        metrics = run_eval(file_path)
-        print(f"| {decoder} | {beam_size} | {k_number} | {seed_number} | {' | '.join(metrics)} |\n")
+    file_names = os.listdir(directory)
+    # Sort the file names by beam size, then by k number, then by seed number
+    sorted_file_names = sorted(file_names, key=lambda name: extract_info_from_filename(name)[1:])
 
-        if metrics:
-            markdown_table += f"| {decoder} | {beam_size} | {k_number} | {seed_number} | {' | '.join(metrics)} |\n"
+
+    # Loop through each file in the directory and process it
+    for file_name in sorted_file_names:
+        if file_name.endswith('_chair.json'):
+            file_path = os.path.join(directory, file_name)
+            print(file_path)
+            # Extract information from filename
+            decoder, beam_size, k_number, seed_number = extract_info_from_filename(file_name)
+            
+            metrics = run_eval(file_path)
+            
+            print(f"| {decoder} | {beam_size} | {k_number} | {seed_number} | {' | '.join(metrics)} |\n")
+
+            if metrics:
+                markdown_table += f"| {decoder} | {beam_size} | {k_number} | {seed_number} | {' | '.join(metrics)} |\n"
+
+                writer.writerow({
+                    'Decoder': decoder,
+                    'Beam': beam_size,
+                    'K': k_number,
+                    'Seed': seed_number,
+                    'SPICE': metrics[0],
+                    'METEOR': metrics[1],
+                    'CIDEr': metrics[2],
+                    'CHAIRs': metrics[3],
+                    'CHAIRi': metrics[4]
+                })
 
 
 # Save the markdown table to a file
@@ -56,4 +82,6 @@ markdown_file_path = 'eval/eval_results.md'
 with open(markdown_file_path, 'w') as md_file:
     md_file.write(markdown_table)
 
-markdown_file_path  # Return the path to the markdown file
+# The CSV file is already saved at this point, so we can output the paths to both files
+print(f'Markdown file saved to: {markdown_file_path}')
+print(f'CSV file saved to: {csv_file_path}')

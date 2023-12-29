@@ -154,16 +154,25 @@ The evaluation results will be printed in terminal.
 
 ## :wrench: Troubleshooting
 
-Error installing `pattern`:
+#### Error installing `pattern`:
 
 ```
 conda install -c conda-forge pattern
 ```
 
-CUDA Error installing `GroundingDINO`:
+#### CUDA Error installing `GroundingDINO`:
 
 ```
 conda install pytorch torchvision torchaudio pytorch-cuda=[YOUR NVIDIA CUDA VERSION] -c pytorch -c nvidia
+```
+
+#### runtimeError: Input type (float) and bias type (c10::Half) should be the same
+
+simply reinstall torch==2.0.0 will most likely solve the issue
+
+```
+pip uninstall torch
+pip install torch==2.0.0
 ```
 
 ## :key: License

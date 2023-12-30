@@ -38,3 +38,9 @@ dependencies:
     - shortuuid
     - chardet
     - spacy
+    - openai
+    - supervision
+    - addict
+    - yapf
+    - pycocotools
+    - pycocoevalcap

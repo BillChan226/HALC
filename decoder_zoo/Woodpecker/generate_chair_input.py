@@ -15,7 +15,7 @@ from types import SimpleNamespace
 import argparse
 import json
 import sys
-sys.path.append("/home/czr/contrast_decoding_LVLMs/")
+sys.path.append(".")
 
 # define pre-trained model download path by setting the environment variable
 os.environ["TRANSFORMERS_CACHE"] = "./model_checkpoints/"
@@ -37,7 +37,7 @@ def initialize_mini_gpt_4(parser):
     parser_group = parser.add_argument_group("MiniGPT4")
     parser_group.add_argument(
         "--cfg_path",
-        default="/home/czr/contrast_decoding_LVLMs/eval_configs/minigpt4_llama2_eval_hallucination.yaml",
+        default="./eval_configs/minigpt4_llama2_eval_hallucination.yaml",
         help="path to configuration file.",
     )
     parser_group.add_argument(
@@ -120,7 +120,7 @@ def main():
     parser.add_argument(
         "--data_dir",
         type=str,
-        default="/home/czr/contrast_decoding_LVLMs/eval_dataset/val2014",
+        default="./eval_dataset/val2014",
         help="Test data directory. Default is '/media/zhuokai/SN850X_4TB/Data/coco/val2014'.",
     )
     parser.add_argument(
@@ -189,8 +189,8 @@ def main():
     'api_base': "https://api.openai.com/v1",
     'val_model_path': "Salesforce/blip2-flan-t5-xxl",
     'qa2c_model_path': "khhuang/zerofec-qa2claim-t5-base",
-    'detector_config': "/home/czr/contrast_decoding_LVLMs/woodpecker/GroundingDINO/groundingdino/config/GroundingDINO_SwinT_OGC.py",
-    'detector_model_path': "/home/czr/contrast_decoding_LVLMs/woodpecker/GroundingDINO/weights/groundingdino_swint_ogc.pth",
+    'detector_config': "./woodpecker/GroundingDINO/groundingdino/config/GroundingDINO_SwinT_OGC.py",
+    'detector_model_path': "./woodpecker/GroundingDINO/weights/groundingdino_swint_ogc.pth",
     'cache_dir': "./cache_dir",
     }
 
@@ -276,7 +276,7 @@ def main():
                 # construct the conversation
                 img_list = []
                 model.upload_img(cur_img_path, CONV_VISION, img_list)
-                
+
                 model.encode_img(img_list, 38)  # -1 means the last layer
                 # question taken from https://arxiv.org/pdf/2305.10355.pdf
                 model.ask("Generate a short caption of the image.", CONV_VISION)
@@ -300,7 +300,7 @@ def main():
                 corrected_sample = corrector.correct(sample)
                 print(corrected_sample['output'])
                 input()
-                
+
                 # append the generated caption to the list
                 # format follows https://github.com/tylin/coco-caption/tree/master
                 all_generated_captions.append(

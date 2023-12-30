@@ -8,15 +8,10 @@ import torch.backends.cudnn as cudnn
 from tqdm import tqdm
 
 from torchvision import transforms
-from torchvision.transforms.functional import InterpolationMode
-from torchvision.utils import save_image
 
-from pope_loader import POPEDataSet
-from minigpt4.common.dist_utils import get_rank
 from minigpt4.models import load_preprocess
 
 from minigpt4.common.config import Config
-from minigpt4.common.dist_utils import get_rank
 from minigpt4.common.registry import registry
 
 # imports modules for registration
@@ -27,12 +22,7 @@ from minigpt4.runners import *
 from minigpt4.tasks import *
 
 from PIL import Image
-from torchvision.utils import save_image
-
-import matplotlib.pyplot as plt
-import matplotlib as mpl
-import seaborn
-import json, jsonlines
+import json
 
 from decoder_zoo.Woodpecker.vis_corrector import Corrector
 from decoder_zoo.HaLC.context_density.halc import halc_assistant
@@ -92,7 +82,7 @@ parser.add_argument(
     default="coco",
     help="Name of the dataset. Default is 'coco'.",
 )
-parser.add_argument("--data_path", type=str, default="/home/czr/contrast_decoding_LVLMs/eval_dataset/val2014/", help="data path")
+parser.add_argument("--data_path", type=str, default="./eval_dataset/val2014/", help="data path")
 parser.add_argument("--batch_size", type=int, default=1, help="batch size")
 parser.add_argument("--num_workers", type=int, default=2, help="num workers")
 parser.add_argument("-b", "--beam", type=int)
@@ -257,7 +247,7 @@ print("sampled_img_ids", sampled_img_ids)
 
 img_files = []
 for cur_img_id in sampled_img_ids:
-        
+
     cur_img = coco.loadImgs(cur_img_id)[0]
     cur_img_path = cur_img["file_name"]
     img_files.append(cur_img_path)
@@ -278,7 +268,7 @@ for ann_info in coco_anns["annotations"]:
 
 base_dir  = output_dir + args.model
 if not os.path.exists(base_dir):
-    os.mkdir(base_dir)
+    os.makedirs(base_dir)
 
 halc_params = {"context_domain": "upper", "contrast_weight": 0.05, "context_window": 4, "expand_ratio": expand_ratio, "beam_size": num_beams, "k_candidate_num": args.k_candidate_num}
 halc_assistant_helper = halc_assistant(model, vis_processor=vis_processor, device=device, halc_params=halc_params)
@@ -297,7 +287,7 @@ for img_id in tqdm(range(len(img_files))):
     raw_image = Image.open(image_path).convert("RGB")
     image = vis_processors["eval"](raw_image).unsqueeze(0)
     image = image.to(device)
-    
+
     # qu = "Please describe this image in detail."
     # qu = "Generate a one sentence caption of the image."
     qu = "Generate a short caption of the image."
@@ -337,8 +327,8 @@ for img_id in tqdm(range(len(img_files))):
     with torch.inference_mode():
         with torch.no_grad():
             out = model.generate(
-                {"image": norm(image), "prompt":qu}, 
-                use_nucleus_sampling=args.sample, 
+                {"image": norm(image), "prompt":qu},
+                use_nucleus_sampling=args.sample,
                 num_beams=num_beams,
                 max_new_tokens=max_new_tokens,
                 output_attentions=True,
@@ -385,7 +375,7 @@ for img_id in tqdm(range(len(img_files))):
     with open(generated_captions_path, "a") as f:
         json.dump(img_save, f)
         f.write('\n')
-    
+
 
 ##################  EVALUATION  #####################
 

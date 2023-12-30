@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 
 from transformers import StoppingCriteriaList
 
-sys.path.append("/home/czr/contrast_decoding_LVLMs")
+sys.path.append(".")
 
 from minigpt4.common.config import Config
 from minigpt4.common.dist_utils import get_rank
@@ -109,7 +109,7 @@ print("early_exit_layer_idx: ", early_exit_layer_idx)
 img_list = []
 
 chat.upload_img(img, CONV_VISION, img_list)
-chat.encode_img(img_list, early_exit_layer_idx) 
+chat.encode_img(img_list, early_exit_layer_idx)
 
 
 # chat.ask("Briefly describe the image.", CONV_VISION)

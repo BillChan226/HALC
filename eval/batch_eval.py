@@ -4,7 +4,8 @@ import subprocess
 import csv
 
 # Set the directory where the chair.json files are located
-directory = './paper_result/minigpt4/'
+directory = './paper_result/32_tokens/minigpt4/'
+# directory = './paper_result/minigpt4/'
 
 # Function to run the eval_hallucination command and parse the output
 def run_eval(file_path):
@@ -21,21 +22,20 @@ def run_eval(file_path):
     return metrics if metrics else None
 
 def extract_info_from_filename(filename):
-    match = re.search(r'(halc-\w+)_beams_(\d+)_k_(\d+)_coco_seed_(\d+)_max', filename)
+    # Updated regex pattern to match various decoder names
+    match = re.search(r'minigpt4_([a-zA-Z0-9-]+)_beams_(\d+)_k_(\d+)_coco_expand_ratio_([\d.]+)_seed_(\d+)_max', filename)
     if match:
-        # Convert beam size, k number, and seed number to integers for proper numerical sorting
-        return match.group(1), int(match.group(2)), int(match.group(3)), int(match.group(4))
+        return match.group(1), int(match.group(2)), float(match.group(3)), float(match.group(4)), int(match.group(5))
     else:
-        return '-', -1, -1, -1  # Use -1 for numerical fields to ensure they sort before numbers
-
+        return '-', -1, -1, -1, -1
 
 # Initialize the markdown table with headers
-markdown_table = "| Decoder | Beam | K | Seed | SPICE | METEOR | CIDEr | CHAIRs | CHAIRi |\n"
-markdown_table += "|---------|-----------|----------|------------|-------|--------|-------|--------|--------|\n"
+markdown_table = "| Decoder | Ratio | Beam | K | Seed | SPICE | METEOR | CIDEr | CHAIRs | CHAIRi |\n"
+markdown_table += "|---------|-----------|-----------|----------|------------|-------|--------|-------|--------|--------|\n"
 
 # Prepare the CSV file
 csv_file_path = 'eval/eval_results.csv'
-csv_columns = ['Decoder', 'Beam', 'K', 'Seed', 'SPICE', 'METEOR', 'CIDEr', 'CHAIRs', 'CHAIRi']
+csv_columns = ['Decoder', 'Ratio', 'Beam', 'K', 'Seed', 'SPICE', 'METEOR', 'CIDEr', 'CHAIRs', 'CHAIRi']
 
 # Start writing to the CSV file
 with open(csv_file_path, 'w', newline='') as csvfile:
@@ -54,17 +54,18 @@ with open(csv_file_path, 'w', newline='') as csvfile:
             file_path = os.path.join(directory, file_name)
             print(file_path)
             # Extract information from filename
-            decoder, beam_size, k_number, seed_number = extract_info_from_filename(file_name)
+            decoder,  beam_size, k_number, expand_ratio, seed_number = extract_info_from_filename(file_name)
             
             metrics = run_eval(file_path)
             
-            print(f"| {decoder} | {beam_size} | {k_number} | {seed_number} | {' | '.join(metrics)} |\n")
+            print(f"| {decoder} | {expand_ratio} | {beam_size} | {k_number} | {seed_number} | {' | '.join(metrics)} |\n")
 
             if metrics:
-                markdown_table += f"| {decoder} | {beam_size} | {k_number} | {seed_number} | {' | '.join(metrics)} |\n"
+                markdown_table += f"| {decoder} | {expand_ratio} | {beam_size} | {k_number} | {seed_number} | {' | '.join(metrics)} |\n"
 
                 writer.writerow({
                     'Decoder': decoder,
+                    'Ratio' : expand_ratio,
                     'Beam': beam_size,
                     'K': k_number,
                     'Seed': seed_number,

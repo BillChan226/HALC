@@ -2619,8 +2619,7 @@ class GenerationMixin:
                         decoder_attentions=decoder_attentions,
                         cross_attentions=cross_attentions,
                         decoder_hidden_states=decoder_hidden_states,
-                    ),
-                    info_dict,
+                    )
                 )
             else:
                 return (
@@ -2629,11 +2628,10 @@ class GenerationMixin:
                         scores=scores,
                         attentions=decoder_attentions,
                         hidden_states=decoder_hidden_states,
-                    ),
-                    info_dict,
+                    )
                 )
         else:
-            return input_ids, info_dict
+            return input_ids
 
     def relative_top_filter(
         self,

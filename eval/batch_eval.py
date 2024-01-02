@@ -4,8 +4,8 @@ import subprocess
 import csv
 
 # Set the directory where the chair.json files are located
-directory = './paper_result/32_tokens/minigpt4/'
-# directory = './paper_result/minigpt4/'
+# directory = './paper_result/32_tokens/minigpt4/'
+directory = '/home/czr/HaLC/paper_result/server'
 
 # Function to run the eval_hallucination command and parse the output
 def run_eval(file_path):

@@ -82,7 +82,7 @@ parser.add_argument(
     default="coco",
     help="Name of the dataset. Default is 'coco'.",
 )
-parser.add_argument("--data_path", type=str, default="./eval_dataset/val2014/", help="data path")
+parser.add_argument("--data_path", type=str, default="/home/czr/contrast_decoding_LVLMs/eval_dataset/val2014/", help="data path")
 parser.add_argument("--batch_size", type=int, default=1, help="batch size")
 parser.add_argument("--num_workers", type=int, default=2, help="num workers")
 parser.add_argument("-b", "--beam", type=int)
@@ -366,9 +366,9 @@ for img_id in tqdm(range(len(img_files))):
     img_save["caption"] = output_text
 
     # print("img_id: ", img_id)
-    print("img_file: ", img_file)
+    print("image_path: ", image_path)
     print("caption: ", output_text)
-    # input("done")
+
 
     # dump metric file
     generated_captions_path = os.path.join(base_dir, f"{model_name}_{decoding_strategy}_beams_{num_beams}_k_{k_candidate_num}_{dataset_name}_expand_ratio_{expand_ratio}_seed_{seed}_max_tokens_{max_new_tokens}_samples_{num_samples}_generated_captions.json")

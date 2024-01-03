@@ -3,7 +3,7 @@ import json
 import argparse
 import sys
 import random
-
+import copy
 sys.path.append("/home/czr/HaLC")
 import numpy as np
 import torch
@@ -47,8 +47,8 @@ from collections import defaultdict
 
 
 # Assuming this script is placed in the same directory as the JSON files
-directory_path = "/home/czr/HaLC/paper_result/server"
-output_directory_path = "/home/czr/HaLC/paper_result/server"
+directory_path = "/home/czr/HaLC/paper_result/minigpt4"
+output_directory_path = "/home/czr/HaLC/paper_result/minigpt4"
 
 # List all files in the directory
 files = os.listdir(directory_path)
@@ -76,7 +76,7 @@ for file_name in caption_files:
     # Process the file (you would insert your processing code here)
     # For example, load the JSON, perform operations, and then save the output
 
-
+    print("file_path: ", file_path)
 
     loaded_json = []
     with open(file_path, 'r') as f:
@@ -100,9 +100,9 @@ for file_name in caption_files:
     all_overall_scores = defaultdict(list)
     # imgToEval per image result
     img_to_eval_dict = {}
-
-
-
+    good = copy.deepcopy(loaded_json)
+    loaded_json= []
+    loaded_json = good
     # to save memory, load 100 captions at a time
     for start_idx in tqdm(
         range(0, len(loaded_json), 100), desc="Generating CHAIR Input"

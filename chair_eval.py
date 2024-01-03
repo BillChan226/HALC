@@ -273,10 +273,17 @@ if not os.path.exists(base_dir):
 halc_params = {"context_domain": "upper", "contrast_weight": 0.05, "context_window": 4, "expand_ratio": expand_ratio, "beam_size": num_beams, "k_candidate_num": args.k_candidate_num}
 halc_assistant_helper = halc_assistant(model, vis_processor=vis_processor, device=device, halc_params=halc_params)
 
+offlight = True
 
 for img_id in tqdm(range(len(img_files))):
+
     img_file = img_files[img_id]
     img_id = int(img_file.split(".jpg")[0][-6:])
+    # print("img_id", img_id)
+    # if img_id != 236426 and offlight:
+    #     continue
+    # offlight = False
+
     img_info = img_dict[img_id]
     assert img_info["name"] == img_file
     img_anns = set(img_info["anns"])
@@ -294,7 +301,6 @@ for img_id in tqdm(range(len(img_files))):
 
     template = INSTRUCTION_TEMPLATE[args.model]
     qu = template.replace("<question>", qu)
-
 
 
     lm_early_exit_layers = [

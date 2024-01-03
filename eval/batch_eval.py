@@ -2,11 +2,24 @@ import os
 import re
 import subprocess
 import csv
+import argparse
 
 # Set the directory where the chair.json files are located
 # directory = './paper_result/32_tokens/minigpt4/'
-directory = '/home/czr/HaLC/paper_result/server'
 
+parser = argparse.ArgumentParser(description="POPE-Adv evaluation on LVLMs.")
+
+parser.add_argument(
+    "-c",
+    "--chair-path",
+    type=str,
+    required=True,
+    help="Path to the generated CHAIR captions",
+)
+
+args = parser.parse_known_args()[0]
+
+directory = args.chair_path
 # Function to run the eval_hallucination command and parse the output
 def run_eval(file_path):
     # Running the eval_hallucination command for the given file
@@ -23,19 +36,19 @@ def run_eval(file_path):
 
 def extract_info_from_filename(filename):
     # Updated regex pattern to match various decoder names
-    match = re.search(r'minigpt4_([a-zA-Z0-9-]+)_beams_(\d+)_k_(\d+)_coco_expand_ratio_([\d.]+)_seed_(\d+)_max', filename)
+    match = re.search(r'minigpt4_([a-zA-Z0-9-]+)_beams_(\d+)_k_(\d+)_coco_expand_ratio_([\d.]+)_seed_(\d+)_max_tokens_(\d+)_samples_(\d+)_chair', filename)
     if match:
-        return match.group(1), int(match.group(2)), float(match.group(3)), float(match.group(4)), int(match.group(5))
+        return match.group(1), int(match.group(2)), float(match.group(3)), float(match.group(4)), int(match.group(5)), int(match.group(6)), int(match.group(7))
     else:
         return '-', -1, -1, -1, -1
 
 # Initialize the markdown table with headers
-markdown_table = "| Decoder | Ratio | Beam | K | Seed | SPICE | METEOR | CIDEr | CHAIRs | CHAIRi |\n"
-markdown_table += "|---------|-----------|-----------|----------|------------|-------|--------|-------|--------|--------|\n"
+markdown_table = "| Decoder | Ratio | Beam | K | Seed | SPICE | METEOR | CIDEr | CHAIRs | CHAIRi | Num of Samples | Max Tokens |\n"
+markdown_table += "|---------|-----------|-----------|----------|------------|-------|--------|-------|--------|--------|--------|--------|\n"
 
 # Prepare the CSV file
 csv_file_path = 'eval/eval_results.csv'
-csv_columns = ['Decoder', 'Ratio', 'Beam', 'K', 'Seed', 'SPICE', 'METEOR', 'CIDEr', 'CHAIRs', 'CHAIRi']
+csv_columns = ['Decoder', 'Ratio', 'Beam', 'K', 'Seed', 'SPICE', 'METEOR', 'CIDEr', 'CHAIRs', 'CHAIRi', 'Num of Samples', 'Max Tokens']
 
 # Start writing to the CSV file
 with open(csv_file_path, 'w', newline='') as csvfile:
@@ -54,15 +67,16 @@ with open(csv_file_path, 'w', newline='') as csvfile:
             file_path = os.path.join(directory, file_name)
             print(file_path)
             # Extract information from filename
-            decoder,  beam_size, k_number, expand_ratio, seed_number = extract_info_from_filename(file_name)
+            # decoder,  beam_size, k_number, expand_ratio, seed_number = extract_info_from_filename(file_name)
+            decoder,  beam_size, k_number, expand_ratio, seed_number, num_samples, max_tokens = extract_info_from_filename(file_name)
             
             metrics = run_eval(file_path)
             
-            print(f"| {decoder} | {expand_ratio} | {beam_size} | {k_number} | {seed_number} | {' | '.join(metrics)} |\n")
-
+            # print(f"| {decoder} | {expand_ratio} | {beam_size} | {k_number} | {seed_number} | {' | '.join(metrics)} |\n")
+            print(f"| {decoder} | {expand_ratio} | {beam_size} | {k_number} | {seed_number} | {' | '.join(metrics)} | {num_samples} | {max_tokens} |\n")
             if metrics:
-                markdown_table += f"| {decoder} | {expand_ratio} | {beam_size} | {k_number} | {seed_number} | {' | '.join(metrics)} |\n"
-
+                # markdown_table += f"| {decoder} | {expand_ratio} | {beam_size} | {k_number} | {seed_number} | {' | '.join(metrics)} |\n"
+                markdown_table += f"| {decoder} | {expand_ratio} | {beam_size} | {k_number} | {seed_number} | {' | '.join(metrics)} | {num_samples} | {max_tokens} |\n"
                 writer.writerow({
                     'Decoder': decoder,
                     'Ratio' : expand_ratio,
@@ -73,7 +87,9 @@ with open(csv_file_path, 'w', newline='') as csvfile:
                     'METEOR': metrics[1],
                     'CIDEr': metrics[2],
                     'CHAIRs': metrics[3],
-                    'CHAIRi': metrics[4]
+                    'CHAIRi': metrics[4],
+                    'Num of Samples': num_samples,
+                    'Max Tokens': max_tokens
                 })
 
 

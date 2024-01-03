@@ -1,7 +1,7 @@
 import argparse
-import os
+import os, sys
 import random
-
+sys.path.append("/home/czr/HaLC/")
 import numpy as np
 import torch
 import torch.backends.cudnn as cudnn
@@ -11,7 +11,6 @@ from torchvision import transforms
 from torchvision.transforms.functional import InterpolationMode
 from torchvision.utils import save_image
 
-from pope_loader import POPEDataSet
 from minigpt4.common.dist_utils import get_rank
 from minigpt4.models import load_preprocess
 
@@ -41,11 +40,23 @@ from pycocotools.coco import COCO
 from pycocoevalcap.eval import COCOEvalCap
 from collections import defaultdict
 
+parser = argparse.ArgumentParser(description="POPE-Adv evaluation on LVLMs.")
+
+
+parser.add_argument(
+    "-g",
+    "--generated-captions-path",
+    type=str,
+    required=True,
+    help="Path to the generated captions",
+)
+
+args = parser.parse_known_args()[0]
 
 
 # generated_captions_path = "/home/czr/HaLC/log/minigpt4/minigpt4_halc-beam_2_2_coco_0_2_generated_captions.json"
-generated_captions_path = "/home/czr/HaLC/paper_result/minigpt4/minigpt4_halc-beam_beams_2_k_2_coco_seed_0_max_tokens_32_samples_100_generated_captions.json"
-
+generated_captions_path = args.generated_captions_path
+formulated_output_path = generated_captions_path.replace("_generated_captions.json", "_chair.json")
 loaded_json = []
 with open(generated_captions_path, 'r') as f:
     lines = f.readlines()
@@ -114,10 +125,10 @@ formulated_output_dict["overall"] = overall_dict
 formulated_output_dict["imgToEval"] = img_to_eval_dict
 
 
-# save the formulated output dict
-formulated_output_path = os.path.join(
-    "/home/czr/HaLC/paper_result/minigpt4/minigpt4_halc-beam_beams_2_k_2_coco_seed_0_max_tokens_32_samples_100_chair.json",
-)
+# # save the formulated output dict
+# formulated_output_path = os.path.join(
+#     "/home/czr/HaLC/paper_result/minigpt4/minigpt4_halc-beam_beams_1_k_6_coco_expand_ratio_0.6_seed_1_max_tokens_64_samples_300_chair.json",
+# )
 
 with open(formulated_output_path, "w") as f:
     json.dump(formulated_output_dict, f)

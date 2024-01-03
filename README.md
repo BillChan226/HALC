@@ -21,8 +21,7 @@ This repository provides the official PyTorch implementation of the following pa
 > [Huaxiu Yao](https://www.huaxiuyao.io/) <sup>1</sup>, 
 > [Jiawei Zhou](https://sites.harvard.edu/jzhou/)<sup>3</sup>
 >
-> <sup>1</sup>UNC-Chapel Hill, <sup>2</sup>University of Chicago,
-> <sup>3</sup>Toyota Technological Institute at Chicago, <sup>4</sup>Massachusetts Institute of Technology <br>
+> <sup>1</sup>UNC-Chapel Hill, <sup>2</sup>University of Chicago, <sup>3</sup>Toyota Technological Institute at Chicago, <sup>4</sup>Massachusetts Institute of Technology <br>
 
 
 
@@ -37,7 +36,6 @@ cd contrast_decoding_LVLMs
 conda env create -f environment.yml
 conda activate halc
 
-pip install -U spacy
 python -m spacy download en_core_web_lg
 python -m spacy download en_core_web_md
 python -m spacy download en_core_web_sm
@@ -53,7 +51,7 @@ wget -q https://github.com/IDEA-Research/GroundingDINO/releases/download/v0.1.0-
 
 
 
-## LVLM Backbones
+## :bee: LVLM Backbones
 
 The following evaluation requires for MSCOCO 2014 dataset. Please download [here](https://cocodataset.org/#home) and extract it in your data path.
 

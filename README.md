@@ -9,8 +9,8 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-g.svg)](https://opensource.org/licenses/MIT)
 [![Arxiv](https://img.shields.io/badge/arXiv-2311.17911-B21A1B)](https://arxiv.org/pdf/2311.17911.pdf)
 [![Hugging Face Transformers](https://img.shields.io/badge/%F0%9F%A4%97-Transformers-blue)](https://github.com/huggingface/transformers)
-[![GitHub Stars](https://img.shields.io/github/stars/BillChan226/HALC?style=social)](https://github.com/BillChan226/HALC/stargazers)
 [![Project Page](https://img.shields.io/badge/Project-Page-Green)](https://billchan226.github.io/projects)
+[![GitHub Stars](https://img.shields.io/github/stars/BillChan226/HALC?style=social)](https://github.com/BillChan226/HALC/stargazers)
 
 This repository provides the official PyTorch implementation of the following paper: 
 > [**HALC: Object Hallucination Reduction via Adaptive Focal-Contrast Decoding**]() <br>
@@ -19,8 +19,8 @@ This repository provides the official PyTorch implementation of the following pa
 > [Lingyu Gao](https://lygao.me/)<sup>3</sup>,
 > [Hongyin Luo](https://luohongyin.github.io/) <sup>4</sup>,
 > [Huaxiu Yao](https://www.huaxiuyao.io/) <sup>1</sup>, 
-> [Jiawei Zhou](https://sites.harvard.edu/jzhou/)<sup>3</sup>,
-
+> [Jiawei Zhou](https://sites.harvard.edu/jzhou/)<sup>3</sup>
+>
 > <sup>1</sup>UNC-Chapel Hill, <sup>2</sup>University of Chicago, <sup>3</sup>Toyota Technological Institute at Chicago, <sup>4</sup>Massachusetts Institute of Technology <br>
 
 

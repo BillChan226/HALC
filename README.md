@@ -9,8 +9,8 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-g.svg)](https://opensource.org/licenses/MIT)
 [![Arxiv](https://img.shields.io/badge/arXiv-2311.17911-B21A1B)](https://arxiv.org/pdf/2311.17911.pdf)
 [![Hugging Face Transformers](https://img.shields.io/badge/%F0%9F%A4%97-Transformers-blue)](https://github.com/huggingface/transformers)
-[![GitHub Stars](https://img.shields.io/github/stars/shikiw/OPERA?style=social)](https://github.com/shikiw/OPERA/stargazers)
-
+[![GitHub Stars](https://img.shields.io/github/stars/BillChan226/HALC?style=social)](https://github.com/BillChan226/HALC/stargazers)
+[![Project Page](https://img.shields.io/badge/Project-Page-Green)](https://billchan226.github.io/projects)
 
 This repository provides the official PyTorch implementation of the following paper: 
 > [**HALC: Object Hallucination Reduction via Adaptive Focal-Contrast Decoding**]() <br>
@@ -26,9 +26,8 @@ This repository provides the official PyTorch implementation of the following pa
 
 ## :hammer_and_wrench: Installation
 
-We use the MiniGPT-4 SOTA as the LVLM backbone for HALC. Please refer to the [Installation](#Installation) section in the [MiniGPT-4](https://github.com/Vision-CAIR/MiniGPT-4) README.
 
-Briefly, run the following commands to install the required packages:
+To install, run the following commands to install the required packages:
 
 ```
 git clone https://github.com/BillChan226/HaLC.git
@@ -36,78 +35,48 @@ cd contrast_decoding_LVLMs
 conda env create -f environment.yml
 conda activate halc
 
-```
-
-We employ [Grounding DINO](https://github.com/IDEA-Research/GroundingDINO) as the external detector to bound hallucinatory objects. For quick installation:
-
-```
 pip install -U spacy
 python -m spacy download en_core_web_lg
 python -m spacy download en_core_web_md
 python -m spacy download en_core_web_sm
-
-cd woodpecker/GroundingDINO/
-pip install -e .
 ```
 
-Then download pre-trained model weights for DINO:
+We employ [Grounding DINO](https://github.com/IDEA-Research/GroundingDINO) as the external detector to bound hallucinatory objects. To download pre-trained model weights for DINO:
+
 ```
 mkdir weights
 cd weights
 wget -q https://github.com/IDEA-Research/GroundingDINO/releases/download/v0.1.0-alpha/groundingdino_swint_ogc.pth
 ```
 
-If error `NameError: name '_C' is not defined` is reported, refer to [this issue](https://github.com/IDEA-Research/GroundingDINO/issues/8#issuecomment-1541892708) for a quick fix.
-
-To reproduce our results, we use the **Llama-2-7b** as LLM backbone, which can be downloaded from [here](https://huggingface.co/meta-llama/Llama-2-7b-chat-hf/tree/main). After downloading, modify the code accordingly [here](minigpt4/configs/models/minigpt4_llama2.yaml#L15) at Line 15.
-
-You also have to prepare the pretrained model checkpoints, which can be downloaded from [here](https://drive.google.com/file/d/11nAPjEok8eAGGEG1N2vXo3kBLCg0WgUk/view?usp=sharing). After downloading, modify the code accordingly [here](eval_configs/minigpt4_llama2_eval.yaml#L10) at Line 10.
 
 
-## :roller_coaster: Demo Playgrounds
+## LVLM Backbones
 
-### :eagle: HALC Demo
-Run CDL demo on a [toy example](hallucinatory_image/beach_on_a_clock.png):
-  
-```
-python context_density/context_decoding.py --cfg-path eval_configs/minigpt4_llama2_eval.yaml  --gpu-id 0
-```
+The following evaluation requires for MSCOCO 2014 dataset. Please download [here](https://cocodataset.org/#home) and extract it in your data path.
 
-### ViT Early Exit Layers Demo 
-Specify early_exit_layer_idx then run ViT early exit layers contrastive decoding:
-  
-```
-python vit_early_exit_contrast.py --cfg-path eval_configs/minigpt4_llama2_eval.yaml  --gpu-id 0
-```
+Besides, it needs you to prepare the following checkpoints of 7B base models:
+
+- Download [LLaVA-1.5 merged 7B model](https://huggingface.co/liuhaotian/llava-v1.5-7b) and specify it at [Line 14](https://github.com/shikiw/OPERA/blob/bf18aa9c409f28b31168b0f71ebf8457ae8063d5/eval_configs/llava-1.5_eval.yaml#L14) of `eval_configs/llava-1.5_eval.yaml`.
+- Download [LLaMA-2 7B model](https://huggingface.co/meta-llama/Llama-2-7b-chat-hf/tree/main) and specify it at [Line 15](minigpt4/configs/models/minigpt4_llama2.yaml#L15)
+- Download [Vicuna 7B v1.1 model](https://github.com/lm-sys/FastChat) and specify it at [Line 25](https://github.com/shikiw/OPERA/blob/bf18aa9c409f28b31168b0f71ebf8457ae8063d5/minigpt4/configs/models/blip2_instruct_vicuna7b.yaml#L25) of `minigpt4/configs/models/blip2_instruct_vicuna7b.yaml`.
+- Download [Vicuna 7B v0 model](https://huggingface.co/Vision-CAIR/vicuna-7b/tree/main) and specify it at [Line 18](https://github.com/shikiw/OPERA/blob/bf18aa9c409f28b31168b0f71ebf8457ae8063d5/minigpt4/configs/models/minigpt4_vicuna0.yaml#L18) of `minigpt4/configs/models/minigpt4_vicuna0.yaml`.
+- Download [MiniGPT-4 7B pretrained weights](https://drive.google.com/file/d/1RY9jV0dyqLX-o38LrumkKRh6Jtaop58R/view?usp=sharing) and specify it at [Line 8](https://github.com/shikiw/OPERA/blob/bf18aa9c409f28b31168b0f71ebf8457ae8063d5/eval_configs/minigpt4_eval.yaml#L8) of `eval_configs/minigpt4_eval.yaml`.
 
 
-### DoLA Demo
+### Arguments
 
-#### Test DoLa with their textual input
-
-run
-
-```
-python toy_dola_eval.py --model-name ./models/models--meta-llama--Llama-2-7b-chat-hf/snapshots/94b07a6e30c3292b8265ed32ffdeccfdadf434a8 --output-path output-path.json --num-gpus 1 --early-exit-layers 0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32
-```
-
-Note: adding 32 in the early-exit-layers is crucial for reasonable output.
-
-JSD for each candidate layer is printed and input at line 2720 of file ```DoLa/transformers-4.28.1/src/transformers/generation/utils.py```
-
-#### Test DoLA with visual-textual input
-
-run a toy example:
-
-```
-python contrast_decoding.py --cfg-path eval_configs/minigpt4_llama2_eval.yaml  --gpu-id 0
-```
-
-The [toy example](hallucinatory_image/beach_on_a_clock.png) is projected into the prefix of the language model as a context.
+| Argument             | Example             | Description   |
+| -------------------- | ------------------- | ------------- |
+| `--model`    | `llava-1.5` | Specify the MLLM model, this codebase supports `instructblip`, `minigpt4`, `llava-1.5`. |
+| `--data-path`     | `/path/to/dataset` | Path to the dataset file or folder, e.g., `COCO_2014/val2014/`. |
+| `--pope-type`     | `random` | Type for POPE evaluation, supports `random`, `popular`, `adversarial`. |
+| `--beam`   | `3` | Beam size for global search. Default: 1. |
+| `--k-candidate-num`      | `4` | Number of generative focal fields for local search. Default: 2. |
 
 
 
-## :hourglass: Benchmarks
+## :hourglass: Benchmarks Evaluation
 ### :chair: CHAIR Evaluation of LVLMs Object Hallucination
 
 
@@ -165,7 +134,57 @@ python eval_hallucination.py --metric pope --pope_answer_path [PATH_TO_MODEL_OUT
 
 The evaluation results will be printed in terminal.
 
+
+
+## :roller_coaster: Demo Playgrounds
+
+### :eagle: HALC Demo
+Run CDL demo on a [toy example](hallucinatory_image/beach_on_a_clock.png):
+  
+```
+python context_density/context_decoding.py --cfg-path eval_configs/minigpt4_llama2_eval.yaml  --gpu-id 0
+```
+
+### ViT Early Exit Layers Demo 
+Specify early_exit_layer_idx then run ViT early exit layers contrastive decoding:
+  
+```
+python vit_early_exit_contrast.py --cfg-path eval_configs/minigpt4_llama2_eval.yaml  --gpu-id 0
+```
+
+
+### DoLA Demo
+
+#### Test DoLa with their textual input
+
+run
+
+```
+python toy_dola_eval.py --model-name ./models/models--meta-llama--Llama-2-7b-chat-hf/snapshots/94b07a6e30c3292b8265ed32ffdeccfdadf434a8 --output-path output-path.json --num-gpus 1 --early-exit-layers 0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32
+```
+
+Note: adding 32 in the early-exit-layers is crucial for reasonable output.
+
+JSD for each candidate layer is printed and input at line 2720 of file ```DoLa/transformers-4.28.1/src/transformers/generation/utils.py```
+
+#### Test DoLA with visual-textual input
+
+run a toy example:
+
+```
+python contrast_decoding.py --cfg-path eval_configs/minigpt4_llama2_eval.yaml  --gpu-id 0
+```
+
+The [toy example](hallucinatory_image/beach_on_a_clock.png) is projected into the prefix of the language model as a context.
+
+
+
+
 ## :wrench: Troubleshooting
+
+#### Error installing `GroundingDINO`: 
+
+If error `NameError: name '_C' is not defined` is reported, refer to [this issue](https://github.com/IDEA-Research/GroundingDINO/issues/8#issuecomment-1541892708) for a quick fix.
 
 #### Error installing `pattern`:
 

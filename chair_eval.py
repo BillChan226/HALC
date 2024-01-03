@@ -85,7 +85,7 @@ parser.add_argument(
 parser.add_argument("--data_path", type=str, default="/home/czr/contrast_decoding_LVLMs/eval_dataset/val2014/", help="data path")
 parser.add_argument("--batch_size", type=int, default=1, help="batch size")
 parser.add_argument("--num_workers", type=int, default=2, help="num workers")
-parser.add_argument("-b", "--beam", type=int, default=1)
+parser.add_argument("-b", "--beam", type=int, default=3)
 parser.add_argument("--sample", action='store_true')
 parser.add_argument("--scale_factor", type=float, default=50)
 parser.add_argument("--threshold", type=int, default=15)
@@ -106,7 +106,7 @@ parser.add_argument(
     "-k",
     "--k-candidate-num",
     type=int,
-    default=2,
+    default=4,
     help="specify the k candidate number for halc.",
 )
 parser.add_argument(
@@ -126,7 +126,7 @@ parser.add_argument(
     "-e",
     "--expand-ratio",
     type=float,
-    default=0.2,
+    default=0.6,
     help="Expand ratio of growing contextual field.",
 )
 

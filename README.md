@@ -1,15 +1,15 @@
 
-# HaLC: Mitigating LVLMs Object Hallucination via Context-Density-Layer Contrastive Decoding
+# HALC: Mitigating LVLMs Object Hallucination via Context-Density-Layer Contrastive Decoding
 
 <div align="center">
-  <img src="https://github.com/BillChan226/HaLC/blob/main/.assets/hawk_logo.png" width="35%">
+  <img src="https://github.com/BillChan226/HALC/blob/main/.assets/hawk_logo.png" width="35%">
 </div>
 
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-g.svg)](https://opensource.org/licenses/MIT)
 [![Arxiv](https://img.shields.io/badge/arXiv-2311.17911-B21A1B)](https://arxiv.org/pdf/2311.17911.pdf)
 [![Hugging Face Transformers](https://img.shields.io/badge/%F0%9F%A4%97-Transformers-blue)](https://github.com/huggingface/transformers)
-[![Project Page](https://img.shields.io/badge/Project-Page-Green)](https://billchan226.github.io/projects)
+[![Project Page](https://img.shields.io/badge/Project-Page-Purple)](https://billchan226.github.io/projects/HALC/)
 [![GitHub Stars](https://img.shields.io/github/stars/BillChan226/HALC?style=social)](https://github.com/BillChan226/HALC/stargazers)
 
 This repository provides the official PyTorch implementation of the following paper: 
@@ -31,7 +31,7 @@ This repository provides the official PyTorch implementation of the following pa
 To install, run the following commands to install the required packages:
 
 ```
-git clone https://github.com/BillChan226/HaLC.git
+git clone https://github.com/BillChan226/HALC.git
 cd contrast_decoding_LVLMs
 conda env create -f environment.yml
 conda activate halc

@@ -14,8 +14,8 @@
 
 This repository provides the official PyTorch implementation of the following paper: 
 > [**HALC: Object Hallucination Reduction via Adaptive Focal-Contrast Decoding**]() <br>
-> [Zhaorun Chen](https://billchan226.github.io/)<sup>1,*</sup>, 
-> [Zhuokai Zhao](https://zhuokai-zhao.com/)<sup>2,*</sup>, 
+> [Zhaorun Chen](https://billchan226.github.io/)<sup>1,\*</sup>, 
+> [Zhuokai Zhao](https://zhuokai-zhao.com/)<sup>2,\*</sup>, 
 > [Lingyu Gao](https://lygao.me/)<sup>3</sup>,
 > [Hongyin Luo](https://luohongyin.github.io/) <sup>4</sup>,
 > [Huaxiu Yao](https://www.huaxiuyao.io/) <sup>1</sup>, 

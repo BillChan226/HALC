@@ -2824,11 +2824,11 @@ class GenerationMixin:
         # info to go back to main for debug
         info_dict = {}
 
-        JSD_matrix = []
-        clock_matrix = []
-        surf_matrix = []
-        premature_layer_list = []
-        all_layer_matrix = []
+        # JSD_matrix = []
+        # clock_matrix = []
+        # surf_matrix = []
+        # premature_layer_list = []
+        # all_layer_matrix = []
 
         while True:
             if synced_gpus:
@@ -2916,10 +2916,10 @@ class GenerationMixin:
                 js_divs = js_divs.mean(-1)  # shape: (num_premature_layers,)
 
                 # print("js_divs ", js_divs*10000)
-                JSD_matrix.append(js_divs)
+                # JSD_matrix.append(js_divs)
 
                 premature_layer = candidate_premature_layers[int(js_divs.argmax().cpu().item())]
-                premature_layer_list.append(premature_layer)
+                # premature_layer_list.append(premature_layer)
                 # print("premature_layer", premature_layer)
                 premature_layer_dist[premature_layer] += 1
                 # record_data = candidate_premature_layers + mature_layer
@@ -2930,17 +2930,17 @@ class GenerationMixin:
 
                 # "▁clock": 12006
                 # "▁sur": 1190
-                all_layer_matrix.append(all_layer_logits)
-                all_layer_logits = np.array(all_layer_logits)
+                # all_layer_matrix.append(all_layer_logits)
+                # all_layer_logits = np.array(all_layer_logits)
 
                 # print("all_layer_logits", all_layer_logits)
 
                 # print("all_layer_logits", np.shape(all_layer_logits))
-                clock_logits = all_layer_logits[:, :, 12006]
-                clock_matrix.append(clock_logits)
+                # clock_logits = all_layer_logits[:, :, 12006]
+                # clock_matrix.append(clock_logits)
                 # print("clock_logits", clock_logits)
-                surf_logits = all_layer_logits[:, :, 1190]
-                surf_matrix.append(surf_logits)
+                # surf_logits = all_layer_logits[:, :, 1190]
+                # surf_matrix.append(surf_logits)
                 # print("clock_logits", np.shape(clock_logits))
                 # print("all_layer_logits", np.shape(all_layer_logits))
                 # input()
@@ -3009,10 +3009,10 @@ class GenerationMixin:
                 else:
                     this_peer_finished = True
 
-        info_dict["jsd_matrix"] = torch.stack(JSD_matrix, dim=0)
-        info_dict["clock_matrix"] = clock_matrix
-        info_dict["surf_matrix"] = surf_matrix
-        info_dict["all_layer_matrix"] = all_layer_matrix
+        # info_dict["jsd_matrix"] = torch.stack(JSD_matrix, dim=0)
+        # info_dict["clock_matrix"] = clock_matrix
+        # info_dict["surf_matrix"] = surf_matrix
+        # info_dict["all_layer_matrix"] = all_layer_matrix
         # print("return_dict_in_generate", return_dict_in_generate)
         # print("self.config.is_encoder_decoder", self.config.is_encoder_decoder)
 
@@ -3031,7 +3031,7 @@ class GenerationMixin:
                         cross_attentions=cross_attentions,
                         decoder_hidden_states=decoder_hidden_states,
                     ),
-                    info_dict,
+                 #   info_dict,
                 )
             else:
                 return (
@@ -3042,10 +3042,10 @@ class GenerationMixin:
                         hidden_states=decoder_hidden_states,
                         premature_layer_dist=premature_layer_dist,
                     ),
-                    info_dict,
+                  #  info_dict,
                 )
         else:
-            return input_ids, info_dict
+            return input_ids #, info_dict
 
     def contrastive_greedy_decode(
         self,
@@ -4993,9 +4993,9 @@ class GenerationMixin:
 
         beam_size = beam_size
 
-        initial_model_kwargs = copy.copy(model_kwargs)
-        initial_input_ids = copy.copy(input_ids)
-
+        initial_model_kwargs = copy.deepcopy(model_kwargs)
+        initial_input_ids = copy.deepcopy(input_ids)
+        # print("initial_input_ids", initial_input_ids)
         intermediate_token_lists = input_ids
         last_tokens = []
 
@@ -5206,27 +5206,21 @@ class GenerationMixin:
                             context_logits_list = []
                             for context_embed in embeds_list:
                                 # sub_model_kwargs = copy.copy(initial_model_kwargs)
-                                sub_model_kwargs = deep_copy_tensor_structure(initial_model_kwargs)
-                                sub_model_kwargs['inputs_embeds'] = context_embed
+                                # sub_model_kwargs = deep_copy_tensor_structure(initial_model_kwargs)
+                                sub_model_kwargs = copy.deepcopy(initial_model_kwargs)
 
-                                # context_logits, _ = self.get_intermediate_logits(
-                                #     beam_intermediate_token_lists[bs],
-                                #     initial_input_ids,
-                                #     logits_processor,
-                                #     stopping_criteria,
-                                #     max_length,
-                                #     pad_token_id,
-                                #     eos_token_id,
-                                #     output_attentions,
-                                #     output_hidden_states,
-                                #     output_scores,
-                                #     return_dict_in_generate,
-                                #     synced_gpus,
-                                #     streamer,
-                                #     **sub_model_kwargs,
-                                # )
+                                if self.halc_assistant.model_backbone == "minigpt4":
+                                    sub_model_kwargs['inputs_embeds'] = context_embed
+                                    teacher_forcing_tokens = beam_intermediate_token_lists[bs]
+                                if self.halc_assistant.model_backbone == "llava-1.5":
+                                    sub_model_kwargs['images'] = context_embed
+                                    # print("beam_intermediate_token_lists[bs]", beam_intermediate_token_lists[bs])
+                                    teacher_forcing_tokens = beam_intermediate_token_lists[bs][:, len(initial_input_ids[0]):]
+                                
+                                # print("sub_model_kwargs", sub_model_kwargs.keys())
+
                                 context_logits, _ = self.get_intermediate_logits(
-                                teacher_forcing_tokens = beam_intermediate_token_lists[bs],
+                                teacher_forcing_tokens = teacher_forcing_tokens,
                                 input_ids = initial_input_ids,
                                 logits_processor = logits_processor,
                                 stopping_criteria = stopping_criteria,
@@ -5320,7 +5314,8 @@ class GenerationMixin:
                     raise ValueError("candidate_intermediate_token_lists_array length error")
                 ############ Beam Search Score ############
                 # candidate_index = self.halc_assistant.random_selection(candidate_intermediate_token_lists_array, beam_size)
-                candidate_index = self.halc_assistant.clip_score_selection(candidate_intermediate_token_lists_array, beam_size)
+
+                candidate_index = self.halc_assistant.clip_score_selection(candidate_intermediate_token_lists_array, beam_size, skip_token_length=len(initial_input_ids[0]))
                 ############ Beam Search Score ############
 
                 # print("random_index", random_index)
@@ -5489,7 +5484,7 @@ class GenerationMixin:
             gc.collect()
 
         for bs in range(beam_size):
-            text = self.halc_assistant.get_sequence_text(beam_intermediate_token_lists[bs][0].cpu().numpy().tolist())
+            text = self.halc_assistant.get_sequence_text(beam_intermediate_token_lists[bs][0].cpu().numpy().tolist(), skip_token_length=len(initial_input_ids[0]))
             
             print(f"\033[1;4{bs+5}m Beam Search Candidate: {bs+1} {text} \033[0m")
             # print("beam_last_tokens", beam_last_tokens)
@@ -6084,11 +6079,10 @@ class GenerationMixin:
         unfinished_sequences = torch.ones(input_ids.shape[0], dtype=torch.long, device=input_ids.device)
 
         this_peer_finished = False  # used by synced_gpus only
-
-        # print("\nteacher_forcing_tokens", teacher_forcing_tokens)
+        # print("teacher_forcing_tokens[0]", teacher_forcing_tokens[0])
         # print("input_ids", input_ids)
-        # print("teacher_forcing_tokens", teacher_forcing_tokens)
-
+        # input()
+        # if self.halc_assistant.check_word_complete(teacher_forcing_tokens[0]) == True:
         # auto-regressive generation
         for tf in range(0, len(teacher_forcing_tokens[0])):
             if synced_gpus:
@@ -6101,6 +6095,7 @@ class GenerationMixin:
                 if this_peer_finished_flag.item() == 0.0:
                     break
 
+            # print("tf", tf)
             # prepare model inputs
             model_inputs = self.prepare_inputs_for_generation(input_ids, **model_kwargs)
 

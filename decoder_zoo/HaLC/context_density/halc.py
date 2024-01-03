@@ -39,6 +39,7 @@ class halc_assistant:
         self.halc_params = halc_params
         self.k_candidate_num = halc_params["k_candidate_num"]
         self.original_image = None
+        self.model_backbone = halc_params["LVLM_backbone"]
         token_vocab_dir = "decoder_zoo/HaLC/context_density/tokenizer.json"
         if not os.path.exists(token_vocab_dir):
             temp = AutoTokenizer.from_pretrained(
@@ -78,9 +79,12 @@ class halc_assistant:
 
         return last_word
 
-    def get_sequence_text(self, input_ids):
-        
-        output_text = self.tokenizer.decode(input_ids, skip_special_tokens=True)
+    def get_sequence_text(self, input_ids, skip_token_length=None):
+
+        if skip_token_length == 0:
+            output_text = self.tokenizer.decode(input_ids, skip_special_tokens=True)
+        else:
+            output_text = self.tokenizer.decode(input_ids[skip_token_length:], skip_special_tokens=True)
 
         return output_text
 
@@ -262,27 +266,11 @@ class halc_assistant:
             #     saved_paths.append(save_path)
 
             # get decoding for each context window
-            max_new_tokens = 300
-            max_length = 2000
+
             embeds_list = []
             for i, cropped_img in enumerate(cropped_images, start=1):
-                image = self.vis_processor(cropped_img).unsqueeze(0).to(self.device)
-                image_emb, _ = self.model.encode_img(image, 38)
-                prompt = self.prompt
-                # print("prompt: ", prompt)
-                embs = self.model.get_context_emb(prompt, [image_emb])
-                current_max_len = embs.shape[1] + max_new_tokens
-
-                if current_max_len - max_length > 0:
-                    print(
-                        "Warning: The number of tokens in current conversation exceeds the max length. "
-                        "The model will not see the contexts outside the range."
-                    )
-
-                begin_idx = max(0, current_max_len - max_length)
-                embs = embs[:, begin_idx:]
+                embs = self.get_model_embeds(cropped_images)
                 embeds_list.append(embs)
-
         else:
             detect_info["status"] = "invalid"
             embeds_list = None
@@ -290,7 +278,34 @@ class halc_assistant:
         return embeds_list, detect_info
 
 
+    def get_model_embeds(self, image):
 
+        if self.model_backbone == "minigpt4":
+            max_new_tokens = 300
+            max_length = 2000
+        
+            image = self.vis_processor(image).unsqueeze(0).to(self.device)
+            image_emb, _ = self.model.encode_img(image, 38)
+            
+            prompt = self.prompt
+            # print("prompt: ", prompt)
+            embs = self.model.get_context_emb(prompt, [image_emb])
+            current_max_len = embs.shape[1] + max_new_tokens
+
+            if current_max_len - max_length > 0:
+                print(
+                    "Warning: The number of tokens in current conversation exceeds the max length. "
+                    "The model will not see the contexts outside the range."
+                )
+
+            begin_idx = max(0, current_max_len - max_length)
+            embs = embs[:, begin_idx:]
+
+        elif self.model_backbone == "llava-1.5":
+            # image_emb = self.model.prepare_inputs_labels_for_multimodal(input_ids, attention_mask, past_key_values, labels, image)
+            embs = self.vis_processor(image).unsqueeze(0).to(self.device)
+
+        return embs
 
     def context_density_distortion_embedding(self, entity):
         # context_window specifies the number of context windows
@@ -444,8 +459,6 @@ class halc_assistant:
             embeds_list = None
 
         return embeds_list, detect_info
-
-
 
 
 
@@ -866,18 +879,25 @@ class halc_assistant:
         return skip_flag, contrast_logits_array
 
 
-    def clip_score_selection(self, candidate_intermediate_token_lists_array, beam_size):
-
+    def clip_score_selection(self, candidate_intermediate_token_lists_array, beam_size, skip_token_length=0):
+        
 
         if candidate_intermediate_token_lists_array == [None] * len(candidate_intermediate_token_lists_array) or self.original_image == None:
             # print("identical candidate lists: ", candidate_intermediate_token_lists_array)
-            # input()
             random.seed(8)
             selected_candidates = random.sample(range(len(candidate_intermediate_token_lists_array)), beam_size)
+
         else:
             candidate_texts = []
             for candidate_intermediate_token_lists in candidate_intermediate_token_lists_array:
-                candidate_texts.append(self.get_sequence_text(candidate_intermediate_token_lists[0]))
+                # print("candidate_intermediate_token_lists[0]", candidate_intermediate_token_lists[0])
+                if self.model_backbone == "minigpt4":
+                    skip_token_length = 0
+                elif self.model_backbone == "llava-1.5":
+                    skip_token_length = skip_token_length
+                
+                    # print("tokens_to_text", tokens_to_text)
+                candidate_texts.append(self.get_sequence_text(candidate_intermediate_token_lists[0], skip_token_length))
 
             original_image = self.original_image
             
@@ -901,8 +921,8 @@ class halc_assistant:
             # print("sorted_indices:", sorted_indices)
             for idx in sorted_indices:
 
-                candidate_text = self.get_sequence_text(candidate_intermediate_token_lists_array[idx][0])
-            
+                # candidate_text = self.get_sequence_text(candidate_intermediate_token_lists_array[idx][0])
+                candidate_text = candidate_texts[idx]
                 # Check for uniqueness
                 if candidate_text not in selected_texts:
                     selected_texts.add(candidate_text)

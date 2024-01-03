@@ -5,7 +5,23 @@
   <img src="https://github.com/BillChan226/HaLC/blob/main/.assets/hawk_logo.png" width="35%">
 </div>
 
-<!-- <a href='https://minigpt-v2.github.io'><img src='https://img.shields.io/badge/Project-Page-Green'></a> <a href='https://arxiv.org/abs/2310.09478.pdf'><img src='https://img.shields.io/badge/Paper-Arxiv-red'></a>  <a href='https://huggingface.co/spaces/Vision-CAIR/MiniGPT-v2'><img src='https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Spaces-blue'> <a href='https://minigpt-v2.github.io'><img src='https://img.shields.io/badge/Gradio-Demo-blue'></a> [![YouTube](https://badges.aleen42.com/src/youtube.svg)](https://www.youtube.com/watch?v=atFCwV2hSY4) -->
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-g.svg)](https://opensource.org/licenses/MIT)
+[![Arxiv](https://img.shields.io/badge/arXiv-2311.17911-B21A1B)](https://arxiv.org/pdf/2311.17911.pdf)
+[![Hugging Face Transformers](https://img.shields.io/badge/%F0%9F%A4%97-Transformers-blue)](https://github.com/huggingface/transformers)
+[![GitHub Stars](https://img.shields.io/github/stars/shikiw/OPERA?style=social)](https://github.com/shikiw/OPERA/stargazers)
+
+
+This repository provides the official PyTorch implementation of the following paper: 
+> [**HALC: Object Hallucination Reduction via Adaptive Focal-Contrast Decoding**]() <br>
+> [Zhaorun Chen](https://billchan226.github.io/)<sup>1,*</sup>, 
+> [Zhuokai Zhao](https://zhuokai-zhao.com/)<sup>2,*</sup>, 
+> [Lingyu Gao](https://lygao.me/)<sup>3</sup>,
+> [Hongyin Luo](https://luohongyin.github.io/) <sup>4</sup>,
+> [Huaxiu Yao](https://www.huaxiuyao.io/) <sup>1</sup>, 
+> [Jiawei Zhou](https://sites.harvard.edu/jzhou/)<sup>3</sup>,
+> <sup>1</sup>UNC-Chapel Hill, <sup>2</sup>University of Chicago, <sup>3</sup>Toyota Technological Institute at Chicago, <sup>4</sup>Massachusetts Institute of Technology <br>
+
 
 
 ## :hammer_and_wrench: Installation

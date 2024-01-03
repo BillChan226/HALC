@@ -147,8 +147,15 @@ class LLaVa(BaseModel):
         num_captions=1,
         temperature=1,
         output_attentions=False,
-        # ours
+        premature_layer=None,
+        candidate_premature_layers=None,
+        mature_layer=None,
+        beam_search=False,
+        dola_decoding = False,
+        halc_decoding = False,
         opera_decoding=False,
+        halc_assistant=None,
+        # OPERA
         key_position=None,
         scale_factor=1.0,
         threshold=1,
@@ -225,8 +232,15 @@ class LLaVa(BaseModel):
                 # num_return_sequences=num_captions,
                 images=image,
                 output_attentions=output_attentions,
-                # opera
+                premature_layer=premature_layer,
+                candidate_premature_layers=candidate_premature_layers,
+                mature_layer=mature_layer,
+                beam_search=beam_search,
+                dola_decoding=dola_decoding,
+                halc_decoding=halc_decoding,
                 opera_decoding=opera_decoding,
+                halc_assistant=halc_assistant,
+                # opera
                 key_position=key_position,
                 scale_factor=scale_factor,
                 threshold=threshold,

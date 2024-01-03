@@ -85,7 +85,7 @@ parser.add_argument(
 parser.add_argument("--data_path", type=str, default="/home/czr/contrast_decoding_LVLMs/eval_dataset/val2014/", help="data path")
 parser.add_argument("--batch_size", type=int, default=1, help="batch size")
 parser.add_argument("--num_workers", type=int, default=2, help="num workers")
-parser.add_argument("-b", "--beam", type=int)
+parser.add_argument("-b", "--beam", type=int, default=1)
 parser.add_argument("--sample", action='store_true')
 parser.add_argument("--scale_factor", type=float, default=50)
 parser.add_argument("--threshold", type=int, default=15)
@@ -132,8 +132,8 @@ parser.add_argument(
 
 args = parser.parse_known_args()[0]
 
-print("args.gpu_id", args.gpu_id)
-# os.environ["CUDA_VISIBLE_DEVICES"] = str(args.gpu_id)
+# print("args.gpu_id", args.gpu_id)
+os.environ["CUDA_VISIBLE_DEVICES"] = str(args.gpu_id)
 args.cfg_path = MODEL_EVAL_CONFIG_PATH[args.model]
 model_name = args.model
 decoding_strategy = args.decoder
@@ -142,6 +142,7 @@ seed = args.seed
 setup_seeds(cfg, seed)
 
 device = torch.device(f"cuda:{int(args.gpu_id)}") if torch.cuda.is_available() else "cpu"
+# device = "cpu"
 
 verbosity = args.verbosity
 k_candidate_num = args.k_candidate_num
@@ -167,6 +168,8 @@ model_config.device_8bit = args.gpu_id
 model_cls = registry.get_model_class(model_config.arch)
 model = model_cls.from_config(model_config).to(device)
 model.eval()
+
+print("model device", model.device)
 
 processor_cfg = cfg.get_config().preprocess
 processor_cfg.vis_processor.eval.do_normalize = False
@@ -243,7 +246,7 @@ img_ids = coco.getImgIds()
 # sample image ids
 sampled_img_ids = random.sample(img_ids, num_samples)
 
-print("sampled_img_ids", sampled_img_ids)
+# print("sampled_img_ids", sampled_img_ids)
 
 img_files = []
 for cur_img_id in sampled_img_ids:
@@ -270,7 +273,7 @@ base_dir  = output_dir + args.model
 if not os.path.exists(base_dir):
     os.makedirs(base_dir)
 
-halc_params = {"context_domain": "upper", "contrast_weight": 0.05, "context_window": 4, "expand_ratio": expand_ratio, "beam_size": num_beams, "k_candidate_num": args.k_candidate_num}
+halc_params = {"context_domain": "upper", "contrast_weight": 0.05, "context_window": 4, "expand_ratio": expand_ratio, "beam_size": num_beams, "k_candidate_num": args.k_candidate_num, "LVLM_backbone": model_name}
 halc_assistant_helper = halc_assistant(model, vis_processor=vis_processor, device=device, halc_params=halc_params)
 
 offlight = True
@@ -294,6 +297,7 @@ for img_id in tqdm(range(len(img_files))):
     raw_image = Image.open(image_path).convert("RGB")
     image = vis_processors["eval"](raw_image).unsqueeze(0)
     image = image.to(device)
+    # print("image device", norm(image).device)
 
     # qu = "Please describe this image in detail."
     # qu = "Generate a one sentence caption of the image."
@@ -351,7 +355,7 @@ for img_id in tqdm(range(len(img_files))):
                 threshold=args.threshold,
                 num_attn_candidates=args.num_attn_candidates,
                 penalty_weights=args.penalty_weights,
-                k_candidate_num=k_candidate_num,
+                # k_candidate_num=k_candidate_num,
             )
 
     output_text = out[0]

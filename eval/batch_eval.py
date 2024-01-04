@@ -35,20 +35,20 @@ def run_eval(file_path):
     return metrics if metrics else None
 
 def extract_info_from_filename(filename):
-    # Updated regex pattern to match various decoder names
-    match = re.search(r'minigpt4_([a-zA-Z0-9-]+)_beams_(\d+)_k_(\d+)_coco_expand_ratio_([\d.]+)_seed_(\d+)_max_tokens_(\d+)_samples_(\d+)_chair', filename)
+    # Corrected regex pattern to accurately capture 'llava-1.5' as the model name
+    match = re.search(r'([^_]+)_([^_]+)_beams_(\d+)_k_(\d+)_coco_expand_ratio_([\d.]+)_seed_(\d+)_max_tokens_(\d+)_samples_(\d+)_chair', filename)
     if match:
-        return match.group(1), int(match.group(2)), float(match.group(3)), float(match.group(4)), int(match.group(5)), int(match.group(6)), int(match.group(7))
+        return match.groups()
     else:
-        return '-', -1, -1, -1, -1
+        return '-', '-', -1, -1, -1, -1, -1, -1
 
 # Initialize the markdown table with headers
-markdown_table = "| Decoder | Ratio | Beam | K | Seed | SPICE | METEOR | CIDEr | CHAIRs | CHAIRi | Num of Samples | Max Tokens |\n"
-markdown_table += "|---------|-----------|-----------|----------|------------|-------|--------|-------|--------|--------|--------|--------|\n"
+markdown_table = "| Backbone | Decoder | Ratio | Beam | K | Seed | SPICE | METEOR | CIDEr | CHAIRs | CHAIRi | Num of Samples | Max Tokens |\n"
+markdown_table += "|---------|---------|-----------|-----------|----------|------------|-------|--------|-------|--------|--------|--------|--------|\n"
 
 # Prepare the CSV file
 csv_file_path = 'eval/eval_results.csv'
-csv_columns = ['Decoder', 'Ratio', 'Beam', 'K', 'Seed', 'SPICE', 'METEOR', 'CIDEr', 'CHAIRs', 'CHAIRi', 'Num of Samples', 'Max Tokens']
+csv_columns = ['Backbone', 'Decoder', 'Ratio', 'Beam', 'K', 'Seed', 'SPICE', 'METEOR', 'CIDEr', 'CHAIRs', 'CHAIRi', 'Num of Samples', 'Max Tokens']
 
 # Start writing to the CSV file
 with open(csv_file_path, 'w', newline='') as csvfile:
@@ -68,16 +68,17 @@ with open(csv_file_path, 'w', newline='') as csvfile:
             print(file_path)
             # Extract information from filename
             # decoder,  beam_size, k_number, expand_ratio, seed_number = extract_info_from_filename(file_name)
-            decoder,  beam_size, k_number, expand_ratio, seed_number, num_samples, max_tokens = extract_info_from_filename(file_name)
+            backbone, decoder,  beam_size, k_number, expand_ratio, seed_number, num_samples, max_tokens = extract_info_from_filename(file_name)
             
             metrics = run_eval(file_path)
             
             # print(f"| {decoder} | {expand_ratio} | {beam_size} | {k_number} | {seed_number} | {' | '.join(metrics)} |\n")
-            print(f"| {decoder} | {expand_ratio} | {beam_size} | {k_number} | {seed_number} | {' | '.join(metrics)} | {num_samples} | {max_tokens} |\n")
+            print(f"| {backbone} | {decoder} | {expand_ratio} | {beam_size} | {k_number} | {seed_number} | {' | '.join(metrics)} | {num_samples} | {max_tokens} |\n")
             if metrics:
                 # markdown_table += f"| {decoder} | {expand_ratio} | {beam_size} | {k_number} | {seed_number} | {' | '.join(metrics)} |\n"
-                markdown_table += f"| {decoder} | {expand_ratio} | {beam_size} | {k_number} | {seed_number} | {' | '.join(metrics)} | {num_samples} | {max_tokens} |\n"
+                markdown_table += f"| {backbone} | {decoder} | {expand_ratio} | {beam_size} | {k_number} | {seed_number} | {' | '.join(metrics)} | {num_samples} | {max_tokens} |\n"
                 writer.writerow({
+                    'Backbone': backbone,
                     'Decoder': decoder,
                     'Ratio' : expand_ratio,
                     'Beam': beam_size,

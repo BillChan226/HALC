@@ -1482,13 +1482,13 @@ class GenerationMixin:
                 **model_kwargs,
             )
         
-        elif is_beam_gen_mode and halc_decoding and dola_decoding and beam_search==True:
+        elif halc_decoding and dola_decoding and beam_search==True:
             if generation_config.num_return_sequences > 1:
                 raise ValueError(
                     f"num_return_sequences has to be 1, but is {generation_config.num_return_sequences} when doing"
                     " greedy search."
                 )
-            # print("\033[41m!!!!! Halc-Dola Decoding !!!!!!\033[0m")
+            # print("\033[41m!!!!! Halc-Beam Search !!!!!!\033[0m")
             return self.halc_dola_beam_search(
                 input_ids,
                 logits_processor=logits_processor,
@@ -1505,6 +1505,7 @@ class GenerationMixin:
                 relative_top=relative_top,
                 streamer=streamer,
                 beam_size=generation_config.num_beams,
+                max_new_tokens=generation_config.max_new_tokens,
                 **model_kwargs,
             )
         
@@ -1613,7 +1614,6 @@ class GenerationMixin:
                 **model_kwargs,
             )
 
-        # input()
         # 10. go into different generation modes
         elif is_greedy_gen_mode and dola_decoding and beam_search==False:
             if generation_config.num_return_sequences > 1:
@@ -4895,6 +4895,7 @@ class GenerationMixin:
         synced_gpus: Optional[bool] = False,
         streamer: Optional["BaseStreamer"] = None,
         beam_size: Optional[Union[int, List[int]]] = None,
+        max_new_tokens: Optional[int] = None,
         **model_kwargs,
     ) -> Union[GreedySearchOutput, torch.LongTensor]:
         r"""
@@ -5102,10 +5103,20 @@ class GenerationMixin:
         beam_once_flag = [False] * beam_size
         beam_next_tokens = [None] * beam_size
         beam_finished = [False] * beam_size
+
+        repetition_flag = False
+        repetition_counter = 0
+
         if self.halc_assistant.model_backbone == "minigpt4":
-            valid_length_max = max_length
+            valid_length_max = min(max_new_tokens, max_length)
         elif self.halc_assistant.model_backbone == "llava-1.5":
-            valid_length_max = max_length + len(len(initial_input_ids[0]))
+            valid_length_max = min(max_new_tokens, max_length)  + len(initial_input_ids[0])
+        else:
+            input("model name error")
+        # print("len(initial_input_ids[0])", len(initial_input_ids[0]))
+        # print("max_length", max_length)
+        # print("max_new_tokens", max_new_tokens)
+        # print("valid_length_max", valid_length_max)
  
         while True:
 
@@ -5273,7 +5284,7 @@ class GenerationMixin:
                                 if self.halc_assistant.model_backbone == "minigpt4":
                                     sub_model_kwargs['inputs_embeds'] = context_embed
                                     teacher_forcing_tokens = beam_intermediate_token_lists[bs]
-                                if self.halc_assistant.model_backbone == "llava-1.5":
+                                elif self.halc_assistant.model_backbone == "llava-1.5":
                                     sub_model_kwargs['images'] = context_embed
                                     # print("beam_intermediate_token_lists[bs]", beam_intermediate_token_lists[bs])
                                     teacher_forcing_tokens = beam_intermediate_token_lists[bs][:, len(initial_input_ids[0])-1:]
@@ -5527,20 +5538,30 @@ class GenerationMixin:
                 #     beam_finished[bs] = True
                 # print("len(beam_input_ids[bs][0])", len(beam_input_ids[bs][0]))
                 # print("valid_length_max", valid_length_max)
-                if beam_input_ids[bs][0][-1].cpu().numpy().tolist() == eos_token_id[0] or valid_length_max + 3 <= len(beam_input_ids[bs][0]):
+                #### REPETITION PATTERN DETECTION ######
+                if beam_input_ids[bs][0][-1] == beam_input_ids[bs][0][-2] or beam_input_ids[bs][0][-1] == beam_input_ids[bs][0][-3] or beam_input_ids[bs][0][-1] == beam_input_ids[bs][0][-4]:
+                    repetition_flag = True
+                    repetition_counter += 1
+                else:
+                    repetition_flag = False
+                    repetition_counter = 0
+                if beam_input_ids[bs][0][-1].cpu().numpy().tolist() == eos_token_id[0] or valid_length_max + 2 <= len(beam_input_ids[bs][0]) or repetition_counter > 2:
                     # beam_intermediate_token_lists[bs] = beam_input_ids[bs]
                     beam_intermediate_token_lists[bs] = deep_copy_tensor_structure(beam_input_ids[bs])
                     # input(f"{bs} finished\n")
                     beam_finished[bs] = True
-
+                
+            # print("beam_input_ids", beam_input_ids)
+            # print("beam_intermediate_token_lists", beam_intermediate_token_lists)
+            # print("len: ", len(beam_input_ids[0][0]))
                 
 
-                # for bs in range(beam_size):
-                #     print("eos_token_id[0]", eos_token_id[0])
-                #     print(f"beam_input_ids {bs}:", beam_input_ids[bs])
-                #     text = self.halc_assistant.get_sequence_text(beam_intermediate_token_lists[bs][0].cpu().numpy().tolist())
+            # for bs in range(beam_size):
+            #     print("eos_token_id[0]", eos_token_id[0])
+            #     print(f"beam_input_ids {bs}:", beam_input_ids[bs])
+            #     text = self.halc_assistant.get_sequence_text(beam_intermediate_token_lists[bs][0].cpu().numpy().tolist(), skip_token_length=len(initial_input_ids[0]))
                     
-                #     print(f"\033[1;4{bs+5}m Beam Search Candidate: {bs+1} {text} \033[0m")
+            #     print(f"\033[1;4{bs+5}m Beam Search Candidate: {bs+1} {text} \033[0m")
 
             gc.collect()
 

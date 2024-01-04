@@ -44,11 +44,29 @@ from pycocotools.coco import COCO
 from pycocoevalcap.eval import COCOEvalCap
 from collections import defaultdict
 
+import argparse
+
+# Set the directory where the chair.json files are located
+# directory = './paper_result/32_tokens/minigpt4/'
+
+parser = argparse.ArgumentParser(description="POPE-Adv evaluation on LVLMs.")
+
+parser.add_argument(
+    "-c",
+    "--caption-path",
+    type=str,
+    required=True,
+    help="Path to the generated captions",
+)
+
+args = parser.parse_known_args()[0]
+
+directory = args.caption_path
 
 
 # Assuming this script is placed in the same directory as the JSON files
-directory_path = "/home/czr/HaLC/paper_result/minigpt4"
-output_directory_path = "/home/czr/HaLC/paper_result/minigpt4"
+directory_path = directory
+output_directory_path = directory
 
 # List all files in the directory
 files = os.listdir(directory_path)

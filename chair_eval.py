@@ -299,9 +299,9 @@ for img_id in tqdm(range(len(img_files))):
     image = image.to(device)
     # print("image device", norm(image).device)
 
-    # qu = "Please describe this image in detail."
+    qu = "Please describe this image in detail."
     # qu = "Generate a one sentence caption of the image."
-    qu = "Generate a short caption of the image."
+    # qu = "Generate a short caption of the image."
 
     template = INSTRUCTION_TEMPLATE[args.model]
     qu = template.replace("<question>", qu)

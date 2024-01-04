@@ -217,17 +217,17 @@ raw_image = Image.open(image_path).convert("RGB")
 image = vis_processors["eval"](raw_image).unsqueeze(0)
 image = image.to(device)
 
-# qu = "Please describe this image in detail."
+qu = "Please describe this image in detail."
 # qu = "Generate a one sentence caption of the image."
 # qu = "Generate a short caption of the image."
-qu = "What is the man holding in his hand?"
+# qu = "What is the man holding in his hand?"
 
 
 template = INSTRUCTION_TEMPLATE[args.model]
 qu = template.replace("<question>", qu)
 
 
-halc_params = {"context_domain": "upper", "contrast_weight": 0.05, "context_window": 4, "expand_ratio": 0.8, "beam_size": num_beams, "k_candidate_num": args.k_candidate_num, "LVLM_backbone": model_name}
+halc_params = {"context_domain": "upper", "contrast_weight": 0.05, "context_window": 4, "expand_ratio": 0.1, "beam_size": num_beams, "k_candidate_num": args.k_candidate_num, "LVLM_backbone": model_name}
 halc_assistant_helper = halc_assistant(model, vis_processor=vis_processor, device=device, halc_params=halc_params)
 
 lm_early_exit_layers = [

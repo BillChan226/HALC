@@ -305,6 +305,9 @@ class halc_assistant:
             # image_emb = self.model.prepare_inputs_labels_for_multimodal(input_ids, attention_mask, past_key_values, labels, image)
             embs = self.vis_processor(image).unsqueeze(0).to(self.device)
 
+        elif self.model_backbone == "blip":
+            pass
+
         return embs
 
     def context_density_distortion_embedding(self, entity):

@@ -48,7 +48,7 @@ markdown_table += "|---------|---------|-----------|-----------|----------|-----
 
 # Prepare the CSV file
 csv_file_path = 'eval/eval_results.csv'
-csv_columns = ['Backbone', 'Decoder', 'Ratio', 'Beam', 'K', 'Seed', 'SPICE', 'METEOR', 'CIDEr', 'CHAIRs', 'CHAIRi', 'Num of Samples', 'Max Tokens']
+csv_columns = ['Backbone', 'Decoder', 'Ratio', 'Beam', 'K', 'Seed', 'SPICE', 'METEOR', 'CIDEr', 'CHAIRs', 'CHAIRi', 'Max Tokens', 'Num of Samples']
 
 # Start writing to the CSV file
 with open(csv_file_path, 'w', newline='') as csvfile:
@@ -68,15 +68,15 @@ with open(csv_file_path, 'w', newline='') as csvfile:
             print(file_path)
             # Extract information from filename
             # decoder,  beam_size, k_number, expand_ratio, seed_number = extract_info_from_filename(file_name)
-            backbone, decoder,  beam_size, k_number, expand_ratio, seed_number, num_samples, max_tokens = extract_info_from_filename(file_name)
+            backbone, decoder,  beam_size, k_number, expand_ratio, seed_number, max_tokens, num_samples = extract_info_from_filename(file_name)
             
             metrics = run_eval(file_path)
             
             # print(f"| {decoder} | {expand_ratio} | {beam_size} | {k_number} | {seed_number} | {' | '.join(metrics)} |\n")
-            print(f"| {backbone} | {decoder} | {expand_ratio} | {beam_size} | {k_number} | {seed_number} | {' | '.join(metrics)} | {num_samples} | {max_tokens} |\n")
+            print(f"| {backbone} | {decoder} | {expand_ratio} | {beam_size} | {k_number} | {seed_number} | {' | '.join(metrics)} | {max_tokens} | {num_samples} |\n")
             if metrics:
                 # markdown_table += f"| {decoder} | {expand_ratio} | {beam_size} | {k_number} | {seed_number} | {' | '.join(metrics)} |\n"
-                markdown_table += f"| {backbone} | {decoder} | {expand_ratio} | {beam_size} | {k_number} | {seed_number} | {' | '.join(metrics)} | {num_samples} | {max_tokens} |\n"
+                markdown_table += f"| {backbone} | {decoder} | {expand_ratio} | {beam_size} | {k_number} | {seed_number} | {' | '.join(metrics)} | {max_tokens} | {num_samples} |\n"
                 writer.writerow({
                     'Backbone': backbone,
                     'Decoder': decoder,
@@ -89,8 +89,8 @@ with open(csv_file_path, 'w', newline='') as csvfile:
                     'CIDEr': metrics[2],
                     'CHAIRs': metrics[3],
                     'CHAIRi': metrics[4],
+                    'Max Tokens': max_tokens,
                     'Num of Samples': num_samples,
-                    'Max Tokens': max_tokens
                 })
 
 

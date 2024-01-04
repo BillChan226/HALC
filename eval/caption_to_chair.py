@@ -68,7 +68,6 @@ coco = COCO(caption_file_path)
 
 
 
-
 for file_name in caption_files:
     # Construct the full file path
     file_path = os.path.join(directory_path, file_name)

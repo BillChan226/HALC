@@ -269,7 +269,7 @@ class halc_assistant:
 
             embeds_list = []
             for i, cropped_img in enumerate(cropped_images, start=1):
-                embs = self.get_model_embeds(cropped_images)
+                embs = self.get_model_embeds(cropped_img)
                 embeds_list.append(embs)
         else:
             detect_info["status"] = "invalid"

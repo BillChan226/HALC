@@ -5186,13 +5186,12 @@ class GenerationMixin:
                         
                     else:
                         beam_current_word[bs] = self.halc_assistant.get_last_word(beam_last_tokens[bs]) 
-                        
+                        # print("beam_last_tokens: ", beam_last_tokens[bs])
                         # print("CURRENT WORD: ", beam_current_word[bs])
                         entity = beam_current_word[bs]
                         embeds_list, detect_info = self.halc_assistant.context_density_embedding(entity)
         
                         # embeds_list, detect_info = self.halc_assistant.context_density_distortion_embedding(entity)
-
                         if detect_info["status"] == "invalid":
                             # print("CURRENT WORD: ", beam_current_word[bs],"detect: ", detect_info["status"])
                             # beam_token_to_append[bs] = torch.tensor([beam_last_tokens[bs]]).to(beam_input_ids[bs].device)
@@ -5200,7 +5199,7 @@ class GenerationMixin:
                             for _ in range(self.halc_assistant.k_candidate_num):
                                 candidate_token_to_append.append(torch.tensor([beam_last_tokens[bs]]).to(beam_input_ids[bs].device))
                             beam_candidate_token_to_append[bs] = candidate_token_to_append
-                        
+
                         else:
                             # print("DINO acctivated")
                             context_logits_list = []
@@ -5215,10 +5214,14 @@ class GenerationMixin:
                                 if self.halc_assistant.model_backbone == "llava-1.5":
                                     sub_model_kwargs['images'] = context_embed
                                     # print("beam_intermediate_token_lists[bs]", beam_intermediate_token_lists[bs])
-                                    teacher_forcing_tokens = beam_intermediate_token_lists[bs][:, len(initial_input_ids[0]):]
+                                    teacher_forcing_tokens = beam_intermediate_token_lists[bs][:, len(initial_input_ids[0])-1:]
                                 
                                 # print("sub_model_kwargs", sub_model_kwargs.keys())
-
+                                # print("beam_next_tokens[bs]", beam_next_tokens[bs])
+                                # print("initial_input_ids", initial_input_ids)
+                                # print("beam_intermediate_token_lists[bs]", beam_intermediate_token_lists[bs])
+                                # print("teacher_forcing_tokens", teacher_forcing_tokens)
+                                # input()
                                 context_logits, _ = self.get_intermediate_logits(
                                 teacher_forcing_tokens = teacher_forcing_tokens,
                                 input_ids = initial_input_ids,
@@ -5291,7 +5294,6 @@ class GenerationMixin:
 
             # print("beam_candidate_token_to_append", beam_candidate_token_to_append)
             for bs in range(beam_size):
-                # print("beam_candidate_token_to_append[bs]", beam_candidate_token_to_append[bs])
                 if beam_candidate_token_to_append[bs] != None:
                     for candidate_token_to_append in beam_candidate_token_to_append[bs]:
                         if candidate_token_to_append != None:
@@ -5422,13 +5424,10 @@ class GenerationMixin:
                         beam_outputs[bs], deep_copy_tensor_structure(beam_model_kwargs[bs]), is_encoder_decoder=self.config.is_encoder_decoder
                     )
                 
-
-                
-                # print(f"beam_model_kwargs {bs}:", np.shape(beam_model_kwargs[bs]["attention_mask"]))
-                
-                # print(f"beam_next_tokens {bs}", beam_next_tokens[bs])
+                # print("beam_input_ids[bs]", beam_input_ids[bs])
                 
                 beam_last_tokens[bs].append(beam_next_tokens[bs][:, None].cpu().numpy().tolist()[0][0])
+
                 if beam_finished[bs] == False:
                     # update generated ids, model inputs, and length for next step
                     beam_input_ids[bs] = torch.cat([beam_input_ids[bs], beam_next_tokens[bs][:, None]], dim=-1)

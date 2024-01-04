@@ -227,7 +227,7 @@ template = INSTRUCTION_TEMPLATE[args.model]
 qu = template.replace("<question>", qu)
 
 
-halc_params = {"context_domain": "upper", "contrast_weight": 0.05, "context_window": 4, "expand_ratio": 0.1, "beam_size": num_beams, "k_candidate_num": args.k_candidate_num}
+halc_params = {"context_domain": "upper", "contrast_weight": 0.05, "context_window": 4, "expand_ratio": 0.8, "beam_size": num_beams, "k_candidate_num": args.k_candidate_num, "LVLM_backbone": model_name}
 halc_assistant_helper = halc_assistant(model, vis_processor=vis_processor, device=device, halc_params=halc_params)
 
 lm_early_exit_layers = [
@@ -278,7 +278,6 @@ with torch.inference_mode():
             threshold=args.threshold,
             num_attn_candidates=args.num_attn_candidates,
             penalty_weights=args.penalty_weights,
-            k_candidate_num=k_candidate_num,
         )
 
 output_text = out[0]

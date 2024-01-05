@@ -15,7 +15,7 @@ model:
   # generation configs
   prompt: ""
 
-  llama_model: "/mnt/petrelfs/share_data/wangbin/mllm/minigpt4/vicuna-7b-v0"
+  llama_model: "Vision-CAIR/vicuna-7b/"
 
 preprocess:
     vis_processor:

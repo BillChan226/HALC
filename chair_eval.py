@@ -26,6 +26,7 @@ import json
 
 from decoder_zoo.Woodpecker.vis_corrector import Corrector
 from decoder_zoo.HaLC.context_density.halc import halc_assistant
+from decoder_zoo.VCD.vcd_utils.vcd_add_noise import add_diffusion_noise
 
 from pycocotools.coco import COCO
 from pycocoevalcap.eval import COCOEvalCap
@@ -129,6 +130,24 @@ parser.add_argument(
     default=0.6,
     help="Expand ratio of growing contextual field.",
 )
+parser.add_argument(
+    "--cd_alpha",
+    type=float,
+    default=1,
+    help="Alpha param for VCD.",
+)
+parser.add_argument(
+    "--cd_beta",
+    type=float,
+    default=0.1,
+    help="Beta param for VCD."
+)
+parser.add_argument(
+    "--noise_step",
+    type=int,
+    default=3,
+    help="Noise step for VCD."
+)
 
 args = parser.parse_known_args()[0]
 
@@ -156,6 +175,8 @@ batch_size = args.batch_size
 post_correction = args.post_correction
 max_new_tokens = args.max_new_tokens
 expand_ratio = args.expand_ratio
+cd_alpha = args.cd_alpha
+cd_beta = args.cd_beta
 
 
 # ========================================
@@ -170,7 +191,7 @@ model = model_cls.from_config(model_config).to(device)
 model.eval()
 
 print("model device", model.device)
-
+print("expand_ratio", expand_ratio)
 processor_cfg = cfg.get_config().preprocess
 processor_cfg.vis_processor.eval.do_normalize = False
 vis_processors, txt_processors = load_preprocess(processor_cfg)
@@ -180,7 +201,7 @@ vis_processor = registry.get_processor_class(vis_processor_cfg.name).from_config
     vis_processor_cfg)
 
 
-valid_decoding_strategies = ["greedy", "dola", "halc-dola", "halc-greedy", "halc-beam", "opera-beam"]
+valid_decoding_strategies = ["greedy", "dola", "halc-dola", "halc-greedy", "halc-beam", "opera-beam", "vcd"]
 
 assert decoding_strategy in valid_decoding_strategies, f"Invalid decoding strategy: {decoding_strategy}, should be in {valid_decoding_strategies}"
 
@@ -188,6 +209,7 @@ decoding_strategy = decoding_strategy
 opera_decoding = False
 dola_decoding = False
 halc_decoding = False
+vcd_decoding = False
 beam_search = False
 
 if decoding_strategy == "greedy":
@@ -207,6 +229,8 @@ elif decoding_strategy == "halc-beam":
 elif decoding_strategy == "opera-beam":
     beam_search = True
     opera_decoding = True
+elif decoding_strategy == "vcd":
+    vcd_decoding = True
 
 
 if post_correction == "woodpecker":
@@ -334,6 +358,16 @@ for img_id in tqdm(range(len(img_files))):
 
     halc_assistant_helper.update_input(img_path=image_path, input_prompt=qu)
 
+    image_cd = None
+    if decoding_strategy == "vcd":
+        image_tensor_cd = add_diffusion_noise(image, args.noise_step)
+        image_cd = (image_tensor_cd.unsqueeze(0).half().cuda() if image_tensor_cd is not None else None)
+        cd_alpha = cd_alpha
+        cd_beta = cd_beta
+        if model_name == "minigpt4":
+            image_cd = image_cd.squeeze(0)
+
+
     with torch.inference_mode():
         with torch.no_grad():
             out = model.generate(
@@ -348,14 +382,20 @@ for img_id in tqdm(range(len(img_files))):
                 beam_search=beam_search,
                 dola_decoding=dola_decoding,
                 opera_decoding=opera_decoding,
+                vcd_decoding=vcd_decoding,
                 halc_decoding=halc_decoding,
+                # HALC
                 halc_assistant=halc_assistant_helper,
+                # OPERA
                 key_position=None,
                 scale_factor=args.scale_factor,
                 threshold=args.threshold,
                 num_attn_candidates=args.num_attn_candidates,
                 penalty_weights=args.penalty_weights,
-                # k_candidate_num=k_candidate_num,
+                # VCD
+                images_cd=image_cd,
+                cd_alpha=cd_alpha,
+                cd_beta=cd_beta
             )
 
     output_text = out[0]

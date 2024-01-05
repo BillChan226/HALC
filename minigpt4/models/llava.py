@@ -154,6 +154,7 @@ class LLaVa(BaseModel):
         dola_decoding = False,
         halc_decoding = False,
         opera_decoding=False,
+        vcd_decoding=False,
         halc_assistant=None,
         # OPERA
         key_position=None,
@@ -161,9 +162,13 @@ class LLaVa(BaseModel):
         threshold=1,
         num_attn_candidates=5,
         penalty_weights=1.0,
+        # VCD
+        images_cd=None,
+        cd_alpha=1,
+        cd_beta=0.1
     ):
         self.llama_tokenizer.padding_side = "left"
-
+        self.model_name = "llava-1.5"
         image = samples["image"]
 
         instruction = samples["prompt"] if "prompt" in samples else None
@@ -239,6 +244,7 @@ class LLaVa(BaseModel):
                 dola_decoding=dola_decoding,
                 halc_decoding=halc_decoding,
                 opera_decoding=opera_decoding,
+                vcd_decoding=vcd_decoding,
                 halc_assistant=halc_assistant,
                 # opera
                 key_position=key_position,
@@ -246,6 +252,11 @@ class LLaVa(BaseModel):
                 threshold=threshold,
                 num_attn_candidates=num_attn_candidates,
                 penalty_weights=penalty_weights,
+                # VCD
+                images_cd=images_cd,
+                cd_alpha=cd_alpha,
+                cd_beta=cd_beta,
+                LVLM_backbone=self,
             )
 
         input_token_len = input_ids.shape[1]

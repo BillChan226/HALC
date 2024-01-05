@@ -221,6 +221,7 @@ class MiniGPT4(Blip2Base):
 
         mixed_embs = [emb for pair in zip(seg_embs[:-1], img_list) for emb in pair] + [seg_embs[-1]]
         mixed_embs = torch.cat(mixed_embs, dim=1)
+        
         return mixed_embs
 
     def prompt_wrap(self, img_embeds, atts_img, prompts):
@@ -289,7 +290,7 @@ class MiniGPT4(Blip2Base):
             instruction = random.choice(self.prompt_list)
         else:
             instruction = samples["instruction_input"] if "instruction_input" in samples else None
-
+ 
         img_embeds, atts_img = self.prompt_wrap(img_embeds, atts_img, instruction)
 
         self.llama_tokenizer.padding_side = "right"
@@ -361,16 +362,20 @@ class MiniGPT4(Blip2Base):
         dola_decoding = False,
         halc_decoding = False,
         opera_decoding=False,
+        vcd_decoding=False,
         halc_assistant=None,
         key_position=None,
         scale_factor=1.0,
         threshold=1,
         num_attn_candidates=5,
         penalty_weights=1.0,
-        # k_candidate_num=1,
+        # VCD
+        images_cd=None,
+        cd_alpha=1,
+        cd_beta=0.1
     ):
         self.llama_tokenizer.padding_side = "left"
-
+        self.model_name = "minigpt4"
         image = samples["image"]
         img_embeds, atts_img = self.encode_img(image)
 
@@ -378,6 +383,8 @@ class MiniGPT4(Blip2Base):
             instruction = random.choice(self.prompt_list)
         else:
             instruction = samples["prompt"] if "prompt" in samples else None # e.g., prompt = ["<Img><ImageHere></Img> Is there a dog?", "<Img><ImageHere></Img> Is there a cat?", ...]
+        
+        self.instructions = instruction
 
         inputs_embeds, attention_mask, img_start_pos = self.prompt_wrap(img_embeds, atts_img, instruction)
 
@@ -421,6 +428,7 @@ class MiniGPT4(Blip2Base):
                 dola_decoding=dola_decoding,
                 halc_decoding=halc_decoding,
                 opera_decoding=opera_decoding,
+                vcd_decoding=vcd_decoding,
                 halc_assistant=halc_assistant,
                 # opera
                 key_position=key_position,
@@ -428,6 +436,11 @@ class MiniGPT4(Blip2Base):
                 threshold=threshold,
                 num_attn_candidates=num_attn_candidates,
                 penalty_weights=penalty_weights,
+                # VCD
+                images_cd=images_cd,
+                cd_alpha=cd_alpha,
+                cd_beta=cd_beta,
+                LVLM_backbone=self,
             )
 
         outputs[outputs == 0] = 2 # convert output id 0 to 2 (eos_token_id)

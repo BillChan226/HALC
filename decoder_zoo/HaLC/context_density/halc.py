@@ -35,16 +35,19 @@ class halc_assistant:
         self.vis_processor = vis_processor
         self.model = model
         self.tagging = spacy.load("en_core_web_sm")
-        self.tokenizer = self.model.llama_tokenizer
         self.halc_params = halc_params
         self.k_candidate_num = halc_params["k_candidate_num"]
         self.original_image = None
+
         self.model_backbone = halc_params["LVLM_backbone"]
-        token_vocab_dir = "decoder_zoo/HaLC/context_density/tokenizer.json"
-        if not os.path.exists(token_vocab_dir):
-            temp = AutoTokenizer.from_pretrained(
-                "meta-llama/Llama-2-7b-chat-hf",  # official model name for llama2-7b-chat-hf
-            )
+
+        if self.model_backbone == "minigpt4" or self.model_backbone == "llava-1.5":
+            self.tokenizer = self.model.llama_tokenizer
+            token_vocab_dir = "decoder_zoo/HaLC/context_density/llama_tokenizer.json"
+        elif self.model_backbone == "instructblip":
+            self.tokenizer = self.model.llm_tokenizer
+            token_vocab_dir = "decoder_zoo/HaLC/context_density/vicuna_tokenizer.json"
+
         with open(token_vocab_dir, "r") as f:
             self.token_vocab = json.load(f)
 
@@ -65,6 +68,7 @@ class halc_assistant:
         input_id = input_id.cpu().numpy().tolist()
         # print("input_id", input_id)
         final_tokens = self.token_vocab[input_id[0][0]]
+        # print("final_tokens", final_tokens)
         if "▁" in final_tokens or "." in final_tokens or input_id[0][0] == 2:
             last_word_flag = True
         else:
@@ -81,7 +85,7 @@ class halc_assistant:
 
     def get_sequence_text(self, input_ids, skip_token_length=None):
 
-        if skip_token_length == 0:
+        if skip_token_length == 0 or skip_token_length is None:
             output_text = self.tokenizer.decode(input_ids, skip_special_tokens=True)
         else:
             output_text = self.tokenizer.decode(input_ids[skip_token_length:], skip_special_tokens=True)
@@ -305,8 +309,12 @@ class halc_assistant:
             # image_emb = self.model.prepare_inputs_labels_for_multimodal(input_ids, attention_mask, past_key_values, labels, image)
             embs = self.vis_processor(image).unsqueeze(0).to(self.device)
 
-        elif self.model_backbone == "blip":
-            pass
+        elif self.model_backbone == "instructblip":
+            image = self.vis_processor(image).unsqueeze(0).to(self.device)
+            image_emb, _ = self.model.encode_img(image, 38)
+            embs = self.model.image_to_embs(image_emb, image)
+        else:
+            raise NotImplementedError
 
         return embs
 
@@ -894,7 +902,7 @@ class halc_assistant:
             candidate_texts = []
             for candidate_intermediate_token_lists in candidate_intermediate_token_lists_array:
                 # print("candidate_intermediate_token_lists[0]", candidate_intermediate_token_lists[0])
-                if self.model_backbone == "minigpt4":
+                if self.model_backbone == "minigpt4" or self.model_backbone == "instructblip":
                     skip_token_length = 0
                 elif self.model_backbone == "llava-1.5":
                     skip_token_length = skip_token_length

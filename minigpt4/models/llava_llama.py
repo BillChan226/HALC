@@ -57,6 +57,7 @@ class LlavaLlamaForCausalLM(LlamaForCausalLM, LlavaMetaForCausalLM):
         self,
         input_ids: torch.LongTensor = None,
         attention_mask: Optional[torch.Tensor] = None,
+        position_ids: Optional[torch.LongTensor] = None,
         past_key_values: Optional[List[torch.FloatTensor]] = None,
         inputs_embeds: Optional[torch.FloatTensor] = None,
         labels: Optional[torch.LongTensor] = None,
@@ -66,6 +67,7 @@ class LlavaLlamaForCausalLM(LlamaForCausalLM, LlavaMetaForCausalLM):
         images: Optional[torch.FloatTensor] = None,
         return_dict: Optional[bool] = None,
         early_exit_layers: Optional[int] = None,
+        images_cd: Optional[torch.FloatTensor] = None,
     ) -> Union[Tuple, CausalLMOutputWithPast]:
         output_attentions = output_attentions if output_attentions is not None else self.config.output_attentions
         output_hidden_states = (
@@ -163,6 +165,53 @@ class LlavaLlamaForCausalLM(LlamaForCausalLM, LlavaMetaForCausalLM):
             }
         )
         return model_inputs
+
+    # def prepare_inputs_for_generation_cd(
+    #     self, input_ids, past_key_values=None, attention_mask=None, inputs_embeds=None, images_cd=None, **kwargs
+    # ):
+    #     print("here")
+    #     if past_key_values:
+    #         input_ids = input_ids[:, -1:]
+
+    #     # if `inputs_embeds` are passed, we only want to use them in the 1st generation step
+    #     if inputs_embeds is not None and past_key_values is None:
+    #         model_inputs = {"inputs_embeds": images_cd}
+    #     else:
+    #         model_inputs = {"input_ids": input_ids}
+
+    #     model_inputs.update(
+    #         {
+    #             "past_key_values": past_key_values,
+    #             "use_cache": kwargs.get("use_cache"),
+    #             "attention_mask": attention_mask,
+    #             # "images": kwargs.get("images", None),
+    #             "images": images_cd
+    #         }
+    #     )
+    #     return model_inputs
+
+    def prepare_inputs_for_generation_cd(
+        self, input_ids, past_key_values=None, attention_mask=None, inputs_embeds=None, images_cd=None, **kwargs
+    ):
+        if past_key_values:
+            input_ids = input_ids[:, -1:]
+
+        # if `inputs_embeds` are passed, we only want to use them in the 1st generation step
+        if inputs_embeds is not None and past_key_values is None:
+            model_inputs = {"inputs_embeds": inputs_embeds}
+        else:
+            model_inputs = {"input_ids": input_ids}
+
+        model_inputs.update(
+            {
+                "past_key_values": past_key_values,
+                "use_cache": kwargs.get("use_cache"),
+                "attention_mask": attention_mask,
+                "images": images_cd
+            }
+        )
+        return model_inputs
+
 
 AutoConfig.register("llava", LlavaConfig)
 AutoModelForCausalLM.register(LlavaConfig, LlavaLlamaForCausalLM)

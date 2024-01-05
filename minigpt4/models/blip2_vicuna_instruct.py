@@ -16,7 +16,8 @@ from minigpt4.models.blip2 import Blip2Base, disabled_train
 
 transformers_version = version.parse(transformers.__version__)
 assert transformers_version >= version.parse("4.28"), "BLIP-2 Vicuna requires transformers>=4.28"        
-from minigpt4.models.modeling_llama import LlamaForCausalLM
+# from minigpt4.models.modeling_llama import LlamaForCausalLM
+from transformers.models.llama.modeling_llama import LlamaForCausalLM
 from transformers import LlamaTokenizer
 
 
@@ -138,6 +139,84 @@ class Blip2VicunaInstruct(Blip2Base):
         llm_tokens['attention_mask'] = torch.stack(llm_tokens['attention_mask'])
         return llm_tokens, input_part_targets_len
 
+
+    def encode_img(self, image, early_exit_layer_idx=None):
+        device = image.device
+
+        query_tokens = self.query_tokens.expand(image.size(0), -1, -1)
+        if self.qformer_text_input:
+            # remove ocr tokens in q_former (for eval textvqa)
+            # qformer_prompt = prompt
+            # qformer_prompt = ['Question: ' + qp.split(' Question: ')[1] for qp in qformer_prompt]
+
+            text_Qformer = self.tokenizer(
+                self.prompt,
+                padding='longest',
+                truncation=True,
+                max_length=self.max_txt_len,
+                return_tensors="pt",
+            ).to(device)
+            query_atts = torch.ones(query_tokens.size()[:-1], dtype=torch.long).to(device)
+            Qformer_atts = torch.cat([query_atts, text_Qformer.attention_mask], dim=1)
+
+        with self.maybe_autocast():
+
+            final_layer_features, early_exit_features = self.visual_encoder(
+            image, early_exit_layer_idx
+                )
+            # early_exit_layers not activated
+            if early_exit_features == None:
+                image_embeds = self.ln_vision(final_layer_features).to(image.device)
+            else:
+                # print("early_exit_features", len(early_exit_features))
+                # image_embeds = self.ln_vision(early_exit_features[early_exit_layer_idx]).to(device)
+                image_embeds = self.ln_vision(early_exit_features[0]).to(image.device)
+
+            image_atts = torch.ones(image_embeds.size()[:-1], dtype=torch.long).to(image.device)
+
+            if self.qformer_text_input:
+                query_output = self.Qformer.bert(
+                    text_Qformer.input_ids,
+                    attention_mask=Qformer_atts,
+                    query_embeds=query_tokens,
+                    encoder_hidden_states=image_embeds,
+                    encoder_attention_mask=image_atts,
+                    return_dict=True,
+                )
+            else:
+                query_output = self.Qformer.bert(
+                    query_embeds=query_tokens,
+                    encoder_hidden_states=image_embeds,
+                    encoder_attention_mask=image_atts,
+                    return_dict=True,
+                )
+
+            inputs_llm = self.llm_proj(query_output.last_hidden_state[:,:query_tokens.size(1),:])#.index_select(dim=1, index=torch.tensor([4,31]).to(image.device))
+            # inputs_llm = torch.cat([inputs_llm[:,-i,:].unsqueeze(1) for i in range(inputs_llm.shape[1])], dim=1)
+            atts_llm = torch.ones(inputs_llm.size()[:-1], dtype=torch.long).to(image.device)
+
+        return inputs_llm, atts_llm
+
+
+    def image_to_embs(self, inputs_llm=None, image=None):
+
+        device = image.device
+
+        llm_tokens = self.llm_tokenizer(
+            self.prompt,
+            padding="longest",
+            return_tensors="pt"
+        ).to(device)
+
+        with self.maybe_autocast():
+            inputs_embeds = self.llm_model.get_input_embeddings()(llm_tokens.input_ids)
+            inputs_embeds = torch.cat([inputs_llm, inputs_embeds], dim=1)
+
+        return inputs_embeds
+
+
+
+
     def forward(self, samples):
         # print('-----------------')
         # print(samples["text_input"])
@@ -254,16 +333,31 @@ class Blip2VicunaInstruct(Blip2Base):
         num_captions=1,
         temperature=1,
         output_attentions=False,
-        # ours
+        premature_layer=None,
+        candidate_premature_layers=None,
+        mature_layer=None,
+        beam_search=False,
+        dola_decoding = False,
+        halc_decoding = False,
         opera_decoding=False,
+        vcd_decoding=False,
+        # HALC
+        halc_assistant=None,
+        # OPERA
         key_position=None,
         scale_factor=1.0,
         threshold=1,
         num_attn_candidates=5,
         penalty_weights=1.0,
+        # VCD
+        images_cd=None,
+        cd_alpha=1,
+        cd_beta=0.1
     ):
         self.llm_tokenizer.padding_side = "left"
-
+        self.model_name = "instructblip"
+        
+        early_exit_layer_idx = None
         if "prompt" in samples.keys():
             prompt = samples["prompt"]
         else:
@@ -284,6 +378,7 @@ class Blip2VicunaInstruct(Blip2Base):
         if "ocr_tokens" in samples.keys() and "{}" in prompt[0]:
             prompt = [p.format(', '.join(samples['ocr_tokens'][i][:30])) for i, p in enumerate(prompt)]
 
+        self.prompt = prompt
         query_tokens = self.query_tokens.expand(bs, -1, -1)
         if self.qformer_text_input:
             # remove ocr tokens in q_former (for eval textvqa)
@@ -333,7 +428,19 @@ class Blip2VicunaInstruct(Blip2Base):
             atts_llm = torch.cat(atts_llm, dim=1)
         else:
             with self.maybe_autocast():
-                image_embeds = self.ln_vision(self.visual_encoder(image))
+                # image_embeds = self.ln_vision(self.visual_encoder(image, early_exit_layer_idx))
+
+                final_layer_features, early_exit_features = self.visual_encoder(
+                image, early_exit_layer_idx
+                    )
+                # early_exit_layers not activated
+                if early_exit_features == None:
+                    image_embeds = self.ln_vision(final_layer_features).to(image.device)
+                else:
+                    # print("early_exit_features", len(early_exit_features))
+                    # image_embeds = self.ln_vision(early_exit_features[early_exit_layer_idx]).to(device)
+                    image_embeds = self.ln_vision(early_exit_features[0]).to(image.device)
+
             image_atts = torch.ones(image_embeds.size()[:-1], dtype=torch.long).to(image.device)
 
             if self.qformer_text_input:
@@ -390,13 +497,26 @@ class Blip2VicunaInstruct(Blip2Base):
                 length_penalty=length_penalty,
                 num_return_sequences=num_captions,
                 output_attentions=output_attentions,
-                # opera
+                premature_layer=premature_layer,
+                candidate_premature_layers=candidate_premature_layers,
+                mature_layer=mature_layer,
+                beam_search=beam_search,
+                dola_decoding=dola_decoding,
+                halc_decoding=halc_decoding,
                 opera_decoding=opera_decoding,
+                vcd_decoding=vcd_decoding,
+                halc_assistant=halc_assistant,
+                # opera
                 key_position=key_position,
                 scale_factor=scale_factor,
                 threshold=threshold,
                 num_attn_candidates=num_attn_candidates,
                 penalty_weights=penalty_weights,
+                # VCD
+                images_cd=images_cd,
+                cd_alpha=cd_alpha,
+                cd_beta=cd_beta,
+                LVLM_backbone=self,
             )
 
         outputs[outputs == 0] = 2 # convert output id 0 to 2 (eos_token_id)

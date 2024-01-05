@@ -36,6 +36,7 @@ import json
 
 from decoder_zoo.Woodpecker.vis_corrector import Corrector
 from decoder_zoo.HaLC.context_density.halc import halc_assistant
+from decoder_zoo.VCD.vcd_utils.vcd_add_noise import add_diffusion_noise
 
 from pycocotools.coco import COCO
 from pycocoevalcap.eval import COCOEvalCap
@@ -117,6 +118,26 @@ parser.add_argument(
     default=None,
     help="Post correction method such as Woodpecker, Lure.",
 )
+parser.add_argument(
+    "--cd_alpha",
+    type=float,
+    default=1,
+    help="Alpha param for VCD.",
+)
+parser.add_argument(
+    "--cd_beta",
+    type=float,
+    default=0.1,
+    help="Beta param for VCD."
+)
+parser.add_argument(
+    "--noise_step",
+    type=int,
+    default=3,
+    help="Noise step for VCD."
+)
+
+
 args = parser.parse_known_args()[0]
 
 print("args.gpu_id", args.gpu_id)
@@ -136,6 +157,8 @@ num_beams = args.beam
 num_workers = args.num_workers
 batch_size = args.batch_size
 post_correction = args.post_correction
+cd_alpha = args.cd_alpha
+cd_beta = args.cd_beta
 
 
 # ========================================
@@ -157,7 +180,7 @@ vis_processor = registry.get_processor_class(vis_processor_cfg.name).from_config
     vis_processor_cfg)
 
 
-valid_decoding_strategies = ["greedy", "dola", "halc-dola", "halc-greedy", "halc-beam", "opera-beam"]
+valid_decoding_strategies = ["greedy", "dola", "halc-beam", "opera-beam", "vcd"]
 
 assert decoding_strategy in valid_decoding_strategies, f"Invalid decoding strategy: {decoding_strategy}, should be in {valid_decoding_strategies}"
 
@@ -166,6 +189,7 @@ opera_decoding = False
 dola_decoding = False
 halc_decoding = False
 beam_search = False
+vcd_decoding = False
 
 if decoding_strategy == "greedy":
     pass
@@ -184,6 +208,8 @@ elif decoding_strategy == "halc-beam":
 elif decoding_strategy == "opera-beam":
     beam_search = True
     opera_decoding = True
+elif decoding_strategy == "vcd":
+    vcd_decoding = True
 
 
 if post_correction == "woodpecker":
@@ -227,7 +253,7 @@ template = INSTRUCTION_TEMPLATE[args.model]
 qu = template.replace("<question>", qu)
 
 
-halc_params = {"context_domain": "upper", "contrast_weight": 0.05, "context_window": 4, "expand_ratio": 0.1, "beam_size": num_beams, "k_candidate_num": args.k_candidate_num, "LVLM_backbone": model_name}
+halc_params = {"context_domain": "upper", "contrast_weight": 0.05, "context_window": 4, "expand_ratio": 0.8, "beam_size": num_beams, "k_candidate_num": args.k_candidate_num, "LVLM_backbone": model_name}
 halc_assistant_helper = halc_assistant(model, vis_processor=vis_processor, device=device, halc_params=halc_params)
 
 lm_early_exit_layers = [
@@ -257,6 +283,17 @@ premature_layer_dist = {l: 0 for l in candidate_premature_layers}
 
 halc_assistant_helper.update_input(img_path=image_path, input_prompt=qu)
 
+
+image_cd = None
+if decoding_strategy == "vcd":
+    image_tensor_cd = add_diffusion_noise(image, args.noise_step)
+    image_cd = (image_tensor_cd.unsqueeze(0).half().cuda() if image_tensor_cd is not None else None)
+    cd_alpha = cd_alpha
+    cd_beta = cd_beta
+    if model_name == "minigpt4":
+        image_cd = image_cd.squeeze(0)
+
+
 with torch.inference_mode():
     with torch.no_grad():
         out = model.generate(
@@ -271,13 +308,20 @@ with torch.inference_mode():
             beam_search=beam_search,
             dola_decoding=dola_decoding,
             opera_decoding=opera_decoding,
+            vcd_decoding=vcd_decoding,
             halc_decoding=halc_decoding,
+            # HALC
             halc_assistant=halc_assistant_helper,
+            # OPERA
             key_position=None,
             scale_factor=args.scale_factor,
             threshold=args.threshold,
             num_attn_candidates=args.num_attn_candidates,
             penalty_weights=args.penalty_weights,
+            # VCD
+            images_cd=image_cd,
+            cd_alpha=cd_alpha,
+            cd_beta=cd_beta
         )
 
 output_text = out[0]

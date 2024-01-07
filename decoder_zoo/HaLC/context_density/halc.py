@@ -19,17 +19,15 @@ from transformers import AutoTokenizer, CLIPConfig, CLIPTextConfig, CLIPVisionCo
 from PIL import Image, ImageFilter
 
 
-# initialize detector
-args_dict = {
-    "detector_config": "decoder_zoo/GroundingDINO/groundingdino/config/GroundingDINO_SwinT_OGC.py",
-    "detector_model_path": "decoder_zoo/GroundingDINO/weights/groundingdino_swint_ogc.pth",
-    "cache_dir": "decoder_zoo/HaLC/cache_dir",
-}
-
-
 class halc_assistant:
-    def __init__(self, model=None, vis_processor=None, device=None, halc_params=None):
-        args_dict["device"] = device
+    def __init__(self, model=None, vis_processor=None, device=None, halc_params=None, max_new_tokens=64):
+        # initialize detector
+        args_dict = {
+            "detector_config": "decoder_zoo/GroundingDINO/groundingdino/config/GroundingDINO_SwinT_OGC.py",
+            "detector_model_path": "decoder_zoo/GroundingDINO/weights/groundingdino_swint_ogc.pth",
+            "cache_dir": "decoder_zoo/HaLC/cache_dir",
+            "device": device,
+        }
         model_args = SimpleNamespace(**args_dict)
         self.device = device
         self.detector = Detector(model_args)

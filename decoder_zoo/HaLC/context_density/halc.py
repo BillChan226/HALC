@@ -56,11 +56,15 @@ class halc_assistant:
 
         self.token_vocab = {value: key for key, value in self.token_vocab.items()}
 
-        config_text = CLIPTextConfig(max_position_embeddings=self.max_new_tokens)
-        config_vision = CLIPVisionConfig()
-        config = CLIPConfig.from_text_vision_configs(config_text, config_vision)
-        self.clip_model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32", config=config, ignore_mismatched_sizes=True)
-        self.clip_processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32", config=config, ignore_mismatched_sizes=True)
+        if self.max_new_tokens > 77:
+            config_text = CLIPTextConfig(max_position_embeddings=self.max_new_tokens)
+            config_vision = CLIPVisionConfig()
+            config = CLIPConfig.from_text_vision_configs(config_text, config_vision)
+            self.clip_model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32", config=config, ignore_mismatched_sizes=True)
+            self.clip_processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32", config=config, ignore_mismatched_sizes=True)
+        else:
+            self.clip_model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32")
+            self.clip_processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32")
 
 
     def update_input(self, img_path, input_prompt):

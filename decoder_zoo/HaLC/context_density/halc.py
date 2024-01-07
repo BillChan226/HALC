@@ -479,8 +479,6 @@ class halc_assistant:
         return embeds_list, detect_info
 
 
-
-
     def naive_focus_decoding(self, context_logits_list):
         """
         directly apply the detected box for decoding

@@ -5598,10 +5598,6 @@ class GenerationMixin:
                     # input(f"{bs} finished\n")
                     beam_finished[bs] = True
                 
-            # print("beam_input_ids", beam_input_ids)
-            # print("beam_intermediate_token_lists", beam_intermediate_token_lists)
-            # print("len: ", len(beam_input_ids[0][0]))
-                
 
             # for bs in range(beam_size):
             #     print("eos_token_id[0]", eos_token_id[0])

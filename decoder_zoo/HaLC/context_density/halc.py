@@ -15,7 +15,7 @@ import spacy
 from torch.nn import functional as F
 from transformers import CLIPProcessor, CLIPModel
 import random
-from transformers import AutoTokenizer
+from transformers import AutoTokenizer, CLIPConfig, CLIPTextConfig, CLIPVisionConfig
 from PIL import Image, ImageFilter
 
 
@@ -28,7 +28,7 @@ args_dict = {
 
 
 class halc_assistant:
-    def __init__(self, model=None, vis_processor=None, device=None, halc_params=None):
+    def __init__(self, model=None, vis_processor=None, device=None, halc_params=None, max_new_tokens=64):
         model_args = SimpleNamespace(**args_dict)
         self.device = device
         self.detector = Detector(model_args)
@@ -38,6 +38,7 @@ class halc_assistant:
         self.halc_params = halc_params
         self.k_candidate_num = halc_params["k_candidate_num"]
         self.original_image = None
+        self.max_new_tokens = max_new_tokens
 
         self.model_backbone = halc_params["LVLM_backbone"]
 
@@ -55,8 +56,11 @@ class halc_assistant:
 
         self.token_vocab = {value: key for key, value in self.token_vocab.items()}
 
-        self.clip_model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32")
-        self.clip_processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32")
+        config_text = CLIPTextConfig(max_position_embeddings=self.max_new_tokens)
+        config_vision = CLIPVisionConfig()
+        config = CLIPConfig.from_text_vision_configs(config_text, config_vision)
+        self.clip_model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32", config=config, ignore_mismatched_sizes=True)
+        self.clip_processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32", config=config, ignore_mismatched_sizes=True)
 
 
     def update_input(self, img_path, input_prompt):
@@ -164,7 +168,7 @@ class halc_assistant:
         doc = self.tagging(entity)
         detect_info = {}
 
-        
+
         if len(doc) < 1:
             detect_info["pos"] = "PUNC"
         else:
@@ -227,7 +231,7 @@ class halc_assistant:
                     # expanded_bboxes = [self.expand_bbox(target_bbox, -initial_ratio)]
                     expanded_bboxes = [self.expand_bbox(target_bbox, -expand_ratio), target_bbox]
                     all_box_sizes = [self.compute_bbox_size(expanded_bboxes[0]), self.compute_bbox_size(expanded_bboxes[1])]
-                    
+
                     for _ in range(1, context_window-1):
                         # Each expansion is double the size of the previous level
                         expanded_bboxes.append(
@@ -285,12 +289,12 @@ class halc_assistant:
     def get_model_embeds(self, image):
 
         if self.model_backbone == "minigpt4":
-            max_new_tokens = 300
+            max_new_tokens = self.max_new_tokens
             max_length = 2000
-        
+
             image = self.vis_processor(image).unsqueeze(0).to(self.device)
             image_emb, _ = self.model.encode_img(image, 38)
-            
+
             prompt = self.prompt
             # print("prompt: ", prompt)
             embs = self.model.get_context_emb(prompt, [image_emb])
@@ -329,7 +333,7 @@ class halc_assistant:
         doc = self.tagging(entity)
         detect_info = {}
 
-        
+
         if len(doc) < 1:
             detect_info["pos"] = "PUNC"
         else:
@@ -392,7 +396,7 @@ class halc_assistant:
                     # expanded_bboxes = [self.expand_bbox(target_bbox, -initial_ratio)]
                     expanded_bboxes = [self.expand_bbox(target_bbox, -expand_ratio), target_bbox]
                     all_box_sizes = [self.compute_bbox_size(expanded_bboxes[0]), self.compute_bbox_size(expanded_bboxes[1])]
-                    
+
                     for _ in range(1, context_window-1):
                         # Each expansion is double the size of the previous level
                         expanded_bboxes.append(
@@ -444,7 +448,7 @@ class halc_assistant:
             # input("img saved!")
 
             # get decoding for each context window
-            max_new_tokens = 300
+            max_new_tokens = self.max_new_tokens
             max_length = 2000
             embeds_list = []
             for i, cropped_img in enumerate(final_images, start=1):
@@ -486,7 +490,7 @@ class halc_assistant:
         directly apply the detected box for decoding
         """
         return True, None
-    
+
 
     def context_curve_contrastive_decoding(self, context_logits_list):
         """
@@ -748,7 +752,7 @@ class halc_assistant:
             final_logits = context_logits_list[layer_idx1]
         else:
             raise ValueError("Invalid context domain!")
-        
+
         # final_logits = self.relative_top_filter(final_logits, relative_top=0.1)
         # base_logits = base_logits.log_softmax(dim=-1)
         mask = final_logits[0] < -1e3
@@ -822,7 +826,7 @@ class halc_assistant:
             # contrast_logits = final_logits - base_logits * 0.05
             contrast_logits = final_logits - base_logits * contrast_weight
             contrast_logits_array.append(contrast_logits)
-            
+
 
         return skip_flag, contrast_logits_array
 
@@ -886,12 +890,12 @@ class halc_assistant:
 
             contrast_logits = final_logits - base_logits * contrast_weight
             contrast_logits_array.append(contrast_logits)
-            
+
         return skip_flag, contrast_logits_array
 
 
     def clip_score_selection(self, candidate_intermediate_token_lists_array, beam_size, skip_token_length=0):
-        
+
 
         if candidate_intermediate_token_lists_array == [None] * len(candidate_intermediate_token_lists_array) or self.original_image == None:
             # print("identical candidate lists: ", candidate_intermediate_token_lists_array)
@@ -906,12 +910,12 @@ class halc_assistant:
                     skip_token_length = 0
                 elif self.model_backbone == "llava-1.5":
                     skip_token_length = skip_token_length
-                
+
                     # print("tokens_to_text", tokens_to_text)
                 candidate_texts.append(self.get_sequence_text(candidate_intermediate_token_lists[0], skip_token_length))
 
             original_image = self.original_image
-            
+
             # print("candidate_texts", candidate_texts)
             clip_inputs = self.clip_processor(text=candidate_texts, images=original_image, return_tensors="pt", padding=True, truncation=True)
 
@@ -921,11 +925,11 @@ class halc_assistant:
 
             # print("candidate lists:", candidate_intermediate_token_lists_array)
             # print("clip_probs:", clip_probs)
-            
+
             # # get the top beam_size candidates
             clip_probs = clip_probs.cpu().numpy()
             # candidate_index = clip_probs.argsort()[-beam_size:][::-1]
-            
+
             sorted_indices = clip_probs.argsort()[-len(candidate_intermediate_token_lists_array):][::-1]
             selected_texts = set()
             selected_candidates = []
@@ -938,7 +942,7 @@ class halc_assistant:
                 if candidate_text not in selected_texts:
                     selected_texts.add(candidate_text)
                     selected_candidates.append(idx)
-                
+
                 # Stop if enough candidates have been selected
                 if len(selected_candidates) == beam_size:
                     break
@@ -959,7 +963,7 @@ class halc_assistant:
 
         random.seed(8)
         candidate_index = random.sample(range(len(candidate_intermediate_token_lists_array)), beam_size)
-            
+
         return candidate_index
 
 

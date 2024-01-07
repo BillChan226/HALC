@@ -28,7 +28,8 @@ args_dict = {
 
 
 class halc_assistant:
-    def __init__(self, model=None, vis_processor=None, device=None, halc_params=None, max_new_tokens=64):
+    def __init__(self, model=None, vis_processor=None, device=None, halc_params=None):
+        args_dict["device"] = device
         model_args = SimpleNamespace(**args_dict)
         self.device = device
         self.detector = Detector(model_args)

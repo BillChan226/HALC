@@ -24,7 +24,9 @@ from minigpt4.tasks import *
 from PIL import Image
 import json
 
+from types import SimpleNamespace
 from decoder_zoo.Woodpecker.vis_corrector import Corrector
+from decoder_zoo.Woodpecker.config import woodpecker_args_dict
 from decoder_zoo.HaLC.context_density.halc import halc_assistant
 from decoder_zoo.VCD.vcd_utils.vcd_add_noise import add_diffusion_noise
 
@@ -48,6 +50,7 @@ INSTRUCTION_TEMPLATE = {
     "shikra": "USER: <im_start><ImageHere><im_end> <question> ASSISTANT:",
     "llava-1.5": "USER: <ImageHere> <question> ASSISTANT:"
 }
+
 
 
 def setup_seeds(config, seed):
@@ -121,7 +124,7 @@ parser.add_argument(
     "--post-correction",
     type=str,
     default=None,
-    help="Post correction method such as Woodpecker, Lure.",
+    help="Post correction method such as woodpecker, lure.",
 )
 parser.add_argument(
     "-e",
@@ -145,7 +148,7 @@ parser.add_argument(
 parser.add_argument(
     "--noise_step",
     type=int,
-    default=3,
+    default=500,
     help="Noise step for VCD."
 )
 
@@ -189,8 +192,8 @@ model_config.device_8bit = args.gpu_id
 model_cls = registry.get_model_class(model_config.arch)
 model = model_cls.from_config(model_config).to(device)
 model.eval()
-
 print("model device", model.device)
+
 print("expand_ratio", expand_ratio)
 processor_cfg = cfg.get_config().preprocess
 processor_cfg.vis_processor.eval.do_normalize = False
@@ -202,8 +205,10 @@ vis_processor = registry.get_processor_class(vis_processor_cfg.name).from_config
 
 
 valid_decoding_strategies = ["greedy", "dola", "halc-dola", "halc-greedy", "halc-beam", "opera-beam", "vcd"]
+valid_post_editing_strategies = ["lure", "woodpecker"]
 
 assert decoding_strategy in valid_decoding_strategies, f"Invalid decoding strategy: {decoding_strategy}, should be in {valid_decoding_strategies}"
+assert post_correction in valid_post_editing_strategies or post_correction is None, f"Invalid post correction strategy: {post_correction}, should be in {valid_post_editing_strategies}"
 
 decoding_strategy = decoding_strategy
 opera_decoding = False
@@ -212,6 +217,7 @@ halc_decoding = False
 vcd_decoding = False
 beam_search = False
 
+print("decoding_strategy", decoding_strategy)
 if decoding_strategy == "greedy":
     pass
 elif decoding_strategy == "dola":
@@ -234,7 +240,7 @@ elif decoding_strategy == "vcd":
 
 
 if post_correction == "woodpecker":
-    model_args = SimpleNamespace(**args_dict)
+    model_args = SimpleNamespace(**woodpecker_args_dict)
     corrector = Corrector(model_args)
 
 
@@ -323,9 +329,9 @@ for img_id in tqdm(range(len(img_files))):
     image = image.to(device)
     # print("image device", norm(image).device)
 
-    qu = "Please describe this image in detail."
+    # qu = "Please describe this image in detail."
     # qu = "Generate a one sentence caption of the image."
-    # qu = "Generate a short caption of the image."
+    qu = "Generate a short caption of the image."
 
     template = INSTRUCTION_TEMPLATE[args.model]
     qu = template.replace("<question>", qu)
@@ -359,7 +365,8 @@ for img_id in tqdm(range(len(img_files))):
     halc_assistant_helper.update_input(img_path=image_path, input_prompt=qu)
 
     image_cd = None
-    if decoding_strategy == "vcd":
+
+    if vcd_decoding:
         image_tensor_cd = add_diffusion_noise(image, args.noise_step)
         image_cd = (image_tensor_cd.unsqueeze(0).half().cuda() if image_tensor_cd is not None else None)
         cd_alpha = cd_alpha
@@ -401,10 +408,11 @@ for img_id in tqdm(range(len(img_files))):
     output_text = out[0]
     print("decoder output text", output_text)
     if post_correction == "woodpecker":
+        decoding_strategy = "woodpecker"
         sample = {
         'img_path': image_path,
         'input_desc': output_text,
-        'query': "Generate a short caption of the image."
+        'query': qu,
         }
 
         corrected_sample = corrector.correct(sample)

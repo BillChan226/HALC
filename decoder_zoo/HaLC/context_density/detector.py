@@ -111,7 +111,7 @@ class Detector:
 
     def __init__(self, args):
         self.model = load_model(
-            args.detector_config, args.detector_model_path, device="cuda:0"
+            args.detector_config, args.detector_model_path, device=args.device
         )
         self.cache_dir = args.cache_dir
         self.args = args

@@ -7,7 +7,7 @@ from typing import Dict
 
 
 def get_answer(processor, model, img, qs):
-    inputs = processor(img, qs, return_tensors="pt").to("cuda:0", torch.float16)
+    inputs = processor(img, qs, return_tensors="pt").to("cuda", torch.float16)
 
     generated_ids = model.generate(**inputs)
     generated_text = processor.decode(generated_ids[0], skip_special_tokens=True)

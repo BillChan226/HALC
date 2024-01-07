@@ -1,5 +1,1 @@
 Backbone,Decoder,Ratio,Beam,K,Seed,SPICE,METEOR,CIDEr,CHAIRs,CHAIRi,Max Tokens,Num of Samples
-llava-1.5,halc-beam,0.1,2,4,0,21.0,23.2,0.0,23.0,7.9,64,100
-llava-1.5,halc-beam,0.15,2,4,0,21.1,23.2,0.0,24.0,8.2,64,100
-llava-1.5,halc-beam,0.2,2,4,0,21.2,23.1,0.0,19.8,6.4,64,100
-llava-1.5,halc-beam,0.5,2,4,0,21.2,23.1,0.0,23.0,8.6,64,100

@@ -746,7 +746,6 @@ class GenerationMixin:
                     [attention_mask, attention_mask.new_ones((attention_mask.shape[0], 1))], dim=-1
                 )
         else:
-            print("is_encoder_decoder")
             # update decoder attention mask
             if "decoder_attention_mask" in model_kwargs:
                 decoder_attention_mask = model_kwargs["decoder_attention_mask"]
@@ -1464,6 +1463,7 @@ class GenerationMixin:
             generation_config=generation_config, stopping_criteria=stopping_criteria
         )
 
+
         if halc_decoding and dola_decoding and beam_search==False:
             if generation_config.num_return_sequences > 1:
                 raise ValueError(
@@ -1489,6 +1489,7 @@ class GenerationMixin:
             )
         
         elif halc_decoding and dola_decoding and beam_search==True:
+            print("\033[41m!!!!! HALC Decoding !!!!!!\033[0m")
             if generation_config.num_return_sequences > 1:
                 raise ValueError(
                     f"num_return_sequences has to be 1, but is {generation_config.num_return_sequences} when doing"
@@ -1541,7 +1542,7 @@ class GenerationMixin:
             )
 
         elif vcd_decoding:
-
+            print("\033[41m!!!!! VCD Decoding !!!!!!\033[0m")
             # 11. prepare logits warper
             logits_warper = self._get_logits_warper(generation_config)
 
@@ -1603,7 +1604,8 @@ class GenerationMixin:
                 **model_kwargs,
             )
 
-        elif is_beam_gen_mode and beam_search==True and opera_decoding:
+        elif is_beam_gen_mode and opera_decoding:
+            print("\033[41m!!!!! OPERA-Beam Decoding !!!!!!\033[0m")
             assert generation_config.output_attentions, "OPERA decoding requires output_attentions=True!"
 
             if key_position is None:
@@ -1653,6 +1655,7 @@ class GenerationMixin:
 
         # 10. go into different generation modes
         elif is_greedy_gen_mode and dola_decoding and beam_search==False:
+            print("\033[41m!!!!! DOLA Decoding !!!!!!\033[0m")
             if generation_config.num_return_sequences > 1:
                 raise ValueError(
                     f"num_return_sequences has to be 1, but is {generation_config.num_return_sequences} when doing"
@@ -1678,6 +1681,7 @@ class GenerationMixin:
             )
 
         elif is_beam_gen_mode and dola_decoding:
+            print("\033[41m!!!!! DOLA-BEAM Decoding !!!!!!\033[0m")
             # 11. run dola beam search
             print("\033[41m!!!!! DoLA-Beam Decoding !!!!!!\033[0m")
             if generation_config.num_return_sequences > generation_config.num_beams:
@@ -1765,7 +1769,7 @@ class GenerationMixin:
                     f"num_return_sequences has to be 1, but is {generation_config.num_return_sequences} when doing"
                     " greedy search."
                 )
-            # print("\033[41m!!!!! Greedy Decoding !!!!!!\033[0m")
+            print("\033[41m!!!!! Greedy Decoding !!!!!!\033[0m")
             # 11. run greedy search
             return self.greedy_search(
                 input_ids,
@@ -1888,6 +1892,8 @@ class GenerationMixin:
             )
 
         elif is_beam_gen_mode:
+            print("\033[41m!!!!! Beam-Search Decoding !!!!!!\033[0m")
+
             if generation_config.num_return_sequences > generation_config.num_beams:
                 raise ValueError("`num_return_sequences` has to be smaller or equal to `num_beams`.")
 
@@ -5565,25 +5571,28 @@ class GenerationMixin:
                         beam_next_tokens[bs].tile(eos_token_id_tensor.shape[0], 1).ne(eos_token_id_tensor.unsqueeze(1)).prod(dim=0)
                     )
                 #### STOPPING CRITERIA ###### 
+                
                 rpt_pattern_1 = False
                 rpt_pattern_2 = False
                 rpt_pattern_3 = False
+                
+                if self.halc_assistant.model_backbone == "llava-1.5": # only activate this pattern for LLAVA-1.5
 
-                if len(beam_input_ids[bs][0]) > 1:
-                    rpt_pattern_1 = beam_input_ids[bs][0][-1] == beam_input_ids[bs][0][-2]
-                if len(beam_input_ids[bs][0]) > 2:
-                    rpt_pattern_2 = beam_input_ids[bs][0][-1] == beam_input_ids[bs][0][-3]
-                if len(beam_input_ids[bs][0]) > 3:
-                    rpt_pattern_3 = beam_input_ids[bs][0][-1] == beam_input_ids[bs][0][-4]
-                #### REPETITION PATTERN DETECTION ######
-                if rpt_pattern_1 or rpt_pattern_2 or rpt_pattern_3:
-                    repetition_flag = True
-                    repetition_counter += 1
+                    if len(beam_input_ids[bs][0]) > 1:
+                        rpt_pattern_1 = beam_input_ids[bs][0][-1] == beam_input_ids[bs][0][-2]
+                    if len(beam_input_ids[bs][0]) > 2:
+                        rpt_pattern_2 = beam_input_ids[bs][0][-1] == beam_input_ids[bs][0][-3]
+                    if len(beam_input_ids[bs][0]) > 3:
+                        rpt_pattern_3 = beam_input_ids[bs][0][-1] == beam_input_ids[bs][0][-4]
+
+                    #### REPETITION PATTERN DETECTION ######
+                    if rpt_pattern_1 or rpt_pattern_2 or rpt_pattern_3:
+                        repetition_flag = True
+                        repetition_counter += 1
                 else:
-                    repetition_flag = False
                     repetition_counter = 0
 
-                if beam_input_ids[bs][0][-1].cpu().numpy().tolist() == eos_token_id[0] or valid_length_max + 2 <= len(beam_input_ids[bs][0]) or repetition_counter > 0:
+                if beam_input_ids[bs][0][-1].cpu().numpy().tolist() == eos_token_id[0] or valid_length_max + 2 <= len(beam_input_ids[bs][0]) or repetition_counter > 2:
                     # beam_intermediate_token_lists[bs] = beam_input_ids[bs]
                     beam_intermediate_token_lists[bs] = deep_copy_tensor_structure(beam_input_ids[bs])
                     # input(f"{bs} finished\n")

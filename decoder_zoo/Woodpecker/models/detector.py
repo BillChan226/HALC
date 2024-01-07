@@ -1,4 +1,5 @@
-import os
+import os, sys
+sys.path.append("decoder_zoo/GroundingDINO")
 
 from typing import Dict
 from tqdm import tqdm
@@ -92,7 +93,7 @@ class Detector:
     '''
     def __init__(self, args):
         
-        self.model = load_model(args.detector_config, args.detector_model_path, device='cuda:0')
+        self.model = load_model(args.detector_config, args.detector_model_path, device='cuda:1')
         self.cache_dir = args.cache_dir
         self.args = args
         self.nlp = spacy.load("en_core_web_md")

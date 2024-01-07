@@ -67,7 +67,6 @@ directory = args.caption_path
 # Assuming this script is placed in the same directory as the JSON files
 directory_path = directory
 output_directory_path = directory
-
 # List all files in the directory
 files = os.listdir(directory_path)
 
@@ -97,9 +96,13 @@ for file_name in caption_files:
 
     loaded_json = []
     with open(file_path, 'r') as f:
-        lines = f.readlines()
-        for line in lines:
-            loaded_json.append(json.loads(line))
+        try:
+            lines = f.readlines()
+            for line in lines:
+                loaded_json.append(json.loads(line))
+        except:
+            continue
+
 
 
     # eliminate the items in loaded_json with the same key:
@@ -108,6 +111,14 @@ for file_name in caption_files:
             if loaded_json[i]['image_id'] == loaded_json[j]['image_id']:
                 loaded_json.pop(j)
                 break
+
+    # # save loaded json
+
+    # generated_captions_path = file_name.replace('_generated_captions.json', '_generated_captions_new.json')
+    # output_file_path = os.path.join(output_directory_path, generated_captions_path)
+    # with open(output_file_path, "a") as f:
+    #     json.dump(img_save, f)
+    #     f.write('\n')
 
     print("loaded_json: ", len(loaded_json))
     # construct output file as input to CHAIR evaluation

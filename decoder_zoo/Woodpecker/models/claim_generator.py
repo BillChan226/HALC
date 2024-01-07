@@ -46,7 +46,7 @@ class ClaimGenerator:
     def __init__(self, args):
         self.args = args
         qa2c_model_path = args.qa2c_model_path
-        self.model = AutoModelForSeq2SeqLM.from_pretrained(qa2c_model_path).to('cuda:0')
+        self.model = AutoModelForSeq2SeqLM.from_pretrained(qa2c_model_path).to('cuda')
         self.tokenizer = AutoTokenizer.from_pretrained(qa2c_model_path)
 
     def generate_claim(self, sample: Dict):

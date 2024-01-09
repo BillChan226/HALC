@@ -14,12 +14,14 @@ class POPEDataSet(Dataset):
         self.data_path = data_path
         self.trans = trans
 
-        image_list, query_list, label_list = [], [], []
+        image_list, query_list, label_list, path_list = [], [], [], []
         for q in open(pope_path, 'r'):
             line = json.loads(q)
+
             image_list.append(line['image'])
             query_list.append(line['text'])
             label_list.append(line['label'])
+
 
         for i in range(len(label_list)):
             if label_list[i] == 'no':
@@ -44,4 +46,4 @@ class POPEDataSet(Dataset):
         query = self.query_list[index]
         label = self.label_list[index]
 
-        return {"image": image, "query": query, "label": label}
+        return {"image": image, "query": query, "label": label, "image_path": image_path}

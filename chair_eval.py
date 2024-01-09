@@ -329,9 +329,9 @@ for img_id in tqdm(range(len(img_files))):
     image = image.to(device)
     # print("image device", norm(image).device)
 
-    # qu = "Please describe this image in detail."
+    qu = "Please describe this image in detail."
     # qu = "Generate a one sentence caption of the image."
-    qu = "Generate a short caption of the image."
+    # qu = "Generate a short caption of the image."
 
     template = INSTRUCTION_TEMPLATE[args.model]
     qu = template.replace("<question>", qu)
@@ -371,6 +371,8 @@ for img_id in tqdm(range(len(img_files))):
         image_cd = (image_tensor_cd.unsqueeze(0).half().cuda() if image_tensor_cd is not None else None)
         cd_alpha = cd_alpha
         cd_beta = cd_beta
+        print("image_cd", image_cd.shape)
+        print(cd_alpha, cd_beta, args.noise_step)
         if model_name == "minigpt4":
             image_cd = image_cd.squeeze(0)
 

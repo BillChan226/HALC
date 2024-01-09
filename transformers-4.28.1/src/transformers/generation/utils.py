@@ -5592,7 +5592,7 @@ class GenerationMixin:
                 else:
                     repetition_counter = 0
 
-                if beam_input_ids[bs][0][-1].cpu().numpy().tolist() == eos_token_id[0] or valid_length_max + 2 <= len(beam_input_ids[bs][0]) or repetition_counter > 2:
+                if beam_input_ids[bs][0][-1].cpu().numpy().tolist() == eos_token_id[0] or valid_length_max + 2 <= len(beam_input_ids[bs][0]) or repetition_counter > 3:
                     # beam_intermediate_token_lists[bs] = beam_input_ids[bs]
                     beam_intermediate_token_lists[bs] = deep_copy_tensor_structure(beam_input_ids[bs])
                     # input(f"{bs} finished\n")
@@ -6680,7 +6680,6 @@ class GenerationMixin:
         ['Wie alt bist du?']
         ```"""
 
-        print("OPERA DECODING")
         # init values
         logits_processor = logits_processor if logits_processor is not None else LogitsProcessorList()
         stopping_criteria = stopping_criteria if stopping_criteria is not None else StoppingCriteriaList()

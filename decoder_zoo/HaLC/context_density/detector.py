@@ -11,6 +11,7 @@ from models.utils import compute_iou
 from decoder_zoo.GroundingDINO.groundingdino.util.inference import (
     load_model,
     load_image,
+    transform_loaded_image,
     predict,
 )
 from PIL import Image
@@ -120,7 +121,14 @@ class Detector:
     def detect_objects(self, sample: Dict):
         img_path = sample["img_path"]
         extracted_entities = sample["named_entity"]
-        image_source, image = load_image(img_path)
+        # check whether img_pah is a string
+        if isinstance(img_path, str):
+            image_source, image = load_image(img_path)
+        elif isinstance(img_path, torch.Tensor):
+            image_source = img_path
+            image = transform_loaded_image(image_source)
+        else:
+            raise ValueError("img_path should be a string or a torch.Tensor.")
 
         global_entity_dict = (
             {}

@@ -65,6 +65,7 @@ python -m spacy download en_core_web_sm
 We employ [Grounding DINO](https://github.com/IDEA-Research/GroundingDINO) as the external detector to bound hallucinatory objects. To download pre-trained model weights for DINO:
 
 ```
+cd decoder_zoo/GroundingDINO
 mkdir weights
 cd weights
 wget -q https://github.com/IDEA-Research/GroundingDINO/releases/download/v0.1.0-alpha/groundingdino_swint_ogc.pth

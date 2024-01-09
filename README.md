@@ -25,22 +25,24 @@ This repository provides the official PyTorch implementation of the following pa
 
 ## :partying_face: Features
 
-### Currently supported online OH decoding methods:
+#### Currently supported online OH decoding methods:
 
 |  Decoder |  Minigpt4-v2 | Instructblip | LLaVA-1.5 | 
 |----------|-----------|-------------|-----|
-| Greedy     | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
-| HALC      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
-| OPERA      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+| Greedy*    | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+| HALC*   | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+| OPERA-Beam     | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 | VCD      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
-| DoLa     | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+| DoLa*     | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 
-### Currently supported post-hoc methods:
+*: indicates the method supports beam search.
+
+#### Currently supported post-hoc methods:
 
 |  Post-hoc |  Minigpt4-v2 | Instructblip | LLaVA-1.5 | 
 |----------|-----------|-------------|-----|
-| Woodpecker      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
-| Lure      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+| Woodpecker      | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+| LURE      | :x: | :x: | :x: |
 
 
 

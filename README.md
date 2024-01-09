@@ -27,13 +27,13 @@ This repository provides the official PyTorch implementation of the following pa
 
 #### Currently supported online OH decoding methods:
 
-|  Decoder |  Minigpt4-v2 | Instructblip | LLaVA-1.5 | 
+|  Decoder |  [Minigpt4-v2](https://arxiv.org/abs/2304.10592) | [Instructblip](https://arxiv.org/abs/2305.06500) | [LLaVA-1.5](https://arxiv.org/abs/2310.03744) | 
 |----------|-----------|-------------|-----|
-| Greedy*    | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
-| HALC*   | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
-| OPERA-Beam     | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
-| VCD      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
-| DoLa*     | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+| Greedy*    | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+| HALC*   | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+| [OPERA-Beam](https://arxiv.org/abs/2311.17911)     | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+| [VCD](https://arxiv.org/abs/2311.16922)      | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+| [DoLa](https://arxiv.org/abs/2309.03883)*     | :white_check_mark: | :white_check_mark: | :white_check_mark: |
 
 *: indicates the method supports beam search.
 
@@ -41,8 +41,8 @@ This repository provides the official PyTorch implementation of the following pa
 
 |  Post-hoc |  Minigpt4-v2 | Instructblip | LLaVA-1.5 | 
 |----------|-----------|-------------|-----|
-| Woodpecker      | :white_check_mark: | :white_check_mark: | :white_check_mark: |
-| LURE      | :x: | :x: | :x: |
+| [Woodpecker](https://arxiv.org/abs/2310.16045)      | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+| [LURE](https://arxiv.org/abs/2310.00754)      | :x: | :x: | :x: |
 
 
 

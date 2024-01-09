@@ -85,7 +85,7 @@ Besides, it needs you to prepare the following checkpoints of 7B base models:
 Following [Evaluating Object Hallucination in Large Vision-Language Models](https://arxiv.org/pdf/2305.10355.pdf), we used "Generate a short caption of the image" as the prompt to query LVLM for captions of the `2,000` images randomly sampled from [COCO 2014 Val](https://cocodataset.org/#download) datast. Under root directory, run
 
 ```
-python generate_chair_input.py --num_samples 2000 --dataset_name coco --data_dir [COCO_DIR] --output_dir ./generated_captions/ --gpu-id 0 -v -d [Decoding Strategy]
+python chair_eval.py --model [LVLM Backbone] --data-path [COCO_DIR] -d [Decoding Strategy] --num_samples 500 --seed [SEED] --gpu-id [GPU_IDs] --output_dir ./generated_captions/
 ```
 
 For a full list of command line input, run `python generate_chair_input.py -h`. Note that `[COCO_DIR]` is expected to contain both images and annotation files within the `annotations` subfolder. In other words, `[COCO_DIR]` should the the following structure:
@@ -114,8 +114,9 @@ Upon completion, two files, `minigpt4_pretrain-llama2_coco_2000_generated_captio
 Under root directory, run
 
 ```
-python generate_pope_input.py --num_images 2000 --dataset_name coco --data_dir [COCO_DIR] --output_dir ./generated_captions/ --gpu-id 0 -v -d [Decoding Strategy]
+python pope_eval.py --model [LVLM Backbone] --data-path [COCO_DIR] -d [Decoding Strategy] --pope-type [random/popular/adversarial] --num_images 100 --seed [SEED] --gpu-id [GPU_IDs] --output_dir ./generated_captions/
 ```
+
 
 ### Evaluation
 

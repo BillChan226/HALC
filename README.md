@@ -93,9 +93,27 @@ Besides, it needs you to prepare the following checkpoints of 7B base models:
 | `--data-path`     | `/path/to/dataset` | Path to the dataset file or folder, e.g., `COCO_2014/val2014/`. |
 | `--pope-type`     | `random` | Type for POPE evaluation, supports `random`, `popular`, `adversarial`. |
 | `--beam`   | `3` | Beam size for global search. Default: 1. |
+
+#### Arguments for HALC
+| Argument             | Example             | Description   |
+| -------------------- | ------------------- | ------------- |
 | `--k-candidate-num`      | `4` | Number of generative focal fields for local search. Default: 2. |
+| `--expand-ratio`      | `0.6` | The growing factor of focal fields. Default: 0.6. |
 
+#### Arguments for OPERA
+| Argument             | Example             | Description   |
+| -------------------- | ------------------- | ------------- |
+| `--scale_factor`   | `50` | The scale factor to scale up the self-attention weights. Default: 50. |
+| `--threshold`      | `15` | The threshold for attending retrospection. Default: 15. |
+| `--num_attn_candidates`   | `5` | The number of candidates per beam. Default: 5. |
+| `--penalty_weights`| `1` | The weight of penalty term in decoding. Default: 1.  |
 
+#### Arguments for VCD
+| Argument             | Example             | Description   |
+| -------------------- | ------------------- | ------------- |
+| `--cd-alpha`      | `1` | Amplification factor. Default: 1. |
+| `--cd-beta`   | `0.1` | Truncation factor for adaptive plausibility constraint. Default: 0.1. |
+| `--noise-step`| `500` | Number of steps to add diffusion noise. Default: 500.  |
 
 ## :hourglass: Benchmarks Evaluation
 ### :chair: CHAIR Evaluation of LVLMs Object Hallucination
@@ -145,7 +163,6 @@ Under root directory, run
 
 ```
 python reviser_eval.py -m [woodpecker/lure] --data-path [COCO_DIR] --caption-path [PATH_TO_CAPTION] --output-path [PATH_TO_OUTPUT] --seed [SEED] --gpu-id [GPU_IDs] --output_dir ./generated_captions/
-```
 ```
 
 

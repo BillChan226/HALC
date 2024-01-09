@@ -23,6 +23,25 @@ This repository provides the official PyTorch implementation of the following pa
 >
 > <sup>1</sup>UNC-Chapel Hill, <sup>2</sup>University of Chicago, <sup>3</sup>Toyota Technological Institute at Chicago, <sup>4</sup>Massachusetts Institute of Technology <br>
 
+## :muscle: Features
+
+### Currently supported online OH decoding methods:
+
+|  Decoder |  Minigpt4-v2 | Instructblip | LLaVA-1.5 | 
+|----------|-----------|-------------|-----|
+| Greedy     | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+| HALC      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+| OPERA      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+| VCD      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+| DoLa     | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+
+### Currently supported post-hoc methods:
+
+|  Post-hoc |  Minigpt4-v2 | Instructblip | LLaVA-1.5 | 
+|----------|-----------|-------------|-----|
+| Woodpecker      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+| Lure      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+
 
 
 ## :hammer_and_wrench: Installation
@@ -48,7 +67,6 @@ mkdir weights
 cd weights
 wget -q https://github.com/IDEA-Research/GroundingDINO/releases/download/v0.1.0-alpha/groundingdino_swint_ogc.pth
 ```
-
 
 
 ## :bee: LVLM Backbones
@@ -115,6 +133,16 @@ Under root directory, run
 
 ```
 python pope_eval.py --model [LVLM Backbone] --data-path [COCO_DIR] -d [Decoding Strategy] --pope-type [random/popular/adversarial] --num_images 100 --seed [SEED] --gpu-id [GPU_IDs] --output_dir ./generated_captions/
+```
+
+
+### :hospital: Running Post-hoc methods to revise captions for CHAIR
+
+Under root directory, run
+
+```
+python reviser_eval.py -m [woodpecker/lure] --data-path [COCO_DIR] --caption-path [PATH_TO_CAPTION] --output-path [PATH_TO_OUTPUT] --seed [SEED] --gpu-id [GPU_IDs] --output_dir ./generated_captions/
+```
 ```
 
 

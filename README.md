@@ -53,7 +53,7 @@ To install, run the following commands to install the required packages:
 
 ```
 git clone https://github.com/BillChan226/HALC.git
-cd contrast_decoding_LVLMs
+cd HALC
 conda env create -f environment.yml
 conda activate halc
 

@@ -20,7 +20,14 @@ from PIL import Image, ImageFilter
 
 
 class halc_assistant:
-    def __init__(self, model=None, vis_processor=None, device=None, halc_params=None, max_new_tokens=64):
+    def __init__(
+        self,
+        model=None,
+        vis_processor=None,
+        device=None,
+        halc_params=None,
+        max_new_tokens=64,
+    ):
         # initialize detector
         args_dict = {
             "detector_config": "decoder_zoo/GroundingDINO/groundingdino/config/GroundingDINO_SwinT_OGC.py",
@@ -59,12 +66,21 @@ class halc_assistant:
             config_text = CLIPTextConfig(max_position_embeddings=self.max_new_tokens)
             config_vision = CLIPVisionConfig()
             config = CLIPConfig.from_text_vision_configs(config_text, config_vision)
-            self.clip_model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32", config=config, ignore_mismatched_sizes=True)
-            self.clip_processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32", config=config, ignore_mismatched_sizes=True)
+            self.clip_model = CLIPModel.from_pretrained(
+                "openai/clip-vit-base-patch32",
+                config=config,
+                ignore_mismatched_sizes=True,
+            )
+            self.clip_processor = CLIPProcessor.from_pretrained(
+                "openai/clip-vit-base-patch32",
+                config=config,
+                ignore_mismatched_sizes=True,
+            )
         else:
             self.clip_model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32")
-            self.clip_processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32")
-
+            self.clip_processor = CLIPProcessor.from_pretrained(
+                "openai/clip-vit-base-patch32"
+            )
 
     def update_input(self, img_path, input_prompt):
         # print("img_path", img_path)
@@ -91,11 +107,12 @@ class halc_assistant:
         return last_word
 
     def get_sequence_text(self, input_ids, skip_token_length=None):
-
         if skip_token_length == 0 or skip_token_length is None:
             output_text = self.tokenizer.decode(input_ids, skip_special_tokens=True)
         else:
-            output_text = self.tokenizer.decode(input_ids[skip_token_length:], skip_special_tokens=True)
+            output_text = self.tokenizer.decode(
+                input_ids[skip_token_length:], skip_special_tokens=True
+            )
 
         return output_text
 
@@ -171,7 +188,6 @@ class halc_assistant:
         doc = self.tagging(entity)
         detect_info = {}
 
-
         if len(doc) < 1:
             detect_info["pos"] = "PUNC"
         else:
@@ -220,8 +236,11 @@ class halc_assistant:
                 # smallest size should be 0.2
                 if target_bbox_size < 0.2:
                     # only increase the size
-                    expanded_bboxes = [self.expand_bbox(target_bbox, -expand_ratio), target_bbox]
-                    for _ in range(1, context_window-1):
+                    expanded_bboxes = [
+                        self.expand_bbox(target_bbox, -expand_ratio),
+                        target_bbox,
+                    ]
+                    for _ in range(1, context_window - 1):
                         # Each expansion is double the size of the previous level
                         expanded_bboxes.append(
                             self.expand_bbox(expanded_bboxes[-1], expand_ratio)
@@ -232,10 +251,16 @@ class halc_assistant:
                 else:
                     initial_ratio = np.sqrt(0.2 / target_bbox_size)
                     # expanded_bboxes = [self.expand_bbox(target_bbox, -initial_ratio)]
-                    expanded_bboxes = [self.expand_bbox(target_bbox, -expand_ratio), target_bbox]
-                    all_box_sizes = [self.compute_bbox_size(expanded_bboxes[0]), self.compute_bbox_size(expanded_bboxes[1])]
+                    expanded_bboxes = [
+                        self.expand_bbox(target_bbox, -expand_ratio),
+                        target_bbox,
+                    ]
+                    all_box_sizes = [
+                        self.compute_bbox_size(expanded_bboxes[0]),
+                        self.compute_bbox_size(expanded_bboxes[1]),
+                    ]
 
-                    for _ in range(1, context_window-1):
+                    for _ in range(1, context_window - 1):
                         # Each expansion is double the size of the previous level
                         expanded_bboxes.append(
                             self.expand_bbox(expanded_bboxes[-1], expand_ratio)
@@ -288,9 +313,7 @@ class halc_assistant:
 
         return embeds_list, detect_info
 
-
     def get_model_embeds(self, image):
-
         if self.model_backbone == "minigpt4":
             max_new_tokens = self.max_new_tokens
             max_length = 2000
@@ -298,7 +321,7 @@ class halc_assistant:
             image = self.vis_processor(image).unsqueeze(0).to(self.device)
             image_emb, _ = self.model.encode_img(image, 38)
 
-            prompt = self.prompt
+            prompt = self.prompt[0]
             # print("prompt: ", prompt)
             embs = self.model.get_context_emb(prompt, [image_emb])
             current_max_len = embs.shape[1] + max_new_tokens
@@ -335,7 +358,6 @@ class halc_assistant:
         entity = entity.strip(".")
         doc = self.tagging(entity)
         detect_info = {}
-
 
         if len(doc) < 1:
             detect_info["pos"] = "PUNC"
@@ -385,8 +407,11 @@ class halc_assistant:
                 # smallest size should be 0.2
                 if target_bbox_size < 0.2:
                     # only increase the size
-                    expanded_bboxes = [self.expand_bbox(target_bbox, -expand_ratio), target_bbox]
-                    for _ in range(1, context_window-1):
+                    expanded_bboxes = [
+                        self.expand_bbox(target_bbox, -expand_ratio),
+                        target_bbox,
+                    ]
+                    for _ in range(1, context_window - 1):
                         # Each expansion is double the size of the previous level
                         expanded_bboxes.append(
                             self.expand_bbox(expanded_bboxes[-1], expand_ratio)
@@ -397,10 +422,16 @@ class halc_assistant:
                 else:
                     initial_ratio = np.sqrt(0.2 / target_bbox_size)
                     # expanded_bboxes = [self.expand_bbox(target_bbox, -initial_ratio)]
-                    expanded_bboxes = [self.expand_bbox(target_bbox, -expand_ratio), target_bbox]
-                    all_box_sizes = [self.compute_bbox_size(expanded_bboxes[0]), self.compute_bbox_size(expanded_bboxes[1])]
+                    expanded_bboxes = [
+                        self.expand_bbox(target_bbox, -expand_ratio),
+                        target_bbox,
+                    ]
+                    all_box_sizes = [
+                        self.compute_bbox_size(expanded_bboxes[0]),
+                        self.compute_bbox_size(expanded_bboxes[1]),
+                    ]
 
-                    for _ in range(1, context_window-1):
+                    for _ in range(1, context_window - 1):
                         # Each expansion is double the size of the previous level
                         expanded_bboxes.append(
                             self.expand_bbox(expanded_bboxes[-1], expand_ratio)
@@ -420,7 +451,6 @@ class halc_assistant:
             self.original_image = Image.open(image_path)
             original_image = self.original_image.convert("RGB")
 
-
             im_width, im_height = original_image.size
 
             final_images = []  # List to store each modified image
@@ -430,10 +460,20 @@ class halc_assistant:
 
                 # original_image = self.draw_bbox(original_image, bbox, color="red", width=3)
                 # Apply blur to the entire image
-                blurred_image = original_image.filter(ImageFilter.GaussianBlur(radius=15))
+                blurred_image = original_image.filter(
+                    ImageFilter.GaussianBlur(radius=15)
+                )
 
                 # Create a mask for the expanded bounding box
-                left, top, right, bottom = [int(coord) for coord in (bbox[0] * im_width, bbox[1] * im_height, bbox[2] * im_width, bbox[3] * im_height)]
+                left, top, right, bottom = [
+                    int(coord)
+                    for coord in (
+                        bbox[0] * im_width,
+                        bbox[1] * im_height,
+                        bbox[2] * im_width,
+                        bbox[3] * im_height,
+                    )
+                ]
                 mask = np.zeros((im_height, im_width), dtype=np.uint8)
                 mask[top:bottom, left:right] = 255
                 mask = Image.fromarray(mask)
@@ -478,7 +518,6 @@ class halc_assistant:
 
         return embeds_list, detect_info
 
-
     def naive_focus_decoding(self, context_logits_list):
         """
         directly apply the detected box for decoding
@@ -491,7 +530,6 @@ class halc_assistant:
         directly apply the detected box for decoding
         """
         return True, None
-
 
     def context_curve_contrastive_decoding(self, context_logits_list):
         """
@@ -666,7 +704,6 @@ class halc_assistant:
             return skip_flag, contrast_logits
 
     def contrastive_avg_context_decoding(self, context_logits_list, last_tokens):
-
         hallucination_index = last_tokens[0]
 
         target_layer = context_logits_list[self.target_bbox_index]
@@ -724,19 +761,32 @@ class halc_assistant:
         jsd_matrix = torch.zeros((num_layers, num_layers))
 
         for i in range(num_layers):
-            for j in range(i+1, num_layers):
-                M = 0.5 * (F.softmax(stacked_premature_layers[i], dim=-1) + F.softmax(stacked_premature_layers[j], dim=-1))
-                kl1 = F.kl_div(F.log_softmax(stacked_premature_layers[i], dim=-1), M, reduction="batchmean")
-                kl2 = F.kl_div(F.log_softmax(stacked_premature_layers[j], dim=-1), M, reduction="batchmean")
+            for j in range(i + 1, num_layers):
+                M = 0.5 * (
+                    F.softmax(stacked_premature_layers[i], dim=-1)
+                    + F.softmax(stacked_premature_layers[j], dim=-1)
+                )
+                kl1 = F.kl_div(
+                    F.log_softmax(stacked_premature_layers[i], dim=-1),
+                    M,
+                    reduction="batchmean",
+                )
+                kl2 = F.kl_div(
+                    F.log_softmax(stacked_premature_layers[j], dim=-1),
+                    M,
+                    reduction="batchmean",
+                )
                 jsd = 0.5 * (kl1 + kl2)
                 jsd_matrix[i, j] = jsd
                 jsd_matrix[j, i] = jsd  # Symmetric matrix
 
         # Find indices of max JSD
         # print("jsd_matrix.triu(diagonal=1)", jsd_matrix.triu(diagonal=1))
-        max_jsd_flat_index = torch.argmax(jsd_matrix.triu(diagonal=1)) #.unbind()
+        max_jsd_flat_index = torch.argmax(jsd_matrix.triu(diagonal=1))  # .unbind()
         # layer_idx1, layer_idx2 = max_jsd_indices[0], max_jsd_indices[1]
-        layer_idx1, layer_idx2 = np.unravel_index(max_jsd_flat_index.cpu().numpy(), jsd_matrix.shape)
+        layer_idx1, layer_idx2 = np.unravel_index(
+            max_jsd_flat_index.cpu().numpy(), jsd_matrix.shape
+        )
         print("base_layer, final_layer: ", layer_idx1, layer_idx2)
 
         # # Update final_logits and base_logits
@@ -768,15 +818,15 @@ class halc_assistant:
 
         return skip_flag, contrast_logits
 
-
-    def context_layer_multi_contrastive_decoding(self, context_logits_list, last_tokens):
+    def context_layer_multi_contrastive_decoding(
+        self, context_logits_list, last_tokens
+    ):
         """
         The method uses a list of context windows rooted from the DINO detection one and apply the contrastive decoding method to each context-window pair to get a list of contrastive logits. Then we use the contrastive logits to do the decoding.
         """
         skip_flag = False
         k_candidate = self.k_candidate_num
         all_layer_indices = range(len(context_logits_list))
-
 
         stacked_premature_layers = torch.stack(
             [context_logits_list[i] for i in all_layer_indices],
@@ -787,14 +837,24 @@ class halc_assistant:
         jsd_matrix = torch.zeros((num_layers, num_layers))
 
         for i in range(num_layers):
-            for j in range(i+1, num_layers):
-                M = 0.5 * (F.softmax(stacked_premature_layers[i], dim=-1) + F.softmax(stacked_premature_layers[j], dim=-1))
-                kl1 = F.kl_div(F.log_softmax(stacked_premature_layers[i], dim=-1), M, reduction="batchmean")
-                kl2 = F.kl_div(F.log_softmax(stacked_premature_layers[j], dim=-1), M, reduction="batchmean")
+            for j in range(i + 1, num_layers):
+                M = 0.5 * (
+                    F.softmax(stacked_premature_layers[i], dim=-1)
+                    + F.softmax(stacked_premature_layers[j], dim=-1)
+                )
+                kl1 = F.kl_div(
+                    F.log_softmax(stacked_premature_layers[i], dim=-1),
+                    M,
+                    reduction="batchmean",
+                )
+                kl2 = F.kl_div(
+                    F.log_softmax(stacked_premature_layers[j], dim=-1),
+                    M,
+                    reduction="batchmean",
+                )
                 jsd = 0.5 * (kl1 + kl2)
                 jsd_matrix[i, j] = jsd
                 jsd_matrix[j, i] = jsd  # Symmetric matrix
-
 
         # Find indices of top k_candidate JSD values
         upper_tri_flat = jsd_matrix.triu(diagonal=1).flatten()
@@ -807,7 +867,7 @@ class halc_assistant:
         context_domain = self.halc_params["context_domain"]
         contrast_weight = self.halc_params["contrast_weight"]
 
-        for (layer_idx1, layer_idx2) in top_k_indices:
+        for layer_idx1, layer_idx2 in top_k_indices:
             # print("base_layer, final_layer: ", layer_idx1, layer_idx2)
             # (layer_idx1, layer_idx2) = top_k_indices[0]
 
@@ -828,20 +888,19 @@ class halc_assistant:
             contrast_logits = final_logits - base_logits * contrast_weight
             contrast_logits_array.append(contrast_logits)
 
-
         return skip_flag, contrast_logits_array
 
-
-    def context_layer_double_multi_contrastive_decoding(self, context_logits_list, last_tokens):
+    def context_layer_double_multi_contrastive_decoding(
+        self, context_logits_list, last_tokens
+    ):
         """
         The method uses a list of context windows rooted from the DINO detection one and apply the contrastive decoding method to each context-window pair to get a list of contrastive logits. Then we use the contrastive logits to do the decoding.
         """
         skip_flag = False
         if self.k_candidate_num % 2 != 0:
             raise ValueError("k_candidate_num must be even!")
-        k_candidate = int(self.k_candidate_num/2)
+        k_candidate = int(self.k_candidate_num / 2)
         all_layer_indices = range(len(context_logits_list))
-
 
         stacked_premature_layers = torch.stack(
             [context_logits_list[i] for i in all_layer_indices],
@@ -852,14 +911,24 @@ class halc_assistant:
         jsd_matrix = torch.zeros((num_layers, num_layers))
 
         for i in range(num_layers):
-            for j in range(i+1, num_layers):
-                M = 0.5 * (F.softmax(stacked_premature_layers[i], dim=-1) + F.softmax(stacked_premature_layers[j], dim=-1))
-                kl1 = F.kl_div(F.log_softmax(stacked_premature_layers[i], dim=-1), M, reduction="batchmean")
-                kl2 = F.kl_div(F.log_softmax(stacked_premature_layers[j], dim=-1), M, reduction="batchmean")
+            for j in range(i + 1, num_layers):
+                M = 0.5 * (
+                    F.softmax(stacked_premature_layers[i], dim=-1)
+                    + F.softmax(stacked_premature_layers[j], dim=-1)
+                )
+                kl1 = F.kl_div(
+                    F.log_softmax(stacked_premature_layers[i], dim=-1),
+                    M,
+                    reduction="batchmean",
+                )
+                kl2 = F.kl_div(
+                    F.log_softmax(stacked_premature_layers[j], dim=-1),
+                    M,
+                    reduction="batchmean",
+                )
                 jsd = 0.5 * (kl1 + kl2)
                 jsd_matrix[i, j] = jsd
                 jsd_matrix[j, i] = jsd  # Symmetric matrix
-
 
         # Find indices of top k_candidate JSD values
         upper_tri_flat = jsd_matrix.triu(diagonal=1).flatten()
@@ -872,8 +941,7 @@ class halc_assistant:
         context_domain = self.halc_params["context_domain"]
         contrast_weight = self.halc_params["contrast_weight"]
 
-        for (layer_idx1, layer_idx2) in top_k_indices:
-
+        for layer_idx1, layer_idx2 in top_k_indices:
             base_logits = context_logits_list[layer_idx1]
             final_logits = context_logits_list[layer_idx2]
 
@@ -894,35 +962,59 @@ class halc_assistant:
 
         return skip_flag, contrast_logits_array
 
-
-    def clip_score_selection(self, candidate_intermediate_token_lists_array, beam_size, skip_token_length=0):
-
-
-        if candidate_intermediate_token_lists_array == [None] * len(candidate_intermediate_token_lists_array) or self.original_image == None:
+    def clip_score_selection(
+        self, candidate_intermediate_token_lists_array, beam_size, skip_token_length=0
+    ):
+        if (
+            candidate_intermediate_token_lists_array
+            == [None] * len(candidate_intermediate_token_lists_array)
+            or self.original_image == None
+        ):
             # print("identical candidate lists: ", candidate_intermediate_token_lists_array)
             random.seed(8)
-            selected_candidates = random.sample(range(len(candidate_intermediate_token_lists_array)), beam_size)
+            selected_candidates = random.sample(
+                range(len(candidate_intermediate_token_lists_array)), beam_size
+            )
 
         else:
             candidate_texts = []
-            for candidate_intermediate_token_lists in candidate_intermediate_token_lists_array:
+            for (
+                candidate_intermediate_token_lists
+            ) in candidate_intermediate_token_lists_array:
                 # print("candidate_intermediate_token_lists[0]", candidate_intermediate_token_lists[0])
-                if self.model_backbone == "minigpt4" or self.model_backbone == "instructblip":
+                if (
+                    self.model_backbone == "minigpt4"
+                    or self.model_backbone == "instructblip"
+                ):
                     skip_token_length = 0
                 elif self.model_backbone == "llava-1.5":
                     skip_token_length = skip_token_length
 
                     # print("tokens_to_text", tokens_to_text)
-                candidate_texts.append(self.get_sequence_text(candidate_intermediate_token_lists[0], skip_token_length))
+                candidate_texts.append(
+                    self.get_sequence_text(
+                        candidate_intermediate_token_lists[0], skip_token_length
+                    )
+                )
 
             original_image = self.original_image
 
             # print("candidate_texts", candidate_texts)
-            clip_inputs = self.clip_processor(text=candidate_texts, images=original_image, return_tensors="pt", padding=True, truncation=True)
+            clip_inputs = self.clip_processor(
+                text=candidate_texts,
+                images=original_image,
+                return_tensors="pt",
+                padding=True,
+                truncation=True,
+            )
 
             clip_outputs = self.clip_model(**clip_inputs)
-            logits_per_image = clip_outputs.logits_per_image  # image-text similarity score
-            clip_probs = logits_per_image.softmax(dim=1)[0]  # take the softmax to get the label probabilities
+            logits_per_image = (
+                clip_outputs.logits_per_image
+            )  # image-text similarity score
+            clip_probs = logits_per_image.softmax(dim=1)[
+                0
+            ]  # take the softmax to get the label probabilities
 
             # print("candidate lists:", candidate_intermediate_token_lists_array)
             # print("clip_probs:", clip_probs)
@@ -931,12 +1023,13 @@ class halc_assistant:
             clip_probs = clip_probs.cpu().numpy()
             # candidate_index = clip_probs.argsort()[-beam_size:][::-1]
 
-            sorted_indices = clip_probs.argsort()[-len(candidate_intermediate_token_lists_array):][::-1]
+            sorted_indices = clip_probs.argsort()[
+                -len(candidate_intermediate_token_lists_array) :
+            ][::-1]
             selected_texts = set()
             selected_candidates = []
             # print("sorted_indices:", sorted_indices)
             for idx in sorted_indices:
-
                 # candidate_text = self.get_sequence_text(candidate_intermediate_token_lists_array[idx][0])
                 candidate_text = candidate_texts[idx]
                 # Check for uniqueness
@@ -961,11 +1054,9 @@ class halc_assistant:
         return candidate_index
 
     def random_selection(self, candidate_intermediate_token_lists_array, beam_size):
-
         random.seed(8)
-        candidate_index = random.sample(range(len(candidate_intermediate_token_lists_array)), beam_size)
+        candidate_index = random.sample(
+            range(len(candidate_intermediate_token_lists_array)), beam_size
+        )
 
         return candidate_index
-
-
-

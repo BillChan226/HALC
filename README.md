@@ -5,29 +5,28 @@
   <img src="https://github.com/BillChan226/HALC/blob/main/.assets/hawk_logo.png" width="35%">
 </div>
 
-
 [![License: MIT](https://img.shields.io/badge/License-MIT-g.svg)](https://opensource.org/licenses/MIT)
 [![Arxiv](https://img.shields.io/badge/arXiv-2311.17911-B21A1B)](https://arxiv.org/pdf/2311.17911.pdf)
 [![Hugging Face Transformers](https://img.shields.io/badge/%F0%9F%A4%97-Transformers-blue)](https://github.com/huggingface/transformers)
 [![Project Page](https://img.shields.io/badge/Project-Page-Green)](https://billchan226.github.io/projects/halc.html)
 [![GitHub Stars](https://img.shields.io/github/stars/BillChan226/HALC?style=social)](https://github.com/BillChan226/HALC/stargazers)
 
-This repository provides the official PyTorch implementation of the following paper: 
+This repository provides the official PyTorch implementation of the following paper:
 > [**HALC: Object Hallucination Reduction via Adaptive Focal-Contrast Decoding**]() <br>
-> [Zhaorun Chen](https://billchan226.github.io/)<sup>1,\*</sup>, 
-> [Zhuokai Zhao](https://zhuokai-zhao.com/)<sup>2,\*</sup>, 
+> [Zhaorun Chen](https://billchan226.github.io/)<sup>1,\*</sup>,
+> [Zhuokai Zhao](https://zhuokai-zhao.com/)<sup>2,\*</sup>,
 > [Lingyu Gao](https://lygao.me/)<sup>3</sup>,
 > [Hongyin Luo](https://luohongyin.github.io/) <sup>4</sup>,
-> [Huaxiu Yao](https://www.huaxiuyao.io/) <sup>1</sup>, 
+> [Huaxiu Yao](https://www.huaxiuyao.io/) <sup>1</sup>,
 > [Jiawei Zhou](https://sites.harvard.edu/jzhou/)<sup>3</sup>
 >
 > <sup>1</sup>UNC-Chapel Hill, <sup>2</sup>University of Chicago, <sup>3</sup>Toyota Technological Institute at Chicago, <sup>4</sup>Massachusetts Institute of Technology <br>
 
 ## :partying_face: Features
 
-#### Currently supported online OH decoding methods:
+#### Currently supported online OH decoding methods
 
-|  Decoder |  [Minigpt4-v2](https://arxiv.org/abs/2304.10592) | [Instructblip](https://arxiv.org/abs/2305.06500) | [LLaVA-1.5](https://arxiv.org/abs/2310.03744) | 
+|  Decoder |  [Minigpt4-v2](https://arxiv.org/abs/2304.10592) | [Instructblip](https://arxiv.org/abs/2305.06500) | [LLaVA-1.5](https://arxiv.org/abs/2310.03744) |
 |----------|-----------|-------------|-----|
 | Greedy*    | :white_check_mark: | :white_check_mark: | :white_check_mark: |
 | HALC*   | :white_check_mark: | :white_check_mark: | :white_check_mark: |
@@ -37,17 +36,14 @@ This repository provides the official PyTorch implementation of the following pa
 
 *: indicates the method supports beam search.
 
-#### Currently supported post-hoc methods:
+#### Currently supported post-hoc methods
 
-|  Post-hoc |  Minigpt4-v2 | Instructblip | LLaVA-1.5 | 
+|  Post-hoc |  Minigpt4-v2 | Instructblip | LLaVA-1.5 |
 |----------|-----------|-------------|-----|
 | [Woodpecker](https://arxiv.org/abs/2310.16045)      | :white_check_mark: | :white_check_mark: | :white_check_mark: |
 | [LURE](https://arxiv.org/abs/2310.00754)      | :x: | :x: | :x: |
 
-
-
 ## :hammer_and_wrench: Installation
-
 
 To install, run the following commands to install the required packages:
 
@@ -71,7 +67,6 @@ cd weights
 wget -q https://github.com/IDEA-Research/GroundingDINO/releases/download/v0.1.0-alpha/groundingdino_swint_ogc.pth
 ```
 
-
 ## :bee: LVLM Backbones
 
 The following evaluation requires for MSCOCO 2014 dataset. Please download [here](https://cocodataset.org/#home) and extract it in your data path.
@@ -84,7 +79,6 @@ Besides, it needs you to prepare the following checkpoints of 7B base models:
 - Download [Vicuna 7B v0 model](https://huggingface.co/Vision-CAIR/vicuna-7b/tree/main) and specify it at [Line 18](https://github.com/shikiw/OPERA/blob/bf18aa9c409f28b31168b0f71ebf8457ae8063d5/minigpt4/configs/models/minigpt4_vicuna0.yaml#L18) of `minigpt4/configs/models/minigpt4_vicuna0.yaml`.
 - Download [MiniGPT-4 7B pretrained weights](https://drive.google.com/file/d/1RY9jV0dyqLX-o38LrumkKRh6Jtaop58R/view?usp=sharing) and specify it at [Line 8](https://github.com/shikiw/OPERA/blob/bf18aa9c409f28b31168b0f71ebf8457ae8063d5/eval_configs/minigpt4_eval.yaml#L8) of `eval_configs/minigpt4_eval.yaml`.
 
-
 ### Arguments
 
 | Argument             | Example             | Description   |
@@ -95,12 +89,14 @@ Besides, it needs you to prepare the following checkpoints of 7B base models:
 | `--beam`   | `3` | Beam size for global search. Default: 1. |
 
 #### Arguments for HALC
+
 | Argument             | Example             | Description   |
 | -------------------- | ------------------- | ------------- |
 | `--k-candidate-num`      | `4` | Number of generative focal fields for local search. Default: 2. |
 | `--expand-ratio`      | `0.6` | The growing factor of focal fields. Default: 0.6. |
 
 #### Arguments for OPERA
+
 | Argument             | Example             | Description   |
 | -------------------- | ------------------- | ------------- |
 | `--scale_factor`   | `50` | The scale factor to scale up the self-attention weights. Default: 50. |
@@ -109,6 +105,7 @@ Besides, it needs you to prepare the following checkpoints of 7B base models:
 | `--penalty_weights`| `1` | The weight of penalty term in decoding. Default: 1.  |
 
 #### Arguments for VCD
+
 | Argument             | Example             | Description   |
 | -------------------- | ------------------- | ------------- |
 | `--cd-alpha`      | `1` | Amplification factor. Default: 1. |
@@ -116,8 +113,8 @@ Besides, it needs you to prepare the following checkpoints of 7B base models:
 | `--noise-step`| `500` | Number of steps to add diffusion noise. Default: 500.  |
 
 ## :hourglass: Benchmarks Evaluation
-### :chair: CHAIR Evaluation of LVLMs Object Hallucination
 
+### :chair: CHAIR Evaluation of LVLMs Object Hallucination
 
 #### Running LVLM to generate captions and result file format-ready for CHAIR
 
@@ -145,7 +142,6 @@ COCO_DIR (val2014 for example)
 
 Upon completion, two files, `minigpt4_pretrain-llama2_coco_2000_generated_captions.json` and `minigpt4_pretrain-llama2_coco_2000_chair.json` should be generated under `generated_captions/minigpt4_pretrain-llama2/coco/` if `llama2` is the `model_type` used for `minigpt4`.
 
-
 ### :man_in_tuxedo: POPE Evaluation of LVLMs Object Hallucination
 
 #### Running LVLM to generate captions and result file format-ready for POPE
@@ -153,9 +149,8 @@ Upon completion, two files, `minigpt4_pretrain-llama2_coco_2000_generated_captio
 Under root directory, run
 
 ```
-python pope_eval.py --model [LVLM Backbone] --data-path [COCO_DIR] -d [Decoding Strategy] --pope-type [random/popular/adversarial] --num_images 100 --seed [SEED] --gpu-id [GPU_IDs] --output_dir ./generated_captions/
+python pope_eval.py --model [LVLM Backbone] --data_path [COCO_DIR] -d [Decoding Strategy] --pope_type [random/popular/adversarial] --num_images 100 --seed [SEED] --gpu_id [GPU_IDs] --output_dir ./generated_captions/
 ```
-
 
 ### :hospital: Running Post-hoc methods to revise captions for CHAIR
 
@@ -165,10 +160,10 @@ Under root directory, run
 python reviser_eval.py -m [woodpecker/lure] --data-path [COCO_DIR] --caption-path [PATH_TO_CAPTION] --output-path [PATH_TO_OUTPUT] --seed [SEED] --gpu-id [GPU_IDs] --output_dir ./generated_captions/
 ```
 
-
 ### Evaluation
 
 #### CHAIR Evaluation
+
 We use the generated `_chair.json` file, for example, `minigpt4_pretrain-llama2_coco_2000_chair.json` for the CHAIR evaluation. Under root directory, run
 
 ```
@@ -183,24 +178,23 @@ python eval_hallucination.py --metric pope --pope_answer_path [PATH_TO_MODEL_OUT
 
 The evaluation results will be printed in terminal.
 
-
-
 ## :roller_coaster: Demo Playgrounds
 
 ### :eagle: HALC Demo
+
 Run CDL demo on a [toy example](hallucinatory_image/beach_on_a_clock.png):
-  
+
 ```
 python context_density/context_decoding.py --cfg-path eval_configs/minigpt4_llama2_eval.yaml  --gpu-id 0
 ```
 
-### ViT Early Exit Layers Demo 
+### ViT Early Exit Layers Demo
+
 Specify early_exit_layer_idx then run ViT early exit layers contrastive decoding:
-  
+
 ```
 python vit_early_exit_contrast.py --cfg-path eval_configs/minigpt4_llama2_eval.yaml  --gpu-id 0
 ```
-
 
 ### DoLA Demo
 
@@ -226,22 +220,19 @@ python contrast_decoding.py --cfg-path eval_configs/minigpt4_llama2_eval.yaml  -
 
 The [toy example](hallucinatory_image/beach_on_a_clock.png) is projected into the prefix of the language model as a context.
 
-
-
-
 ## :wrench: Troubleshooting
 
-#### Error installing `GroundingDINO`: 
+#### Error installing `GroundingDINO`
 
 If error `NameError: name '_C' is not defined` is reported, refer to [this issue](https://github.com/IDEA-Research/GroundingDINO/issues/8#issuecomment-1541892708) for a quick fix.
 
-#### Error installing `pattern`:
+#### Error installing `pattern`
 
 ```
 conda install -c conda-forge pattern
 ```
 
-#### CUDA Error installing `GroundingDINO`:
+#### CUDA Error installing `GroundingDINO`
 
 ```
 conda install pytorch torchvision torchaudio pytorch-cuda=[YOUR NVIDIA CUDA VERSION] -c pytorch -c nvidia

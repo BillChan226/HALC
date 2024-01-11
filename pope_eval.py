@@ -78,6 +78,12 @@ def parse_args():
         "change to --cfg-options instead.",
     )
     parser.add_argument(
+        "--dataset_name",
+        type=str,
+        default="coco",
+        help="Name of the dataset. Default is 'coco'.",
+    )
+    parser.add_argument(
         "--data_path",
         type=str,
         default="/home/czr/contrast_decoding_LVLMs/eval_dataset/val2014/",
@@ -170,8 +176,9 @@ def parse_args():
     parser.add_argument(
         "--question_template",
         type=str,
-        default="Is there a {} in the image? ",
+        # default="Is there a {} in the image? ",
         # default="Is there a XXX in the image? There is no XXX in the image, so the answer is No. Is there a YYY in the image? There is 2 YYY in the image, so the answer is Yes. Is there a {} in the image? ",
+        default="Is there a {} in the image? Answer 'Yes' or 'No' at the end of your response.",
         help="Prompt template. Default is 'Is there a {} in the image?'.",
     )
 
@@ -256,6 +263,7 @@ def main():
     k_candidate_num = args.k_candidate_num
     num_samples = args.num_samples
     num_images = args.num_images
+    dataset_name = args.dataset_name
     data_path = args.data_path
     output_dir = args.output_dir
     num_beams = args.beam
@@ -452,7 +460,7 @@ def main():
 
     print("load data finished")
 
-    base_dir = output_dir + args.model
+    base_dir = os.path.join(output_dir, "pope", args.model)
     if not os.path.exists(base_dir):
         os.makedirs(base_dir)
 
@@ -505,6 +513,7 @@ def main():
         qu = data["query"]
         label = data["label"]
         image_path = data["image_path"]
+        image_id = image_path[0].split("/")[-1].split(".")[0].split("_")[-1].lstrip("0")
         label_list = label_list + list(label)
 
         template = INSTRUCTION_TEMPLATE[args.model]
@@ -564,6 +573,22 @@ def main():
                 pred_list = recorder(out, pred_list)
                 for line in out:
                     print(line)
+
+        output_text = out[0]
+        cur_generated_answer = {
+            "image_id": image_id,
+            "question": " ".join(qu[0].split(" ")[2:]).split("?")[0] + "?",
+            "answer": output_text,
+        }
+
+        # dump metric file
+        generated_captions_path = os.path.join(
+            base_dir,
+            f"{model_name}_{decoding_strategy}_beams_{num_beams}_k_{k_candidate_num}_{dataset_name}_expand_ratio_{expand_ratio}_seed_{seed}_max_tokens_{max_new_tokens}_samples_{num_images}_generated_captions.json",
+        )
+        with open(generated_captions_path, "a") as f:
+            json.dump(cur_generated_answer, f)
+            f.write("\n")
 
     print(
         "[{}, {}]===============================================".format(

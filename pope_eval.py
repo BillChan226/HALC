@@ -58,16 +58,18 @@ INSTRUCTION_TEMPLATE = {
     "instructblip": "<ImageHere><question>",
     "lrv_instruct": "###Human: <Img><ImageHere></Img> <question> ###Assistant:",
     "shikra": "USER: <im_start><ImageHere><im_end> <question> ASSISTANT:",
-    "llava-1.5": "USER: <ImageHere> <question> ASSISTANT:"
+    "llava-1.5": "USER: <ImageHere> <question> ASSISTANT:",
 }
 
 
 def parse_args():
     parser = argparse.ArgumentParser(description="POPE-Adv evaluation on LVLMs.")
     parser.add_argument("--model", type=str, help="model")
-    parser.add_argument("--pope-type", type=str, help="model")
+    parser.add_argument("--pope_type", type=str, help="model")
     # parser.add_argument("--cfg-path", required=True, help="path to configuration file.")
-    parser.add_argument("--gpu-id", type=int, default=0, help="specify the gpu to load the model.")
+    parser.add_argument(
+        "--gpu_id", type=int, default=0, help="specify the gpu to load the model."
+    )
     parser.add_argument(
         "--options",
         nargs="+",
@@ -75,12 +77,17 @@ def parse_args():
         "in xxx=yyy format will be merged into config file (deprecate), "
         "change to --cfg-options instead.",
     )
-    parser.add_argument("--data_path", type=str, default="/home/czr/contrast_decoding_LVLMs/eval_dataset/val2014/", help="data path")
+    parser.add_argument(
+        "--data_path",
+        type=str,
+        default="/home/czr/contrast_decoding_LVLMs/eval_dataset/val2014/",
+        help="data path",
+    )
     parser.add_argument("--batch_size", type=int, default=1, help="batch size")
     parser.add_argument("--num_workers", type=int, default=2, help="num workers")
 
     parser.add_argument("-b", "--beam", type=int, default=1)
-    parser.add_argument("--sample", action='store_true')
+    parser.add_argument("--sample", action="store_true")
     parser.add_argument("--scale_factor", type=float, default=50)
     parser.add_argument("--threshold", type=int, default=15)
     parser.add_argument("--num_attn_candidates", type=int, default=5)
@@ -136,16 +143,10 @@ def parse_args():
         help="Alpha param for VCD.",
     )
     parser.add_argument(
-        "--cd_beta",
-        type=float,
-        default=0.1,
-        help="Beta param for VCD."
+        "--cd_beta", type=float, default=0.1, help="Beta param for VCD."
     )
     parser.add_argument(
-        "--noise_step",
-        type=int,
-        default=500,
-        help="Noise step for VCD."
+        "--noise_step", type=int, default=500, help="Noise step for VCD."
     )
     parser.add_argument(
         "--gt_seg_path",
@@ -154,7 +155,8 @@ def parse_args():
         help="Input json file that contains ground truth objects in the image.",
     )
     parser.add_argument(
-        "-n", "--num_images",
+        "-n",
+        "--num_images",
         type=int,
         default=100,
         help="Number of images to build POPE questions. Default is 500.",
@@ -173,14 +175,11 @@ def parse_args():
         help="Prompt template. Default is 'Is there a {} in the image?'.",
     )
 
-
-
     args = parser.parse_args()
     return args
 
 
 def setup_seeds(config, seed):
-
     # seed = config.run_cfg.seed + get_rank()
     random.seed(seed)
     np.random.seed(seed)
@@ -207,39 +206,37 @@ def print_acc(pred_list, label_list):
         elif pred == neg and label == pos:
             FN += 1
 
-    print('TP\tFP\tTN\tFN\t')
-    print('{}\t{}\t{}\t{}'.format(TP, FP, TN, FN))
+    print("TP\tFP\tTN\tFN\t")
+    print("{}\t{}\t{}\t{}".format(TP, FP, TN, FN))
 
     precision = float(TP) / float(TP + FP)
     recall = float(TP) / float(TP + FN)
-    f1 = 2*precision*recall / (precision + recall)
+    f1 = 2 * precision * recall / (precision + recall)
     acc = (TP + TN) / (TP + TN + FP + FN)
-    print('Accuracy: {}'.format(acc))
-    print('Precision: {}'.format(precision))
-    print('Recall: {}'.format(recall))
-    print('F1 score: {}'.format(f1))
-    print('Yes ratio: {}'.format(yes_ratio))
+    print("Accuracy: {}".format(acc))
+    print("Precision: {}".format(precision))
+    print("Recall: {}".format(recall))
+    print("F1 score: {}".format(f1))
+    print("Yes ratio: {}".format(yes_ratio))
 
 
 def recorder(out, pred_list):
     NEG_WORDS = ["No", "not", "no", "NO"]
     for line in out:
-
-        line = line.replace('.', '')
-        line = line.replace(',', '')
-        words = line.split(' ')
-        if any(word in NEG_WORDS for word in words) or any(word.endswith("n't") for word in words):
+        line = line.replace(".", "")
+        line = line.replace(",", "")
+        words = line.split(" ")
+        if any(word in NEG_WORDS for word in words) or any(
+            word.endswith("n't") for word in words
+        ):
             pred_list.append(0)
         else:
             pred_list.append(1)
-    
+
     return pred_list
 
 
-
-
 def main():
-
     args = parse_args()
     os.environ["CUDA_VISIBLE_DEVICES"] = str(args.gpu_id)
 
@@ -247,12 +244,13 @@ def main():
     args.pope_path = POPE_PATH[args.pope_type]
     cfg = Config(args)
 
-
     decoding_strategy = args.decoder
     seed = args.seed
     setup_seeds(cfg, seed)
     pope_type = args.pope_type
-    device = torch.device(f"cuda:{int(args.gpu_id)}") if torch.cuda.is_available() else "cpu"
+    device = (
+        torch.device(f"cuda:{int(args.gpu_id)}") if torch.cuda.is_available() else "cpu"
+    )
     model_name = args.model
     verbosity = args.verbosity
     k_candidate_num = args.k_candidate_num
@@ -272,12 +270,10 @@ def main():
     question_template = args.question_template
     # device = torch.device("cuda") if torch.cuda.is_available() else "cpu"
 
-
-
     # ========================================
     #             Model Initialization
     # ========================================
-    print('Initializing Model')
+    print("Initializing Model")
 
     model_config = cfg.model_cfg
     model_config.device_8bit = args.gpu_id
@@ -287,16 +283,28 @@ def main():
     vis_processors, txt_processors = load_preprocess(cfg.get_config().preprocess)
     vis_processor_cfg = cfg.datasets_cfg.cc_sbu_align.vis_processor.train
     vis_processor = registry.get_processor_class(vis_processor_cfg.name).from_config(
-        vis_processor_cfg)
+        vis_processor_cfg
+    )
     # vis_processors.do_normalize = False
     print(vis_processors["eval"].transform)
 
-
-    valid_decoding_strategies = ["greedy", "dola", "halc-dola", "halc-greedy", "halc-beam", "opera-beam", "vcd"]
+    valid_decoding_strategies = [
+        "greedy",
+        "dola",
+        "halc-dola",
+        "halc-greedy",
+        "halc-beam",
+        "opera-beam",
+        "vcd",
+    ]
     valid_post_editing_strategies = ["lure", "woodpecker"]
 
-    assert decoding_strategy in valid_decoding_strategies, f"Invalid decoding strategy: {decoding_strategy}, should be in {valid_decoding_strategies}"
-    assert post_correction in valid_post_editing_strategies or post_correction is None, f"Invalid post correction strategy: {post_correction}, should be in {valid_post_editing_strategies}"
+    assert (
+        decoding_strategy in valid_decoding_strategies
+    ), f"Invalid decoding strategy: {decoding_strategy}, should be in {valid_decoding_strategies}"
+    assert (
+        post_correction in valid_post_editing_strategies or post_correction is None
+    ), f"Invalid post correction strategy: {post_correction}, should be in {valid_post_editing_strategies}"
 
     decoding_strategy = decoding_strategy
     opera_decoding = False
@@ -337,14 +345,10 @@ def main():
         print("seed: ", seed)
         print(vis_processors["eval"].transform)
 
-
     print("Done!")
-
-
 
     if verbosity:
         print(f"\nGenerating {pope_type} POPE questions")
-
 
     # generate pope questions
     question_dir = os.path.join(output_dir, "pope")
@@ -378,9 +382,7 @@ def main():
     processed_segment_results = random.sample(processed_segment_results, num_images)
 
     # Organize the ground truth objects and their co-occurring frequency
-    question_name = (
-        f"_num_images_{num_images}_num_samples_{num_samples}"
-    )
+    question_name = f"_num_images_{num_images}_num_samples_{num_samples}"
     # ground truth object summary
     ground_truth_objects = generate_ground_truth_objects(
         processed_segment_results,
@@ -388,7 +390,6 @@ def main():
         question_name,
         verbosity,
     )
-
 
     # Generate POPE questions and save to local file
     if pope_type is None:
@@ -437,31 +438,40 @@ def main():
     # )
     # input()
 
-
-
     # load pope data
     pope_dataset = POPEDataSet(
-        pope_path=question_path, 
-        data_path=args.data_path, 
-        trans=vis_processors["eval"]
+        pope_path=question_path, data_path=args.data_path, trans=vis_processors["eval"]
     )
     pope_loader = torch.utils.data.DataLoader(
-        pope_dataset, 
-        batch_size=batch_size, 
-        shuffle=False, 
+        pope_dataset,
+        batch_size=batch_size,
+        shuffle=False,
         num_workers=args.num_workers,
-        drop_last=False
+        drop_last=False,
     )
 
-    print ("load data finished")
+    print("load data finished")
 
-
-    base_dir  = output_dir + args.model
+    base_dir = output_dir + args.model
     if not os.path.exists(base_dir):
         os.makedirs(base_dir)
 
-    halc_params = {"context_domain": "upper", "contrast_weight": 0.05, "context_window": 4, "expand_ratio": expand_ratio, "beam_size": num_beams, "k_candidate_num": args.k_candidate_num, "LVLM_backbone": model_name}
-    halc_assistant_helper = halc_assistant(model, vis_processor=vis_processor, device=device, halc_params=halc_params, max_new_tokens=max_new_tokens)
+    halc_params = {
+        "context_domain": "upper",
+        "contrast_weight": 0.05,
+        "context_window": 4,
+        "expand_ratio": expand_ratio,
+        "beam_size": num_beams,
+        "k_candidate_num": args.k_candidate_num,
+        "LVLM_backbone": model_name,
+    }
+    halc_assistant_helper = halc_assistant(
+        model,
+        vis_processor=vis_processor,
+        device=device,
+        halc_params=halc_params,
+        max_new_tokens=max_new_tokens,
+    )
 
     lm_early_exit_layers = [
         0,
@@ -488,13 +498,9 @@ def main():
     candidate_premature_layers = lm_early_exit_layers[:-1]
     premature_layer_dist = {l: 0 for l in candidate_premature_layers}
 
-
-
     print("Start eval...")
     pred_list, pred_list_s, label_list = [], [], []
     for batch_id, data in tqdm(enumerate(pope_loader), total=len(pope_loader)):
-
-
         image = data["image"]
         qu = data["query"]
         label = data["label"]
@@ -511,7 +517,11 @@ def main():
 
         if vcd_decoding:
             image_tensor_cd = add_diffusion_noise(image, args.noise_step)
-            image_cd = (image_tensor_cd.unsqueeze(0).half().cuda() if image_tensor_cd is not None else None)
+            image_cd = (
+                image_tensor_cd.unsqueeze(0).half().cuda()
+                if image_tensor_cd is not None
+                else None
+            )
             cd_alpha = cd_alpha
             cd_beta = cd_beta
             print("image_cd", image_cd.shape)
@@ -525,8 +535,8 @@ def main():
         with torch.inference_mode():
             with torch.no_grad():
                 out = model.generate(
-                    {"image": image, "prompt":qu}, 
-                    use_nucleus_sampling=args.sample, 
+                    {"image": image, "prompt": qu},
+                    use_nucleus_sampling=args.sample,
                     num_beams=args.beam,
                     max_new_tokens=512,
                     output_attentions=True,
@@ -549,23 +559,21 @@ def main():
                     # VCD
                     images_cd=image_cd,
                     cd_alpha=cd_alpha,
-                    cd_beta=cd_beta
+                    cd_beta=cd_beta,
                 )
                 pred_list = recorder(out, pred_list)
                 for line in out:
                     print(line)
 
-    print("[{}, {}]===============================================".format(args.scale_factor, args.num_attn_candidates))
+    print(
+        "[{}, {}]===============================================".format(
+            args.scale_factor, args.num_attn_candidates
+        )
+    )
     if len(pred_list) != 0:
         print_acc(pred_list, label_list)
     if len(pred_list_s) != 0:
         print_acc(pred_list_s, label_list)
-
-
-
-
-
-
 
 
 if __name__ == "__main__":

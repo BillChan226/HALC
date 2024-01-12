@@ -99,7 +99,7 @@ def parse_args():
     parser.add_argument("--num_attn_candidates", type=int, default=5)
     parser.add_argument("--penalty_weights", type=float, default=1.0)
     parser.add_argument("--seed", type=int, default=0)
-    parser.add_argument("-m", "--max_new_tokens", type=int, default=64)
+    parser.add_argument("-m", "--max_new_tokens", type=int, default=16)
     parser.add_argument(
         "-d",
         "--decoder",
@@ -547,7 +547,7 @@ def main():
                     {"image": image, "prompt": qu},
                     use_nucleus_sampling=args.sample,
                     num_beams=args.beam,
-                    max_new_tokens=512,
+                    max_new_tokens=max_new_tokens,
                     output_attentions=True,
                     premature_layer=premature_layer,
                     candidate_premature_layers=candidate_premature_layers,

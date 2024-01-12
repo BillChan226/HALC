@@ -1,0 +1,27 @@
+{"ground_truth": "What is behind the hydrant ? house", "image_id": 15746, "caption": "Behind the hydrant, there is a house with a", "answer": true}
+{"ground_truth": "What is behind the desk? person", "image_id": 8844, "caption": "Behind the desk, there are bunches of bananas.", "answer": false}
+{"ground_truth": "What is on the wall ? socket", "image_id": 495448, "caption": "There is a light switch on the wall.", "answer": false}
+{"ground_truth": "Who is standing on the line ? coach", "image_id": 5388, "caption": "A baseball player is standing on the line.", "answer": false}
+{"ground_truth": "What is behind the laptop ? letter", "image_id": 494427, "caption": "Behind the laptop, there is a wooden table.", "answer": false}
+{"ground_truth": "What is behind the fruit ? bottle", "image_id": 546626, "caption": "Behind the fruit, there is a red coffee mug and a wooden table.", "answer": false}
+{"ground_truth": "What is on the car ? cat", "image_id": 10363, "caption": "A cat is standing on the hood of the", "answer": true}
+{"ground_truth": "What is on the floor ? carpet", "image_id": 5328, "caption": "There is a tile floor in the bathroom.", "answer": false}
+{"ground_truth": "What is on the tray ? cup", "image_id": 5352, "caption": "There is a slice of pizza on the tray.", "answer": false}
+{"ground_truth": "What is behind the man ? woman", "image_id": 5247, "caption": "Behind the man, there is a snowy forest.", "answer": false}
+{"ground_truth": "What is under this man's feet? skateboard", "image_id": 7977, "caption": "Under the man's feet, there is a skateboard.", "answer": true}
+{"ground_truth": "What are they looking at ? TV", "image_id": 556000, "caption": "The group of people, including both adults and children, are looking at a Wii game console. They are gathered in a living room, and one of the young boys is holding a Wii remote, likely playing a game or showing others how to use the console. The presence of chairs, a couch,", "answer": false}
+{"ground_truth": "What is the painting on the wall ? flower", "image_id": 498463, "caption": "There is no painting on the wall. The image shows a kitchen with a", "answer": false}
+{"ground_truth": "What is on the bridge ? car", "image_id": 5282, "caption": "There is a boat on the bridge.", "answer": false}
+{"ground_truth": "What is the main object ? man", "image_id": 5443, "caption": "The main object is a person standing on ais in the snow.", "answer": false}
+{"ground_truth": "What is the man wearing on his head ? bat", "image_id": 6471, "caption": "The man is wearing a helmet on his head.", "answer": false}
+{"ground_truth": "What is under the man's feet ? skateboard", "image_id": 424521, "caption": "Under the man's feet, there is a skateboard.", "answer": true}
+{"ground_truth": "What is in front of the man ? plane", "image_id": 5356, "caption": "A large airplane is in front of the man.", "answer": false}
+{"ground_truth": "What is the red object in the image ? mailbox", "image_id": 519039, "caption": "The red object in the image is a fire hydrant.", "answer": false}
+{"ground_truth": "Who is under the coat ? hydrant", "image_id": 5437, "caption": "A person is under the coat.", "answer": false}
+{"ground_truth": "What is behind the man ? woman", "image_id": 50145, "caption": "Behind the man, there is a motorcycle parked.", "answer": false}
+{"ground_truth": "What is besides the train ? man", "image_id": 5278, "caption": "Besides the train, there is a yellow and blue train carrier. The train car car", "answer": false}
+{"ground_truth": "What is under the basin ? chair", "image_id": 537812, "caption": "Under the basin, there is a bucket.", "answer": false}
+{"ground_truth": "What is on the floor ? boat", "image_id": 5412, "caption": "There is a black tile on the floor.", "answer": false}
+{"ground_truth": "What is behind the woman ? boat", "image_id": 61418, "caption": "Behind the woman, there is a boat in the water.", "answer": true}
+{"ground_truth": "What is in the air ? grid", "image_id": 15517, "caption": "There are no visible objects or items in the air in", "answer": false}
+{"ground_truth": "What is the greed object in the image ? grape", "image_id": 15254, "caption": "The greed object in the image is a bowl of food.", "answer": false}

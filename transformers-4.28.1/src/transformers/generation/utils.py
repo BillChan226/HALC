@@ -2736,10 +2736,11 @@ class GenerationMixin:
     def relative_top_filter(
         self,
         scores: torch.FloatTensor,
-        relative_top: float = 0.1,
+        relative_top: float = 0.001, #0.1
         filter_value: float = -float("Inf"),
         min_tokens_to_keep: int = 1,
     ) -> torch.FloatTensor:
+
         scores_normalized = scores.log_softmax(dim=-1)
         sorted_logits, sorted_indices = torch.sort(scores_normalized, descending=True)
         min_thresh = sorted_logits[..., min_tokens_to_keep - 1]
@@ -7341,11 +7342,11 @@ class GenerationMixin:
             if base_layer is not None:
                 base_logits = dict_outputs[base_layer][:, -1, :]
                 final_logits = dict_outputs[mature_layer][:, -1, :]
-                if relative_top > 0.0:
-                    final_logits = self.relative_top_filter(final_logits, relative_top)
-                    base_logits = base_logits.log_softmax(dim=-1)
-                    mask = final_logits[0] < -1e3
-                    base_logits[0][mask] = -1e3
+                # if relative_top > 0.0:
+                #     final_logits = self.relative_top_filter(final_logits, relative_top)
+                #     base_logits = base_logits.log_softmax(dim=-1)
+                #     mask = final_logits[0] < -1e3
+                #     base_logits[0][mask] = -1e3
 
                 logits = final_logits - base_logits
                 next_token_logits = logits
@@ -7404,13 +7405,15 @@ class GenerationMixin:
 
                 base_logits = dict_outputs[premature_layer][:, -1, :]
                 final_logits = dict_outputs[mature_layer][:, -1, :]
-                if relative_top > 0.0:
-                    final_logits = self.relative_top_filter(final_logits, relative_top)
-                    base_logits = base_logits.log_softmax(dim=-1)
-                    mask = final_logits[0] < -1e3
-                    base_logits[0][mask] = -1e3
+                # if relative_top > 0.0:
+                #     final_logits = self.relative_top_filter(final_logits, relative_top)
+                #     base_logits = base_logits.log_softmax(dim=-1)
+                #     mask = final_logits[0] < -1e3
+                #     base_logits[0][mask] = -1e3
                 logits = final_logits - base_logits
                 next_token_logits = logits
+
+                print("here!")
 
             # # pre-process distribution
             # next_tokens_scores = logits_processor(input_ids, next_token_logits)

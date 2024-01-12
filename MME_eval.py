@@ -86,7 +86,7 @@ parser.add_argument(
     default="coco",
     help="Name of the dataset. Default is 'coco'.",
 )
-parser.add_argument("--data_path", type=str, default="/home/czr/contrast_decoding_LVLMs/eval_dataset/val2014/", help="data path")
+parser.add_argument("--data_path", type=str, default="/home/czr/HaLC/MME_benchmark/pattern_exp/existence", help="data path")
 parser.add_argument("--batch_size", type=int, default=1, help="batch size")
 parser.add_argument("--num_workers", type=int, default=2, help="num workers")
 parser.add_argument("-b", "--beam", type=int, default=3)
@@ -263,75 +263,69 @@ mean = (0.48145466, 0.4578275, 0.40821073)
 std = (0.26862954, 0.26130258, 0.27577711)
 norm = transforms.Normalize(mean, std)
 
-annotation_file_path = args.data_path + 'annotations/instances_val2014.json'
-caption_file_path = args.data_path + 'annotations/captions_val2014.json'
-# with open(args.data_path + '../annotations_trainval2014/annotations/instances_val2014.json', 'r') as f:
-with open(annotation_file_path, 'r') as f:
-    lines = f.readlines()
-coco_anns = json.loads(lines[0])
 
-coco = COCO(caption_file_path)
+if not os.path.exists(data_path):
+    raise ValueError("data_path does not exist!")
+else:
+    file_names = os.listdir(data_path)
 
-img_ids = coco.getImgIds()
-# sample image ids
-sampled_img_ids = random.sample(img_ids, num_samples)
+# Initialize an empty dictionary to store the paths
+file_dict = {}
 
-# print("sampled_img_ids", sampled_img_ids)
+# Go through each file name to pair .txt files with corresponding .jpg files
+for file_name in file_names:
 
-img_files = []
-for cur_img_id in sampled_img_ids:
+    if file_name.endswith('.txt'):
+        # Construct the full path for the .txt file
+        txt_file_path = os.path.join(data_path, file_name)
+        
+        # Construct the corresponding .jpg file name
+        img_file_name = file_name.replace('.txt', '.jpg')
+        
+        # Check if the corresponding .jpg file exists in the list
+        if img_file_name in file_names:
+            # Construct the full path for the .jpg file
+            jpg_file_path = os.path.join(data_path, img_file_name)
+            
+            # Add to the dictionary
+            file_dict[txt_file_path] = jpg_file_path
 
-    cur_img = coco.loadImgs(cur_img_id)[0]
-    cur_img_path = cur_img["file_name"]
-    img_files.append(cur_img_path)
+print("file_dict", file_dict)
 
-img_dict = {}
 
-categories = coco_anns["categories"]
-category_names = [c["name"] for c in categories]
-category_dict = {int(c["id"]): c["name"] for c in categories}
 
-for img_info in coco_anns["images"]:
-    img_dict[img_info["id"]] = {"name": img_info["file_name"], "anns": []}
 
-for ann_info in coco_anns["annotations"]:
-    img_dict[ann_info["image_id"]]["anns"].append(
-        category_dict[ann_info["category_id"]]
-    )
-
-base_dir  = output_dir + args.model
+base_dir  = output_dir + "/" + args.model
 if not os.path.exists(base_dir):
     os.makedirs(base_dir)
 
 halc_params = {"context_domain": "upper", "contrast_weight": 0.05, "context_window": 4, "expand_ratio": expand_ratio, "beam_size": num_beams, "k_candidate_num": args.k_candidate_num, "LVLM_backbone": model_name}
 halc_assistant_helper = halc_assistant(model, vis_processor=vis_processor, device=device, halc_params=halc_params, max_new_tokens=max_new_tokens)
 
-offlight = True
 
-for img_id in tqdm(range(len(img_files))):
+for txt_path in tqdm(file_dict):
 
-    img_file = img_files[img_id]
-    img_id = int(img_file.split(".jpg")[0][-6:])
-    # print("img_id", img_id)
-    # if img_id != 368581 and offlight:
-    #     continue
-    # offlight = False
 
-    img_info = img_dict[img_id]
-    assert img_info["name"] == img_file
-    img_anns = set(img_info["anns"])
+    # print("txt_path", txt_path)
+    img_path = file_dict[txt_path]
+
+    with open(txt_path, 'r') as file:
+        text_contents = file.read().strip()
+
     img_save = {}
-    img_save["image_id"] = img_id
+    img_save["ground_truth"] = text_contents
+    img_save["image_id"] = int(img_path.split("/")[-1].split(".")[0])
 
-    image_path = args.data_path + img_file
+    image_path = img_path
     raw_image = Image.open(image_path).convert("RGB")
     image = vis_processors["eval"](raw_image).unsqueeze(0)
     image = image.to(device)
     # print("image device", norm(image).device)
 
-    qu = "Please describe this image in detail."
-    # qu = "Generate a one sentence caption of the image."
-    # qu = "Generate a short caption of the image."
+    if "?" in text_contents:
+        qu = text_contents.split("?")[0] + "?"
+    else:
+        qu = text_contents.split(".")[0] + "."
 
     template = INSTRUCTION_TEMPLATE[args.model]
     qu = template.replace("<question>", qu)
@@ -408,19 +402,8 @@ for img_id in tqdm(range(len(img_files))):
             )
 
     output_text = out[0]
-    print("decoder output text", output_text)
-    if post_correction == "woodpecker":
-        decoding_strategy = "woodpecker"
-        sample = {
-        'img_path': image_path,
-        'input_desc': output_text,
-        'query': qu,
-        }
 
-        corrected_sample = corrector.correct(sample)
-        output_text = corrected_sample['output']
-        print("corrected output_text", output_text)
-        input()
+    print("decoder output text", output_text)
 
 
     img_save["caption"] = output_text
@@ -431,88 +414,8 @@ for img_id in tqdm(range(len(img_files))):
 
 
     # dump metric file
-    generated_captions_path = os.path.join(base_dir, f"{model_name}_{decoding_strategy}_beams_{num_beams}_k_{k_candidate_num}_{dataset_name}_expand_ratio_{expand_ratio}_seed_{seed}_max_tokens_{max_new_tokens}_samples_{num_samples}_generated_captions.json")
+    generated_captions_path = os.path.join(base_dir, f"{model_name}_{decoding_strategy}_beams_{num_beams}_k_{k_candidate_num}_{dataset_name}_expand_ratio_{expand_ratio}_seed_{seed}_max_tokens_{max_new_tokens}_samples_{num_samples}_generated_answers_MME.json")
     with open(generated_captions_path, "a") as f:
         json.dump(img_save, f)
         f.write('\n')
-
-
-##################  EVALUATION  #####################
-
-loaded_json = []
-with open(generated_captions_path, 'r') as f:
-    lines = f.readlines()
-    for line in lines:
-        loaded_json.append(json.loads(line))
-
-# eliminate the items in loaded_json with the same key:
-for i in range(len(loaded_json)):
-    for j in range(i+1, len(loaded_json)):
-        if loaded_json[i]['image_id'] == loaded_json[j]['image_id']:
-            loaded_json.pop(j)
-            break
-
-print("loaded_json:", len(loaded_json))
-
-# construct output file as input to CHAIR evaluation
-# output format follows https://github.com/ruotianluo/self-critical.pytorch
-formulated_output_dict = {}
-# overall result
-all_overall_scores = defaultdict(list)
-# imgToEval per image result
-img_to_eval_dict = {}
-# to save memory, load 100 captions at a time
-for start_idx in tqdm(
-    range(0, len(loaded_json), 100), desc="Generating CHAIR Input"
-):
-    # define the current iteration end index
-    end_idx = min(start_idx + 100, len(loaded_json))
-    coco_res = coco.loadRes(
-        loaded_json[start_idx:end_idx],
-    )
-    coco_eval = COCOEvalCap(coco, coco_res)
-    coco_eval.params["image_id"] = coco_res.getImgIds()
-    coco_eval.evaluate()
-
-    # keep track of the overall scores
-    for metric, score in coco_eval.eval.items():
-        all_overall_scores[metric].append(score)
-
-    # imgToEval per image result
-    for i, cur_img_id in enumerate(coco_res.getImgIds()):
-        cur_eval_dict = coco_eval.evalImgs[i]
-        # add caption to the eval dict
-        cur_eval_dict["caption"] = coco_res.imgToAnns[cur_img_id][0]["caption"]
-        img_to_eval_dict[cur_img_id] = cur_eval_dict
-
-# overall result
-overall_dict = {}
-for metric, score in all_overall_scores.items():
-    overall_dict[metric] = np.mean(score)
-formulated_output_dict["overall"] = overall_dict
-formulated_output_dict["imgToEval"] = img_to_eval_dict
-
-# sanity check the results
-if len(img_to_eval_dict) != num_samples:
-    raise Exception(
-        f"Resulting output_dict has number of images {len(img_to_eval_dict)} different from num_samples {num_samples}"
-    )
-
-if verbosity:
-    print(
-        f"\nGenerated {len(img_to_eval_dict)} samples results in CHAIR format."
-    )
-
-# save the formulated output dict
-formulated_output_path = os.path.join(
-    base_dir,
-    f"{model_name}_{decoding_strategy}_beams_{num_beams}_k_{k_candidate_num}_{dataset_name}_expand_ratio_{expand_ratio}_seed_{seed}_max_tokens_{max_new_tokens}_samples_{num_samples}_chair.json",
-)
-
-with open(formulated_output_path, "w") as f:
-    json.dump(formulated_output_dict, f)
-if verbosity:
-    print(
-        f"\nFormulated output matching CHAIR input format saved to {base_dir}."
-    )
 

@@ -90,6 +90,8 @@ class halc_assistant:
     def check_word_complete(self, input_id):
         input_id = input_id.cpu().numpy().tolist()
         # print("input_id", input_id)
+        if input_id[0][0] == -1:
+            return True
         final_tokens = self.token_vocab[input_id[0][0]]
         # print("final_tokens", final_tokens)
         if "▁" in final_tokens or "." in final_tokens or input_id[0][0] == 2:
@@ -100,7 +102,17 @@ class halc_assistant:
         return last_word_flag
 
     def get_last_word(self, input_ids):
+        # if -1 in input_ids: delete them
+
+        # while True:
+        #     try:
         output_text = self.tokenizer.decode(input_ids, skip_special_tokens=True)
+            #     break
+            # except:
+            #     input_ids = input_ids[:-1]
+                
+            # except:
+            #     output_text = " "
         last_word_flag = True
         last_word = output_text.split(" ")[-1]
 
@@ -277,8 +289,14 @@ class halc_assistant:
 
             # Load the original image
             image_path = sample["img_path"]
-            self.original_image = Image.open(image_path)
-            original_image = self.original_image.convert("RGB")
+            while True:
+                try:
+                    self.original_image = Image.open(image_path)
+                    original_image = self.original_image.convert("RGB")
+                    break
+                except:
+                    print("halc load image failed")
+                    continue
 
             # Crop images to the expanded bounding boxes
             cropped_images = []

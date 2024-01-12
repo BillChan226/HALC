@@ -92,7 +92,7 @@ Besides, it needs you to prepare the following checkpoints of 7B base models:
 
 | Argument             | Example             | Description   |
 | -------------------- | ------------------- | ------------- |
-| `--k-candidate-num`      | `4` | Number of generative focal fields for local search. Default: 2. |
+| `--k-candidate-num`      | `4` | Number of generative focal fields for local search. Default: 4. |
 | `--expand-ratio`      | `0.6` | The growing factor of focal fields. Default: 0.6. |
 
 #### Arguments for OPERA

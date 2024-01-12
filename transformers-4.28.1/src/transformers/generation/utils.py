@@ -1683,7 +1683,6 @@ class GenerationMixin:
         elif is_beam_gen_mode and dola_decoding:
             print("\033[41m!!!!! DOLA-BEAM Decoding !!!!!!\033[0m")
             # 11. run dola beam search
-            print("\033[41m!!!!! DoLA-Beam Decoding !!!!!!\033[0m")
             if generation_config.num_return_sequences > generation_config.num_beams:
                 raise ValueError("`num_return_sequences` has to be smaller or equal to `num_beams`.")
 
@@ -5187,7 +5186,7 @@ class GenerationMixin:
                 # prepare model inputs
                 model_inputs = self.prepare_inputs_for_generation(beam_input_ids[bs], **beam_model_kwargs[bs])
 
-                
+
                 # forward pass to get next token
                 dict_outputs, outputs = self(
                     **model_inputs,
@@ -5196,6 +5195,7 @@ class GenerationMixin:
                     output_hidden_states=output_hidden_states,
                     early_exit_layers=early_exit_layers,
                 )
+
 
                 beam_outputs[bs] = outputs
                 beam_dict_outputs[bs] = dict_outputs
@@ -5415,7 +5415,7 @@ class GenerationMixin:
             for bs in range(beam_size):
                 if beam_candidate_token_to_append[bs] != None:
                     for candidate_token_to_append in beam_candidate_token_to_append[bs]:
-                        if candidate_token_to_append != None:
+                        if candidate_token_to_append != None and beam_finished[bs] == False:
                             candidate_intermediate_token_lists_array.append(torch.cat([beam_intermediate_token_lists[bs], candidate_token_to_append], dim=-1))
                             candidate_token_to_append_lists.append(candidate_token_to_append)
                         else:
@@ -5576,7 +5576,7 @@ class GenerationMixin:
                 rpt_pattern_2 = False
                 rpt_pattern_3 = False
                 
-                if self.halc_assistant.model_backbone == "llava-1.5": # only activate this pattern for LLAVA-1.5
+                if self.halc_assistant.model_backbone == "llava-1.5" or self.halc_assistant.model_backbone == "instructblip": # only activate this pattern for LLAVA-1.5
 
                     if len(beam_input_ids[bs][0]) > 1:
                         rpt_pattern_1 = beam_input_ids[bs][0][-1] == beam_input_ids[bs][0][-2]
@@ -5592,7 +5592,7 @@ class GenerationMixin:
                 else:
                     repetition_counter = 0
 
-                if beam_input_ids[bs][0][-1].cpu().numpy().tolist() == eos_token_id[0] or valid_length_max + 2 <= len(beam_input_ids[bs][0]) or repetition_counter > 3:
+                if beam_input_ids[bs][0][-1].cpu().numpy().tolist() == eos_token_id[0] or valid_length_max + 2 <= len(beam_input_ids[bs][0]) or repetition_counter > 0 or -1 in beam_last_tokens[bs]:
                     # beam_intermediate_token_lists[bs] = beam_input_ids[bs]
                     beam_intermediate_token_lists[bs] = deep_copy_tensor_structure(beam_input_ids[bs])
                     # input(f"{bs} finished\n")

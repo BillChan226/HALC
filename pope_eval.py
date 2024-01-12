@@ -178,7 +178,8 @@ def parse_args():
         type=str,
         # default="Is there a {} in the image? ",
         # default="Is there a XXX in the image? There is no XXX in the image, so the answer is No. Is there a YYY in the image? There is 2 YYY in the image, so the answer is Yes. Is there a {} in the image? ",
-        default="Is there a {} in the image? Answer 'Yes' or 'No' at the end of your response.",
+        # default="Is there a {} in the image? Answer 'Yes' or 'No' at the end of your response.",
+        default="Is there a {} in the image?",  # for llava-1.5
         help="Prompt template. Default is 'Is there a {} in the image?'.",
     )
 
@@ -225,6 +226,8 @@ def print_acc(pred_list, label_list):
     print("Recall: {}".format(recall))
     print("F1 score: {}".format(f1))
     print("Yes ratio: {}".format(yes_ratio))
+
+    return acc, precision, recall, f1
 
 
 def recorder(out, pred_list):
@@ -584,7 +587,7 @@ def main():
         # dump metric file
         generated_captions_path = os.path.join(
             base_dir,
-            f"{model_name}_{decoding_strategy}_beams_{num_beams}_k_{k_candidate_num}_{dataset_name}_expand_ratio_{expand_ratio}_seed_{seed}_max_tokens_{max_new_tokens}_samples_{num_images}_generated_captions.json",
+            f"{model_name}_{decoding_strategy}_beams_{num_beams}_k_{k_candidate_num}_{dataset_name}_expand_ratio_{expand_ratio}_seed_{seed}_max_tokens_{max_new_tokens}_samples_{num_images}_pope_{pope_type}_generated_captions.json",
         )
         with open(generated_captions_path, "a") as f:
             json.dump(cur_generated_answer, f)
@@ -596,9 +599,26 @@ def main():
         )
     )
     if len(pred_list) != 0:
-        print_acc(pred_list, label_list)
+        acc, precision, recall, f1 = print_acc(pred_list, label_list)
     if len(pred_list_s) != 0:
-        print_acc(pred_list_s, label_list)
+        acc, precision, recall, f1 = print_acc(pred_list_s, label_list)
+
+    result = {
+        "Accuracy": acc,
+        "Precision": precision,
+        "Recall": recall,
+        "F1 Score": f1,
+    }
+
+    metrics_path = os.path.join(
+        base_dir,
+        f"{model_name}_{decoding_strategy}_beams_{num_beams}_k_{k_candidate_num}_{dataset_name}_expand_ratio_{expand_ratio}_seed_{seed}_max_tokens_{max_new_tokens}_samples_{num_images}_pope_{pope_type}_results.json",
+    )
+    with open(metrics_path, "w") as f:
+        json.dump(result, f)
+        f.write("\n")
+
+
 
 
 if __name__ == "__main__":

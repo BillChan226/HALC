@@ -1,8 +1,2 @@
 Backbone,Decoder,Ratio,Beam,K,Seed,SPICE,METEOR,CIDEr,CHAIRs,CHAIRi,Max Tokens,Num of Samples
-instructblip,halc-beam,0.6,3,4,1,20.2,22.4,0.0,33.8,12.9,64,500
-instructblip,halc-beam,0.6,3,4,2,20.4,22.3,0.0,37.4,13.1,64,500
-instructblip,halc-beam,0.6,3,4,4,20.0,21.9,0.0,38.6,14.4,64,500
-instructblip,opera-beam,0.6,3,0,1,22.4,24.3,0.2,27.7,9.6,64,500
-instructblip,opera-beam,0.6,3,0,2,22.3,24.6,0.1,28.5,9.7,64,500
-instructblip,opera-beam,0.6,3,0,4,21.6,23.5,0.3,24.9,8.4,64,500
-instructblip,vcd,0.6,1,0,4,19.3,21.3,0.0,31.7,12.1,64,500
+llava-1.5,halc-beam,0.6,3,4,4,19.7,23.8,7.9,22.9,8.9,64,500

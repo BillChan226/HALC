@@ -5575,6 +5575,7 @@ class GenerationMixin:
                 rpt_pattern_1 = False
                 rpt_pattern_2 = False
                 rpt_pattern_3 = False
+                rpt_pattern_4 = False
                 
                 if self.halc_assistant.model_backbone == "llava-1.5" or self.halc_assistant.model_backbone == "instructblip": # only activate this pattern for LLAVA-1.5
 
@@ -5584,9 +5585,11 @@ class GenerationMixin:
                         rpt_pattern_2 = beam_input_ids[bs][0][-1] == beam_input_ids[bs][0][-3]
                     if len(beam_input_ids[bs][0]) > 3:
                         rpt_pattern_3 = beam_input_ids[bs][0][-1] == beam_input_ids[bs][0][-4]
+                    if len(beam_input_ids[bs][0]) > 4:
+                        rpt_pattern_4 = beam_input_ids[bs][0][-1] == beam_input_ids[bs][0][-5]
 
                     #### REPETITION PATTERN DETECTION ######
-                    if rpt_pattern_1 or rpt_pattern_2 or rpt_pattern_3:
+                    if rpt_pattern_1 or rpt_pattern_2 or rpt_pattern_3 or rpt_pattern_4:
                         repetition_flag = True
                         repetition_counter += 1
                 else:

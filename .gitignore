@@ -3,6 +3,7 @@
 cache_dir/
 generated_captions/
 paper_result/
+paper_result_owl/
 MME_benchmark/
 
 # Byte-compiled / optimized / DLL files

@@ -4989,7 +4989,9 @@ class GenerationMixin:
             # print("beam_last_tokens", beam_last_tokens)
 
         # RESET HALC STATE
-        self.halc_assistant.original_image = None
+        # self.halc_assistant.original_image = None
+        self.halc_assistant.reset_info()
+
 
         try:
             del (beam_intermediate_token_lists, beam_input_ids, beam_outputs, beam_dict_outputs, 

@@ -39,11 +39,11 @@ class halc_assistant:
         model_args = SimpleNamespace(**args_dict)
         self.device = device
         halc_detector = halc_params["detector"]
-        if halc_detector == "groundingdino":
+        if halc_detector == "dino":
             self.detector = Detector(model_args)
         elif halc_detector == "owlv2":
-            owlv2_processor = Owlv2Processor.from_pretrained("google/owlv2-base-patch16-ensemble")
-            owlv2_model = Owlv2ForObjectDetection.from_pretrained("google/owlv2-base-patch16-ensemble")
+            self.owlv2_processor = Owlv2Processor.from_pretrained("google/owlv2-base-patch16-ensemble")
+            self.owlv2_model = Owlv2ForObjectDetection.from_pretrained("google/owlv2-base-patch16-ensemble")
         else:
             raise ValueError("Invalid detector!")
 
@@ -53,7 +53,8 @@ class halc_assistant:
         self.tagging = spacy.load("en_core_web_sm")
         self.halc_params = halc_params
         self.k_candidate_num = halc_params["k_candidate_num"]
-        self.original_image = None
+        # self.original_image = None
+        self.grounded_check = False
         self.max_new_tokens = max_new_tokens
 
         self.model_backbone = halc_params["LVLM_backbone"]
@@ -95,7 +96,15 @@ class halc_assistant:
     def update_input(self, img_path, input_prompt):
         # print("img_path", img_path)
         self.detector_dict = {"img_path": img_path, "box_threshold": 0.1}
+        self.image_to_ground = Image.open(img_path)
         self.prompt = input_prompt
+
+    def reset_info(self):
+        self.detector_dict = None
+        self.image_to_ground = None
+        self.prompt = None
+        self.original_image = None
+        self.grounded_check = False
 
     def check_word_complete(self, input_id):
         input_id = input_id.cpu().numpy().tolist()
@@ -112,17 +121,9 @@ class halc_assistant:
         return last_word_flag
 
     def get_last_word(self, input_ids):
-        # if -1 in input_ids: delete them
 
-        # while True:
-        #     try:
         output_text = self.tokenizer.decode(input_ids, skip_special_tokens=True)
-            #     break
-            # except:
-            #     input_ids = input_ids[:-1]
-                
-            # except:
-            #     output_text = " "
+
         last_word_flag = True
         last_word = output_text.split(" ")[-1]
 
@@ -223,12 +224,39 @@ class halc_assistant:
         if detect_info["pos"] in valid_list:
             detect_info["status"] = "acctivated"
             self.detector_dict["named_entity"] = [entity]
-            sample = self.detector.detect_objects(self.detector_dict)
 
-            # print("Detection: ", sample)
-            # Assuming the first detected bounding box is the one related to the entity
+            if self.halc_params["detector"] == "dino":
+                sample = self.detector.detect_objects(self.detector_dict)
 
-            original_bbox = sample["entity_info"][entity]["bbox"]
+                # print("Detection: ", sample)
+                # Assuming the first detected bounding box is the one related to the entity
+
+                original_bbox = sample["entity_info"][entity]["bbox"]
+
+            elif self.halc_params["detector"] == "owlv2":
+                # print("entity", entity)
+                img_path = self.detector_dict["img_path"]
+                # image_to_ground = Image.open(img_path)
+                entity_to_ground = [self.detector_dict["named_entity"]]
+                # entity_to_ground = [["a man hold a clock"]]
+                # print("texts", entity_to_ground)
+                # print("self.detector_dict", self.detector_dict)
+                owlv2_inputs = self.owlv2_processor(text=entity_to_ground, images=self.image_to_ground, return_tensors="pt")
+                owlv2_outputs = self.owlv2_model(**owlv2_inputs)
+                # Target image sizes (height, width) to rescale box predictions [batch_size, 2]
+                # target_sizes = torch.Tensor([self.image_to_ground.size[::-1]])
+                # Convert outputs (bounding boxes and class logits) to Pascal VOC Format (xmin, ymin, xmax, ymax)
+                # results = self.owlv2_processor.post_process_object_detection(outputs=owlv2_outputs, target_sizes=target_sizes, threshold=0.1)
+        
+                results = self.owlv2_processor.post_process_object_detection(outputs=owlv2_outputs, threshold=0.05)
+
+                # print("results: ", results)
+                original_bbox = results[0]["boxes"].cpu().numpy().tolist()
+                
+                # input()
+            # print("original_bbox", original_bbox)
+            # input()
+
             if len(original_bbox) > 2:
                 detect_info["status"] = "invalid"
                 embeds_list = None
@@ -243,7 +271,11 @@ class halc_assistant:
                 ]
 
                 # get the index of the smallest bbox
-                target_bbox_index = area_list.index(min(area_list))
+                # target_bbox_index = area_list.index(min(area_list))
+                # target_bbox_index = area_list.index(max(area_list))
+                # get the middle of the area_list
+                # you have to sort area_list first and then get the middle of the area_list
+                target_bbox_index = sorted(range(len(area_list)), key=lambda k: area_list[k])[len(area_list)//2]
                 target_bbox = original_bbox[target_bbox_index]
 
             # target_bbox = original_bbox[0]
@@ -298,19 +330,24 @@ class halc_assistant:
                     )
 
             # Load the original image
-            image_path = sample["img_path"]
-            while True:
-                try:
-                    self.original_image = Image.open(image_path)
-                    original_image = self.original_image.convert("RGB")
-                    break
-                except:
-                    print("halc load image failed")
-                    continue
+            # image_path = sample["img_path"]
+            # while True:
+            #     try:
+            #         self.original_image = Image.open(image_path)
+            #         original_image = self.original_image.convert("RGB")
+            #         break
+            #     except:
+            #         print("halc load image failed")
+            #         continue
+
+            self.grounded_check = True
+
+            original_image = self.image_to_ground.convert("RGB")
 
             # Crop images to the expanded bounding boxes
             cropped_images = []
             for bbox in expanded_bboxes:
+                # print("bbox", bbox)
                 # Calculate the absolute coordinates of the bounding box
                 im_width, im_height = original_image.size
                 left = bbox[0] * im_width
@@ -325,10 +362,11 @@ class halc_assistant:
             # # Save the cropped images
             # saved_paths = []
             # for i, cropped_img in enumerate(cropped_images, start=1):
-            #     save_path = f"./context_density/mnt/cropped_level_{i}.png"
+            #     save_path = f"/home/czr/HaLC/decoder_zoo/HaLC/cache_dir/cropped_level_{i}.png"
             #     cropped_img.save(save_path)
             #     saved_paths.append(save_path)
 
+            # input()
             # get decoding for each context window
 
             embeds_list = []
@@ -476,8 +514,10 @@ class halc_assistant:
 
             # Load the original image
             image_path = sample["img_path"]
-            self.original_image = Image.open(image_path)
-            original_image = self.original_image.convert("RGB")
+            # self.original_image = Image.open(image_path)
+            self.grounded_check = True
+            # original_image = self.original_image.convert("RGB")
+            original_image = self.image_to_ground.convert("RGB")
 
             im_width, im_height = original_image.size
 
@@ -996,7 +1036,7 @@ class halc_assistant:
         if (
             candidate_intermediate_token_lists_array
             == [None] * len(candidate_intermediate_token_lists_array)
-            or self.original_image == None
+            or self.grounded_check == False
         ):
             # print("identical candidate lists: ", candidate_intermediate_token_lists_array)
             random.seed(8)
@@ -1025,7 +1065,8 @@ class halc_assistant:
                     )
                 )
 
-            original_image = self.original_image
+            # original_image = self.original_image
+            original_image = self.image_to_ground
 
             # print("candidate_texts", candidate_texts)
             clip_inputs = self.clip_processor(

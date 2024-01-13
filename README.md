@@ -41,7 +41,7 @@ This repository provides the official PyTorch implementation of the following pa
 |  Post-hoc |  Minigpt4-v2 | Instructblip | LLaVA-1.5 |
 |----------|-----------|-------------|-----|
 | [Woodpecker](https://arxiv.org/abs/2310.16045)      | :white_check_mark: | :white_check_mark: | :white_check_mark: |
-| [LURE](https://arxiv.org/abs/2310.00754)      | :x: | :x: | :x: |
+| [LURE](https://arxiv.org/abs/2310.00754)      | :white_check_mark: | :white_check_mark: | :white_check_mark: |
 
 ## :hammer_and_wrench: Installation
 

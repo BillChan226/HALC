@@ -389,6 +389,25 @@ for idx, img_id in tqdm(enumerate(range(len(img_files)))):
     qu = template.replace("<question>", qu)
 
 
+    # lm_early_exit_layers = [
+    #     0,
+    #     2,
+    #     4,
+    #     6,
+    #     8,
+    #     10,
+    #     12,
+    #     14,
+    #     16,
+    #     18,
+    #     20,
+    #     22,
+    #     24,
+    #     26,
+    #     28,
+    #     30,
+    #     32,
+    # ]
     lm_early_exit_layers = [
         0,
         2,
@@ -398,15 +417,7 @@ for idx, img_id in tqdm(enumerate(range(len(img_files)))):
         10,
         12,
         14,
-        16,
-        18,
-        20,
-        22,
-        24,
-        26,
-        28,
         30,
-        32,
     ]
 
     mature_layer = lm_early_exit_layers[-1]

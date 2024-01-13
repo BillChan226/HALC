@@ -151,6 +151,12 @@ parser.add_argument(
     default=500,
     help="Noise step for VCD."
 )
+parser.add_argument(
+    "--detector",
+    type=str,
+    default="dino",
+    help="Detector type. Default is 'groundingdino'.",
+)
 
 args = parser.parse_known_args()[0]
 
@@ -168,6 +174,7 @@ device = torch.device(f"cuda:{int(args.gpu_id)}") if torch.cuda.is_available() e
 
 verbosity = args.verbosity
 k_candidate_num = args.k_candidate_num
+detector_type = args.detector
 num_samples = args.num_samples
 dataset_name = args.dataset_name
 data_path = args.data_path
@@ -206,9 +213,11 @@ vis_processor = registry.get_processor_class(vis_processor_cfg.name).from_config
 
 valid_decoding_strategies = ["greedy", "dola", "halc-dola", "halc-greedy", "halc-beam", "opera-beam", "vcd"]
 valid_post_editing_strategies = ["lure", "woodpecker"]
+valid_detector = ["dino", "owlv2"]
 
 assert decoding_strategy in valid_decoding_strategies, f"Invalid decoding strategy: {decoding_strategy}, should be in {valid_decoding_strategies}"
 assert post_correction in valid_post_editing_strategies or post_correction is None, f"Invalid post correction strategy: {post_correction}, should be in {valid_post_editing_strategies}"
+assert detector_type in valid_detector, f"Invalid detector type: {detector_type}, should be in {valid_detector}"
 
 decoding_strategy = decoding_strategy
 opera_decoding = False
@@ -303,7 +312,7 @@ base_dir  = output_dir + args.model
 if not os.path.exists(base_dir):
     os.makedirs(base_dir)
 
-halc_params = {"context_domain": "upper", "contrast_weight": 0.05, "context_window": 4, "expand_ratio": expand_ratio, "beam_size": num_beams, "k_candidate_num": args.k_candidate_num, "LVLM_backbone": model_name}
+halc_params = {"context_domain": "upper", "contrast_weight": 0.05, "context_window": 4, "expand_ratio": expand_ratio, "beam_size": num_beams, "k_candidate_num": args.k_candidate_num, "LVLM_backbone": model_name, "detector": detector_type}
 halc_assistant_helper = halc_assistant(model, vis_processor=vis_processor, device=device, halc_params=halc_params, max_new_tokens=max_new_tokens)
 
 offlight = True
@@ -330,6 +339,8 @@ for img_id in tqdm(range(len(img_files))):
     # print("image device", norm(image).device)
 
     qu = "Please describe this image in detail."
+    # qu = "Please provide a very detailed description of the image."
+    # qu = "Please provide a very long and detailed description of the image."
     # qu = "Generate a one sentence caption of the image."
     # qu = "Generate a short caption of the image."
 
@@ -337,6 +348,25 @@ for img_id in tqdm(range(len(img_files))):
     qu = template.replace("<question>", qu)
 
 
+    # lm_early_exit_layers = [
+    #     0,
+    #     2,
+    #     4,
+    #     6,
+    #     8,
+    #     10,
+    #     12,
+    #     14,
+    #     16,
+    #     18,
+    #     20,
+    #     22,
+    #     24,
+    #     26,
+    #     28,
+    #     30,
+    #     32,
+    # ]
     lm_early_exit_layers = [
         0,
         2,
@@ -346,14 +376,6 @@ for img_id in tqdm(range(len(img_files))):
         10,
         12,
         14,
-        16,
-        18,
-        20,
-        22,
-        24,
-        26,
-        28,
-        30,
         32,
     ]
 
@@ -506,7 +528,7 @@ if verbosity:
 # save the formulated output dict
 formulated_output_path = os.path.join(
     base_dir,
-    f"{model_name}_{decoding_strategy}_beams_{num_beams}_k_{k_candidate_num}_{dataset_name}_expand_ratio_{expand_ratio}_seed_{seed}_max_tokens_{max_new_tokens}_samples_{num_samples}_chair.json",
+    f"{model_name}_{decoding_strategy}_{detector_type}_beams_{num_beams}_k_{k_candidate_num}_{dataset_name}_expand_ratio_{expand_ratio}_seed_{seed}_max_tokens_{max_new_tokens}_samples_{num_samples}_chair.json",
 )
 
 with open(formulated_output_path, "w") as f:

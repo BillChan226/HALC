@@ -382,14 +382,20 @@ class halc_assistant:
     def get_model_embeds(self, image):
         if self.model_backbone == "minigpt4":
             max_new_tokens = self.max_new_tokens
-            max_length = 2000
+            max_length = 512
 
             image = self.vis_processor(image).unsqueeze(0).to(self.device)
             image_emb, _ = self.model.encode_img(image, 38)
 
-            prompt = self.prompt[0]
+            # prompt = self.prompt[0]
+            prompt = self.prompt
             # print("prompt: ", prompt)
+            # try:
             embs = self.model.get_context_emb(prompt, [image_emb])
+            # except:
+            #     print("image", np.shape(image))
+            #     print("prompt", prompt)
+            #     print("image_emb", np.shape(image_emb))
             current_max_len = embs.shape[1] + max_new_tokens
 
             if current_max_len - max_length > 0:

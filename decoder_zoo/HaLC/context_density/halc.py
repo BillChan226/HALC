@@ -9,6 +9,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import json
 from decoder_zoo.HaLC.context_density.detector import Detector
+from transformers import Owlv2Processor, Owlv2ForObjectDetection
 from types import SimpleNamespace
 from PIL import Image, ImageDraw
 import spacy
@@ -37,9 +38,18 @@ class halc_assistant:
         }
         model_args = SimpleNamespace(**args_dict)
         self.device = device
-        self.detector = Detector(model_args)
+        halc_detector = halc_params["detector"]
+        if halc_detector == "groundingdino":
+            self.detector = Detector(model_args)
+        elif halc_detector == "owlv2":
+            owlv2_processor = Owlv2Processor.from_pretrained("google/owlv2-base-patch16-ensemble")
+            owlv2_model = Owlv2ForObjectDetection.from_pretrained("google/owlv2-base-patch16-ensemble")
+        else:
+            raise ValueError("Invalid detector!")
+
         self.vis_processor = vis_processor
         self.model = model
+        
         self.tagging = spacy.load("en_core_web_sm")
         self.halc_params = halc_params
         self.k_candidate_num = halc_params["k_candidate_num"]

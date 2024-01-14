@@ -41,7 +41,6 @@ def main():
         "--data_dir",
         type=str,
         default="/home/czr/contrast_decoding_LVLMs/eval_dataset/val2014",
-
         help="Test data directory. Default is 'eval_dataset/val2014'.",
     )
     parser.add_argument(
@@ -119,7 +118,7 @@ def main():
             json.dump(cap_dict, f, indent=4)
         # print metric
         metric_string_ce = chair.print_metrics(cap_dict, quiet=False)
-        
+
         # save results
         result_path = os.path.join(
             output_dir,

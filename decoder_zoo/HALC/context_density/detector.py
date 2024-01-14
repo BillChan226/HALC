@@ -18,11 +18,7 @@ from decoder_zoo.GroundingDINO.groundingdino.util.inference import (
 )
 
 # use GroundingDINO from pip install
-# from groundingdino.util.inference import (
-#     load_model,
-#     load_image,
-#     predict,
-# )
+# from groundingdino.util.inference import load_model, load_image, predict
 from PIL import Image
 import spacy
 

@@ -1,25 +1,23 @@
-import argparse
-import os, sys
 import random
-import csv
 import numpy as np
 import torch
-import torch.backends.cudnn as cudnn
-import seaborn as sns
-import matplotlib.pyplot as plt
 import json
 from decoder_zoo.HALC.context_density.detector import Detector
-
-# from transformers import Owlv2Processor, Owlv2ForObjectDetection
+from transformers import Owlv2Processor, Owlv2ForObjectDetection
 from types import SimpleNamespace
 from PIL import Image, ImageDraw
 import spacy
 from torch.nn import functional as F
 from transformers import CLIPProcessor, CLIPModel
 import random
-from transformers import AutoTokenizer, CLIPConfig, CLIPTextConfig, CLIPVisionConfig
+from transformers import CLIPConfig, CLIPTextConfig, CLIPVisionConfig
 from PIL import Image, ImageFilter
-from mplug_owl2.mm_utils import process_images, tokenizer_image_token, get_model_name_from_path, KeywordsStoppingCriteria
+from mplug_owl2.mm_utils import (
+    process_images,
+    tokenizer_image_token,
+    get_model_name_from_path,
+    KeywordsStoppingCriteria,
+)
 
 
 class halc_assistant:
@@ -33,10 +31,8 @@ class halc_assistant:
     ):
         # initialize detector
         args_dict = {
-            # "detector_config": "decoder_zoo/GroundingDINO/groundingdino/config/GroundingDINO_SwinT_OGC.py",
-            "detector_config": "./eval_configs/GroundingDINO_SwinT_OGC.py",
+            "detector_config": "decoder_zoo/GroundingDINO/groundingdino/config/GroundingDINO_SwinT_OGC.py",
             "detector_model_path": "decoder_zoo/GroundingDINO/weights/groundingdino_swint_ogc.pth",
-            # "detector_model_path": "./model_checkpoints/groundingdino_swint_ogc.pth",
             "cache_dir": "decoder_zoo/HALC/cache_dir",
             "device": device,
         }
@@ -426,11 +422,13 @@ class halc_assistant:
             embs = self.vis_processor(image).unsqueeze(0).to(self.device)
         elif self.model_backbone == "mplug-owl2":
             # image_emb = self.model.prepare_inputs_labels_for_multimodal(input_ids, attention_mask, past_key_values, labels, image)
-            max_edge = max(image.size) # We recommand you to resize to squared image for BEST performance.
+            max_edge = max(
+                image.size
+            )  # We recommand you to resize to squared image for BEST performance.
             image = image.resize((max_edge, max_edge))
             image_tensor = process_images([image], self.model.image_processor)
             embs = image_tensor.to(self.device, dtype=torch.float16)
-            
+
         elif self.model_backbone == "instructblip":
             image = self.vis_processor(image).unsqueeze(0).to(self.device)
             image_emb, _ = self.model.encode_img(image, 38)
@@ -1036,7 +1034,6 @@ class halc_assistant:
         contrast_weight = self.halc_params["contrast_weight"]
 
         for layer_idx1, layer_idx2 in top_k_indices:
-            
             base_logits = context_logits_list[layer_idx1]
             final_logits = context_logits_list[layer_idx2]
 
@@ -1078,10 +1075,14 @@ class halc_assistant:
             ) in candidate_intermediate_token_lists_array:
                 # print("candidate_intermediate_token_lists[0]", candidate_intermediate_token_lists[0])
                 if (
-                    self.model_backbone == "minigpt4" or self.model_backbone == "instructblip"
+                    self.model_backbone == "minigpt4"
+                    or self.model_backbone == "instructblip"
                 ):
                     skip_token_length = 0
-                elif self.model_backbone == "llava-1.5" or self.model_backbone == "mplug-owl2":
+                elif (
+                    self.model_backbone == "llava-1.5"
+                    or self.model_backbone == "mplug-owl2"
+                ):
                     skip_token_length = skip_token_length
 
                     # print("tokens_to_text", tokens_to_text)

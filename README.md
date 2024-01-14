@@ -21,6 +21,7 @@ This repository provides the official PyTorch implementation of the following pa
 > [Jiawei Zhou](https://sites.harvard.edu/jzhou/)<sup>3</sup>
 >
 > <sup>1</sup>UNC-Chapel Hill, <sup>2</sup>University of Chicago, <sup>3</sup>Toyota Technological Institute at Chicago, <sup>4</sup>Massachusetts Institute of Technology <br>
+> <sub>*</sup> Equal contribution
 
 ## :partying_face: Features
 
@@ -52,19 +53,30 @@ git clone https://github.com/BillChan226/HALC.git
 cd HALC
 conda env create -f environment.yml
 conda activate halc
-
-python -m spacy download en_core_web_lg
-python -m spacy download en_core_web_md
-python -m spacy download en_core_web_sm
 ```
 
-We employ [Grounding DINO](https://github.com/IDEA-Research/GroundingDINO) as the external detector to bound hallucinatory objects. To download pre-trained model weights for DINO:
+We employ [Grounding DINO](https://github.com/IDEA-Research/GroundingDINO) as the external detector to bound hallucinatory objects. To install GroundingDINO with CUDA, we simplify the installation process, where you can:
 
 ```
+# set CUDA_HOME to the virtual environment halc
+export CUDA_HOME=$CONDA_PREFIX
+# install GroundingDINO
 cd decoder_zoo/GroundingDINO
-mkdir weights
-cd weights
+pip install -e .
+# go back to HALC root
+cd ../..
+```
+
+To download pre-trained model weights for DINO:
+
+```
+# default directory that contains the weights
+mkdir model_checkpoints
+cd model_checkpoints
+# download weights
 wget -q https://github.com/IDEA-Research/GroundingDINO/releases/download/v0.1.0-alpha/groundingdino_swint_ogc.pth
+# go back to HALC root
+cd ..
 ```
 
 ## :bee: LVLM Backbones

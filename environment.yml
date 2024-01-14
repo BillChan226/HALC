@@ -8,7 +8,7 @@ channels:
   - conda-forge
 dependencies:
   - python=3.9
-  - cudatoolkit=11.7
+  - cudatoolkit-dev=11.7
   - pip
   - spacy
   - spacy-model-en_core_web_sm=3.5.0
@@ -48,4 +48,3 @@ dependencies:
     - yapf
     - pycocotools
     - pycocoevalcap
-    - groundingdino-py==0.4.0

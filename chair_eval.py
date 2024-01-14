@@ -308,7 +308,7 @@ for ann_info in coco_anns["annotations"]:
         category_dict[ann_info["category_id"]]
     )
 
-base_dir  = output_dir + args.model
+base_dir = os.path.join(output_dir, "chair", args.model)
 if not os.path.exists(base_dir):
     os.makedirs(base_dir)
 

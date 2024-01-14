@@ -27,22 +27,22 @@ This repository provides the official PyTorch implementation of the following pa
 
 #### Currently supported online OH decoding methods
 
-|  Decoder |  [Minigpt4-v2](https://arxiv.org/abs/2304.10592) | [Instructblip](https://arxiv.org/abs/2305.06500) | [LLaVA-1.5](https://arxiv.org/abs/2310.03744) |
-|----------|-----------|-------------|-----|
-| Greedy*    | :white_check_mark: | :white_check_mark: | :white_check_mark: |
-| HALC*   | :white_check_mark: | :white_check_mark: | :white_check_mark: |
-| [OPERA-Beam](https://arxiv.org/abs/2311.17911)     | :white_check_mark: | :white_check_mark: | :white_check_mark: |
-| [VCD](https://arxiv.org/abs/2311.16922)      | :white_check_mark: | :white_check_mark: | :white_check_mark: |
-| [DoLa](https://arxiv.org/abs/2309.03883)*     | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+|  Decoder |  [Minigpt4-v2](https://arxiv.org/abs/2304.10592) | [Instructblip](https://arxiv.org/abs/2305.06500) | [LLaVA-1.5](https://arxiv.org/abs/2310.03744) | [mPLUG-OWL2](https://arxiv.org/abs/2311.04257) |
+|----------|-----------|-------------|-----|-----|
+| Greedy*    | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+| HALC*   | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+| [OPERA-Beam](https://arxiv.org/abs/2311.17911)     | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+| [VCD](https://arxiv.org/abs/2311.16922)      | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+| [DoLa](https://arxiv.org/abs/2309.03883)*     | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
 
 *: indicates the method supports beam search.
 
 #### Currently supported post-hoc methods
 
-|  Post-hoc |  Minigpt4-v2 | Instructblip | LLaVA-1.5 |
-|----------|-----------|-------------|-----|
-| [Woodpecker](https://arxiv.org/abs/2310.16045)      | :white_check_mark: | :white_check_mark: | :white_check_mark: |
-| [LURE](https://arxiv.org/abs/2310.00754)      | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+|  Post-hoc |  [Minigpt4-v2](https://arxiv.org/abs/2304.10592) | [Instructblip](https://arxiv.org/abs/2305.06500) | [LLaVA-1.5](https://arxiv.org/abs/2310.03744) | [mPLUG-OWL2](https://arxiv.org/abs/2311.04257) |
+|----------|-----------|-------------|-----|-----|
+| [Woodpecker](https://arxiv.org/abs/2310.16045)      | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+| [LURE](https://arxiv.org/abs/2310.00754)      | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
 
 ## :hammer_and_wrench: Installation
 
@@ -85,11 +85,13 @@ The following evaluation requires for MSCOCO 2014 dataset. Please download [here
 
 Besides, it needs you to prepare the following checkpoints of 7B base models:
 
-- Download [LLaVA-1.5 merged 7B model](https://huggingface.co/liuhaotian/llava-v1.5-7b) and specify it at [Line 14](https://github.com/shikiw/OPERA/blob/bf18aa9c409f28b31168b0f71ebf8457ae8063d5/eval_configs/llava-1.5_eval.yaml#L14) of `eval_configs/llava-1.5_eval.yaml`.
-- Download [LLaMA-2 7B model](https://huggingface.co/meta-llama/Llama-2-7b-chat-hf/tree/main) and specify it at [Line 15](minigpt4/configs/models/minigpt4_llama2.yaml#L15)
-- Download [Vicuna 7B v1.1 model](https://github.com/lm-sys/FastChat) and specify it at [Line 25](https://github.com/shikiw/OPERA/blob/bf18aa9c409f28b31168b0f71ebf8457ae8063d5/minigpt4/configs/models/blip2_instruct_vicuna7b.yaml#L25) of `minigpt4/configs/models/blip2_instruct_vicuna7b.yaml`.
-- Download [Vicuna 7B v0 model](https://huggingface.co/Vision-CAIR/vicuna-7b/tree/main) and specify it at [Line 18](https://github.com/shikiw/OPERA/blob/bf18aa9c409f28b31168b0f71ebf8457ae8063d5/minigpt4/configs/models/minigpt4_vicuna0.yaml#L18) of `minigpt4/configs/models/minigpt4_vicuna0.yaml`.
-- Download [MiniGPT-4 7B pretrained weights](https://drive.google.com/file/d/1RY9jV0dyqLX-o38LrumkKRh6Jtaop58R/view?usp=sharing) and specify it at [Line 8](https://github.com/shikiw/OPERA/blob/bf18aa9c409f28b31168b0f71ebf8457ae8063d5/eval_configs/minigpt4_eval.yaml#L8) of `eval_configs/minigpt4_eval.yaml`.
+- Download [LLaVA-1.5 merged 7B model](https://huggingface.co/liuhaotian/llava-v1.5-7b) and specify it at [Line 14](https://github.com/BillChan226/HALC/blob/924cdc09310df8826fe2f8e2e16c25a6312a48b7/eval_configs/llava-1.5_eval.yaml#L14) of `eval_configs/llava-1.5_eval.yaml`.
+- Download [LLaMA-2 7B model](https://huggingface.co/meta-llama/Llama-2-7b-chat-hf/tree/main) and specify it at [Line 15](https://github.com/BillChan226/HALC/blob/924cdc09310df8826fe2f8e2e16c25a6312a48b7/minigpt4/configs/models/minigpt4_llama2.yaml#L15) of `minigpt4/configs/models/minigpt4_llama2.yaml`.(https://github.com/BillChan226/HALC/blob/924cdc09310df8826fe2f8e2e16c25a6312a48b7/minigpt4/configs/models/minigpt4_llama2.yaml#L15)
+- Download [Vicuna 7B v1.1 model](https://github.com/lm-sys/FastChat) and specify it at [Line 25](https://github.com/BillChan226/HALC/blob/924cdc09310df8826fe2f8e2e16c25a6312a48b7/minigpt4/configs/models/blip2_instruct_vicuna7b.yaml#L25) of `minigpt4/configs/models/blip2_instruct_vicuna7b.yaml`.
+- Download [Vicuna 7B v0 model](https://huggingface.co/Vision-CAIR/vicuna-7b/tree/main) and specify it at [Line 18](https://github.com/BillChan226/HALC/blob/924cdc09310df8826fe2f8e2e16c25a6312a48b7/minigpt4/configs/models/minigpt4_vicuna0.yaml#L18) of `minigpt4/configs/models/minigpt4_vicuna0.yaml`.
+- Download [MiniGPT-4 7B pretrained weights](https://drive.google.com/file/d/1RY9jV0dyqLX-o38LrumkKRh6Jtaop58R/view?usp=sharing) and specify it at [Line 8](https://github.com/BillChan226/HALC/blob/924cdc09310df8826fe2f8e2e16c25a6312a48b7/eval_configs/minigpt4_eval.yaml#L8C10-L8C10) of `eval_configs/minigpt4_eval.yaml`.
+- Download [MiniGPT-4 7B pretrained weights for LlaMA-2](https://drive.google.com/file/d/1RY9jV0dyqLX-o38LrumkKRh6Jtaop58R/view?usp=sharing) and specify it at [Line 8](https://github.com/BillChan226/HALC/blob/924cdc09310df8826fe2f8e2e16c25a6312a48b7/eval_configs/minigpt4_llama2_eval.yaml#L8) of `eval_configs/minigpt4_llama2_eval.yaml`.
+- Download [mPLUG-Owl2 7B pretrained weights]([https://drive.google.com/file/d/1RY9jV0dyqLX-o38LrumkKRh6Jtaop58R/view?usp=sharing](https://huggingface.co/MAGAer13/mplug-owl2-llama2-7b)) and specify it at [Line 14](https://github.com/BillChan226/HALC/blob/924cdc09310df8826fe2f8e2e16c25a6312a48b7/eval_configs/mplug-owl2_eval.yaml#L14) of `eval_configs/mplug-owl2_eval.yaml`.
 
 ### Arguments
 
@@ -106,6 +108,7 @@ Besides, it needs you to prepare the following checkpoints of 7B base models:
 | -------------------- | ------------------- | ------------- |
 | `--k-candidate-num`      | `4` | Number of generative focal fields for local search. Default: 4. |
 | `--expand-ratio`      | `0.6` | The growing factor of focal fields. Default: 0.6. |
+| `--detector`      | `dino` | Detector to use in [dino, owlv2]. Default: dino. |
 
 #### Arguments for OPERA
 

@@ -16,12 +16,13 @@ import torch
 from PIL import Image
 from transformers import TextStreamer
 import sys
+
 sys.path.append("mPLUG-Owl/mPLUG-Owl2")
 from mplug_owl2.constants import IMAGE_TOKEN_INDEX, DEFAULT_IMAGE_TOKEN
 from mplug_owl2.conversation import conv_templates, SeparatorStyle
 from mplug_owl2.model.builder import load_pretrained_model
 from mplug_owl2.mm_utils import process_images, tokenizer_image_token, get_model_name_from_path, KeywordsStoppingCriteria
-
+from mplug_owl2.model.modeling_llama2 import replace_llama_modality_adaptive
 
 @registry.register_model("mplug-owl2")
 class MPLUGOWL2(BaseModel):
@@ -58,6 +59,10 @@ class MPLUGOWL2(BaseModel):
         lora_dropout=0.05,
     ):
         super().__init__()
+
+        # AutoModelForCausalLM.register(MPLUGOwl2Config, MPLUGOwl2LlamaForCausalLM)
+
+        replace_llama_modality_adaptive()
 
         print("llama_model", llama_model)
         model_name = get_model_name_from_path(llama_model)

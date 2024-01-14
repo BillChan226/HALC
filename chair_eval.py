@@ -346,13 +346,14 @@ if not os.path.exists(base_dir):
 halc_params = {
     "context_domain": "upper",
     "contrast_weight": 0.05,
-    "context_window": 4,
+    "context_window": 3,
     "expand_ratio": expand_ratio,
     "beam_size": num_beams,
-    "k_candidate_num": args.k_candidate_num,
+    "k_candidate_num": k_candidate_num,
     "LVLM_backbone": model_name,
     "detector": detector_type,
 }
+
 halc_assistant_helper = halc_assistant(
     model,
     vis_processor=vis_processor,
@@ -399,25 +400,6 @@ for img_id in tqdm(range(len(img_files))):
     template = INSTRUCTION_TEMPLATE[args.model]
     qu = template.replace("<question>", qu)
 
-    # lm_early_exit_layers = [
-    #     0,
-    #     2,
-    #     4,
-    #     6,
-    #     8,
-    #     10,
-    #     12,
-    #     14,
-    #     16,
-    #     18,
-    #     20,
-    #     22,
-    #     24,
-    #     26,
-    #     28,
-    #     30,
-    #     32,
-    # ]
     lm_early_exit_layers = [
         0,
         2,
@@ -427,8 +409,27 @@ for img_id in tqdm(range(len(img_files))):
         10,
         12,
         14,
+        16,
+        18,
+        20,
+        22,
+        24,
+        26,
+        28,
+        30,
         32,
     ]
+    # lm_early_exit_layers = [
+    #     0,
+    #     2,
+    #     4,
+    #     6,
+    #     8,
+    #     10,
+    #     12,
+    #     14,
+    #     32,
+    # ]
 
     mature_layer = lm_early_exit_layers[-1]
     premature_layer = None

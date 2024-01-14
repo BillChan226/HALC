@@ -336,7 +336,8 @@ class MPLUGOwl2LlamaForCausalLM(LlamaForCausalLM, MPLUGOwl2MetaForCausalLM):
 AutoConfig.register("mplug_owl2", MPLUGOwl2Config)
 AutoModelForCausalLM.register(MPLUGOwl2Config, MPLUGOwl2LlamaForCausalLM)
 
-replace_llama_modality_adaptive()
+# replace_llama_modality_adaptive()
+
 
 if __name__ == "__main__":
     config = MPLUGOwl2Config.from_pretrained('/cpfs01/shared/public/test/vicuna-7b-v1.5/')

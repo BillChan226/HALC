@@ -5,6 +5,9 @@ generated_captions/
 paper_result/
 paper_result_owl/
 MME_benchmark/
+model_checkpoints/
+eval_configs/
+minigpt4/configs/models/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

@@ -35,8 +35,8 @@ class halc_assistant:
         args_dict = {
             # "detector_config": "decoder_zoo/GroundingDINO/groundingdino/config/GroundingDINO_SwinT_OGC.py",
             "detector_config": "./eval_configs/GroundingDINO_SwinT_OGC.py",
-            # "detector_model_path": "decoder_zoo/GroundingDINO/weights/groundingdino_swint_ogc.pth",
-            "detector_model_path": "./model_checkpoints/groundingdino_swint_ogc.pth",
+            "detector_model_path": "decoder_zoo/GroundingDINO/weights/groundingdino_swint_ogc.pth",
+            # "detector_model_path": "./model_checkpoints/groundingdino_swint_ogc.pth",
             "cache_dir": "decoder_zoo/HALC/cache_dir",
             "device": device,
         }
@@ -72,10 +72,10 @@ class halc_assistant:
             token_vocab_dir = "decoder_zoo/HALC/context_density/llama_tokenizer.json"
         elif self.model_backbone == "instructblip":
             self.tokenizer = self.model.llm_tokenizer
-            token_vocab_dir = "decoder_zoo/HaLC/context_density/vicuna_tokenizer.json"
+            token_vocab_dir = "decoder_zoo/HALC/context_density/vicuna_tokenizer.json"
         elif self.model_backbone == "mplug-owl2":
             self.tokenizer = self.model.llm_tokenizer
-            token_vocab_dir = "decoder_zoo/HaLC/context_density/llama_tokenizer.json"
+            token_vocab_dir = "decoder_zoo/HALC/context_density/llama_tokenizer.json"
 
         with open(token_vocab_dir, "r") as f:
             self.token_vocab = json.load(f)

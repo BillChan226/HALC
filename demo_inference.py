@@ -58,7 +58,7 @@ INSTRUCTION_TEMPLATE = {
     "instructblip": "<ImageHere><question>",
     "lrv_instruct": "###Human: <Img><ImageHere></Img> <question> ###Assistant:",
     "shikra": "USER: <im_start><ImageHere><im_end> <question> ASSISTANT:",
-    "llava-1.5": "USER: <ImageHere> <question> ASSISTANT:",,
+    "llava-1.5": "USER: <ImageHere> <question> ASSISTANT:",
     "mplug-owl2": "USER: <|image|><question> ASSISTANT:"
 }
 
@@ -247,8 +247,8 @@ if verbosity:
 
 
 
-# image_path = "/home/czr/HaLC/hallucinatory_image/beach_on_a_clock.png"
-image_path = "/home/czr/contrast_decoding_LVLMs/hallucinatory_image/test.png"
+image_path = "/home/czr/HaLC/hallucinatory_image/beach_on_a_clock.png"
+# image_path = "/home/czr/contrast_decoding_LVLMs/hallucinatory_image/test.png"
 
 
 raw_image = Image.open(image_path).convert("RGB")
@@ -277,7 +277,7 @@ qu = template.replace("<question>", qu)
 halc_params = {
     "context_domain": "upper",
     "contrast_weight": 0.05,
-    "context_window": 4,
+    "context_window": 3,
     "expand_ratio": expand_ratio,
     "beam_size": num_beams,
     "k_candidate_num": args.k_candidate_num,

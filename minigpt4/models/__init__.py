@@ -16,6 +16,7 @@ from minigpt4.models.mini_gpt4 import MiniGPT4
 from minigpt4.models.blip2_vicuna_instruct import Blip2VicunaInstruct
 from minigpt4.models.shikra import Shikra
 from minigpt4.models.llava import LLaVa
+from minigpt4.models.mplug_owl2 import MPLUGOWL2
 from minigpt4.processors.base_processor import BaseProcessor
 
 
@@ -27,6 +28,7 @@ __all__ = [
     "Blip2VicunaInstruct",
     "Shikra",
     "LLaVa",
+    "MPLUGOWL2",
 ]
 
 

@@ -34,6 +34,16 @@ from pycocotools.coco import COCO
 from pycocoevalcap.eval import COCOEvalCap
 from collections import defaultdict
 
+import torch
+from PIL import Image
+from transformers import TextStreamer
+import sys
+sys.path.append("mPLUG-Owl/mPLUG-Owl2")
+from mplug_owl2.constants import IMAGE_TOKEN_INDEX, DEFAULT_IMAGE_TOKEN
+from mplug_owl2.conversation import conv_templates, SeparatorStyle
+from mplug_owl2.model.builder import load_pretrained_model
+from mplug_owl2.mm_utils import process_images, tokenizer_image_token, get_model_name_from_path, KeywordsStoppingCriteria
+
 
 MODEL_EVAL_CONFIG_PATH = {
     "minigpt4": "eval_configs/minigpt4_eval.yaml",
@@ -41,6 +51,7 @@ MODEL_EVAL_CONFIG_PATH = {
     "lrv_instruct": "eval_configs/lrv_instruct_eval.yaml",
     "shikra": "eval_configs/shikra_eval.yaml",
     "llava-1.5": "eval_configs/llava-1.5_eval.yaml",
+    "mplug-owl2": "eval_configs/mplug-owl2_eval.yaml",
 }
 
 INSTRUCTION_TEMPLATE = {
@@ -49,6 +60,7 @@ INSTRUCTION_TEMPLATE = {
     "lrv_instruct": "###Human: <Img><ImageHere></Img> <question> ###Assistant:",
     "shikra": "USER: <im_start><ImageHere><im_end> <question> ASSISTANT:",
     "llava-1.5": "USER: <ImageHere> <question> ASSISTANT:",
+    "mplug-owl2": "USER: <|image|><question> ASSISTANT:",
 }
 
 
@@ -158,10 +170,15 @@ args = parser.parse_known_args()[0]
 
 # print("args.gpu_id", args.gpu_id)
 os.environ["CUDA_VISIBLE_DEVICES"] = str(args.gpu_id)
+# if args.model == "mplug-owl2":
+
+# else:
 args.cfg_path = MODEL_EVAL_CONFIG_PATH[args.model]
+cfg = Config(args)
+
 model_name = args.model
 decoding_strategy = args.decoder
-cfg = Config(args)
+
 seed = args.seed
 setup_seeds(cfg, seed)
 
@@ -192,6 +209,8 @@ cd_beta = args.cd_beta
 # ========================================
 print("Initializing Model")
 
+# print("cfg", cfg)
+# input()
 model_config = cfg.model_cfg
 model_config.device_8bit = args.gpu_id
 model_cls = registry.get_model_class(model_config.arch)
@@ -359,9 +378,16 @@ for img_id in tqdm(range(len(img_files))):
     img_save["image_id"] = img_id
 
     image_path = args.data_path + img_file
-    raw_image = Image.open(image_path).convert("RGB")
-    image = vis_processors["eval"](raw_image).unsqueeze(0)
-    image = image.to(device)
+    raw_image = Image.open(image_path).convert('RGB')
+    if model_name == "mplug-owl2":
+        max_edge = max(raw_image.size) # We recommand you to resize to squared image for BEST performance.
+        image = raw_image.resize((max_edge, max_edge))
+        image_tensor = process_images([image], model.image_processor)
+        image = image_tensor.to(device, dtype=torch.float16)
+    else:
+        image = vis_processors["eval"](raw_image).unsqueeze(0)
+        image = image.to(device)
+
     # print("image device", norm(image).device)
 
     qu = "Please describe this image in detail."
@@ -430,7 +456,7 @@ for img_id in tqdm(range(len(img_files))):
     with torch.inference_mode():
         with torch.no_grad():
             out = model.generate(
-                {"image": norm(image), "prompt": qu},
+                {"image": norm(image), "prompt":qu, "img_path": image_path},
                 use_nucleus_sampling=args.sample,
                 num_beams=num_beams,
                 max_new_tokens=max_new_tokens,

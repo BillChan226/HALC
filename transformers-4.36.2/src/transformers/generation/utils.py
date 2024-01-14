@@ -4526,8 +4526,10 @@ class GenerationMixin:
             valid_length_max = min(max_new_tokens, max_length) + len(initial_input_ids[0]) - 1
         elif self.halc_assistant.model_backbone == "instructblip":
             valid_length_max = min(max_new_tokens, max_length) + len(initial_input_ids[0]) - 1
+        elif self.halc_assistant.model_backbone == "mplug-owl2":
+            valid_length_max = min(max_new_tokens, max_length) + len(initial_input_ids[0]) - 1
         else:
-            input("model name error")
+            raise ValueError("You must specify a valid model backbone")
         # print("len(initial_input_ids[0])", len(initial_input_ids[0]))
         # print("max_length", max_length)
         # print("max_new_tokens", max_new_tokens)
@@ -4701,11 +4703,12 @@ class GenerationMixin:
                                     sub_model_kwargs['inputs_embeds'] = context_embed
                                     teacher_forcing_tokens = beam_intermediate_token_lists[bs]
     
-                                elif self.halc_assistant.model_backbone == "llava-1.5":
+                                elif self.halc_assistant.model_backbone == "llava-1.5" or self.halc_assistant.model_backbone == "mplug-owl2":
                                     sub_model_kwargs['images'] = context_embed
                                     # print("beam_intermediate_token_lists[bs]", beam_intermediate_token_lists[bs])
                                     teacher_forcing_tokens = beam_intermediate_token_lists[bs][:, len(initial_input_ids[0])-1:]
                                 
+                                # print("len(initial_input_ids[0])", len(initial_input_ids[0]))
                                 # print("sub_model_kwargs", sub_model_kwargs.keys())
                                 # print("beam_next_tokens[bs]", beam_next_tokens[bs])
                                 # print("initial_input_ids", initial_input_ids)
@@ -6480,7 +6483,11 @@ class GenerationMixin:
         else:
             return sequence_outputs["sequences"]
 
-
+    def adjust_logits_during_generation(self, logits: torch.FloatTensor, **kwargs) -> torch.FloatTensor:
+        """
+        Implement in subclasses of [`PreTrainedModel`] for custom behavior to adjust the logits in the generate method.
+        """
+        return logits
 
 
     def dola_beam_search(
@@ -6785,7 +6792,6 @@ class GenerationMixin:
                 logits = final_logits - base_logits
                 next_token_logits = logits
 
-                print("here!")
 
             # # pre-process distribution
             # next_tokens_scores = logits_processor(input_ids, next_token_logits)
@@ -6929,11 +6935,6 @@ class GenerationMixin:
                 )
         else:
             return sequence_outputs["sequences"]
-
-
-
-
-
 
 
 

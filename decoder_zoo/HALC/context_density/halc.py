@@ -19,6 +19,7 @@ from transformers import CLIPProcessor, CLIPModel
 import random
 from transformers import AutoTokenizer, CLIPConfig, CLIPTextConfig, CLIPVisionConfig
 from PIL import Image, ImageFilter
+from mplug_owl2.mm_utils import process_images, tokenizer_image_token, get_model_name_from_path, KeywordsStoppingCriteria
 
 
 class halc_assistant:
@@ -71,7 +72,10 @@ class halc_assistant:
             token_vocab_dir = "decoder_zoo/HALC/context_density/llama_tokenizer.json"
         elif self.model_backbone == "instructblip":
             self.tokenizer = self.model.llm_tokenizer
-            token_vocab_dir = "decoder_zoo/HALC/context_density/vicuna_tokenizer.json"
+            token_vocab_dir = "decoder_zoo/HaLC/context_density/vicuna_tokenizer.json"
+        elif self.model_backbone == "mplug-owl2":
+            self.tokenizer = self.model.llm_tokenizer
+            token_vocab_dir = "decoder_zoo/HaLC/context_density/llama_tokenizer.json"
 
         with open(token_vocab_dir, "r") as f:
             self.token_vocab = json.load(f)
@@ -403,13 +407,9 @@ class halc_assistant:
 
             # prompt = self.prompt[0]
             prompt = self.prompt
-            # print("prompt: ", prompt)
-            # try:
+
             embs = self.model.get_context_emb(prompt, [image_emb])
-            # except:
-            #     print("image", np.shape(image))
-            #     print("prompt", prompt)
-            #     print("image_emb", np.shape(image_emb))
+
             current_max_len = embs.shape[1] + max_new_tokens
 
             if current_max_len - max_length > 0:
@@ -424,7 +424,13 @@ class halc_assistant:
         elif self.model_backbone == "llava-1.5":
             # image_emb = self.model.prepare_inputs_labels_for_multimodal(input_ids, attention_mask, past_key_values, labels, image)
             embs = self.vis_processor(image).unsqueeze(0).to(self.device)
-
+        elif self.model_backbone == "mplug-owl2":
+            # image_emb = self.model.prepare_inputs_labels_for_multimodal(input_ids, attention_mask, past_key_values, labels, image)
+            max_edge = max(image.size) # We recommand you to resize to squared image for BEST performance.
+            image = image.resize((max_edge, max_edge))
+            image_tensor = process_images([image], self.model.image_processor)
+            embs = image_tensor.to(self.device, dtype=torch.float16)
+            
         elif self.model_backbone == "instructblip":
             image = self.vis_processor(image).unsqueeze(0).to(self.device)
             image_emb, _ = self.model.encode_img(image, 38)
@@ -1030,6 +1036,7 @@ class halc_assistant:
         contrast_weight = self.halc_params["contrast_weight"]
 
         for layer_idx1, layer_idx2 in top_k_indices:
+            
             base_logits = context_logits_list[layer_idx1]
             final_logits = context_logits_list[layer_idx2]
 
@@ -1071,11 +1078,10 @@ class halc_assistant:
             ) in candidate_intermediate_token_lists_array:
                 # print("candidate_intermediate_token_lists[0]", candidate_intermediate_token_lists[0])
                 if (
-                    self.model_backbone == "minigpt4"
-                    or self.model_backbone == "instructblip"
+                    self.model_backbone == "minigpt4" or self.model_backbone == "instructblip"
                 ):
                     skip_token_length = 0
-                elif self.model_backbone == "llava-1.5":
+                elif self.model_backbone == "llava-1.5" or self.model_backbone == "mplug-owl2":
                     skip_token_length = skip_token_length
 
                     # print("tokens_to_text", tokens_to_text)
@@ -1085,6 +1091,8 @@ class halc_assistant:
                     )
                 )
 
+            # print("candidate_texts", candidate_texts)
+            # input()
             # original_image = self.original_image
             original_image = self.image_to_ground
 

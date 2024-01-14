@@ -27,7 +27,7 @@ import json
 from types import SimpleNamespace
 from decoder_zoo.Woodpecker.vis_corrector import Corrector
 from decoder_zoo.Woodpecker.config import woodpecker_args_dict
-from decoder_zoo.HaLC.context_density.halc import halc_assistant
+from decoder_zoo.HALC.context_density.halc import halc_assistant
 from decoder_zoo.VCD.vcd_utils.vcd_add_noise import add_diffusion_noise
 
 from pycocotools.coco import COCO
@@ -48,9 +48,8 @@ INSTRUCTION_TEMPLATE = {
     "instructblip": "<ImageHere><question>",
     "lrv_instruct": "###Human: <Img><ImageHere></Img> <question> ###Assistant:",
     "shikra": "USER: <im_start><ImageHere><im_end> <question> ASSISTANT:",
-    "llava-1.5": "USER: <ImageHere> <question> ASSISTANT:"
+    "llava-1.5": "USER: <ImageHere> <question> ASSISTANT:",
 }
-
 
 
 def setup_seeds(config, seed):
@@ -66,13 +65,15 @@ def setup_seeds(config, seed):
 parser = argparse.ArgumentParser(description="POPE-Adv evaluation on LVLMs.")
 parser.add_argument("--model", type=str, default="minigpt4", help="model")
 parser.add_argument(
-        "-d",
-        "--decoder",
-        type=str,
-        default="greedy",
-        help="Decoding strategy to use. You can choose from 'greedy', 'dola', 'halc'. Default is 'greedy'.",
-    )
-parser.add_argument("-g", "--gpu-id", type=int, default=0, help="specify the gpu to load the model.")
+    "-d",
+    "--decoder",
+    type=str,
+    default="greedy",
+    help="Decoding strategy to use. You can choose from 'greedy', 'dola', 'halc'. Default is 'greedy'.",
+)
+parser.add_argument(
+    "-g", "--gpu-id", type=int, default=0, help="specify the gpu to load the model."
+)
 parser.add_argument(
     "--options",
     nargs="+",
@@ -86,11 +87,16 @@ parser.add_argument(
     default="coco",
     help="Name of the dataset. Default is 'coco'.",
 )
-parser.add_argument("--data_path", type=str, default="/home/czr/HaLC/MME_benchmark/pattern_exp/existence", help="data path")
+parser.add_argument(
+    "--data_path",
+    type=str,
+    default="/home/czr/HaLC/MME_benchmark/pattern_exp/existence",
+    help="data path",
+)
 parser.add_argument("--batch_size", type=int, default=1, help="batch size")
 parser.add_argument("--num_workers", type=int, default=2, help="num workers")
 parser.add_argument("-b", "--beam", type=int, default=3)
-parser.add_argument("--sample", action='store_true')
+parser.add_argument("--sample", action="store_true")
 parser.add_argument("--scale_factor", type=float, default=50)
 parser.add_argument("--threshold", type=int, default=15)
 parser.add_argument("--num_attn_candidates", type=int, default=5)
@@ -139,18 +145,8 @@ parser.add_argument(
     default=1,
     help="Alpha param for VCD.",
 )
-parser.add_argument(
-    "--cd_beta",
-    type=float,
-    default=0.1,
-    help="Beta param for VCD."
-)
-parser.add_argument(
-    "--noise_step",
-    type=int,
-    default=500,
-    help="Noise step for VCD."
-)
+parser.add_argument("--cd_beta", type=float, default=0.1, help="Beta param for VCD.")
+parser.add_argument("--noise_step", type=int, default=500, help="Noise step for VCD.")
 
 args = parser.parse_known_args()[0]
 
@@ -163,7 +159,9 @@ cfg = Config(args)
 seed = args.seed
 setup_seeds(cfg, seed)
 
-device = torch.device(f"cuda:{int(args.gpu_id)}") if torch.cuda.is_available() else "cpu"
+device = (
+    torch.device(f"cuda:{int(args.gpu_id)}") if torch.cuda.is_available() else "cpu"
+)
 # device = "cpu"
 
 verbosity = args.verbosity
@@ -185,7 +183,7 @@ cd_beta = args.cd_beta
 # ========================================
 #             Model Initialization
 # ========================================
-print('Initializing Model')
+print("Initializing Model")
 
 model_config = cfg.model_cfg
 model_config.device_8bit = args.gpu_id
@@ -201,14 +199,27 @@ vis_processors, txt_processors = load_preprocess(processor_cfg)
 
 vis_processor_cfg = cfg.datasets_cfg.cc_sbu_align.vis_processor.train
 vis_processor = registry.get_processor_class(vis_processor_cfg.name).from_config(
-    vis_processor_cfg)
+    vis_processor_cfg
+)
 
 
-valid_decoding_strategies = ["greedy", "dola", "halc-dola", "halc-greedy", "halc-beam", "opera-beam", "vcd"]
+valid_decoding_strategies = [
+    "greedy",
+    "dola",
+    "halc-dola",
+    "halc-greedy",
+    "halc-beam",
+    "opera-beam",
+    "vcd",
+]
 valid_post_editing_strategies = ["lure", "woodpecker"]
 
-assert decoding_strategy in valid_decoding_strategies, f"Invalid decoding strategy: {decoding_strategy}, should be in {valid_decoding_strategies}"
-assert post_correction in valid_post_editing_strategies or post_correction is None, f"Invalid post correction strategy: {post_correction}, should be in {valid_post_editing_strategies}"
+assert (
+    decoding_strategy in valid_decoding_strategies
+), f"Invalid decoding strategy: {decoding_strategy}, should be in {valid_decoding_strategies}"
+assert (
+    post_correction in valid_post_editing_strategies or post_correction is None
+), f"Invalid post correction strategy: {post_correction}, should be in {valid_post_editing_strategies}"
 
 decoding_strategy = decoding_strategy
 opera_decoding = False
@@ -274,42 +285,51 @@ file_dict = {}
 
 # Go through each file name to pair .txt files with corresponding .jpg files
 for file_name in file_names:
-
-    if file_name.endswith('.txt'):
+    if file_name.endswith(".txt"):
         # Construct the full path for the .txt file
         txt_file_path = os.path.join(data_path, file_name)
-        
+
         # Construct the corresponding .jpg file name
-        img_file_name = file_name.replace('.txt', '.jpg')
-        
+        img_file_name = file_name.replace(".txt", ".jpg")
+
         # Check if the corresponding .jpg file exists in the list
         if img_file_name in file_names:
             # Construct the full path for the .jpg file
             jpg_file_path = os.path.join(data_path, img_file_name)
-            
+
             # Add to the dictionary
             file_dict[txt_file_path] = jpg_file_path
 
 print("file_dict", file_dict)
 
 
-
-
-base_dir  = output_dir + "/" + args.model
+base_dir = output_dir + "/" + args.model
 if not os.path.exists(base_dir):
     os.makedirs(base_dir)
 
-halc_params = {"context_domain": "upper", "contrast_weight": 0.05, "context_window": 4, "expand_ratio": expand_ratio, "beam_size": num_beams, "k_candidate_num": args.k_candidate_num, "LVLM_backbone": model_name}
-halc_assistant_helper = halc_assistant(model, vis_processor=vis_processor, device=device, halc_params=halc_params, max_new_tokens=max_new_tokens)
+halc_params = {
+    "context_domain": "upper",
+    "contrast_weight": 0.05,
+    "context_window": 4,
+    "expand_ratio": expand_ratio,
+    "beam_size": num_beams,
+    "k_candidate_num": args.k_candidate_num,
+    "LVLM_backbone": model_name,
+}
+halc_assistant_helper = halc_assistant(
+    model,
+    vis_processor=vis_processor,
+    device=device,
+    halc_params=halc_params,
+    max_new_tokens=max_new_tokens,
+)
 
 
 for txt_path in tqdm(file_dict):
-
-
     # print("txt_path", txt_path)
     img_path = file_dict[txt_path]
 
-    with open(txt_path, 'r') as file:
+    with open(txt_path, "r") as file:
         text_contents = file.read().strip()
 
     img_save = {}
@@ -329,7 +349,6 @@ for txt_path in tqdm(file_dict):
 
     template = INSTRUCTION_TEMPLATE[args.model]
     qu = template.replace("<question>", qu)
-
 
     lm_early_exit_layers = [
         0,
@@ -362,7 +381,11 @@ for txt_path in tqdm(file_dict):
 
     if vcd_decoding:
         image_tensor_cd = add_diffusion_noise(image, args.noise_step)
-        image_cd = (image_tensor_cd.unsqueeze(0).half().cuda() if image_tensor_cd is not None else None)
+        image_cd = (
+            image_tensor_cd.unsqueeze(0).half().cuda()
+            if image_tensor_cd is not None
+            else None
+        )
         cd_alpha = cd_alpha
         cd_beta = cd_beta
         print("image_cd", image_cd.shape)
@@ -370,11 +393,10 @@ for txt_path in tqdm(file_dict):
         if model_name == "minigpt4":
             image_cd = image_cd.squeeze(0)
 
-
     with torch.inference_mode():
         with torch.no_grad():
             out = model.generate(
-                {"image": norm(image), "prompt":qu},
+                {"image": norm(image), "prompt": qu},
                 use_nucleus_sampling=args.sample,
                 num_beams=num_beams,
                 max_new_tokens=max_new_tokens,
@@ -398,13 +420,12 @@ for txt_path in tqdm(file_dict):
                 # VCD
                 images_cd=image_cd,
                 cd_alpha=cd_alpha,
-                cd_beta=cd_beta
+                cd_beta=cd_beta,
             )
 
     output_text = out[0]
 
     print("decoder output text", output_text)
-
 
     img_save["caption"] = output_text
 
@@ -412,10 +433,11 @@ for txt_path in tqdm(file_dict):
     print("image_path: ", image_path)
     print("caption: ", output_text)
 
-
     # dump metric file
-    generated_captions_path = os.path.join(base_dir, f"{model_name}_{decoding_strategy}_beams_{num_beams}_k_{k_candidate_num}_{dataset_name}_expand_ratio_{expand_ratio}_seed_{seed}_max_tokens_{max_new_tokens}_samples_{num_samples}_generated_answers_MME.json")
+    generated_captions_path = os.path.join(
+        base_dir,
+        f"{model_name}_{decoding_strategy}_beams_{num_beams}_k_{k_candidate_num}_{dataset_name}_expand_ratio_{expand_ratio}_seed_{seed}_max_tokens_{max_new_tokens}_samples_{num_samples}_generated_answers_MME.json",
+    )
     with open(generated_captions_path, "a") as f:
         json.dump(img_save, f)
-        f.write('\n')
-
+        f.write("\n")

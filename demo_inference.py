@@ -35,7 +35,7 @@ import seaborn
 import json
 
 from decoder_zoo.Woodpecker.vis_corrector import Corrector
-from decoder_zoo.HaLC.context_density.halc import halc_assistant
+from decoder_zoo.HALC.context_density.halc import halc_assistant
 from decoder_zoo.VCD.vcd_utils.vcd_add_noise import add_diffusion_noise
 
 from pycocotools.coco import COCO
@@ -56,7 +56,7 @@ INSTRUCTION_TEMPLATE = {
     "instructblip": "<ImageHere><question>",
     "lrv_instruct": "###Human: <Img><ImageHere></Img> <question> ###Assistant:",
     "shikra": "USER: <im_start><ImageHere><im_end> <question> ASSISTANT:",
-    "llava-1.5": "USER: <ImageHere> <question> ASSISTANT:"
+    "llava-1.5": "USER: <ImageHere> <question> ASSISTANT:",
 }
 
 
@@ -73,13 +73,15 @@ def setup_seeds(config, seed):
 parser = argparse.ArgumentParser(description="POPE-Adv evaluation on LVLMs.")
 parser.add_argument("--model", type=str, default="minigpt4", help="model")
 parser.add_argument(
-        "-d",
-        "--decoder",
-        type=str,
-        default="greedy",
-        help="Decoding strategy to use. You can choose from 'greedy', 'dola', 'halc'. Default is 'greedy'.",
-    )
-parser.add_argument("-g", "--gpu-id", type=int, default=0, help="specify the gpu to load the model.")
+    "-d",
+    "--decoder",
+    type=str,
+    default="greedy",
+    help="Decoding strategy to use. You can choose from 'greedy', 'dola', 'halc'. Default is 'greedy'.",
+)
+parser.add_argument(
+    "-g", "--gpu-id", type=int, default=0, help="specify the gpu to load the model."
+)
 parser.add_argument(
     "--options",
     nargs="+",
@@ -90,7 +92,7 @@ parser.add_argument(
 parser.add_argument("--batch_size", type=int, default=1, help="batch size")
 parser.add_argument("--num_workers", type=int, default=2, help="num workers")
 parser.add_argument("-b", "--beam", type=int)
-parser.add_argument("--sample", action='store_true')
+parser.add_argument("--sample", action="store_true")
 parser.add_argument("--scale_factor", type=float, default=50)
 parser.add_argument("--threshold", type=int, default=15)
 parser.add_argument("--num_attn_candidates", type=int, default=5)
@@ -124,18 +126,8 @@ parser.add_argument(
     default=1,
     help="Alpha param for VCD.",
 )
-parser.add_argument(
-    "--cd_beta",
-    type=float,
-    default=0.1,
-    help="Beta param for VCD."
-)
-parser.add_argument(
-    "--noise_step",
-    type=int,
-    default=3,
-    help="Noise step for VCD."
-)
+parser.add_argument("--cd_beta", type=float, default=0.1, help="Beta param for VCD.")
+parser.add_argument("--noise_step", type=int, default=3, help="Noise step for VCD.")
 
 
 args = parser.parse_known_args()[0]
@@ -149,7 +141,9 @@ cfg = Config(args)
 seed = args.seed
 setup_seeds(cfg, seed)
 
-device = torch.device(f"cuda:{int(args.gpu_id)}") if torch.cuda.is_available() else "cpu"
+device = (
+    torch.device(f"cuda:{int(args.gpu_id)}") if torch.cuda.is_available() else "cpu"
+)
 
 verbosity = args.verbosity
 k_candidate_num = args.k_candidate_num
@@ -164,7 +158,7 @@ cd_beta = args.cd_beta
 # ========================================
 #             Model Initialization
 # ========================================
-print('Initializing Model')
+print("Initializing Model")
 
 model_config = cfg.model_cfg
 model_config.device_8bit = args.gpu_id
@@ -177,12 +171,15 @@ vis_processors, txt_processors = load_preprocess(processor_cfg)
 
 vis_processor_cfg = cfg.datasets_cfg.cc_sbu_align.vis_processor.train
 vis_processor = registry.get_processor_class(vis_processor_cfg.name).from_config(
-    vis_processor_cfg)
+    vis_processor_cfg
+)
 
 
 valid_decoding_strategies = ["greedy", "dola", "halc-beam", "opera-beam", "vcd"]
 
-assert decoding_strategy in valid_decoding_strategies, f"Invalid decoding strategy: {decoding_strategy}, should be in {valid_decoding_strategies}"
+assert (
+    decoding_strategy in valid_decoding_strategies
+), f"Invalid decoding strategy: {decoding_strategy}, should be in {valid_decoding_strategies}"
 
 decoding_strategy = decoding_strategy
 opera_decoding = False
@@ -225,14 +222,12 @@ std = (0.26862954, 0.26130258, 0.27577711)
 norm = transforms.Normalize(mean, std)
 
 
-
 if verbosity:
     print("\ndecoding strategy: ", decoding_strategy)
     print("backbone model_name: ", args.model)
     print("num_beams: ", num_beams)
     print("seed: ", seed)
     print(vis_processors["eval"].transform)
-
 
 
 # image_path = "/home/czr/HaLC/hallucinatory_image/beach_on_a_clock.png"
@@ -255,9 +250,20 @@ qu = template.replace("<question>", qu)
 
 
 # halc_params = {"context_domain": "upper", "contrast_weight": 0.05, "context_window": 4, "expand_ratio": 0.1, "beam_size": num_beams, "k_candidate_num": args.k_candidate_num, "LVLM_backbone": model_name, "detector": "groundingdino"}
-halc_params = {"context_domain": "upper", "contrast_weight": 0.05, "context_window": 4, "expand_ratio": 0.001, "beam_size": num_beams, "k_candidate_num": args.k_candidate_num, "LVLM_backbone": model_name, "detector": "owlv2"}
+halc_params = {
+    "context_domain": "upper",
+    "contrast_weight": 0.05,
+    "context_window": 4,
+    "expand_ratio": 0.001,
+    "beam_size": num_beams,
+    "k_candidate_num": args.k_candidate_num,
+    "LVLM_backbone": model_name,
+    "detector": "owlv2",
+}
 
-halc_assistant_helper = halc_assistant(model, vis_processor=vis_processor, device=device, halc_params=halc_params)
+halc_assistant_helper = halc_assistant(
+    model, vis_processor=vis_processor, device=device, halc_params=halc_params
+)
 
 lm_early_exit_layers = [
     0,
@@ -290,7 +296,11 @@ halc_assistant_helper.update_input(img_path=image_path, input_prompt=qu)
 image_cd = None
 if decoding_strategy == "vcd":
     image_tensor_cd = add_diffusion_noise(image, args.noise_step)
-    image_cd = (image_tensor_cd.unsqueeze(0).half().cuda() if image_tensor_cd is not None else None)
+    image_cd = (
+        image_tensor_cd.unsqueeze(0).half().cuda()
+        if image_tensor_cd is not None
+        else None
+    )
     cd_alpha = cd_alpha
     cd_beta = cd_beta
     if model_name == "minigpt4":
@@ -300,8 +310,8 @@ if decoding_strategy == "vcd":
 with torch.inference_mode():
     with torch.no_grad():
         out = model.generate(
-            {"image": norm(image), "prompt":qu}, 
-            use_nucleus_sampling=args.sample, 
+            {"image": norm(image), "prompt": qu},
+            use_nucleus_sampling=args.sample,
             num_beams=num_beams,
             max_new_tokens=64,
             output_attentions=True,
@@ -324,23 +334,21 @@ with torch.inference_mode():
             # VCD
             images_cd=image_cd,
             cd_alpha=cd_alpha,
-            cd_beta=cd_beta
+            cd_beta=cd_beta,
         )
 
 output_text = out[0]
 print("decoder output text", output_text)
 if post_correction == "woodpecker":
     sample = {
-    'img_path': image_path,
-    'input_desc': output_text,
-    'query': "Generate a short caption of the image."
+        "img_path": image_path,
+        "input_desc": output_text,
+        "query": "Generate a short caption of the image.",
     }
 
     corrected_sample = corrector.correct(sample)
-    output_text = corrected_sample['output']
+    output_text = corrected_sample["output"]
     print("corrected output_text", output_text)
 
 
 print("caption: ", output_text)
-
-

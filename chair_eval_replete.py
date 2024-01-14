@@ -25,7 +25,7 @@ from PIL import Image
 import json
 
 from decoder_zoo.Woodpecker.vis_corrector import Corrector
-from decoder_zoo.HaLC.context_density.halc import halc_assistant
+from decoder_zoo.HALC.context_density.halc import halc_assistant
 from decoder_zoo.VCD.vcd_utils.vcd_add_noise import add_diffusion_noise
 
 from pycocotools.coco import COCO
@@ -46,7 +46,7 @@ INSTRUCTION_TEMPLATE = {
     "instructblip": "<ImageHere><question>",
     "lrv_instruct": "###Human: <Img><ImageHere></Img> <question> ###Assistant:",
     "shikra": "USER: <im_start><ImageHere><im_end> <question> ASSISTANT:",
-    "llava-1.5": "USER: <ImageHere> <question> ASSISTANT:"
+    "llava-1.5": "USER: <ImageHere> <question> ASSISTANT:",
 }
 
 
@@ -63,13 +63,15 @@ def setup_seeds(config, seed):
 parser = argparse.ArgumentParser(description="POPE-Adv evaluation on LVLMs.")
 parser.add_argument("--model", type=str, default="minigpt4", help="model")
 parser.add_argument(
-        "-d",
-        "--decoder",
-        type=str,
-        default="greedy",
-        help="Decoding strategy to use. You can choose from 'greedy', 'dola', 'halc'. Default is 'greedy'.",
-    )
-parser.add_argument("-g", "--gpu-id", type=int, default=0, help="specify the gpu to load the model.")
+    "-d",
+    "--decoder",
+    type=str,
+    default="greedy",
+    help="Decoding strategy to use. You can choose from 'greedy', 'dola', 'halc'. Default is 'greedy'.",
+)
+parser.add_argument(
+    "-g", "--gpu-id", type=int, default=0, help="specify the gpu to load the model."
+)
 parser.add_argument(
     "--options",
     nargs="+",
@@ -83,11 +85,16 @@ parser.add_argument(
     default="coco",
     help="Name of the dataset. Default is 'coco'.",
 )
-parser.add_argument("--data_path", type=str, default="/home/czr/contrast_decoding_LVLMs/eval_dataset/val2014/", help="data path")
+parser.add_argument(
+    "--data_path",
+    type=str,
+    default="/home/czr/contrast_decoding_LVLMs/eval_dataset/val2014/",
+    help="data path",
+)
 parser.add_argument("--batch_size", type=int, default=1, help="batch size")
 parser.add_argument("--num_workers", type=int, default=2, help="num workers")
 parser.add_argument("-b", "--beam", type=int, default=3)
-parser.add_argument("--sample", action='store_true')
+parser.add_argument("--sample", action="store_true")
 parser.add_argument("--scale_factor", type=float, default=50)
 parser.add_argument("--threshold", type=int, default=15)
 parser.add_argument("--num_attn_candidates", type=int, default=5)
@@ -136,23 +143,9 @@ parser.add_argument(
     default=1,
     help="Alpha param for VCD.",
 )
-parser.add_argument(
-    "--cd_beta",
-    type=float,
-    default=0.1,
-    help="Beta param for VCD."
-)
-parser.add_argument(
-    "--noise_step",
-    type=int,
-    default=3,
-    help="Noise step for VCD."
-)
-parser.add_argument(
-    "--generated_caption",
-    type=str,
-    help="Generated caption."
-)
+parser.add_argument("--cd_beta", type=float, default=0.1, help="Beta param for VCD.")
+parser.add_argument("--noise_step", type=int, default=3, help="Noise step for VCD.")
+parser.add_argument("--generated_caption", type=str, help="Generated caption.")
 parser.add_argument(
     "--segment",
     type=str,
@@ -171,7 +164,9 @@ cfg = Config(args)
 seed = args.seed
 setup_seeds(cfg, seed)
 
-device = torch.device(f"cuda:{int(args.gpu_id)}") if torch.cuda.is_available() else "cpu"
+device = (
+    torch.device(f"cuda:{int(args.gpu_id)}") if torch.cuda.is_available() else "cpu"
+)
 # device = "cpu"
 
 verbosity = args.verbosity
@@ -193,7 +188,7 @@ segment = int(args.segment)
 
 loaded_json = []
 loaded_keys = []
-with open(generated_caption_path, 'r') as f:
+with open(generated_caption_path, "r") as f:
     lines = f.readlines()
     for line in lines:
         pair = json.loads(line)
@@ -203,7 +198,7 @@ with open(generated_caption_path, 'r') as f:
 # ========================================
 #             Model Initialization
 # ========================================
-print('Initializing Model')
+print("Initializing Model")
 
 model_config = cfg.model_cfg
 model_config.device_8bit = args.gpu_id
@@ -219,12 +214,23 @@ vis_processors, txt_processors = load_preprocess(processor_cfg)
 
 vis_processor_cfg = cfg.datasets_cfg.cc_sbu_align.vis_processor.train
 vis_processor = registry.get_processor_class(vis_processor_cfg.name).from_config(
-    vis_processor_cfg)
+    vis_processor_cfg
+)
 
 
-valid_decoding_strategies = ["greedy", "dola", "halc-dola", "halc-greedy", "halc-beam", "opera-beam", "vcd"]
+valid_decoding_strategies = [
+    "greedy",
+    "dola",
+    "halc-dola",
+    "halc-greedy",
+    "halc-beam",
+    "opera-beam",
+    "vcd",
+]
 
-assert decoding_strategy in valid_decoding_strategies, f"Invalid decoding strategy: {decoding_strategy}, should be in {valid_decoding_strategies}"
+assert (
+    decoding_strategy in valid_decoding_strategies
+), f"Invalid decoding strategy: {decoding_strategy}, should be in {valid_decoding_strategies}"
 
 decoding_strategy = decoding_strategy
 opera_decoding = False
@@ -278,10 +284,10 @@ mean = (0.48145466, 0.4578275, 0.40821073)
 std = (0.26862954, 0.26130258, 0.27577711)
 norm = transforms.Normalize(mean, std)
 
-annotation_file_path = args.data_path + 'annotations/instances_val2014.json'
-caption_file_path = args.data_path + 'annotations/captions_val2014.json'
+annotation_file_path = args.data_path + "annotations/instances_val2014.json"
+caption_file_path = args.data_path + "annotations/captions_val2014.json"
 # with open(args.data_path + '../annotations_trainval2014/annotations/instances_val2014.json', 'r') as f:
-with open(annotation_file_path, 'r') as f:
+with open(annotation_file_path, "r") as f:
     lines = f.readlines()
 coco_anns = json.loads(lines[0])
 
@@ -303,7 +309,6 @@ print("refill_img_ids", refill_img_ids)
 
 img_files = []
 for cur_img_id in refill_img_ids:
-
     cur_img = coco.loadImgs(cur_img_id)[0]
     cur_img_path = cur_img["file_name"]
     img_files.append(cur_img_path)
@@ -322,22 +327,30 @@ for ann_info in coco_anns["annotations"]:
         category_dict[ann_info["category_id"]]
     )
 
-base_dir  = output_dir + args.model
+base_dir = output_dir + args.model
 if not os.path.exists(base_dir):
     os.makedirs(base_dir)
 
-halc_params = {"context_domain": "upper", "contrast_weight": 0.05, "context_window": 4, "expand_ratio": expand_ratio, "beam_size": num_beams, "k_candidate_num": args.k_candidate_num, "LVLM_backbone": model_name}
-halc_assistant_helper = halc_assistant(model, vis_processor=vis_processor, device=device, halc_params=halc_params)
+halc_params = {
+    "context_domain": "upper",
+    "contrast_weight": 0.05,
+    "context_window": 4,
+    "expand_ratio": expand_ratio,
+    "beam_size": num_beams,
+    "k_candidate_num": args.k_candidate_num,
+    "LVLM_backbone": model_name,
+}
+halc_assistant_helper = halc_assistant(
+    model, vis_processor=vis_processor, device=device, halc_params=halc_params
+)
 
 offlight = True
 
 for idx, img_id in tqdm(enumerate(range(len(img_files)))):
-
     # if idx < segment:
     #     continue
     # if idx >= segment + 100:
     #     break
-
 
     img_file = img_files[img_id]
     img_id = int(img_file.split(".jpg")[0][-6:])
@@ -361,12 +374,11 @@ for idx, img_id in tqdm(enumerate(range(len(img_files)))):
         image = vis_processors["eval"](raw_image).unsqueeze(0)
         image = image.to(device)
     except Exception as e:
-    #     # Print the error message
+        #     # Print the error message
         print(f"Failed to open image {img_file}: {e}")
         continue
 
         # Path where the image will be copied if it fails to open
-        
 
         # # Copy the image to the specified directory
         # shutil.copy(image_path, lost_image_path)
@@ -387,7 +399,6 @@ for idx, img_id in tqdm(enumerate(range(len(img_files)))):
 
     template = INSTRUCTION_TEMPLATE[args.model]
     qu = template.replace("<question>", qu)
-
 
     # lm_early_exit_layers = [
     #     0,
@@ -430,7 +441,11 @@ for idx, img_id in tqdm(enumerate(range(len(img_files)))):
     image_cd = None
     if decoding_strategy == "vcd":
         image_tensor_cd = add_diffusion_noise(image, args.noise_step)
-        image_cd = (image_tensor_cd.unsqueeze(0).half().cuda() if image_tensor_cd is not None else None)
+        image_cd = (
+            image_tensor_cd.unsqueeze(0).half().cuda()
+            if image_tensor_cd is not None
+            else None
+        )
         cd_alpha = cd_alpha
         cd_beta = cd_beta
         if model_name == "minigpt4":
@@ -440,7 +455,7 @@ for idx, img_id in tqdm(enumerate(range(len(img_files)))):
         with torch.inference_mode():
             with torch.no_grad():
                 out = model.generate(
-                    {"image": norm(image), "prompt":qu},
+                    {"image": norm(image), "prompt": qu},
                     use_nucleus_sampling=args.sample,
                     num_beams=num_beams,
                     max_new_tokens=max_new_tokens,
@@ -464,7 +479,7 @@ for idx, img_id in tqdm(enumerate(range(len(img_files)))):
                     # VCD
                     images_cd=image_cd,
                     cd_alpha=cd_alpha,
-                    cd_beta=cd_beta
+                    cd_beta=cd_beta,
                 )
     except Exception as e:
         print(f"Failed to generate caption for image {img_file}: {e}")
@@ -474,16 +489,15 @@ for idx, img_id in tqdm(enumerate(range(len(img_files)))):
     print("decoder output text", output_text)
     if post_correction == "woodpecker":
         sample = {
-        'img_path': image_path,
-        'input_desc': output_text,
-        'query': "Generate a short caption of the image."
+            "img_path": image_path,
+            "input_desc": output_text,
+            "query": "Generate a short caption of the image.",
         }
 
         corrected_sample = corrector.correct(sample)
-        output_text = corrected_sample['output']
+        output_text = corrected_sample["output"]
         print("corrected output_text", output_text)
         input()
-
 
     img_save["caption"] = output_text
 
@@ -491,11 +505,13 @@ for idx, img_id in tqdm(enumerate(range(len(img_files)))):
     print("image_path: ", image_path)
     print("caption: ", output_text)
 
-
     # dump metric file
     # generated_captions_path = os.path.join(base_dir, f"{model_name}_{decoding_strategy}_beams_{num_beams}_k_{k_candidate_num}_{dataset_name}_expand_ratio_{expand_ratio}_seed_{seed}_max_tokens_{max_new_tokens}_samples_{num_samples}_segment_{segment}_generated_captions_refill.json")
-    generated_captions_path = os.path.join(base_dir, f"{model_name}_{decoding_strategy}_beams_{num_beams}_k_{k_candidate_num}_{dataset_name}_expand_ratio_{expand_ratio}_seed_{seed}_max_tokens_{max_new_tokens}_samples_{num_samples}_generated_captions_refill.json")
+    generated_captions_path = os.path.join(
+        base_dir,
+        f"{model_name}_{decoding_strategy}_beams_{num_beams}_k_{k_candidate_num}_{dataset_name}_expand_ratio_{expand_ratio}_seed_{seed}_max_tokens_{max_new_tokens}_samples_{num_samples}_generated_captions_refill.json",
+    )
 
     with open(generated_captions_path, "a") as f:
         json.dump(img_save, f)
-        f.write('\n')
+        f.write("\n")

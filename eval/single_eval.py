@@ -1,6 +1,7 @@
 import argparse
 import os, sys
 import random
+
 sys.path.append("/home/czr/HaLC/")
 import numpy as np
 import torch
@@ -34,7 +35,7 @@ import seaborn
 import json, jsonlines
 
 from decoder_zoo.Woodpecker.vis_corrector import Corrector
-from decoder_zoo.HaLC.context_density.halc import halc_assistant
+from decoder_zoo.HALC.context_density.halc import halc_assistant
 
 from pycocotools.coco import COCO
 from pycocoevalcap.eval import COCOEvalCap
@@ -56,9 +57,11 @@ args = parser.parse_known_args()[0]
 
 # generated_captions_path = "/home/czr/HaLC/log/minigpt4/minigpt4_halc-beam_2_2_coco_0_2_generated_captions.json"
 generated_captions_path = args.generated_captions_path
-formulated_output_path = generated_captions_path.replace("_generated_captions.json", "_chair.json")
+formulated_output_path = generated_captions_path.replace(
+    "_generated_captions.json", "_chair.json"
+)
 loaded_json = []
-with open(generated_captions_path, 'r') as f:
+with open(generated_captions_path, "r") as f:
     lines = f.readlines()
     for line in lines:
         loaded_json.append(json.loads(line))
@@ -66,8 +69,8 @@ with open(generated_captions_path, 'r') as f:
 
 # eliminate the items in loaded_json with the same key:
 for i in range(len(loaded_json)):
-    for j in range(i+1, len(loaded_json)):
-        if loaded_json[i]['image_id'] == loaded_json[j]['image_id']:
+    for j in range(i + 1, len(loaded_json)):
+        if loaded_json[i]["image_id"] == loaded_json[j]["image_id"]:
             loaded_json.pop(j)
             break
 
@@ -84,18 +87,15 @@ img_to_eval_dict = {}
 caption_file_path = "/home/czr/contrast_decoding_LVLMs/eval_dataset/val2014/annotations/captions_val2014.json"
 annotation_file_path = "/home/czr/contrast_decoding_LVLMs/eval_dataset/val2014/annotations/captions_val2014.json"
 # with open(args.data_path + '../annotations_trainval2014/annotations/instances_val2014.json', 'r') as f:
-with open(annotation_file_path, 'r') as f:
+with open(annotation_file_path, "r") as f:
     lines = f.readlines()
 coco_anns = json.loads(lines[0])
 
 coco = COCO(caption_file_path)
 
 
-
 # to save memory, load 100 captions at a time
-for start_idx in tqdm(
-    range(0, len(loaded_json), 100), desc="Generating CHAIR Input"
-):
+for start_idx in tqdm(range(0, len(loaded_json), 100), desc="Generating CHAIR Input"):
     # define the current iteration end index
     end_idx = min(start_idx + 100, len(loaded_json))
     coco_res = coco.loadRes(
@@ -132,5 +132,3 @@ formulated_output_dict["imgToEval"] = img_to_eval_dict
 
 with open(formulated_output_path, "w") as f:
     json.dump(formulated_output_dict, f)
-
-

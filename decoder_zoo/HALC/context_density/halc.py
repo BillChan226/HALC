@@ -8,8 +8,9 @@ import torch.backends.cudnn as cudnn
 import seaborn as sns
 import matplotlib.pyplot as plt
 import json
-from decoder_zoo.HaLC.context_density.detector import Detector
-from transformers import Owlv2Processor, Owlv2ForObjectDetection
+from decoder_zoo.HALC.context_density.detector import Detector
+
+# from transformers import Owlv2Processor, Owlv2ForObjectDetection
 from types import SimpleNamespace
 from PIL import Image, ImageDraw
 import spacy
@@ -31,9 +32,11 @@ class halc_assistant:
     ):
         # initialize detector
         args_dict = {
-            "detector_config": "decoder_zoo/GroundingDINO/groundingdino/config/GroundingDINO_SwinT_OGC.py",
-            "detector_model_path": "decoder_zoo/GroundingDINO/weights/groundingdino_swint_ogc.pth",
-            "cache_dir": "decoder_zoo/HaLC/cache_dir",
+            # "detector_config": "decoder_zoo/GroundingDINO/groundingdino/config/GroundingDINO_SwinT_OGC.py",
+            "detector_config": "./eval_configs/GroundingDINO_SwinT_OGC.py",
+            # "detector_model_path": "decoder_zoo/GroundingDINO/weights/groundingdino_swint_ogc.pth",
+            "detector_model_path": "./model_checkpoints/groundingdino_swint_ogc.pth",
+            "cache_dir": "decoder_zoo/HALC/cache_dir",
             "device": device,
         }
         model_args = SimpleNamespace(**args_dict)
@@ -42,14 +45,18 @@ class halc_assistant:
         if halc_detector == "dino":
             self.detector = Detector(model_args)
         elif halc_detector == "owlv2":
-            self.owlv2_processor = Owlv2Processor.from_pretrained("google/owlv2-base-patch16-ensemble")
-            self.owlv2_model = Owlv2ForObjectDetection.from_pretrained("google/owlv2-base-patch16-ensemble")
+            self.owlv2_processor = Owlv2Processor.from_pretrained(
+                "google/owlv2-base-patch16-ensemble"
+            )
+            self.owlv2_model = Owlv2ForObjectDetection.from_pretrained(
+                "google/owlv2-base-patch16-ensemble"
+            )
         else:
             raise ValueError("Invalid detector!")
 
         self.vis_processor = vis_processor
         self.model = model
-        
+
         self.tagging = spacy.load("en_core_web_sm")
         self.halc_params = halc_params
         self.k_candidate_num = halc_params["k_candidate_num"]
@@ -61,10 +68,10 @@ class halc_assistant:
 
         if self.model_backbone == "minigpt4" or self.model_backbone == "llava-1.5":
             self.tokenizer = self.model.llama_tokenizer
-            token_vocab_dir = "decoder_zoo/HaLC/context_density/llama_tokenizer.json"
+            token_vocab_dir = "decoder_zoo/HALC/context_density/llama_tokenizer.json"
         elif self.model_backbone == "instructblip":
             self.tokenizer = self.model.llm_tokenizer
-            token_vocab_dir = "decoder_zoo/HaLC/context_density/vicuna_tokenizer.json"
+            token_vocab_dir = "decoder_zoo/HALC/context_density/vicuna_tokenizer.json"
 
         with open(token_vocab_dir, "r") as f:
             self.token_vocab = json.load(f)
@@ -121,7 +128,6 @@ class halc_assistant:
         return last_word_flag
 
     def get_last_word(self, input_ids):
-
         output_text = self.tokenizer.decode(input_ids, skip_special_tokens=True)
 
         last_word_flag = True
@@ -241,18 +247,24 @@ class halc_assistant:
                 # entity_to_ground = [["a man hold a clock"]]
                 # print("texts", entity_to_ground)
                 # print("self.detector_dict", self.detector_dict)
-                owlv2_inputs = self.owlv2_processor(text=entity_to_ground, images=self.image_to_ground, return_tensors="pt")
+                owlv2_inputs = self.owlv2_processor(
+                    text=entity_to_ground,
+                    images=self.image_to_ground,
+                    return_tensors="pt",
+                )
                 owlv2_outputs = self.owlv2_model(**owlv2_inputs)
                 # Target image sizes (height, width) to rescale box predictions [batch_size, 2]
                 # target_sizes = torch.Tensor([self.image_to_ground.size[::-1]])
                 # Convert outputs (bounding boxes and class logits) to Pascal VOC Format (xmin, ymin, xmax, ymax)
                 # results = self.owlv2_processor.post_process_object_detection(outputs=owlv2_outputs, target_sizes=target_sizes, threshold=0.1)
-        
-                results = self.owlv2_processor.post_process_object_detection(outputs=owlv2_outputs, threshold=0.05)
+
+                results = self.owlv2_processor.post_process_object_detection(
+                    outputs=owlv2_outputs, threshold=0.05
+                )
 
                 # print("results: ", results)
                 original_bbox = results[0]["boxes"].cpu().numpy().tolist()
-                
+
                 # input()
             # print("original_bbox", original_bbox)
             # input()
@@ -275,7 +287,9 @@ class halc_assistant:
                 # target_bbox_index = area_list.index(max(area_list))
                 # get the middle of the area_list
                 # you have to sort area_list first and then get the middle of the area_list
-                target_bbox_index = sorted(range(len(area_list)), key=lambda k: area_list[k])[len(area_list)//2]
+                target_bbox_index = sorted(
+                    range(len(area_list)), key=lambda k: area_list[k]
+                )[len(area_list) // 2]
                 target_bbox = original_bbox[target_bbox_index]
 
             # target_bbox = original_bbox[0]
@@ -557,11 +571,11 @@ class halc_assistant:
                 final_images.append(final_image)
 
             # # Save the distorted images
-            saved_paths = []
-            for i, cropped_img in enumerate(final_images, start=1):
-                save_path = f"decoder_zoo/HaLC/mnt/cropped_level_{i}.png"
-                cropped_img.save(save_path)
-                saved_paths.append(save_path)
+            # saved_paths = []
+            # for i, cropped_img in enumerate(final_images, start=1):
+            #     save_path = f"decoder_zoo/HaLC/mnt/cropped_level_{i}.png"
+            #     cropped_img.save(save_path)
+            #     saved_paths.append(save_path)
             # input("img saved!")
 
             # get decoding for each context window

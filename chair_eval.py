@@ -27,7 +27,7 @@ import json
 from types import SimpleNamespace
 from decoder_zoo.Woodpecker.vis_corrector import Corrector
 from decoder_zoo.Woodpecker.config import woodpecker_args_dict
-from decoder_zoo.HaLC.context_density.halc import halc_assistant
+from decoder_zoo.HALC.context_density.halc import halc_assistant
 from decoder_zoo.VCD.vcd_utils.vcd_add_noise import add_diffusion_noise
 
 from pycocotools.coco import COCO
@@ -48,9 +48,8 @@ INSTRUCTION_TEMPLATE = {
     "instructblip": "<ImageHere><question>",
     "lrv_instruct": "###Human: <Img><ImageHere></Img> <question> ###Assistant:",
     "shikra": "USER: <im_start><ImageHere><im_end> <question> ASSISTANT:",
-    "llava-1.5": "USER: <ImageHere> <question> ASSISTANT:"
+    "llava-1.5": "USER: <ImageHere> <question> ASSISTANT:",
 }
-
 
 
 def setup_seeds(config, seed):
@@ -66,13 +65,15 @@ def setup_seeds(config, seed):
 parser = argparse.ArgumentParser(description="POPE-Adv evaluation on LVLMs.")
 parser.add_argument("--model", type=str, default="minigpt4", help="model")
 parser.add_argument(
-        "-d",
-        "--decoder",
-        type=str,
-        default="greedy",
-        help="Decoding strategy to use. You can choose from 'greedy', 'dola', 'halc'. Default is 'greedy'.",
-    )
-parser.add_argument("-g", "--gpu-id", type=int, default=0, help="specify the gpu to load the model.")
+    "-d",
+    "--decoder",
+    type=str,
+    default="greedy",
+    help="Decoding strategy to use. You can choose from 'greedy', 'dola', 'halc'. Default is 'greedy'.",
+)
+parser.add_argument(
+    "-g", "--gpu-id", type=int, default=0, help="specify the gpu to load the model."
+)
 parser.add_argument(
     "--options",
     nargs="+",
@@ -86,11 +87,16 @@ parser.add_argument(
     default="coco",
     help="Name of the dataset. Default is 'coco'.",
 )
-parser.add_argument("--data_path", type=str, default="/home/czr/contrast_decoding_LVLMs/eval_dataset/val2014/", help="data path")
+parser.add_argument(
+    "--data_path",
+    type=str,
+    default="/home/czr/contrast_decoding_LVLMs/eval_dataset/val2014/",
+    help="data path",
+)
 parser.add_argument("--batch_size", type=int, default=1, help="batch size")
 parser.add_argument("--num_workers", type=int, default=2, help="num workers")
 parser.add_argument("-b", "--beam", type=int, default=3)
-parser.add_argument("--sample", action='store_true')
+parser.add_argument("--sample", action="store_true")
 parser.add_argument("--scale_factor", type=float, default=50)
 parser.add_argument("--threshold", type=int, default=15)
 parser.add_argument("--num_attn_candidates", type=int, default=5)
@@ -139,18 +145,8 @@ parser.add_argument(
     default=1,
     help="Alpha param for VCD.",
 )
-parser.add_argument(
-    "--cd_beta",
-    type=float,
-    default=0.1,
-    help="Beta param for VCD."
-)
-parser.add_argument(
-    "--noise_step",
-    type=int,
-    default=500,
-    help="Noise step for VCD."
-)
+parser.add_argument("--cd_beta", type=float, default=0.1, help="Beta param for VCD.")
+parser.add_argument("--noise_step", type=int, default=500, help="Noise step for VCD.")
 parser.add_argument(
     "--detector",
     type=str,
@@ -169,7 +165,9 @@ cfg = Config(args)
 seed = args.seed
 setup_seeds(cfg, seed)
 
-device = torch.device(f"cuda:{int(args.gpu_id)}") if torch.cuda.is_available() else "cpu"
+device = (
+    torch.device(f"cuda:{int(args.gpu_id)}") if torch.cuda.is_available() else "cpu"
+)
 # device = "cpu"
 
 verbosity = args.verbosity
@@ -192,7 +190,7 @@ cd_beta = args.cd_beta
 # ========================================
 #             Model Initialization
 # ========================================
-print('Initializing Model')
+print("Initializing Model")
 
 model_config = cfg.model_cfg
 model_config.device_8bit = args.gpu_id
@@ -208,16 +206,31 @@ vis_processors, txt_processors = load_preprocess(processor_cfg)
 
 vis_processor_cfg = cfg.datasets_cfg.cc_sbu_align.vis_processor.train
 vis_processor = registry.get_processor_class(vis_processor_cfg.name).from_config(
-    vis_processor_cfg)
+    vis_processor_cfg
+)
 
 
-valid_decoding_strategies = ["greedy", "dola", "halc-dola", "halc-greedy", "halc-beam", "opera-beam", "vcd"]
+valid_decoding_strategies = [
+    "greedy",
+    "dola",
+    "halc-dola",
+    "halc-greedy",
+    "halc-beam",
+    "opera-beam",
+    "vcd",
+]
 valid_post_editing_strategies = ["lure", "woodpecker"]
 valid_detector = ["dino", "owlv2"]
 
-assert decoding_strategy in valid_decoding_strategies, f"Invalid decoding strategy: {decoding_strategy}, should be in {valid_decoding_strategies}"
-assert post_correction in valid_post_editing_strategies or post_correction is None, f"Invalid post correction strategy: {post_correction}, should be in {valid_post_editing_strategies}"
-assert detector_type in valid_detector, f"Invalid detector type: {detector_type}, should be in {valid_detector}"
+assert (
+    decoding_strategy in valid_decoding_strategies
+), f"Invalid decoding strategy: {decoding_strategy}, should be in {valid_decoding_strategies}"
+assert (
+    post_correction in valid_post_editing_strategies or post_correction is None
+), f"Invalid post correction strategy: {post_correction}, should be in {valid_post_editing_strategies}"
+assert (
+    detector_type in valid_detector
+), f"Invalid detector type: {detector_type}, should be in {valid_detector}"
 
 decoding_strategy = decoding_strategy
 opera_decoding = False
@@ -272,10 +285,10 @@ mean = (0.48145466, 0.4578275, 0.40821073)
 std = (0.26862954, 0.26130258, 0.27577711)
 norm = transforms.Normalize(mean, std)
 
-annotation_file_path = args.data_path + 'annotations/instances_val2014.json'
-caption_file_path = args.data_path + 'annotations/captions_val2014.json'
+annotation_file_path = args.data_path + "annotations/instances_val2014.json"
+caption_file_path = args.data_path + "annotations/captions_val2014.json"
 # with open(args.data_path + '../annotations_trainval2014/annotations/instances_val2014.json', 'r') as f:
-with open(annotation_file_path, 'r') as f:
+with open(annotation_file_path, "r") as f:
     lines = f.readlines()
 coco_anns = json.loads(lines[0])
 
@@ -289,7 +302,6 @@ sampled_img_ids = random.sample(img_ids, num_samples)
 
 img_files = []
 for cur_img_id in sampled_img_ids:
-
     cur_img = coco.loadImgs(cur_img_id)[0]
     cur_img_path = cur_img["file_name"]
     img_files.append(cur_img_path)
@@ -312,13 +324,27 @@ base_dir = os.path.join(output_dir, "chair", args.model)
 if not os.path.exists(base_dir):
     os.makedirs(base_dir)
 
-halc_params = {"context_domain": "upper", "contrast_weight": 0.05, "context_window": 4, "expand_ratio": expand_ratio, "beam_size": num_beams, "k_candidate_num": args.k_candidate_num, "LVLM_backbone": model_name, "detector": detector_type}
-halc_assistant_helper = halc_assistant(model, vis_processor=vis_processor, device=device, halc_params=halc_params, max_new_tokens=max_new_tokens)
+halc_params = {
+    "context_domain": "upper",
+    "contrast_weight": 0.05,
+    "context_window": 4,
+    "expand_ratio": expand_ratio,
+    "beam_size": num_beams,
+    "k_candidate_num": args.k_candidate_num,
+    "LVLM_backbone": model_name,
+    "detector": detector_type,
+}
+halc_assistant_helper = halc_assistant(
+    model,
+    vis_processor=vis_processor,
+    device=device,
+    halc_params=halc_params,
+    max_new_tokens=max_new_tokens,
+)
 
 offlight = True
 
 for img_id in tqdm(range(len(img_files))):
-
     img_file = img_files[img_id]
     img_id = int(img_file.split(".jpg")[0][-6:])
     # print("img_id", img_id)
@@ -346,7 +372,6 @@ for img_id in tqdm(range(len(img_files))):
 
     template = INSTRUCTION_TEMPLATE[args.model]
     qu = template.replace("<question>", qu)
-
 
     # lm_early_exit_layers = [
     #     0,
@@ -390,7 +415,11 @@ for img_id in tqdm(range(len(img_files))):
 
     if vcd_decoding:
         image_tensor_cd = add_diffusion_noise(image, args.noise_step)
-        image_cd = (image_tensor_cd.unsqueeze(0).half().cuda() if image_tensor_cd is not None else None)
+        image_cd = (
+            image_tensor_cd.unsqueeze(0).half().cuda()
+            if image_tensor_cd is not None
+            else None
+        )
         cd_alpha = cd_alpha
         cd_beta = cd_beta
         print("image_cd", image_cd.shape)
@@ -398,11 +427,10 @@ for img_id in tqdm(range(len(img_files))):
         if model_name == "minigpt4":
             image_cd = image_cd.squeeze(0)
 
-
     with torch.inference_mode():
         with torch.no_grad():
             out = model.generate(
-                {"image": norm(image), "prompt":qu},
+                {"image": norm(image), "prompt": qu},
                 use_nucleus_sampling=args.sample,
                 num_beams=num_beams,
                 max_new_tokens=max_new_tokens,
@@ -426,7 +454,7 @@ for img_id in tqdm(range(len(img_files))):
                 # VCD
                 images_cd=image_cd,
                 cd_alpha=cd_alpha,
-                cd_beta=cd_beta
+                cd_beta=cd_beta,
             )
 
     output_text = out[0]
@@ -434,16 +462,15 @@ for img_id in tqdm(range(len(img_files))):
     if post_correction == "woodpecker":
         decoding_strategy = "woodpecker"
         sample = {
-        'img_path': image_path,
-        'input_desc': output_text,
-        'query': qu,
+            "img_path": image_path,
+            "input_desc": output_text,
+            "query": qu,
         }
 
         corrected_sample = corrector.correct(sample)
-        output_text = corrected_sample['output']
+        output_text = corrected_sample["output"]
         print("corrected output_text", output_text)
         input()
-
 
     img_save["caption"] = output_text
 
@@ -451,26 +478,28 @@ for img_id in tqdm(range(len(img_files))):
     print("image_path: ", image_path)
     print("caption: ", output_text)
 
-
     # dump metric file
-    generated_captions_path = os.path.join(base_dir, f"{model_name}_{decoding_strategy}_beams_{num_beams}_k_{k_candidate_num}_{dataset_name}_expand_ratio_{expand_ratio}_seed_{seed}_max_tokens_{max_new_tokens}_samples_{num_samples}_generated_captions.json")
+    generated_captions_path = os.path.join(
+        base_dir,
+        f"{model_name}_{decoding_strategy}_beams_{num_beams}_k_{k_candidate_num}_{dataset_name}_expand_ratio_{expand_ratio}_seed_{seed}_max_tokens_{max_new_tokens}_samples_{num_samples}_generated_captions.json",
+    )
     with open(generated_captions_path, "a") as f:
         json.dump(img_save, f)
-        f.write('\n')
+        f.write("\n")
 
 
 ##################  EVALUATION  #####################
 
 loaded_json = []
-with open(generated_captions_path, 'r') as f:
+with open(generated_captions_path, "r") as f:
     lines = f.readlines()
     for line in lines:
         loaded_json.append(json.loads(line))
 
 # eliminate the items in loaded_json with the same key:
 for i in range(len(loaded_json)):
-    for j in range(i+1, len(loaded_json)):
-        if loaded_json[i]['image_id'] == loaded_json[j]['image_id']:
+    for j in range(i + 1, len(loaded_json)):
+        if loaded_json[i]["image_id"] == loaded_json[j]["image_id"]:
             loaded_json.pop(j)
             break
 
@@ -484,9 +513,7 @@ all_overall_scores = defaultdict(list)
 # imgToEval per image result
 img_to_eval_dict = {}
 # to save memory, load 100 captions at a time
-for start_idx in tqdm(
-    range(0, len(loaded_json), 100), desc="Generating CHAIR Input"
-):
+for start_idx in tqdm(range(0, len(loaded_json), 100), desc="Generating CHAIR Input"):
     # define the current iteration end index
     end_idx = min(start_idx + 100, len(loaded_json))
     coco_res = coco.loadRes(
@@ -521,9 +548,7 @@ if len(img_to_eval_dict) != num_samples:
     )
 
 if verbosity:
-    print(
-        f"\nGenerated {len(img_to_eval_dict)} samples results in CHAIR format."
-    )
+    print(f"\nGenerated {len(img_to_eval_dict)} samples results in CHAIR format.")
 
 # save the formulated output dict
 formulated_output_path = os.path.join(
@@ -534,7 +559,4 @@ formulated_output_path = os.path.join(
 with open(formulated_output_path, "w") as f:
     json.dump(formulated_output_dict, f)
 if verbosity:
-    print(
-        f"\nFormulated output matching CHAIR input format saved to {base_dir}."
-    )
-
+    print(f"\nFormulated output matching CHAIR input format saved to {base_dir}.")

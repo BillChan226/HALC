@@ -8,12 +8,21 @@ import shortuuid
 from torchvision.ops import box_convert
 import torch
 from models.utils import compute_iou
+
+# use GroundingDINO in decoder_zoo
 from decoder_zoo.GroundingDINO.groundingdino.util.inference import (
     load_model,
     load_image,
     transform_loaded_image,
     predict,
 )
+
+# use GroundingDINO from pip install
+# from groundingdino.util.inference import (
+#     load_model,
+#     load_image,
+#     predict,
+# )
 from PIL import Image
 import spacy
 
@@ -116,7 +125,7 @@ class Detector:
         )
         self.cache_dir = args.cache_dir
         self.args = args
-        self.nlp = spacy.load("en_core_web_md")
+        self.nlp = spacy.load("en_core_web_sm")
 
     def detect_objects(self, sample: Dict):
         img_path = sample["img_path"]

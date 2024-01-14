@@ -30,7 +30,7 @@ from minigpt4.tasks import *
 from types import SimpleNamespace
 from decoder_zoo.Woodpecker.vis_corrector import Corrector
 from decoder_zoo.Woodpecker.config import woodpecker_args_dict
-from decoder_zoo.HaLC.context_density.halc import halc_assistant
+from decoder_zoo.HALC.context_density.halc import halc_assistant
 from decoder_zoo.VCD.vcd_utils.vcd_add_noise import add_diffusion_noise
 
 from pycocotools.coco import COCO
@@ -617,8 +617,6 @@ def main():
     with open(metrics_path, "w") as f:
         json.dump(result, f)
         f.write("\n")
-
-
 
 
 if __name__ == "__main__":

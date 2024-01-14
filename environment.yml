@@ -3,10 +3,15 @@ channels:
   - pytorch
   - defaults
   - anaconda
+  - main
+  - nvidia
+  - conda-forge
 dependencies:
   - python=3.9
-  - cudatoolkit
+  - cudatoolkit=11.7
   - pip
+  - spacy
+  - spacy-model-en_core_web_sm=3.5.0
   - pip:
     - torch==2.0.0
     - torchaudio
@@ -37,10 +42,10 @@ dependencies:
     - pandas
     - shortuuid
     - chardet
-    - spacy
     - openai
     - supervision
     - addict
     - yapf
     - pycocotools
     - pycocoevalcap
+    - groundingdino-py==0.4.0

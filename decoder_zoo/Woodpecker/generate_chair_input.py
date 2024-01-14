@@ -15,6 +15,7 @@ from types import SimpleNamespace
 import argparse
 import json
 import sys
+
 sys.path.append(".")
 
 # define pre-trained model download path by setting the environment variable
@@ -80,7 +81,14 @@ def initialize_mini_gpt_4(parser):
         [StoppingCriteriaSub(stops=stop_words_ids)]
     )
 
-    halc_params = {"context_domain": "upper", "contrast_weight": 0.05, "context_window": 4, "expand_ratio": 0.15, "beam_size": args.beam_size, "k_candidate_num": args.k_candidate_num}
+    halc_params = {
+        "context_domain": "upper",
+        "contrast_weight": 0.05,
+        "context_window": 4,
+        "expand_ratio": 0.15,
+        "beam_size": args.beam_size,
+        "k_candidate_num": args.k_candidate_num,
+    }
     hyper_params = {"halc_params": halc_params}
     chat = Chat(
         model,
@@ -185,13 +193,13 @@ def main():
     k_candidate_num = args.k_candidate_num
 
     args_dict = {
-    'api_key': "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",
-    'api_base': "https://api.openai.com/v1",
-    'val_model_path': "Salesforce/blip2-flan-t5-xxl",
-    'qa2c_model_path': "khhuang/zerofec-qa2claim-t5-base",
-    'detector_config': "./woodpecker/GroundingDINO/groundingdino/config/GroundingDINO_SwinT_OGC.py",
-    'detector_model_path': "./woodpecker/GroundingDINO/weights/groundingdino_swint_ogc.pth",
-    'cache_dir': "./cache_dir",
+        "api_key": "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",
+        "api_base": "https://api.openai.com/v1",
+        "val_model_path": "Salesforce/blip2-flan-t5-xxl",
+        "qa2c_model_path": "khhuang/zerofec-qa2claim-t5-base",
+        "detector_config": "./eval_configs/GroundingDINO_SwinT_OGC.py",
+        "detector_model_path": "./model_checkpoints/groundingdino_swint_ogc.pth",
+        "cache_dir": "./cache_dir",
     }
 
     model_args = SimpleNamespace(**args_dict)
@@ -251,8 +259,7 @@ def main():
             if verbosity:
                 print(f"\nLoaded generated captions from {generated_captions_path}.")
         else:
-
-        # if True:
+            # if True:
             # prepare data
             # all the image ids
             img_ids = coco.getImgIds()
@@ -292,13 +299,13 @@ def main():
                 print("output_text: ", output_text)
 
                 sample = {
-                'img_path': cur_img_path,
-                'input_desc': output_text,
-                'query': "Generate a short caption of the image."
+                    "img_path": cur_img_path,
+                    "input_desc": output_text,
+                    "query": "Generate a short caption of the image.",
                 }
 
                 corrected_sample = corrector.correct(sample)
-                print(corrected_sample['output'])
+                print(corrected_sample["output"])
                 input()
 
                 # append the generated caption to the list

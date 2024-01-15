@@ -16,15 +16,15 @@ dependencies:
     - torch==2.0.0
     - torchaudio
     - torchvision
-    - huggingface-hub==0.18.0
+    - huggingface-hub==0.20.2
     - matplotlib==3.7.0
     - psutil==5.9.4
     - iopath
     - pyyaml==6.0
     - regex==2022.10.31
-    - tokenizers==0.13.2
+    - tokenizers==0.15.0
     - tqdm==4.64.1
-    - -e ./transformers-4.28.1
+    - -e ./transformers-4.36.2
     - timm==0.6.13
     - webdataset==0.2.48
     - omegaconf==2.3.0
@@ -33,7 +33,7 @@ dependencies:
     - peft==0.2.0
     - sentence-transformers
     - gradio==3.47.1
-    - accelerate==0.20.3
+    - accelerate==0.26.1
     - bitsandbytes==0.37.0
     - scikit-image
     - visual-genome
@@ -48,3 +48,4 @@ dependencies:
     - yapf
     - pycocotools
     - pycocoevalcap
+    - icecream

@@ -184,7 +184,7 @@ def parse_args():
         type=str,
         # default="Is there a {} in the image? ",
         # default="Is there a XXX in the image? There is no XXX in the image, so the answer is No. Is there a YYY in the image? There is 2 YYY in the image, so the answer is Yes. Is there a {} in the image? ",
-        default="Is there a {} in the image? Answer 'Yes' or 'No' at the END of your response.",
+        default="Find evidence first and then answer: is there a {} in the image?",
         # default="Is there a {} in the image?",  # for llava-1.5
         help="Prompt template. Default is 'Is there a {} in the image?'.",
     )
@@ -528,7 +528,7 @@ def main():
         label_list = label_list + list(label)
 
         template = INSTRUCTION_TEMPLATE[args.model]
-        qu = [template.replace("<question>", q) for q in qu]
+        qu = [template.replace("<question>", q) for q in qu][0]
 
         image = image.to(device)
         label = torch.Tensor(label).to(device)

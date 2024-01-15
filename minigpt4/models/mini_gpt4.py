@@ -221,7 +221,7 @@ class MiniGPT4(Blip2Base):
 
         mixed_embs = [emb for pair in zip(seg_embs[:-1], img_list) for emb in pair] + [seg_embs[-1]]
         mixed_embs = torch.cat(mixed_embs, dim=1)
-        
+
         return mixed_embs
 
     def prompt_wrap(self, img_embeds, atts_img, prompts):
@@ -290,7 +290,7 @@ class MiniGPT4(Blip2Base):
             instruction = random.choice(self.prompt_list)
         else:
             instruction = samples["instruction_input"] if "instruction_input" in samples else None
- 
+
         img_embeds, atts_img = self.prompt_wrap(img_embeds, atts_img, instruction)
 
         self.llama_tokenizer.padding_side = "right"
@@ -383,7 +383,7 @@ class MiniGPT4(Blip2Base):
             instruction = random.choice(self.prompt_list)
         else:
             instruction = samples["prompt"] if "prompt" in samples else None # e.g., prompt = ["<Img><ImageHere></Img> Is there a dog?", "<Img><ImageHere></Img> Is there a cat?", ...]
-        
+
         self.instructions = instruction
 
         inputs_embeds, attention_mask, img_start_pos = self.prompt_wrap(img_embeds, atts_img, instruction)
@@ -401,8 +401,8 @@ class MiniGPT4(Blip2Base):
 
             if key_position is None:
                 key_position = {
-                    "image_start": img_start_pos+1, 
-                    "image_end": img_start_pos+img_embeds.shape[1], 
+                    "image_start": img_start_pos+1,
+                    "image_end": img_start_pos+img_embeds.shape[1],
                     "response_start": inputs_embeds.shape[1]
                 }
 

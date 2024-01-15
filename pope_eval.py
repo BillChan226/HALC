@@ -155,6 +155,12 @@ def parse_args():
         "--noise_step", type=int, default=500, help="Noise step for VCD."
     )
     parser.add_argument(
+        "--detector",
+        type=str,
+        default="dino",
+        help="Detector type. Default is 'groundingdino'.",
+    )
+    parser.add_argument(
         "--gt_seg_path",
         type=str,
         default="pope_coco/coco_ground_truth_segmentation.json",
@@ -178,8 +184,8 @@ def parse_args():
         type=str,
         # default="Is there a {} in the image? ",
         # default="Is there a XXX in the image? There is no XXX in the image, so the answer is No. Is there a YYY in the image? There is 2 YYY in the image, so the answer is Yes. Is there a {} in the image? ",
-        # default="Is there a {} in the image? Answer 'Yes' or 'No' at the end of your response.",
-        default="Is there a {} in the image?",  # for llava-1.5
+        default="Is there a {} in the image? Answer 'Yes' or 'No' at the END of your response.",
+        # default="Is there a {} in the image?",  # for llava-1.5
         help="Prompt template. Default is 'Is there a {} in the image?'.",
     )
 
@@ -264,6 +270,7 @@ def main():
     model_name = args.model
     verbosity = args.verbosity
     k_candidate_num = args.k_candidate_num
+    detector_type = args.detector
     num_samples = args.num_samples
     num_images = args.num_images
     dataset_name = args.dataset_name
@@ -475,6 +482,7 @@ def main():
         "beam_size": num_beams,
         "k_candidate_num": args.k_candidate_num,
         "LVLM_backbone": model_name,
+        "detector": detector_type,
     }
     halc_assistant_helper = halc_assistant(
         model,

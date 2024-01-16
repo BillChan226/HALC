@@ -4,7 +4,7 @@ import argparse
 import sys
 import copy
 
-sys.path.append("../HALC")
+sys.path.append(".")
 import numpy as np
 from tqdm import tqdm
 
@@ -48,14 +48,20 @@ output_directory_path = directory
 files = os.listdir(directory_path)
 
 # Filter out files that do not end with '_generated_captions.json'
-caption_files = [file for file in files if file.endswith("_generated_captions.jsonl")]
+caption_files = [file for file in files if file.endswith("_generated_captions.json")]
 
-# loaded_json = json.load(open(generated_captions_path))
+# # loaded_json = json.load(open(generated_captions_path))
+# caption_file_path = (
+#     "/media/zhuokai/SN850X_4TB/Data/coco/annotations_all/captions_val2014.json"
+# )
+# annotation_file_path = (
+#     "/media/zhuokai/SN850X_4TB/Data/coco/annotations_all/captions_val2014.json"
+# )
 caption_file_path = (
-    "/media/zhuokai/SN850X_4TB/Data/coco/annotations_all/captions_val2014.json"
+    "/home/czr/contrast_decoding_LVLMs/eval_dataset/val2014/annotations/captions_val2014.json"
 )
 annotation_file_path = (
-    "/media/zhuokai/SN850X_4TB/Data/coco/annotations_all/captions_val2014.json"
+    "/home/czr/contrast_decoding_LVLMs/eval_dataset/val2014/annotations/captions_val2014.json"
 )
 # with open(args.data_path + '../annotations_trainval2014/annotations/instances_val2014.json', 'r') as f:
 with open(annotation_file_path, "r") as f:
@@ -64,7 +70,7 @@ coco_anns = json.loads(lines[0])
 
 coco = COCO(caption_file_path)
 
-
+print("caption_files", caption_files)
 for file_name in caption_files:
     # Construct the full file path
     file_path = os.path.join(directory_path, file_name)

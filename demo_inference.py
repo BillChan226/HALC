@@ -247,8 +247,9 @@ if verbosity:
 
 
 
-image_path = "/home/czr/HaLC/hallucinatory_image/beach_on_a_clock.png"
+# image_path = "/home/czr/HaLC/hallucinatory_image/beach_on_a_clock.png"
 # image_path = "/home/czr/contrast_decoding_LVLMs/hallucinatory_image/test.png"
+image_path = "/home/czr/contrast_decoding_LVLMs/hallucinatory_image/zoom_in_5.png"
 
 
 raw_image = Image.open(image_path).convert("RGB")

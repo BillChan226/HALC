@@ -54,12 +54,16 @@ class halc_assistant:
         self.vis_processor = vis_processor
         self.model = model
 
-        self.tagging = spacy.load("en_core_web_sm")
+        # self.tagging = spacy.load("en_core_web_sm")
+        self.tagging = spacy.load("en_core_web_lg")
         self.halc_params = halc_params
         self.k_candidate_num = halc_params["k_candidate_num"]
         # self.original_image = None
         self.grounded_check = False
         self.max_new_tokens = max_new_tokens
+
+        self.max_handle_box = 3
+        self.skip_rate = 0
 
         self.model_backbone = halc_params["LVLM_backbone"]
 
@@ -168,6 +172,7 @@ class halc_assistant:
         expanded_y_min = max(0, y_min - height * context_expansion_factor / 2)
         expanded_x_max = min(1, x_max + width * context_expansion_factor / 2)
         expanded_y_max = min(1, y_max + height * context_expansion_factor / 2)
+        
 
         return [expanded_x_min, expanded_y_min, expanded_x_max, expanded_y_max]
 
@@ -210,34 +215,43 @@ class halc_assistant:
         # context_window specifies the number of context windows
 
         context_window = self.halc_params["context_window"]
-        # expand_ratio = 0.1
+
         expand_ratio = self.halc_params["expand_ratio"]
 
         entity = entity.strip(".")
+        # entity = "clock"
         doc = self.tagging(entity)
         detect_info = {}
 
+        # print("entity", entity)
         if len(doc) < 1:
             detect_info["pos"] = "PUNC"
         else:
             detect_info["pos"] = doc[0].pos_
 
-        # print("entity", entity)
+        # add a random filter to halc verification
+
+        if random.random() < self.skip_rate:
+            detect_info["pos"] = "SKIP"
+
+        print("ENTITY: ", entity)
         # print("pos", detect_info["pos"])
 
         valid_list = ["NOUN", "PROPN"]
 
         if detect_info["pos"] in valid_list:
-            detect_info["status"] = "acctivated"
+            detect_info["status"] = "activated"
             self.detector_dict["named_entity"] = [entity]
 
             if self.halc_params["detector"] == "dino":
                 sample = self.detector.detect_objects(self.detector_dict)
 
-                # print("Detection: ", sample)
+                print("Detection: ", sample)
                 # Assuming the first detected bounding box is the one related to the entity
 
                 original_bbox = sample["entity_info"][entity]["bbox"]
+
+                # print("original_bbox", original_bbox)
 
             elif self.halc_params["detector"] == "owlv2":
                 # print("entity", entity)
@@ -265,18 +279,17 @@ class halc_assistant:
                 # print("results: ", results)
                 original_bbox = results[0]["boxes"].cpu().numpy().tolist()
 
-                # input()
-            # print("original_bbox", original_bbox)
-            # input()
-
-            if len(original_bbox) > 2:
+            if len(original_bbox) > self.max_handle_box:
                 detect_info["status"] = "invalid"
                 embeds_list = None
                 return embeds_list, detect_info
 
             if len(original_bbox) == 0:
-                target_bbox = [0.3, 0.3, 0.6, 0.6]
-                detect_info["status"] = "bounding box not detected"
+                # target_bbox = [0.3, 0.3, 0.6, 0.6]
+                # detect_info["status"] = "bounding box not detected"
+                detect_info["status"] = "invalid"
+                embeds_list = None
+                return embeds_list, detect_info
             else:
                 area_list = [
                     (bbox[2] - bbox[0]) * (bbox[3] - bbox[1]) for bbox in original_bbox
@@ -284,75 +297,56 @@ class halc_assistant:
 
                 # get the index of the smallest bbox
                 # target_bbox_index = area_list.index(min(area_list))
-                # target_bbox_index = area_list.index(max(area_list))
-                # get the middle of the area_list
-                # you have to sort area_list first and then get the middle of the area_list
-                target_bbox_index = sorted(
-                    range(len(area_list)), key=lambda k: area_list[k]
-                )[len(area_list) // 2]
+
+                target_bbox_index = area_list.index(max(area_list))
+
+                # target_bbox_index = sorted(
+                #     range(len(area_list)), key=lambda k: area_list[k]
+                # )[len(area_list) // 2]
+
                 target_bbox = original_bbox[target_bbox_index]
 
             # target_bbox = original_bbox[0]
 
             # Calculate expanded bounding boxes for the given context window
-            if context_window == 1:
-                # only the original one
+            if context_window == 1:  # only the original one
+               
                 expanded_bboxes = [target_bbox]
             else:
                 # check on the target box's size
                 target_bbox_size = self.compute_bbox_size(target_bbox)
                 # smallest size should be 0.2
-                if target_bbox_size < 0.2:
-                    # only increase the size
+
+                if expand_ratio > 0.8:
                     expanded_bboxes = [
-                        self.expand_bbox(target_bbox, -expand_ratio),
+                        self.expand_bbox(target_bbox, -0.8),
                         target_bbox,
                     ]
-                    for _ in range(1, context_window - 1):
-                        # Each expansion is double the size of the previous level
-                        expanded_bboxes.append(
-                            self.expand_bbox(expanded_bboxes[-1], expand_ratio)
-                        )
-
-                    # index of the original target box
-                    self.target_bbox_index = 0
                 else:
-                    initial_ratio = np.sqrt(0.2 / target_bbox_size)
-                    # expanded_bboxes = [self.expand_bbox(target_bbox, -initial_ratio)]
                     expanded_bboxes = [
                         self.expand_bbox(target_bbox, -expand_ratio),
                         target_bbox,
                     ]
-                    all_box_sizes = [
-                        self.compute_bbox_size(expanded_bboxes[0]),
-                        self.compute_bbox_size(expanded_bboxes[1]),
-                    ]
+                all_box_sizes = [
+                    self.compute_bbox_size(expanded_bboxes[0]),
+                    self.compute_bbox_size(expanded_bboxes[1]),
+                ]
 
-                    for _ in range(1, context_window - 1):
-                        # Each expansion is double the size of the previous level
-                        expanded_bboxes.append(
-                            self.expand_bbox(expanded_bboxes[-1], expand_ratio)
-                        )
-                        all_box_sizes.append(
-                            self.compute_bbox_size(expanded_bboxes[-1])
-                        )
-
-                    # index of the original target box
-                    self.target_bbox_index = min(
-                        range(len(all_box_sizes)),
-                        key=lambda i: abs(all_box_sizes[i] - target_bbox_size),
+                for _ in range(1, context_window - 1):
+                    # Each expansion is double the size of the previous level
+                    expanded_bboxes.append(
+                        self.expand_bbox(expanded_bboxes[-1], expand_ratio)
+                    )
+                    all_box_sizes.append(
+                        self.compute_bbox_size(expanded_bboxes[-1])
                     )
 
-            # Load the original image
-            # image_path = sample["img_path"]
-            # while True:
-            #     try:
-            #         self.original_image = Image.open(image_path)
-            #         original_image = self.original_image.convert("RGB")
-            #         break
-            #     except:
-            #         print("halc load image failed")
-            #         continue
+                # index of the original target box
+                self.target_bbox_index = min(
+                    range(len(all_box_sizes)),
+                    key=lambda i: abs(all_box_sizes[i] - target_bbox_size),
+                )
+
 
             self.grounded_check = True
 
@@ -373,10 +367,12 @@ class halc_assistant:
                 cropped_image = original_image.crop((left, top, right, bottom))
                 cropped_images.append(cropped_image)
 
-            # # Save the cropped images
+            cropped_images[1].save(f"/home/czr/HaLC/decoder_zoo/HALC/cache_image/cropped_{entity}.png")
+            print(f"/home/czr/HaLC/decoder_zoo/HALC/cache_image/cropped_{entity}.png")
+            # Save the cropped images
             # saved_paths = []
             # for i, cropped_img in enumerate(cropped_images, start=1):
-            #     save_path = f"/home/czr/HaLC/decoder_zoo/HaLC/cache_dir/cropped_level_{i}.png"
+            #     save_path = f"/home/czr/HaLC/decoder_zoo/HALC/cache_dir/cropped_level_{i}.png"
             #     cropped_img.save(save_path)
             #     saved_paths.append(save_path)
 
@@ -384,7 +380,7 @@ class halc_assistant:
             # get decoding for each context window
 
             embeds_list = []
-            for i, cropped_img in enumerate(cropped_images, start=1):
+            for i, cropped_img in enumerate(cropped_images):
                 embs = self.get_model_embeds(cropped_img)
                 embeds_list.append(embs)
         else:
@@ -394,6 +390,7 @@ class halc_assistant:
         return embeds_list, detect_info
 
     def get_model_embeds(self, image):
+
         if self.model_backbone == "minigpt4":
             max_new_tokens = self.max_new_tokens
             max_length = 512
@@ -460,7 +457,7 @@ class halc_assistant:
         valid_list = ["NOUN", "PROPN"]
 
         if detect_info["pos"] in valid_list:
-            detect_info["status"] = "acctivated"
+            detect_info["status"] = "activated"
             self.detector_dict["named_entity"] = [entity]
             sample = self.detector.detect_objects(self.detector_dict)
 

@@ -4678,7 +4678,7 @@ class GenerationMixin:
                     else:
                         beam_current_word[bs] = self.halc_assistant.get_last_word(beam_last_tokens[bs]) 
                         # print("beam_last_tokens: ", beam_last_tokens[bs])
-                        # print("CURRENT WORD: ", beam_current_word[bs])
+                        print("CURRENT WORD: ", beam_current_word[bs])
                         entity = beam_current_word[bs]
                         embeds_list, detect_info = self.halc_assistant.context_density_embedding(entity)
         
@@ -4692,7 +4692,7 @@ class GenerationMixin:
                             beam_candidate_token_to_append[bs] = candidate_token_to_append
 
                         else:
-                            # print("DINO acctivated")
+                            print("DINO acctivated")
                             context_logits_list = []
                             for context_embed in embeds_list:
                                 # sub_model_kwargs = copy.copy(initial_model_kwargs)
@@ -4715,6 +4715,7 @@ class GenerationMixin:
                                 # print("beam_intermediate_token_lists[bs]", beam_intermediate_token_lists[bs])
                                 # print("teacher_forcing_tokens", teacher_forcing_tokens)
                                 # input()
+                                
                                 context_logits, _ = self.get_intermediate_logits(
                                 teacher_forcing_tokens = teacher_forcing_tokens,
                                 input_ids = initial_input_ids,
@@ -4858,11 +4859,12 @@ class GenerationMixin:
                     beam_input_ids[bs] = deep_copy_tensor_structure(beam_intermediate_token_lists[bs])
                     last_word = self.halc_assistant.get_last_word(beam_token_to_append[bs][0])
 
-                    # print("CONTRAST WORD: ", last_word)
-                    # print("last_word", last_word)
+                    print("CONTRAST WORD: ", last_word)
                     # print("beam_current_word", beam_current_word)
+
                     if last_word != beam_current_word[bs]:
-                        # print("\033[41m!!!!! Hallucination Detected !!!!!!\033[0m")
+                        print("\033[41m!!!!! Hallucination Detected !!!!!!\033[0m")
+                        # input("hold")
                         # which means hallucination has been corrected, then resample a last token
 
                         model_inputs = self.prepare_inputs_for_generation(beam_intermediate_token_lists[bs], **beam_last_model_kwargs[bs])
@@ -4992,7 +4994,6 @@ class GenerationMixin:
             # print("beam_last_tokens", beam_last_tokens)
 
         # RESET HALC STATE
-        # self.halc_assistant.original_image = None
         self.halc_assistant.reset_info()
 
 
@@ -5310,16 +5311,16 @@ class GenerationMixin:
                 else:
                     current_word = self.halc_assistant.get_last_word(last_tokens)
 
-                    # print("current_word: ", current_word)
+                    print("CURRENT WORD: ", current_word)
                     entity = current_word
                     embeds_list, detect_info = self.halc_assistant.context_density_embedding(entity, context_window=3)
 
                     if detect_info["status"] == "invalid":
                         token_to_append = torch.tensor([last_tokens]).to(input_ids.device)
                     else:
-                        # print("DINO acctivated")
+                        print("DINO acctivated")
                         context_logits_list = []
-                        clock_logits_list = []
+                        
                         for context_embed in embeds_list:
                             sub_model_kwargs = copy.copy(initial_model_kwargs)
                             sub_model_kwargs["inputs_embeds"] = context_embed
@@ -5341,7 +5342,6 @@ class GenerationMixin:
                                 streamer = streamer,
                                 **sub_model_kwargs,
                             )
-
 
                             context_logits_list.append(context_logits)
 
@@ -5392,7 +5392,7 @@ class GenerationMixin:
                 # last_word = self.halc_assistant.get_last_word([nominate_tokens])
                 last_word = self.halc_assistant.get_last_word(token_to_append[0])
 
-                # print("contrast word: ", last_word)
+                print("CORRECTED WORD: ", last_word)
 
                 if last_word != current_word:
                     print("\033[41m!!!!! Hallucination Detected !!!!!!\033[0m")
@@ -5453,7 +5453,7 @@ class GenerationMixin:
                     outputs, model_kwargs, is_encoder_decoder=self.config.is_encoder_decoder
                 )
 
-            # print("intermediate_token_lists", intermediate_token_lists)
+            print("intermediate_token_lists", intermediate_token_lists)
             # intermediate_token_lists = input_ids
 
             last_tokens.append(next_tokens[:, None].cpu().numpy().tolist()[0][0])
@@ -5518,6 +5518,7 @@ class GenerationMixin:
                 )
         else:
             return input_ids, info_dict
+
 
     def get_intermediate_logits(
         self,

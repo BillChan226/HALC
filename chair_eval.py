@@ -170,9 +170,7 @@ args = parser.parse_known_args()[0]
 
 # print("args.gpu_id", args.gpu_id)
 os.environ["CUDA_VISIBLE_DEVICES"] = str(args.gpu_id)
-# if args.model == "mplug-owl2":
 
-# else:
 args.cfg_path = MODEL_EVAL_CONFIG_PATH[args.model]
 cfg = Config(args)
 
@@ -346,7 +344,7 @@ if not os.path.exists(base_dir):
 halc_params = {
     "context_domain": "upper",
     "contrast_weight": 0.05,
-    "context_window": 3,
+    "context_window": 4,
     "expand_ratio": expand_ratio,
     "beam_size": num_beams,
     "k_candidate_num": k_candidate_num,
@@ -368,7 +366,7 @@ for img_id in tqdm(range(len(img_files))):
     img_file = img_files[img_id]
     img_id = int(img_file.split(".jpg")[0][-6:])
     # print("img_id", img_id)
-    # if img_id != 368581 and offlight:
+    # if img_id != 392493 and offlight:
     #     continue
     # offlight = False
 
@@ -380,6 +378,7 @@ for img_id in tqdm(range(len(img_files))):
 
     image_path = args.data_path + img_file
     raw_image = Image.open(image_path).convert('RGB')
+
     if model_name == "mplug-owl2":
         max_edge = max(raw_image.size) # We recommand you to resize to squared image for BEST performance.
         image = raw_image.resize((max_edge, max_edge))
@@ -504,12 +503,14 @@ for img_id in tqdm(range(len(img_files))):
     # print("img_id: ", img_id)
     print("image_path: ", image_path)
     print("caption: ", output_text)
+    # input()
 
     # dump metric file
     generated_captions_path = os.path.join(
         base_dir,
         f"{model_name}_{decoding_strategy}_beams_{num_beams}_k_{k_candidate_num}_{dataset_name}_expand_ratio_{expand_ratio}_seed_{seed}_max_tokens_{max_new_tokens}_samples_{num_samples}_generated_captions.json",
     )
+    # print("generated_captions_path", generated_captions_path)
     with open(generated_captions_path, "a") as f:
         json.dump(img_save, f)
         f.write("\n")

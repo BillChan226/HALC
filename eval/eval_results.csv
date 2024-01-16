@@ -1,4 +1,6 @@
 Backbone,Decoder,Ratio,Beam,K,Seed,SPICE,METEOR,CIDEr,CHAIRs,CHAIRi,Max Tokens,Num of Samples
-llava-1.5,dola,0.6,3,1,1,21.3,24.0,0.0,21.6,6.5,64,500
-llava-1.5,dola,0.6,3,2,1,21.2,23.6,0.0,20.6,6.3,64,500
-llava-1.5,dola,0.6,3,4,1,21.3,24.0,0.0,21.6,6.5,64,500
+mplug-owl2,greedy,0.6,1,0,1,20.4,22.8,0.1,30.9,11.7,64,500
+mplug-owl2,greedy,0.6,2,2,1,20.9,22.9,0.1,32.7,12.6,64,500
+mplug-owl2,halc-beam,0.5,1,6,1,20.1,22.9,0.1,32.1,12.4,64,500
+mplug-owl2,halc-beam,0.6,1,6,1,20.1,22.9,0.1,32.1,12.4,64,500
+mplug-owl2,halc-beam,0.6,2,4,1,20.4,22.9,0.1,31.5,11.9,64,500

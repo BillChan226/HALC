@@ -24,6 +24,8 @@ from mplug_owl2.model.builder import load_pretrained_model
 from mplug_owl2.mm_utils import process_images, tokenizer_image_token, get_model_name_from_path, KeywordsStoppingCriteria
 from mplug_owl2.model.modeling_llama2 import replace_llama_modality_adaptive
 
+NUM_IMAGE_TOKENS = 224
+
 @registry.register_model("mplug-owl2")
 class MPLUGOWL2(BaseModel):
     """
@@ -172,8 +174,32 @@ class MPLUGOWL2(BaseModel):
         #         streamer=streamer,
         #         use_cache=True,
         #         stopping_criteria=[stopping_criteria])
+        chunks_before, chunks_after = [], []
+        for p in [prompt]:
+            chunk_before, chunk_after = p.split('<|image|>')
+            chunks_before.append(chunk_before)
+            chunks_after.append(chunk_after)
+
+        tokens_before = self.llm_tokenizer(
+            chunks_before,
+            return_tensors="pt",
+            padding="longest",
+            add_special_tokens=False
+        ).to(image.device).input_ids
 
         with torch.inference_mode():     
+
+            if key_position is None:
+                key_position = {
+                    "image_start": tokens_before.shape[1]+1, 
+                    "image_end": tokens_before.shape[1]+NUM_IMAGE_TOKENS, 
+                    "response_start": input_ids.shape[1]+NUM_IMAGE_TOKENS-1,
+                }
+
+            # print("key_position", key_position)
+            # input()
+
+
             outputs = self.model.generate(
                 input_ids=input_ids,
                 do_sample=use_nucleus_sampling,

@@ -220,6 +220,7 @@ class LLaVa(BaseModel):
                     "response_start": input_ids.shape[1]+NUM_IMAGE_TOKENS-1,
                 }
 
+
             output_ids = self.llama_model.generate(
                 input_ids=input_ids,
                 use_cache=True,

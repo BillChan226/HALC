@@ -249,7 +249,8 @@ if verbosity:
 
 # image_path = "/home/czr/HaLC/hallucinatory_image/beach_on_a_clock.png"
 # image_path = "/home/czr/contrast_decoding_LVLMs/hallucinatory_image/test.png"
-image_path = "/home/czr/contrast_decoding_LVLMs/hallucinatory_image/zoom_in_5.png"
+# image_path = "/home/czr/contrast_decoding_LVLMs/hallucinatory_image/zoom_in_5.png"
+image_path = "/home/czr/contrast_decoding_LVLMs/eval_dataset/val2014/COCO_val2014_000000070294.jpg"
 
 
 raw_image = Image.open(image_path).convert("RGB")
@@ -263,10 +264,10 @@ else:
     image = vis_processors["eval"](raw_image).unsqueeze(0)
     image = image.to(device)
 
-# qu = "Please describe this image in detail."
+qu = "Please describe this image in detail."
 # qu = "Generate a one sentence caption of the image."
 # qu = "Generate a short caption of the image."
-qu = "What is the man holding in his hand?"
+# qu = "What is the man holding in his hand?"
 # qu = "generate a one sentence caption of the image"
 
 

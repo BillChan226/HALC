@@ -6,8 +6,6 @@ paper_result/
 paper_result_owl/
 MME_benchmark/
 model_checkpoints/
-eval_configs/
-minigpt4/configs/models/
 decoder_zoo/HALC/cache_image/
 
 # Byte-compiled / optimized / DLL files

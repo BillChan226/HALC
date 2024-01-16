@@ -19,6 +19,9 @@ from mplug_owl2.mm_utils import (
     KeywordsStoppingCriteria,
 )
 
+exempt_word_list = ["image", "side", "background", "feature", "features", 
+                    "center", "left", "right", "scene", "view"]
+
 
 class halc_assistant:
     def __init__(
@@ -64,6 +67,8 @@ class halc_assistant:
 
         self.max_handle_box = 3
         self.skip_rate = 0
+
+        self.exempt_word_list = exempt_word_list
 
         self.model_backbone = halc_params["LVLM_backbone"]
 
@@ -237,7 +242,7 @@ class halc_assistant:
         print("ENTITY: ", entity)
         # print("pos", detect_info["pos"])
 
-        valid_list = ["NOUN", "PROPN"]#, "ADJ"]
+        valid_list = ["NOUN", "PROPN"] #, "ADJ"]
 
         if detect_info["pos"] in valid_list:
             detect_info["status"] = "activated"
@@ -286,7 +291,7 @@ class halc_assistant:
 
             if len(original_bbox) == 0:
                 target_bbox = [0.3, 0.3, 0.6, 0.6]
-                detect_info["status"] = "bounding box not detected"
+                detect_info["status"] = "not-detected"
                 # detect_info["status"] = "invalid"
                 # embeds_list = None
                 # return embeds_list, detect_info
@@ -367,8 +372,8 @@ class halc_assistant:
                 cropped_image = original_image.crop((left, top, right, bottom))
                 cropped_images.append(cropped_image)
 
-            cropped_images[1].save(f"/home/czr/HaLC/decoder_zoo/HALC/cache_image/cropped_{entity}.png")
-            print(f"/home/czr/HaLC/decoder_zoo/HALC/cache_image/cropped_{entity}.png")
+            # cropped_images[1].save(f"/home/czr/HaLC/decoder_zoo/HALC/cache_image/cropped_{entity}.png")
+            # print(f"/home/czr/HaLC/decoder_zoo/HALC/cache_image/cropped_{entity}.png")
             # Save the cropped images
             # saved_paths = []
             # for i, cropped_img in enumerate(cropped_images, start=1):

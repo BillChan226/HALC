@@ -4517,8 +4517,12 @@ class GenerationMixin:
         beam_next_tokens = [None] * beam_size
         beam_finished = [False] * beam_size
 
+        beam_not_detected = [False] * beam_size
+
         repetition_flag = False
         repetition_counter = 0
+
+        min_length = len(initial_input_ids[0]) + 8
 
         if self.halc_assistant.model_backbone == "minigpt4":
             valid_length_max = min(max_new_tokens, max_length)
@@ -4681,7 +4685,11 @@ class GenerationMixin:
                         print("CURRENT WORD: ", beam_current_word[bs])
                         entity = beam_current_word[bs]
                         embeds_list, detect_info = self.halc_assistant.context_density_embedding(entity)
-        
+
+                        if detect_info["status"] == "not-detected":
+                            beam_not_detected[bs] = True
+                        else:
+                            beam_not_detected[bs] = False
                         # embeds_list, detect_info = self.halc_assistant.context_density_distortion_embedding(entity)
                         if detect_info["status"] == "invalid":
                             # print("CURRENT WORD: ", beam_current_word[bs],"detect: ", detect_info["status"])
@@ -4715,7 +4723,7 @@ class GenerationMixin:
                                 # print("beam_intermediate_token_lists[bs]", beam_intermediate_token_lists[bs])
                                 # print("teacher_forcing_tokens", teacher_forcing_tokens)
                                 # input()
-                                
+
                                 context_logits, _ = self.get_intermediate_logits(
                                 teacher_forcing_tokens = teacher_forcing_tokens,
                                 input_ids = initial_input_ids,
@@ -4756,7 +4764,7 @@ class GenerationMixin:
                             if skip_flag == True:
                                 beam_token_to_append[bs] = torch.tensor([beam_last_tokens[bs]]).to(beam_input_ids[bs].device)
                                 candidate_token_to_append = []
-                                for candidate_contrast_logits in range(notdefinedyet):
+                                for candidate_contrast_logits in range(UNDEFINED):
                                     candidate_token_to_append.append(token_to_append)
                                 beam_candidate_token_to_append[bs] = candidate_token_to_append
                             else:
@@ -4827,6 +4835,8 @@ class GenerationMixin:
                 temporary_beam_last_tokens = deep_copy_tensor_structure(beam_last_tokens)
                 temporary_beam_once_flag = deep_copy_tensor_structure(beam_once_flag)
                 temporary_beam_next_tokens = deep_copy_tensor_structure(beam_next_tokens)
+                temporary_beam_un_detected = deep_copy_tensor_structure(beam_not_detected)
+
                 for index, bs in zip(candidate_index, range(beam_size)):
                     
                     row_index = index//(len(candidate_intermediate_token_lists_array)//beam_size)
@@ -4843,6 +4853,7 @@ class GenerationMixin:
                     beam_last_tokens[bs] = deep_copy_tensor_structure(temporary_beam_last_tokens[row_index])
                     beam_once_flag[bs] = deep_copy_tensor_structure(temporary_beam_once_flag[row_index])
                     beam_next_tokens[bs] = deep_copy_tensor_structure(temporary_beam_next_tokens[row_index])
+                    beam_not_detected[bs] = deep_copy_tensor_structure(temporary_beam_un_detected[row_index])
 
                     beam_token_to_append[bs] = candidate_token_to_append_lists[index]
             
@@ -4861,6 +4872,24 @@ class GenerationMixin:
 
                     print("CONTRAST WORD: ", last_word)
                     # print("beam_current_word", beam_current_word)
+                    # print("eos_token_id", eos_token_id)
+                    if last_word == beam_current_word[bs] and beam_not_detected[bs] == True and min_length <= len(beam_intermediate_token_lists[bs][0]) and last_word not in self.halc_assistant.exempt_word_list:
+                        beam_intermediate_token_lists[bs] = beam_intermediate_token_lists[bs][:, :-1*len(beam_token_to_append[bs][0])]
+                        # beam_finished[bs] = True
+                        # ".": 29889
+                        doc_token = [29889]
+                        no_token = [694]
+                        nothing_token = [3078]
+                        # eos_token_id
+                        # EoS_token = torch.tensor([[29889]]).to(beam_input_ids[bs].device)
+                        EoS_token = torch.tensor([doc_token]).to(beam_input_ids[bs].device)
+
+                        beam_intermediate_token_lists[bs] = torch.cat([beam_intermediate_token_lists[bs], EoS_token], dim=-1)
+                        
+                        beam_input_ids[bs] = deep_copy_tensor_structure(beam_intermediate_token_lists[bs])
+                        last_word = "EOS"
+
+
 
                     if last_word != beam_current_word[bs]:
                         print("\033[41m!!!!! Hallucination Detected !!!!!!\033[0m")
@@ -4939,7 +4968,7 @@ class GenerationMixin:
                 else:
                     # beam_last_model_kwargs[bs] = copy.copy(beam_model_kwargs[bs])
                     beam_last_model_kwargs[bs] = deep_copy_tensor_structure(beam_model_kwargs[bs])
-                # print(f"beam_input_ids {bs}:", np.shape(beam_input_ids[bs]))
+                # print(f"beam_input_ids {bs}:", beam_input_ids[bs])
                 # print(f"beam_last_model_kwargs {bs}:", np.shape(beam_last_model_kwargs[bs]["attention_mask"]))
                 # if eos_token was found in one sentence, set sentence to finished
                 if eos_token_id_tensor is not None:

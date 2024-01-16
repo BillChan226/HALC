@@ -23,13 +23,15 @@ from PIL import Image
 import spacy
 
 
+# BOX_TRESHOLD = 0.5  # used in detector api.
 BOX_TRESHOLD = 0.5  # used in detector api.
 # TEXT_TRESHOLD = 0.25    # used in detector api.
 TEXT_TRESHOLD = 0.4  # used in detector api.
 # AREA_THRESHOLD = 0.001   # used to filter out too small object.
 AREA_THRESHOLD = 0.01  # used to filter out too small object.
 # IOU_THRESHOLD = 0.95     # used to filter the same instance. greater than threshold means the same instance
-IOU_THRESHOLD = 0.8  # used to filter the same instance. greater than threshold means the same instance
+# IOU_THRESHOLD = 0.8  # used to filter the same instance. greater than threshold means the same instance
+IOU_THRESHOLD = 0.6  # used to filter the same instance. greater than threshold means the same instance
 
 
 def in_dict(ent_dict, norm_box):
@@ -70,7 +72,7 @@ def extract_detection(
         crop_id = shortuuid.uuid()
         crop_img = Image.fromarray(image_source).crop(box)
         crop_path = os.path.join(cache_dir, f"{crop_id}.png")
-        # crop_img.save(crop_path)
+        crop_img.save(crop_path)
 
         global_entity_dict[entity]["total_count"] += 1
         global_entity_dict[entity]["crop_path"].append(crop_path)

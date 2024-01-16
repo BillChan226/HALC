@@ -54,8 +54,8 @@ class halc_assistant:
         self.vis_processor = vis_processor
         self.model = model
 
-        # self.tagging = spacy.load("en_core_web_sm")
-        self.tagging = spacy.load("en_core_web_lg")
+        self.tagging = spacy.load("en_core_web_sm")
+        # self.tagging = spacy.load("en_core_web_lg")
         self.halc_params = halc_params
         self.k_candidate_num = halc_params["k_candidate_num"]
         # self.original_image = None
@@ -106,7 +106,7 @@ class halc_assistant:
 
     def update_input(self, img_path, input_prompt):
         # print("img_path", img_path)
-        self.detector_dict = {"img_path": img_path, "box_threshold": 0.1}
+        self.detector_dict = {"img_path": img_path}
         self.image_to_ground = Image.open(img_path)
         self.prompt = input_prompt
 
@@ -237,7 +237,7 @@ class halc_assistant:
         print("ENTITY: ", entity)
         # print("pos", detect_info["pos"])
 
-        valid_list = ["NOUN", "PROPN"]
+        valid_list = ["NOUN", "PROPN"]#, "ADJ"]
 
         if detect_info["pos"] in valid_list:
             detect_info["status"] = "activated"
@@ -285,20 +285,20 @@ class halc_assistant:
                 return embeds_list, detect_info
 
             if len(original_bbox) == 0:
-                # target_bbox = [0.3, 0.3, 0.6, 0.6]
-                # detect_info["status"] = "bounding box not detected"
-                detect_info["status"] = "invalid"
-                embeds_list = None
-                return embeds_list, detect_info
+                target_bbox = [0.3, 0.3, 0.6, 0.6]
+                detect_info["status"] = "bounding box not detected"
+                # detect_info["status"] = "invalid"
+                # embeds_list = None
+                # return embeds_list, detect_info
             else:
                 area_list = [
                     (bbox[2] - bbox[0]) * (bbox[3] - bbox[1]) for bbox in original_bbox
                 ]
 
                 # get the index of the smallest bbox
-                # target_bbox_index = area_list.index(min(area_list))
+                target_bbox_index = area_list.index(min(area_list))
 
-                target_bbox_index = area_list.index(max(area_list))
+                # target_bbox_index = area_list.index(max(area_list))
 
                 # target_bbox_index = sorted(
                 #     range(len(area_list)), key=lambda k: area_list[k]

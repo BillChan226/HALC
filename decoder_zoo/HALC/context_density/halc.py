@@ -249,7 +249,7 @@ class halc_assistant:
         if random.random() < self.skip_rate:
             detect_info["pos"] = "SKIP"
 
-        print("ENTITY: ", entity)
+        # print("ENTITY: ", entity)
         # print("pos", detect_info["pos"])
 
         valid_list = ["NOUN", "PROPN"] #, "ADJ"]
@@ -261,7 +261,7 @@ class halc_assistant:
             if self.halc_params["detector"] == "dino":
                 sample = self.detector.detect_objects(self.detector_dict)
 
-                print("Detection: ", sample)
+                # print("Detection: ", sample)
                 # Assuming the first detected bounding box is the one related to the entity
 
                 original_bbox = sample["entity_info"][entity]["bbox"]

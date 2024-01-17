@@ -4688,12 +4688,14 @@ class GenerationMixin:
                         beam_candidate_token_to_append[bs] = candidate_token_to_append
                         
                     else:
-                        print("beam_last_tokens[bs]", beam_last_tokens[bs])
+                        
+                        # print("beam_last_tokens[bs]", beam_last_tokens[bs])
 
                         
                         beam_current_word[bs] = self.halc_assistant.get_last_word(beam_last_tokens[bs]) 
                         # print("beam_last_tokens: ", beam_last_tokens[bs])
-                        print("CURRENT WORD: ", beam_current_word[bs])
+
+                        # print("CURRENT WORD: ", beam_current_word[bs])
                         if self.halc_assistant.check_word_complete([beam_last_tokens[bs]]) == False:
                             # entity = beam_intermediate_token_lists[bs][:, -1] and beam_last_tokens[bs]
                             # input("here!")
@@ -4730,7 +4732,7 @@ class GenerationMixin:
                             beam_candidate_token_to_append[bs] = candidate_token_to_append
 
                         else:
-                            print("DINO acctivated")
+                            # print("DINO acctivated")
                             context_logits_list = []
                             for context_embed in embeds_list:
                                 # sub_model_kwargs = copy.copy(initial_model_kwargs)
@@ -4901,7 +4903,7 @@ class GenerationMixin:
                     beam_input_ids[bs] = deep_copy_tensor_structure(beam_intermediate_token_lists[bs])
                     last_word = self.halc_assistant.get_last_word(beam_token_to_append[bs][0])
 
-                    print("CONTRAST WORD: ", last_word)
+                    # print("CONTRAST WORD: ", last_word)
                     # print("beam_current_word", beam_current_word)
                     # print("eos_token_id", eos_token_id)
                     if last_word == beam_current_word[bs] and beam_not_detected[bs] == True and min_length <= len(beam_intermediate_token_lists[bs][0]) and last_word not in self.halc_assistant.exempt_word_list:

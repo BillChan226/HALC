@@ -252,7 +252,7 @@ if verbosity:
 # image_path = "/home/czr/contrast_decoding_LVLMs/hallucinatory_image/zoom_in_5.png"
 image_path = "/home/czr/contrast_decoding_LVLMs/eval_dataset/val2014/COCO_val2014_000000070294.jpg"
 # image_path = "/home/czr/contrast_decoding_LVLMs/eval_dataset/val2014/COCO_val2014_000000332775.jpg"
-
+# image_path = "/home/czr/contrast_decoding_LVLMs/eval_dataset/val2014/COCO_val2014_000000350132.jpg"
 
 raw_image = Image.open(image_path).convert("RGB")
 

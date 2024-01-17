@@ -246,7 +246,9 @@ class halc_assistant:
 
         # add a random filter to halc verification
 
-        if random.random() < self.skip_rate:
+        # if random.random() < self.skip_rate:
+        #     detect_info["pos"] = "SKIP"
+        if "." in entity or "," in entity:
             detect_info["pos"] = "SKIP"
 
         # print("ENTITY: ", entity)
@@ -475,7 +477,7 @@ class halc_assistant:
             detect_info["status"] = "activated"
             self.detector_dict["named_entity"] = [entity]
             sample = self.detector.detect_objects(self.detector_dict)
-
+            
             # print("Detection: ", sample)
             # Assuming the first detected bounding box is the one related to the entity
 

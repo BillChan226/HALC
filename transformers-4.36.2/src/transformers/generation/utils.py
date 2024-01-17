@@ -4902,12 +4902,32 @@ class GenerationMixin:
                     # beam_input_ids[bs] = beam_intermediate_token_lists[bs]
                     beam_input_ids[bs] = deep_copy_tensor_structure(beam_intermediate_token_lists[bs])
                     last_word = self.halc_assistant.get_last_word(beam_token_to_append[bs][0])
-
-                    # print("CONTRAST WORD: ", last_word)
                     # print("beam_current_word", beam_current_word)
+                    # print("CONTRAST WORD: ", last_word)
+                    
                     # print("eos_token_id", eos_token_id)
                     if last_word == beam_current_word[bs] and beam_not_detected[bs] == True and min_length <= len(beam_intermediate_token_lists[bs][0]) and last_word not in self.halc_assistant.exempt_word_list:
-                        beam_intermediate_token_lists[bs] = beam_intermediate_token_lists[bs][:, :-1*len(beam_token_to_append[bs][0])]
+                        t = 1
+                        if self.halc_assistant.check_word_complete([beam_token_to_append[bs][0].cpu().tolist()]) == False:
+                            # entity = beam_intermediate_token_lists[bs][:, -1] and beam_last_tokens[bs]
+                            # input("here!")
+                            # print("beam_intermediate_token_lists[bs][:, -1]", beam_intermediate_token_lists[bs][:, -1])
+                            # print("beam_last_tokens[bs]", torch.tensor([beam_last_tokens[bs]]).to(beam_input_ids[bs].device))
+                            
+                            while True:
+                                # print("[beam_intermediate_token_lists[bs][:, -t:]", beam_intermediate_token_lists[bs][:, -t:])
+                                concat_words = beam_intermediate_token_lists[bs][:, -t:]
+                                # print("concat_words", concat_words)
+                                if self.halc_assistant.check_word_complete(concat_words) == True:
+                                    break
+                                t += 1
+
+                            # print("t", t)
+                        beam_intermediate_token_lists[bs] = beam_intermediate_token_lists[bs][:, :-1*t]
+
+
+                        
+                        # beam_intermediate_token_lists[bs] = beam_intermediate_token_lists[bs][:, :-1*len(beam_token_to_append[bs][0])]
                         # beam_finished[bs] = True
                         # ".": 29889
                         doc_token = [29889]
@@ -4917,17 +4937,16 @@ class GenerationMixin:
                         
                         # eos_token_id
                         # EoS_token = torch.tensor([[29889]]).to(beam_input_ids[bs].device)
-                        EoS_token = torch.tensor([unk_token]).to(beam_input_ids[bs].device)
-
+                        # repeat EoS_token t times
+                        EoS_token = torch.tensor([unk_token*t]).to(beam_input_ids[bs].device)
+                        # print("EoS_token", EoS_token)
                         beam_intermediate_token_lists[bs] = torch.cat([beam_intermediate_token_lists[bs], EoS_token], dim=-1)
                         
                         beam_input_ids[bs] = deep_copy_tensor_structure(beam_intermediate_token_lists[bs])
                         last_word = "EOS"
 
-
-
                     if last_word != beam_current_word[bs]:
-                        print("\033[41m!!!!! Hallucination Detected !!!!!!\033[0m")
+                        print(f"\033[41mCorrected Hallucination from {beam_current_word[bs]} to {last_word}\033[0m")
                         # input("hold")
                         # which means hallucination has been corrected, then resample a last token
 
@@ -4991,6 +5010,9 @@ class GenerationMixin:
                     # update generated ids, model inputs, and length for next step
                     beam_input_ids[bs] = torch.cat([beam_input_ids[bs], beam_next_tokens[bs][:, None]], dim=-1)
 
+                # print("beam_intermediate_token_lists[bs]", beam_intermediate_token_lists[bs])
+                # print("beam_input_ids[bs]", beam_input_ids[bs])
+
                 if streamer is not None:
                     streamer.put(next_tokens.cpu())
 
@@ -5018,11 +5040,11 @@ class GenerationMixin:
                 rpt_pattern_4 = False
                 
                 if self.halc_assistant.model_backbone == "llava-1.5" or self.halc_assistant.model_backbone == "mplug-owl2": # only activate this pattern for LLAVA-1.5
-
-                    if len(beam_input_ids[bs][0]) > 1:
-                        rpt_pattern_1 = beam_input_ids[bs][0][-1] == beam_input_ids[bs][0][-2]
-                    if len(beam_input_ids[bs][0]) > 2:
-                        rpt_pattern_2 = beam_input_ids[bs][0][-1] == beam_input_ids[bs][0][-3]
+                    pass
+                    if len(beam_input_ids[bs][0]) > 3:
+                        rpt_pattern_1 = beam_intermediate_token_lists[bs][0][-1] == beam_intermediate_token_lists[bs][0][-2] or beam_intermediate_token_lists[bs][0][-2] == beam_intermediate_token_lists[bs][0][-3]
+                    # if len(beam_input_ids[bs][0]) > 4:
+                    #     rpt_pattern_2 = beam_input_ids[bs][0][-1] == beam_input_ids[bs][0][-3]
                     # if len(beam_input_ids[bs][0]) > 3:
                     #     rpt_pattern_3 = beam_input_ids[bs][0][-1] == beam_input_ids[bs][0][-4]
                     # if len(beam_input_ids[bs][0]) > 4:
@@ -5030,12 +5052,13 @@ class GenerationMixin:
 
                     #### REPETITION PATTERN DETECTION ######
                     if rpt_pattern_1 or rpt_pattern_2 or rpt_pattern_3 or rpt_pattern_4:
-                        repetition_flag = True
                         repetition_counter += 1
                 else:
                     repetition_counter = 0
+                
+                # print("repetition_counter", repetition_counter)
 
-                if beam_input_ids[bs][0][-1].cpu().numpy().tolist() == eos_token_id[0] or valid_length_max + 2 <= len(beam_input_ids[bs][0]) or repetition_counter > 3 or -1 in beam_last_tokens[bs]:
+                if beam_input_ids[bs][0][-1].cpu().numpy().tolist() == eos_token_id[0] or valid_length_max + 2 <= len(beam_input_ids[bs][0]) or repetition_counter > 8 or -1 in beam_last_tokens[bs]:
                     # beam_intermediate_token_lists[bs] = beam_input_ids[bs]
                     beam_intermediate_token_lists[bs] = deep_copy_tensor_structure(beam_input_ids[bs])
                     # input(f"{bs} finished\n")

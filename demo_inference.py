@@ -251,6 +251,7 @@ if verbosity:
 # image_path = "/home/czr/contrast_decoding_LVLMs/hallucinatory_image/test.png"
 # image_path = "/home/czr/contrast_decoding_LVLMs/hallucinatory_image/zoom_in_5.png"
 image_path = "/home/czr/contrast_decoding_LVLMs/eval_dataset/val2014/COCO_val2014_000000070294.jpg"
+# image_path = "/home/czr/contrast_decoding_LVLMs/eval_dataset/val2014/COCO_val2014_000000332775.jpg"
 
 
 raw_image = Image.open(image_path).convert("RGB")
@@ -285,6 +286,7 @@ halc_params = {
     "k_candidate_num": args.k_candidate_num,
     "LVLM_backbone": model_name,
     "detector": detector_type,
+    "score_type": "BLIP"
 }
 
 halc_assistant_helper = halc_assistant(
@@ -364,7 +366,17 @@ with torch.inference_mode():
         )
 
 output_text = out[0]
-print("decoder output text", output_text)
+
+print("original output text", output_text)
+# sentence_list = output_text.replace('.', ',').split(',')
+# sentence_filter_list = []
+# for sentence in sentence_list:
+#     if "unk" not in sentence:
+#         sentence_filter_list.append(sentence)
+# output_text = ",".join(sentence_filter_list)
+
+# print("decoder output text", output_text)
+
 if post_correction == "woodpecker":
     sample = {
         "img_path": image_path,

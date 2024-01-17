@@ -9,6 +9,7 @@ from PIL import Image, ImageDraw
 import spacy
 from torch.nn import functional as F
 from transformers import CLIPProcessor, CLIPModel
+from transformers import BlipProcessor, BlipModel
 import random
 from transformers import CLIPConfig, CLIPTextConfig, CLIPVisionConfig
 from PIL import Image, ImageFilter
@@ -20,7 +21,7 @@ from mplug_owl2.mm_utils import (
 )
 
 exempt_word_list = ["image", "side", "background", "feature", "features", 
-                    "center", "left", "right", "scene", "view"]
+                    "center", "left", "right", "scene", "view", "s", "Birthday"]
 
 
 class halc_assistant:
@@ -89,24 +90,31 @@ class halc_assistant:
 
         self.token_vocab = {value: key for key, value in self.token_vocab.items()}
 
-        if self.max_new_tokens > 77:
-            config_text = CLIPTextConfig(max_position_embeddings=self.max_new_tokens)
-            config_vision = CLIPVisionConfig()
-            config = CLIPConfig.from_text_vision_configs(config_text, config_vision)
-            self.clip_model = CLIPModel.from_pretrained(
-                "openai/clip-vit-base-patch32",
-                config=config,
-                ignore_mismatched_sizes=True,
-            )
-            self.clip_processor = CLIPProcessor.from_pretrained(
-                "openai/clip-vit-base-patch32",
-                config=config,
-                ignore_mismatched_sizes=True,
-            )
-        else:
-            self.clip_model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32")
-            self.clip_processor = CLIPProcessor.from_pretrained(
-                "openai/clip-vit-base-patch32"
+        score_type = halc_params["score_type"]
+        if score_type == "CLIP":
+            if self.max_new_tokens > 77:
+                config_text = CLIPTextConfig(max_position_embeddings=self.max_new_tokens)
+                config_vision = CLIPVisionConfig()
+                config = CLIPConfig.from_text_vision_configs(config_text, config_vision)
+                self.score_model = CLIPModel.from_pretrained(
+                    "openai/clip-vit-base-patch32",
+                    config=config,
+                    ignore_mismatched_sizes=True,
+                )
+                self.score_processor = CLIPProcessor.from_pretrained(
+                    "openai/clip-vit-base-patch32",
+                    config=config,
+                    ignore_mismatched_sizes=True,
+                )
+            else:
+                self.score_model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32")
+                self.score_processor = CLIPProcessor.from_pretrained(
+                    "openai/clip-vit-base-patch32"
+                )
+        elif score_type == "BLIP":
+            self.score_model = BlipModel.from_pretrained("Salesforce/blip-image-captioning-large")
+            self.score_processor = BlipProcessor.from_pretrained(
+                "Salesforce/blip-image-captioning-large"
             )
 
     def update_input(self, img_path, input_prompt):
@@ -123,10 +131,12 @@ class halc_assistant:
         self.grounded_check = False
 
     def check_word_complete(self, input_id):
-        input_id = input_id.cpu().numpy().tolist()
+        if isinstance(input_id, torch.Tensor):
+            input_id = input_id.cpu().numpy().tolist()
+            
         # print("input_id", input_id)
-        if input_id[0][0] == -1:
-            return True
+        # if input_id[0][0] == -1:
+        #     return True
         final_tokens = self.token_vocab[input_id[0][0]]
         # print("final_tokens", final_tokens)
         if "▁" in final_tokens or "." in final_tokens or input_id[0][0] == 2:
@@ -1100,7 +1110,7 @@ class halc_assistant:
             original_image = self.image_to_ground
 
             # print("candidate_texts", candidate_texts)
-            clip_inputs = self.clip_processor(
+            clip_inputs = self.score_processor(
                 text=candidate_texts,
                 images=original_image,
                 return_tensors="pt",
@@ -1108,7 +1118,7 @@ class halc_assistant:
                 truncation=True,
             )
 
-            clip_outputs = self.clip_model(**clip_inputs)
+            clip_outputs = self.score_model(**clip_inputs)
             logits_per_image = (
                 clip_outputs.logits_per_image
             )  # image-text similarity score

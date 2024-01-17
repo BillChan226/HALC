@@ -236,6 +236,8 @@ valid_decoding_strategies = [
     "opera-beam",
     "vcd",
 ]
+
+
 valid_post_editing_strategies = ["lure", "woodpecker"]
 valid_detector = ["dino", "owlv2"]
 
@@ -350,6 +352,7 @@ halc_params = {
     "k_candidate_num": k_candidate_num,
     "LVLM_backbone": model_name,
     "detector": detector_type,
+    "score_type": "BLIP"
 }
 
 halc_assistant_helper = halc_assistant(
@@ -484,7 +487,16 @@ for img_id in tqdm(range(len(img_files))):
             )
 
     output_text = out[0]
+    print("original output text", output_text)
+    sentence_list = output_text.split(".")
+    sentence_filter_list = []
+    for sentence in sentence_list:
+        if "unk" not in sentence:
+            sentence_filter_list.append(sentence)
+    output_text = ".".join(sentence_filter_list)
+
     print("decoder output text", output_text)
+
     if post_correction == "woodpecker":
         decoding_strategy = "woodpecker"
         sample = {
@@ -496,7 +508,6 @@ for img_id in tqdm(range(len(img_files))):
         corrected_sample = corrector.correct(sample)
         output_text = corrected_sample["output"]
         print("corrected output_text", output_text)
-        input()
 
     img_save["caption"] = output_text
 
@@ -508,7 +519,7 @@ for img_id in tqdm(range(len(img_files))):
     # dump metric file
     generated_captions_path = os.path.join(
         base_dir,
-        f"{model_name}_{decoding_strategy}_beams_{num_beams}_k_{k_candidate_num}_{dataset_name}_expand_ratio_{expand_ratio}_seed_{seed}_max_tokens_{max_new_tokens}_samples_{num_samples}_generated_captions.json",
+        f"{model_name}_{decoding_strategy}_{detector_type}_beams_{num_beams}_k_{k_candidate_num}_{dataset_name}_expand_ratio_{expand_ratio}_seed_{seed}_max_tokens_{max_new_tokens}_samples_{num_samples}_generated_captions.json",
     )
     # print("generated_captions_path", generated_captions_path)
     with open(generated_captions_path, "a") as f:

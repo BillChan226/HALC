@@ -89,9 +89,10 @@ with open(csv_file_path, "w", newline="") as csvfile:
         file_names, key=lambda name: extract_info_from_filename(name)[1:]
     )
 
+    # print("file_names", file_names)
     # Loop through each file in the directory and process it
     for file_name in sorted_file_names:
-        if file_name.endswith("_chair.jsonl"):
+        if file_name.endswith("_chair.json"):
             file_path = os.path.join(directory, file_name)
             print(file_path)
             # Extract information from filename

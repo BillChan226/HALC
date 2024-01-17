@@ -4550,12 +4550,20 @@ class GenerationMixin:
                 # did all peers finish? the reduced sum will be 0.0 then
                 if this_peer_finished_flag.item() == 0.0:
                     break
+            # print("beam_intermediate_token_lists[0]", beam_intermediate_token_lists[0])
+            # input_ids_lala = [[token for token in beam_intermediate_token_lists[0][0] if token != 0]]
+            # input_ids_lala = torch.tensor([[token for token in beam_intermediate_token_lists[0][0].cpu().numpy().tolist() if token != 0]])
 
+            # print("input_ids_lala", input_ids_lala)
             # print("beam_finished: ", beam_finished)
             if beam_finished == [True] * beam_size or valid_length_max <= len(beam_intermediate_token_lists[0][0]):
                 # print("#####\nfinal top k:\n", beam_intermediate_token_lists)
                 # print("ALL FINISHED")
-                input_ids = beam_intermediate_token_lists[0]
+                input_ids = torch.tensor([[token for token in beam_intermediate_token_lists[0][0].cpu().numpy().tolist() if token != 0]])
+                # input_ids = beam_intermediate_token_lists[0]
+                # print("input_ids", input_ids)
+                # find the  "0" in input_ids[:, ] and delete them
+                # input_ids = input_ids[input_ids != 0]
                 break
 
             # print("FIRST: beam_input_ids", beam_input_ids)
@@ -4680,10 +4688,32 @@ class GenerationMixin:
                         beam_candidate_token_to_append[bs] = candidate_token_to_append
                         
                     else:
+                        print("beam_last_tokens[bs]", beam_last_tokens[bs])
+
+                        
                         beam_current_word[bs] = self.halc_assistant.get_last_word(beam_last_tokens[bs]) 
                         # print("beam_last_tokens: ", beam_last_tokens[bs])
                         print("CURRENT WORD: ", beam_current_word[bs])
-                        entity = beam_current_word[bs]
+                        if self.halc_assistant.check_word_complete([beam_last_tokens[bs]]) == False:
+                            # entity = beam_intermediate_token_lists[bs][:, -1] and beam_last_tokens[bs]
+                            # input("here!")
+                            # print("beam_intermediate_token_lists[bs][:, -1]", beam_intermediate_token_lists[bs][:, -1])
+                            # print("beam_last_tokens[bs]", torch.tensor([beam_last_tokens[bs]]).to(beam_input_ids[bs].device))
+                            t = 1
+                            while True:
+                                # print("[beam_intermediate_token_lists[bs][:, -t:]", beam_intermediate_token_lists[bs][:, -t:])
+                                concat_words = torch.cat([beam_intermediate_token_lists[bs][:, -t:], torch.tensor([beam_last_tokens[bs]]).to(beam_input_ids[bs].device)], dim=-1)
+                                # print("concat_words", concat_words)
+                                if self.halc_assistant.check_word_complete(concat_words) == True:
+                                    break
+                                t += 1
+
+                            entity = self.halc_assistant.get_last_word(concat_words[0])
+                            # print("entity", entity)
+                            # input()
+                        else:
+                            entity = beam_current_word[bs]
+
                         embeds_list, detect_info = self.halc_assistant.context_density_embedding(entity)
 
                         if detect_info["status"] == "not-detected":
@@ -4767,6 +4797,7 @@ class GenerationMixin:
                                 for candidate_contrast_logits in range(UNDEFINED):
                                     candidate_token_to_append.append(token_to_append)
                                 beam_candidate_token_to_append[bs] = candidate_token_to_append
+                                raise ValueError("Undefined")
                             else:
                                 candidate_token_to_append = []
                                 for candidate_contrast_logits in contrast_logits_array:
@@ -4880,9 +4911,11 @@ class GenerationMixin:
                         doc_token = [29889]
                         no_token = [694]
                         nothing_token = [3078]
+                        unk_token = [0]
+                        
                         # eos_token_id
                         # EoS_token = torch.tensor([[29889]]).to(beam_input_ids[bs].device)
-                        EoS_token = torch.tensor([doc_token]).to(beam_input_ids[bs].device)
+                        EoS_token = torch.tensor([unk_token]).to(beam_input_ids[bs].device)
 
                         beam_intermediate_token_lists[bs] = torch.cat([beam_intermediate_token_lists[bs], EoS_token], dim=-1)
                         
@@ -4982,16 +5015,16 @@ class GenerationMixin:
                 rpt_pattern_3 = False
                 rpt_pattern_4 = False
                 
-                if self.halc_assistant.model_backbone == "llava-1.5" or self.halc_assistant.model_backbone == "instructblip": # only activate this pattern for LLAVA-1.5
+                if self.halc_assistant.model_backbone == "llava-1.5" or self.halc_assistant.model_backbone == "mplug-owl2": # only activate this pattern for LLAVA-1.5
 
                     if len(beam_input_ids[bs][0]) > 1:
                         rpt_pattern_1 = beam_input_ids[bs][0][-1] == beam_input_ids[bs][0][-2]
                     if len(beam_input_ids[bs][0]) > 2:
                         rpt_pattern_2 = beam_input_ids[bs][0][-1] == beam_input_ids[bs][0][-3]
-                    if len(beam_input_ids[bs][0]) > 3:
-                        rpt_pattern_3 = beam_input_ids[bs][0][-1] == beam_input_ids[bs][0][-4]
-                    if len(beam_input_ids[bs][0]) > 4:
-                        rpt_pattern_4 = beam_input_ids[bs][0][-1] == beam_input_ids[bs][0][-5]
+                    # if len(beam_input_ids[bs][0]) > 3:
+                    #     rpt_pattern_3 = beam_input_ids[bs][0][-1] == beam_input_ids[bs][0][-4]
+                    # if len(beam_input_ids[bs][0]) > 4:
+                    #     rpt_pattern_4 = beam_input_ids[bs][0][-1] == beam_input_ids[bs][0][-5]
 
                     #### REPETITION PATTERN DETECTION ######
                     if rpt_pattern_1 or rpt_pattern_2 or rpt_pattern_3 or rpt_pattern_4:
@@ -5000,7 +5033,7 @@ class GenerationMixin:
                 else:
                     repetition_counter = 0
 
-                if beam_input_ids[bs][0][-1].cpu().numpy().tolist() == eos_token_id[0] or valid_length_max + 2 <= len(beam_input_ids[bs][0]) or repetition_counter > 0 or -1 in beam_last_tokens[bs]:
+                if beam_input_ids[bs][0][-1].cpu().numpy().tolist() == eos_token_id[0] or valid_length_max + 2 <= len(beam_input_ids[bs][0]) or repetition_counter > 3 or -1 in beam_last_tokens[bs]:
                     # beam_intermediate_token_lists[bs] = beam_input_ids[bs]
                     beam_intermediate_token_lists[bs] = deep_copy_tensor_structure(beam_input_ids[bs])
                     # input(f"{bs} finished\n")
@@ -5017,6 +5050,11 @@ class GenerationMixin:
             gc.collect()
 
         for bs in range(beam_size):
+            # delete the 0 token in beam_intermediate_token_lists[bs][0] and beam_input_ids[bs][0]
+            # final_beam_intermediate_token_lists = beam_intermediate_token_lists[bs][0].cpu().numpy().tolist()
+            # # find all the '0' token in final_beam_intermediate_token_lists and delete the '0' token in final_beam_intermediate_token_lists and beam_input_ids[bs][0]
+            # final_beam_intermediate_token_lists = [token for token in final_beam_intermediate_token_lists if token != 0]
+            
             text = self.halc_assistant.get_sequence_text(beam_intermediate_token_lists[bs][0].cpu().numpy().tolist(), skip_token_length=len(initial_input_ids[0]))
             
             print(f"\033[1;4{bs+5}m Beam Search Candidate: {bs+1} {text} \033[0m")

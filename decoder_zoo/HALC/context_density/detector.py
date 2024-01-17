@@ -72,7 +72,7 @@ def extract_detection(
         crop_id = shortuuid.uuid()
         crop_img = Image.fromarray(image_source).crop(box)
         crop_path = os.path.join(cache_dir, f"{crop_id}.png")
-        crop_img.save(crop_path)
+        # crop_img.save(crop_path)
 
         global_entity_dict[entity]["total_count"] += 1
         global_entity_dict[entity]["crop_path"].append(crop_path)

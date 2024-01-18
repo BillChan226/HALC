@@ -1,0 +1,4 @@
+Backbone,Decoder,Ratio,Beam,K,Seed,SPICE,METEOR,CIDEr,CHAIRs,CHAIRi,Max Tokens,Num of Samples
+dola,dino,0.6,1,6,1,19.6,22.4,0.0,34.4,13.6,64,500
+greedy,dino,0.6,1,6,1,20.0,22.4,0.0,32.0,12.6,64,500
+halc-beam,dino,0.6,1,6,1,14.2,19.4,8.0,24.2,12.6,64,500

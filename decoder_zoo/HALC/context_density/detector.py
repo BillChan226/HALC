@@ -24,7 +24,7 @@ import spacy
 
 
 # BOX_TRESHOLD = 0.5  # used in detector api.
-BOX_TRESHOLD = 0.5  # used in detector api.
+BOX_TRESHOLD = 0.45  # used in detector api.
 # TEXT_TRESHOLD = 0.25    # used in detector api.
 TEXT_TRESHOLD = 0.4  # used in detector api.
 # AREA_THRESHOLD = 0.001   # used to filter out too small object.

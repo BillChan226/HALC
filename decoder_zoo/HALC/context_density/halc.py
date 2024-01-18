@@ -61,10 +61,10 @@ class halc_assistant:
         self.model = model
 
         
-
-        self.tagging_sm = spacy.load("en_core_web_sm")
-        self.tagging_md = spacy.load("en_core_web_md")
-        self.tagging_lg = spacy.load("en_core_web_md")
+        self.tagging = spacy.load("en_core_web_sm")
+        # self.tagging_sm = spacy.load("en_core_web_sm")
+        # self.tagging_md = spacy.load("en_core_web_md")
+        # self.tagging_lg = spacy.load("en_core_web_md")
         self.halc_params = halc_params
         self.k_candidate_num = halc_params["k_candidate_num"]
         # self.original_image = None
@@ -241,34 +241,40 @@ class halc_assistant:
 
         entity = entity.strip(".").strip(",")
         # entity = "clock"
-        doc_sm = self.tagging_sm(entity)
-        doc_md = self.tagging_md(entity)
-        doc_lg = self.tagging_lg(entity)
+        doc = self.tagging(entity)
+        # doc_sm = self.tagging_sm(entity)
+        # doc_md = self.tagging_md(entity)
+        # doc_lg = self.tagging_lg(entity)
         detect_info = {}
 
         # print("entity", entity)
         if len(doc_sm) < 1:
-            detect_info["pos_sm"] = "PUNC"
-            detect_info["pos_md"] = "PUNC"
-            detect_info["pos_lg"] = "PUNC"
+            detect_info["pos"] = "PUNC"
+            # detect_info["pos_sm"] = "PUNC"
+            # detect_info["pos_md"] = "PUNC"
+            # detect_info["pos_lg"] = "PUNC"
         else:
-            detect_info["pos_sm"] = doc_sm[0].pos_
-            detect_info["pos_md"] = doc_md[0].pos_
-            detect_info["pos_lg"] = doc_lg[0].pos_
+            detect_info["pos"] = doc[0].pos_
 
+            # detect_info["pos_sm"] = doc_sm[0].pos_
+            # detect_info["pos_md"] = doc_md[0].pos_
+            # detect_info["pos_lg"] = doc_lg[0].pos_
+            
         # add a random filter to halc verification
 
         # if random.random() < self.skip_rate:
         #     detect_info["pos"] = "SKIP"
         if "." in entity or "," in entity:
-            detect_info["pos_sm"] = "SKIP"
-            detect_info["pos_md"] = "SKIP"
-            detect_info["pos_lg"] = "SKIP"
+            detect_info["pos"] = "SKIP"
+        #     detect_info["pos_sm"] = "SKIP"
+        #     detect_info["pos_md"] = "SKIP"
+        #     detect_info["pos_lg"] = "SKIP"
 
         if entity in self.add_word_list:
-            detect_info["pos_sm"] = "ADD"
-            detect_info["pos_md"] = "ADD"
-            detect_info["pos_lg"] = "ADD"
+            detect_info["pos"] = "ADD"
+            # detect_info["pos_sm"] = "ADD"
+        #     detect_info["pos_md"] = "ADD"
+        #     detect_info["pos_lg"] = "ADD"
 
 
         # print("ENTITY: ", entity)
@@ -276,7 +282,8 @@ class halc_assistant:
 
         valid_list = ["NOUN", "PROPN", "ADD"] #, "ADJ"]
 
-        if detect_info["pos_sm"] in valid_list or detect_info["pos_md"] in valid_list or detect_info["pos_lg"] in valid_list:
+        # if detect_info["pos_sm"] in valid_list or detect_info["pos_md"] in valid_list or detect_info["pos_lg"] in valid_list:
+        if detect_info["pos"] in valid_list:
             detect_info["status"] = "activated"
             self.detector_dict["named_entity"] = [entity]
 

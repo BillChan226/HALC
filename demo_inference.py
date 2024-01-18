@@ -144,6 +144,12 @@ parser.add_argument(
     default=0.6,
     help="Expand ratio of growing contextual field.",
 )
+parser.add_argument(
+    "--debugger",
+    action="store_true",
+    default=False,
+    help="Whether to use debugger output.",
+)
 
 args = parser.parse_known_args()[0]
 
@@ -170,6 +176,7 @@ cd_alpha = args.cd_alpha
 cd_beta = args.cd_beta
 detector_type = args.detector
 expand_ratio = args.expand_ratio
+debugger = args.debugger
 
 # ========================================
 #             Model Initialization
@@ -250,10 +257,13 @@ if verbosity:
 # image_path = "/home/czr/HaLC/hallucinatory_image/beach_on_a_clock.png"
 # image_path = "/home/czr/contrast_decoding_LVLMs/hallucinatory_image/test.png"
 # image_path = "/home/czr/contrast_decoding_LVLMs/hallucinatory_image/zoom_in_5.png"
-image_path = "/home/czr/contrast_decoding_LVLMs/eval_dataset/val2014/COCO_val2014_000000070294.jpg"
+# image_path = "/home/czr/contrast_decoding_LVLMs/eval_dataset/val2014/COCO_val2014_000000070294.jpg"
 # image_path = "/home/czr/contrast_decoding_LVLMs/eval_dataset/val2014/COCO_val2014_000000332775.jpg"
 # image_path = "/home/czr/contrast_decoding_LVLMs/eval_dataset/val2014/COCO_val2014_000000350132.jpg"
-
+# image_path = "/home/czr/contrast_decoding_LVLMs/eval_dataset/val2014/COCO_val2014_000000302222.jpg" 
+# image_path = "/home/czr/contrast_decoding_LVLMs/eval_dataset/val2014/COCO_val2014_000000444366.jpg" 
+image_path = "/home/czr/contrast_decoding_LVLMs/eval_dataset/val2014/COCO_val2014_000000369386.jpg" 
+# image_path = "/home/czr/contrast_decoding_LVLMs/eval_dataset/val2014/COCO_val2014_000000383420.jpg" #9262
 raw_image = Image.open(image_path).convert("RGB")
 
 if model_name == "mplug-owl2":
@@ -286,7 +296,8 @@ halc_params = {
     "k_candidate_num": args.k_candidate_num,
     "LVLM_backbone": model_name,
     "detector": detector_type,
-    "score_type": "BLIP"
+    "score_type": "BLIP",
+    "debugger": debugger,
 }
 
 halc_assistant_helper = halc_assistant(

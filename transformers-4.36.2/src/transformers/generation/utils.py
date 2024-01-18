@@ -4902,8 +4902,9 @@ class GenerationMixin:
                     # beam_input_ids[bs] = beam_intermediate_token_lists[bs]
                     beam_input_ids[bs] = deep_copy_tensor_structure(beam_intermediate_token_lists[bs])
                     last_word = self.halc_assistant.get_last_word(beam_token_to_append[bs][0])
-                    # print("beam_current_word", beam_current_word)
-                    # print("CONTRAST WORD: ", last_word)
+                    if self.halc_assistant.debugger:
+                        print("CURRENT WORD", beam_current_word)
+                        print("CONTRAST WORD: ", last_word)
                     
                     # print("eos_token_id", eos_token_id)
                     if last_word == beam_current_word[bs] and beam_not_detected[bs] == True and min_length <= len(beam_intermediate_token_lists[bs][0]) and last_word not in self.halc_assistant.exempt_word_list:
@@ -4922,7 +4923,8 @@ class GenerationMixin:
                                     break
                                 t += 1
 
-                            # print("t", t)
+                            if self.halc_assistant.debugger:
+                                print("t", t)
                         beam_intermediate_token_lists[bs] = beam_intermediate_token_lists[bs][:, :-1*t]
 
 

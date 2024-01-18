@@ -165,6 +165,12 @@ parser.add_argument(
     default="dino",
     help="Detector type. Default is 'groundingdino'.",
 )
+parser.add_argument(
+    "--debugger",
+    action="store_true",
+    default=False,
+    help="Whether to use debugger output.",
+)
 
 args = parser.parse_known_args()[0]
 
@@ -200,6 +206,7 @@ max_new_tokens = args.max_new_tokens
 expand_ratio = args.expand_ratio
 cd_alpha = args.cd_alpha
 cd_beta = args.cd_beta
+debugger = args.debugger
 
 
 # ========================================
@@ -352,7 +359,8 @@ halc_params = {
     "k_candidate_num": k_candidate_num,
     "LVLM_backbone": model_name,
     "detector": detector_type,
-    "score_type": "BLIP"
+    "score_type": "BLIP",
+    "debugger": debugger,
 }
 
 halc_assistant_helper = halc_assistant(

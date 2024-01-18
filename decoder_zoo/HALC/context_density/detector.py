@@ -24,7 +24,7 @@ import spacy
 
 
 # BOX_TRESHOLD = 0.5  # used in detector api.
-BOX_TRESHOLD = 0.45  # used in detector api.
+BOX_TRESHOLD = 0.5  # used in detector api.
 # TEXT_TRESHOLD = 0.25    # used in detector api.
 TEXT_TRESHOLD = 0.4  # used in detector api.
 # AREA_THRESHOLD = 0.001   # used to filter out too small object.
@@ -46,7 +46,7 @@ def in_dict(ent_dict, norm_box):
 
 
 def extract_detection(
-    global_entity_dict, boxes, phrases, image_source, cache_dir, sample
+    global_entity_dict, boxes, phrases, image_source, cache_dir, sample, debugger
 ):
     h, w, _ = image_source.shape
     boxes = boxes * torch.Tensor([w, h, w, h])
@@ -72,7 +72,8 @@ def extract_detection(
         crop_id = shortuuid.uuid()
         crop_img = Image.fromarray(image_source).crop(box)
         crop_path = os.path.join(cache_dir, f"{crop_id}.png")
-        # crop_img.save(crop_path)
+        if debugger:
+            crop_img.save(crop_path)
 
         global_entity_dict[entity]["total_count"] += 1
         global_entity_dict[entity]["crop_path"].append(crop_path)
@@ -117,13 +118,14 @@ class Detector:
             }
     """
 
-    def __init__(self, args):
+    def __init__(self, args, debugger):
         self.model = load_model(
             args.detector_config, args.detector_model_path, device=args.device
         )
         self.cache_dir = args.cache_dir
         self.args = args
         self.nlp = spacy.load("en_core_web_sm")
+        self.debugger = debugger
 
     def detect_objects(self, sample: Dict):
         img_path = sample["img_path"]
@@ -169,7 +171,7 @@ class Detector:
 
             phrases = find_most_similar_strings(self.nlp, phrases, entity_list)
             global_entity_dict = extract_detection(
-                global_entity_dict, boxes, phrases, image_source, self.cache_dir, sample
+                global_entity_dict, boxes, phrases, image_source, self.cache_dir, sample, self.debugger
             )
 
         sample["entity_info"] = global_entity_dict

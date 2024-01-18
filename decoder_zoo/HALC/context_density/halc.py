@@ -20,9 +20,10 @@ from mplug_owl2.mm_utils import (
     KeywordsStoppingCriteria,
 )
 
-exempt_word_list = ["image", "side", "background", "feature", "features", 
-                    "center", "left", "right", "scene", "view", "s", "Birthday"]
+exempt_word_list = ["image", "side", "background", "feature", "features", "center", 
+                    "left", "right", "scene", "view", "s", "Birthday", "detail", "red"]
 
+add_word_list = ["sink"]
 
 class halc_assistant:
     def __init__(
@@ -42,9 +43,10 @@ class halc_assistant:
         }
         model_args = SimpleNamespace(**args_dict)
         self.device = device
+        self.debugger = halc_params["debugger"]
         halc_detector = halc_params["detector"]
         if halc_detector == "dino":
-            self.detector = Detector(model_args)
+            self.detector = Detector(model_args, self.debugger)
         elif halc_detector == "owlv2":
             self.owlv2_processor = Owlv2Processor.from_pretrained(
                 "google/owlv2-base-patch16-ensemble"
@@ -58,8 +60,11 @@ class halc_assistant:
         self.vis_processor = vis_processor
         self.model = model
 
-        self.tagging = spacy.load("en_core_web_sm")
-        # self.tagging = spacy.load("en_core_web_lg")
+        
+
+        self.tagging_sm = spacy.load("en_core_web_sm")
+        self.tagging_md = spacy.load("en_core_web_md")
+        self.tagging_lg = spacy.load("en_core_web_md")
         self.halc_params = halc_params
         self.k_candidate_num = halc_params["k_candidate_num"]
         # self.original_image = None
@@ -70,6 +75,7 @@ class halc_assistant:
         self.skip_rate = 0
 
         self.exempt_word_list = exempt_word_list
+        self.add_word_list = add_word_list
 
         self.model_backbone = halc_params["LVLM_backbone"]
 
@@ -233,37 +239,52 @@ class halc_assistant:
 
         expand_ratio = self.halc_params["expand_ratio"]
 
-        entity = entity.strip(".")
+        entity = entity.strip(".").strip(",")
         # entity = "clock"
-        doc = self.tagging(entity)
+        doc_sm = self.tagging_sm(entity)
+        doc_md = self.tagging_md(entity)
+        doc_lg = self.tagging_lg(entity)
         detect_info = {}
 
         # print("entity", entity)
-        if len(doc) < 1:
-            detect_info["pos"] = "PUNC"
+        if len(doc_sm) < 1:
+            detect_info["pos_sm"] = "PUNC"
+            detect_info["pos_md"] = "PUNC"
+            detect_info["pos_lg"] = "PUNC"
         else:
-            detect_info["pos"] = doc[0].pos_
+            detect_info["pos_sm"] = doc_sm[0].pos_
+            detect_info["pos_md"] = doc_md[0].pos_
+            detect_info["pos_lg"] = doc_lg[0].pos_
 
         # add a random filter to halc verification
 
         # if random.random() < self.skip_rate:
         #     detect_info["pos"] = "SKIP"
         if "." in entity or "," in entity:
-            detect_info["pos"] = "SKIP"
+            detect_info["pos_sm"] = "SKIP"
+            detect_info["pos_md"] = "SKIP"
+            detect_info["pos_lg"] = "SKIP"
+
+        if entity in self.add_word_list:
+            detect_info["pos_sm"] = "ADD"
+            detect_info["pos_md"] = "ADD"
+            detect_info["pos_lg"] = "ADD"
+
 
         # print("ENTITY: ", entity)
         # print("pos", detect_info["pos"])
 
-        valid_list = ["NOUN", "PROPN"] #, "ADJ"]
+        valid_list = ["NOUN", "PROPN", "ADD"] #, "ADJ"]
 
-        if detect_info["pos"] in valid_list:
+        if detect_info["pos_sm"] in valid_list or detect_info["pos_md"] in valid_list or detect_info["pos_lg"] in valid_list:
             detect_info["status"] = "activated"
             self.detector_dict["named_entity"] = [entity]
 
             if self.halc_params["detector"] == "dino":
                 sample = self.detector.detect_objects(self.detector_dict)
 
-                # print("Detection: ", sample)
+                if self.debugger:
+                    print("Detection: ", sample)
                 # Assuming the first detected bounding box is the one related to the entity
 
                 original_bbox = sample["entity_info"][entity]["bbox"]
@@ -453,6 +474,8 @@ class halc_assistant:
         return embs
 
     def context_density_distortion_embedding(self, entity):
+
+        raise NotImplementedError
         # context_window specifies the number of context windows
 
         context_window = self.halc_params["context_window"]

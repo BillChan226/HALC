@@ -248,7 +248,7 @@ class halc_assistant:
         detect_info = {}
 
         # print("entity", entity)
-        if len(doc_sm) < 1:
+        if len(doc) < 1:
             detect_info["pos"] = "PUNC"
             # detect_info["pos_sm"] = "PUNC"
             # detect_info["pos_md"] = "PUNC"

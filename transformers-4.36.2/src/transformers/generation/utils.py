@@ -4581,7 +4581,6 @@ class GenerationMixin:
                     early_exit_layers=early_exit_layers,
                 )
 
-
                 beam_outputs[bs] = outputs
                 beam_dict_outputs[bs] = dict_outputs
 
@@ -5105,7 +5104,9 @@ class GenerationMixin:
                 next_tokens_scores, row_index, skip_flag, contrast_logits_array, candidate_token_to_append,
                 base_logits, final_logits, M, softmax_mature_layer, softmax_premature_layers, log_softmax_mature_layer,
                 log_softmax_premature_layers, kl1, kl2, js_divs, stacked_premature_layers,
-                next_token_logits)
+                next_token_logits, contrast_logits, skip_token_length, EoS_token, doc_token, no_token, nothing_token, unk_token,
+                rpt_pattern_1, rpt_pattern_2, rpt_pattern_3, rpt_pattern_4, repetition_counter, last_word, text,
+                temporary_beam_un_detected, beam_not_detected, detect_info, embeds_list, entity, sub_model_kwargs)
         except:
             pass
     

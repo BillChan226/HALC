@@ -5094,6 +5094,7 @@ class GenerationMixin:
             del (beam_intermediate_token_lists, beam_input_ids, beam_outputs, beam_dict_outputs, 
                 beam_unfinished_sequences, beam_model_kwargs, beam_last_model_kwargs, beam_last_word_flag, 
                 beam_current_word, beam_last_tokens, beam_once_flag, beam_next_tokens, beam_finished, 
+                temporary_beam_un_detected, beam_not_detected, detect_info, embeds_list, entity,
                 beam_token_to_append, beam_candidate_token_to_append, candidate_intermediate_token_lists_array, 
                 candidate_token_to_append_lists, temporary_beam_intermediate_token_lists, temporary_beam_input_ids, 
                 temporary_beam_unfinished_sequences, temporary_beam_model_kwargs, temporary_beam_last_model_kwargs, 
@@ -5106,7 +5107,7 @@ class GenerationMixin:
                 log_softmax_premature_layers, kl1, kl2, js_divs, stacked_premature_layers,
                 next_token_logits, contrast_logits, skip_token_length, EoS_token, doc_token, no_token, nothing_token, unk_token,
                 rpt_pattern_1, rpt_pattern_2, rpt_pattern_3, rpt_pattern_4, repetition_counter, last_word, text,
-                temporary_beam_un_detected, beam_not_detected, detect_info, embeds_list, entity, sub_model_kwargs)
+                sub_model_kwargs)
         except:
             pass
     

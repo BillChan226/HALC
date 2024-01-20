@@ -21,9 +21,10 @@ from mplug_owl2.mm_utils import (
 )
 
 exempt_word_list = ["image", "side", "background", "feature", "features", "center", 
-                    "left", "right", "scene", "view", "s", "Birthday", "detail", "red"]
+                    "left", "right", "scene", "view", "s", "Birthday", "detail", "red",
+                    "white", "cat", "horse", "bus", "group", "dog"]
 
-add_word_list = ["sink"]
+add_word_list = ["sink", "microwave", "toaster"]
 
 class halc_assistant:
     def __init__(
@@ -262,9 +263,10 @@ class halc_assistant:
             
         # add a random filter to halc verification
 
-        # if random.random() < self.skip_rate:
-        #     detect_info["pos"] = "SKIP"
+        
         if "." in entity or "," in entity:
+            detect_info["pos"] = "SKIP"
+        if entity in self.exempt_word_list:
             detect_info["pos"] = "SKIP"
         #     detect_info["pos_sm"] = "SKIP"
         #     detect_info["pos_md"] = "SKIP"
@@ -330,7 +332,8 @@ class halc_assistant:
                 return embeds_list, detect_info
 
             if len(original_bbox) == 0:
-                target_bbox = [0.3, 0.3, 0.6, 0.6]
+                # target_bbox = [0.3, 0.3, 0.6, 0.6]
+                target_bbox = [0.2, 0.2, 0.8, 0.8]
                 detect_info["status"] = "not-detected"
                 # detect_info["status"] = "invalid"
                 # embeds_list = None
@@ -917,7 +920,6 @@ class halc_assistant:
                 jsd_matrix[j, i] = jsd  # Symmetric matrix
 
         # Find indices of max JSD
-        # print("jsd_matrix.triu(diagonal=1)", jsd_matrix.triu(diagonal=1))
         max_jsd_flat_index = torch.argmax(jsd_matrix.triu(diagonal=1))  # .unbind()
         # layer_idx1, layer_idx2 = max_jsd_indices[0], max_jsd_indices[1]
         layer_idx1, layer_idx2 = np.unravel_index(

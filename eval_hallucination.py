@@ -2,6 +2,7 @@ import os
 import argparse
 import json
 from chair_metrics import chair
+import numpy as np
 
 
 # The script evaluates LLM hallucination on the test set.
@@ -128,6 +129,59 @@ def main():
             f.write(metric_string_ce)
         if verbosity:
             print(f"\nCHAIR results saved to {result_path}.")
+
+        halc_caption_result = cap_dict["sentences"]
+        halc_result = {}
+        for i in halc_caption_result:
+            halc_result[i["image_id"]] = {"caption": i["caption"], 
+                                        "cider": max(np.log10(i["metrics"]["CIDEr"])+20, 0),
+                                        "meteor": i["metrics"]["METEOR"],
+                                        "chairs": i["metrics"]["CHAIRs"],
+                                        "chairi": i["metrics"]["CHAIRi"],
+                                        "bleu": (i["metrics"]["Bleu_1"] + i["metrics"]["Bleu_2"] + i["metrics"]["Bleu_3"] + i["metrics"]["Bleu_4"])/4,
+                                        "objects_num": len(i["mscoco_generated_words"]),
+                                        "words_num": len(i["words"]),
+                                        "hallucinate_num": len(i["hallucination_idxs"])}
+
+        # print(halc_result)
+        cider_sum = 0
+        chairs_sum = 0
+        object_sum = 0
+        meteor_sum = 0
+        bleu_sum = 0
+        words_sum = 0
+        hallucinate_sum = 0
+
+
+        hallucinate_sum_max = 2
+        hallucinate_index_list = []
+
+        for i in halc_result:
+            meteor_sum += halc_result[i]["meteor"]
+            bleu_sum += halc_result[i]["bleu"]
+            cider_sum += halc_result[i]["cider"]
+            chairs_sum += halc_result[i]["chairs"]
+            object_sum += halc_result[i]["objects_num"]
+            words_sum += halc_result[i]["words_num"]
+            hallucinate_sum += halc_result[i]["hallucinate_num"]
+            
+
+        meteor_sum = meteor_sum / len(halc_result)
+        log_cider_sum = cider_sum / len(halc_result)
+        chairs_sum = chairs_sum / len(halc_result)
+        chairi_sum = hallucinate_sum / object_sum
+        bleu_sum = bleu_sum / len(halc_result)
+        print("meteor: ", meteor_sum)
+        print("log_cider: ", log_cider_sum)
+        print("chairs: ", chairs_sum)
+        print("chairi: ", chairi_sum)
+        print("bleu: ", bleu_sum)
+        print("hallucinate_sum: ", hallucinate_sum)
+        print("object_sum: ", object_sum)
+        print("words_sum: ", words_sum)
+        
+
+
         # save hallucinated words
         # chair.save_hallucinated_words(chair_input_path, cap_dict, output_dir)
 

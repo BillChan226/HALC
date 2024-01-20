@@ -262,8 +262,8 @@ if verbosity:
 # image_path = "/home/czr/contrast_decoding_LVLMs/eval_dataset/val2014/COCO_val2014_000000350132.jpg"
 # image_path = "/home/czr/contrast_decoding_LVLMs/eval_dataset/val2014/COCO_val2014_000000302222.jpg" 
 # image_path = "/home/czr/contrast_decoding_LVLMs/eval_dataset/val2014/COCO_val2014_000000444366.jpg" 
-image_path = "/home/czr/contrast_decoding_LVLMs/eval_dataset/val2014/COCO_val2014_000000369386.jpg" 
-# image_path = "/home/czr/contrast_decoding_LVLMs/eval_dataset/val2014/COCO_val2014_000000383420.jpg" #9262
+# image_path = "/home/czr/contrast_decoding_LVLMs/eval_dataset/val2014/COCO_val2014_000000383420.jpg" 
+image_path = "/home/czr/contrast_decoding_LVLMs/eval_dataset/val2014/COCO_val2014_000000165257.jpg" # 162543
 raw_image = Image.open(image_path).convert("RGB")
 
 if model_name == "mplug-owl2":

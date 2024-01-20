@@ -33,12 +33,24 @@ from pycocoevalcap.eval import COCOEvalCap
 from collections import defaultdict
 
 
+import torch
+from PIL import Image
+from transformers import TextStreamer
+import sys
+sys.path.append("mPLUG-Owl/mPLUG-Owl2")
+from mplug_owl2.constants import IMAGE_TOKEN_INDEX, DEFAULT_IMAGE_TOKEN
+from mplug_owl2.conversation import conv_templates, SeparatorStyle
+from mplug_owl2.model.builder import load_pretrained_model
+from mplug_owl2.mm_utils import process_images, tokenizer_image_token, get_model_name_from_path, KeywordsStoppingCriteria
+
+
 MODEL_EVAL_CONFIG_PATH = {
     "minigpt4": "eval_configs/minigpt4_eval.yaml",
     "instructblip": "eval_configs/instructblip_eval.yaml",
     "lrv_instruct": "eval_configs/lrv_instruct_eval.yaml",
     "shikra": "eval_configs/shikra_eval.yaml",
     "llava-1.5": "eval_configs/llava-1.5_eval.yaml",
+    "mplug-owl2": "eval_configs/mplug-owl2_eval.yaml",
 }
 
 INSTRUCTION_TEMPLATE = {
@@ -47,8 +59,8 @@ INSTRUCTION_TEMPLATE = {
     "lrv_instruct": "###Human: <Img><ImageHere></Img> <question> ###Assistant:",
     "shikra": "USER: <im_start><ImageHere><im_end> <question> ASSISTANT:",
     "llava-1.5": "USER: <ImageHere> <question> ASSISTANT:",
+    "mplug-owl2": "USER: <|image|><question> ASSISTANT:",
 }
-
 
 def setup_seeds(config, seed):
     # seed = config.run_cfg.seed + get_rank()
@@ -152,7 +164,18 @@ parser.add_argument(
     help="Segment.",
     default=-1,
 )
-
+parser.add_argument(
+    "--detector",
+    type=str,
+    default="dino",
+    help="Detector type. Default is 'groundingdino'.",
+)
+parser.add_argument(
+    "--debugger",
+    action="store_true",
+    default=False,
+    help="Whether to use debugger output.",
+)
 args = parser.parse_known_args()[0]
 
 # print("args.gpu_id", args.gpu_id)
@@ -183,16 +206,21 @@ max_new_tokens = args.max_new_tokens
 expand_ratio = args.expand_ratio
 cd_alpha = args.cd_alpha
 cd_beta = args.cd_beta
+debugger = args.debugger
+detector_type = args.detector
+
 generated_caption_path = args.generated_caption
 segment = int(args.segment)
 
 loaded_json = []
 loaded_keys = []
+loaded_dict = {}
 with open(generated_caption_path, "r") as f:
     lines = f.readlines()
     for line in lines:
         pair = json.loads(line)
         loaded_json.append(pair)
+        loaded_dict[pair["image_id"]] = pair["caption"]
         loaded_keys.append(pair["image_id"])
 
 # ========================================
@@ -293,22 +321,16 @@ coco_anns = json.loads(lines[0])
 
 coco = COCO(caption_file_path)
 
+replete_image_id = [573877, 196280, 524681, 528984, 43448, 437393, 170605, 445834, 497014, 162543, 165257]
+
 img_ids = coco.getImgIds()
 # sample image ids
 sampled_img_ids = random.sample(img_ids, num_samples)
 
-refill_img_ids = []
-for img in sampled_img_ids:
-    print("img", img)
-    if img not in loaded_keys:
-        refill_img_ids.append(img)
-
-print("refill_img_ids", refill_img_ids)
-# input()
-
+# print("sampled_img_ids", sampled_img_ids)
 
 img_files = []
-for cur_img_id in refill_img_ids:
+for cur_img_id in sampled_img_ids:
     cur_img = coco.loadImgs(cur_img_id)[0]
     cur_img_path = cur_img["file_name"]
     img_files.append(cur_img_path)
@@ -337,25 +359,28 @@ halc_params = {
     "context_window": 4,
     "expand_ratio": expand_ratio,
     "beam_size": num_beams,
-    "k_candidate_num": args.k_candidate_num,
+    "k_candidate_num": k_candidate_num,
     "LVLM_backbone": model_name,
+    "detector": detector_type,
+    "score_type": "BLIP",
+    "debugger": debugger,
 }
+
 halc_assistant_helper = halc_assistant(
-    model, vis_processor=vis_processor, device=device, halc_params=halc_params
+    model,
+    vis_processor=vis_processor,
+    device=device,
+    halc_params=halc_params,
+    max_new_tokens=max_new_tokens,
 )
 
 offlight = True
 
-for idx, img_id in tqdm(enumerate(range(len(img_files)))):
-    # if idx < segment:
-    #     continue
-    # if idx >= segment + 100:
-    #     break
-
+for img_id in tqdm(range(len(img_files))):
     img_file = img_files[img_id]
     img_id = int(img_file.split(".jpg")[0][-6:])
-    print("img_id", img_id)
-    # if img_id != 130076 and offlight:
+    # print("img_id", img_id)
+    # if img_id != 392493 and offlight:
     #     continue
     # offlight = False
 
@@ -365,60 +390,52 @@ for idx, img_id in tqdm(enumerate(range(len(img_files)))):
     img_save = {}
     img_save["image_id"] = img_id
 
-    image_path = args.data_path + img_file
-    # image_path = "/root/autodl-fs/HaLC/lost_images/" + img_file
-    # print("image_path", image_path)
+    if img_id not in replete_image_id:
 
-    try:
-        raw_image = Image.open(image_path).convert("RGB")
-        image = vis_processors["eval"](raw_image).unsqueeze(0)
-        image = image.to(device)
-    except Exception as e:
-        #     # Print the error message
-        print(f"Failed to open image {img_file}: {e}")
+        img_save["caption"] = loaded_dict[img_id]
+
+        # print("img_id: ", img_id)
+        # print("image_path: ", image_path)
+        # print("caption: ", output_text)
+        # input()
+
+        # dump metric file
+        generated_captions_path = os.path.join(
+            base_dir,
+            f"{model_name}_{decoding_strategy}_{detector_type}_beams_{num_beams}_k_{k_candidate_num}_{dataset_name}_expand_ratio_{expand_ratio}_seed_{seed}_max_tokens_{max_new_tokens}_samples_{num_samples}_generated_captions.json",
+        )
+        # print("generated_captions_path", generated_captions_path)
+        with open(generated_captions_path, "a") as f:
+            json.dump(img_save, f)
+            f.write("\n")
+
+
         continue
 
-        # Path where the image will be copied if it fails to open
 
-        # # Copy the image to the specified directory
-        # shutil.copy(image_path, lost_image_path)
+    image_path = args.data_path + img_file
+    raw_image = Image.open(image_path).convert('RGB')
 
-        # # Try to reopen the image from the new location
-    #     try:
-    #         raw_image = Image.open(lost_image_path).convert("RGB")
-    #         image = vis_processors["eval"](raw_image).unsqueeze(0)
-    #         image = image.to(device)
-    #     except Exception as e:
-    #         print(f"Failed to reopen image {img_file} from {lost_image_path}: {e}")
-    #         # Handle the failure to reopen the image, if necessary
-    # # print("image device", norm(image).device)
+    if model_name == "mplug-owl2":
+        max_edge = max(raw_image.size) # We recommand you to resize to squared image for BEST performance.
+        image = raw_image.resize((max_edge, max_edge))
+        image_tensor = process_images([image], model.image_processor)
+        image = image_tensor.to(device, dtype=torch.float16)
+    else:
+        image = vis_processors["eval"](raw_image).unsqueeze(0)
+        image = image.to(device)
+
+    # print("image device", norm(image).device)
 
     qu = "Please describe this image in detail."
+    # qu = "Please provide a very detailed description of the image."
+    # qu = "Please provide a very long and detailed description of the image."
     # qu = "Generate a one sentence caption of the image."
     # qu = "Generate a short caption of the image."
 
     template = INSTRUCTION_TEMPLATE[args.model]
     qu = template.replace("<question>", qu)
 
-    # lm_early_exit_layers = [
-    #     0,
-    #     2,
-    #     4,
-    #     6,
-    #     8,
-    #     10,
-    #     12,
-    #     14,
-    #     16,
-    #     18,
-    #     20,
-    #     22,
-    #     24,
-    #     26,
-    #     28,
-    #     30,
-    #     32,
-    # ]
     lm_early_exit_layers = [
         0,
         2,
@@ -428,8 +445,27 @@ for idx, img_id in tqdm(enumerate(range(len(img_files)))):
         10,
         12,
         14,
+        16,
+        18,
+        20,
+        22,
+        24,
+        26,
+        28,
         30,
+        32,
     ]
+    # lm_early_exit_layers = [
+    #     0,
+    #     2,
+    #     4,
+    #     6,
+    #     8,
+    #     10,
+    #     12,
+    #     14,
+    #     32,
+    # ]
 
     mature_layer = lm_early_exit_layers[-1]
     premature_layer = None
@@ -439,7 +475,8 @@ for idx, img_id in tqdm(enumerate(range(len(img_files)))):
     halc_assistant_helper.update_input(img_path=image_path, input_prompt=qu)
 
     image_cd = None
-    if decoding_strategy == "vcd":
+
+    if vcd_decoding:
         image_tensor_cd = add_diffusion_noise(image, args.noise_step)
         image_cd = (
             image_tensor_cd.unsqueeze(0).half().cuda()
@@ -448,70 +485,78 @@ for idx, img_id in tqdm(enumerate(range(len(img_files)))):
         )
         cd_alpha = cd_alpha
         cd_beta = cd_beta
+        print("image_cd", image_cd.shape)
+        print(cd_alpha, cd_beta, args.noise_step)
         if model_name == "minigpt4":
             image_cd = image_cd.squeeze(0)
 
-    try:
-        with torch.inference_mode():
-            with torch.no_grad():
-                out = model.generate(
-                    {"image": norm(image), "prompt": qu},
-                    use_nucleus_sampling=args.sample,
-                    num_beams=num_beams,
-                    max_new_tokens=max_new_tokens,
-                    output_attentions=True,
-                    premature_layer=premature_layer,
-                    candidate_premature_layers=candidate_premature_layers,
-                    mature_layer=mature_layer,
-                    beam_search=beam_search,
-                    dola_decoding=dola_decoding,
-                    opera_decoding=opera_decoding,
-                    vcd_decoding=vcd_decoding,
-                    halc_decoding=halc_decoding,
-                    # HALC
-                    halc_assistant=halc_assistant_helper,
-                    # OPERA
-                    key_position=None,
-                    scale_factor=args.scale_factor,
-                    threshold=args.threshold,
-                    num_attn_candidates=args.num_attn_candidates,
-                    penalty_weights=args.penalty_weights,
-                    # VCD
-                    images_cd=image_cd,
-                    cd_alpha=cd_alpha,
-                    cd_beta=cd_beta,
-                )
-    except Exception as e:
-        print(f"Failed to generate caption for image {img_file}: {e}")
-        continue
+    with torch.inference_mode():
+        with torch.no_grad():
+            out = model.generate(
+                {"image": norm(image), "prompt":qu, "img_path": image_path},
+                use_nucleus_sampling=args.sample,
+                num_beams=num_beams,
+                max_new_tokens=max_new_tokens,
+                output_attentions=True,
+                premature_layer=premature_layer,
+                candidate_premature_layers=candidate_premature_layers,
+                mature_layer=mature_layer,
+                beam_search=beam_search,
+                dola_decoding=dola_decoding,
+                opera_decoding=opera_decoding,
+                vcd_decoding=vcd_decoding,
+                halc_decoding=halc_decoding,
+                # HALC
+                halc_assistant=halc_assistant_helper,
+                # OPERA
+                key_position=None,
+                scale_factor=args.scale_factor,
+                threshold=args.threshold,
+                num_attn_candidates=args.num_attn_candidates,
+                penalty_weights=args.penalty_weights,
+                # VCD
+                images_cd=image_cd,
+                cd_alpha=cd_alpha,
+                cd_beta=cd_beta,
+            )
 
     output_text = out[0]
+    print("original output text", output_text)
+    sentence_list = output_text.split(".")
+    sentence_filter_list = []
+    for sentence in sentence_list:
+        if "unk" not in sentence:
+            sentence_filter_list.append(sentence)
+    output_text = ".".join(sentence_filter_list)
+
     print("decoder output text", output_text)
+
     if post_correction == "woodpecker":
+        decoding_strategy = "woodpecker"
         sample = {
             "img_path": image_path,
             "input_desc": output_text,
-            "query": "Generate a short caption of the image.",
+            "query": qu,
         }
 
         corrected_sample = corrector.correct(sample)
         output_text = corrected_sample["output"]
         print("corrected output_text", output_text)
-        input()
 
     img_save["caption"] = output_text
 
     # print("img_id: ", img_id)
     print("image_path: ", image_path)
     print("caption: ", output_text)
+    # input()
 
     # dump metric file
-    # generated_captions_path = os.path.join(base_dir, f"{model_name}_{decoding_strategy}_beams_{num_beams}_k_{k_candidate_num}_{dataset_name}_expand_ratio_{expand_ratio}_seed_{seed}_max_tokens_{max_new_tokens}_samples_{num_samples}_segment_{segment}_generated_captions_refill.json")
     generated_captions_path = os.path.join(
         base_dir,
-        f"{model_name}_{decoding_strategy}_beams_{num_beams}_k_{k_candidate_num}_{dataset_name}_expand_ratio_{expand_ratio}_seed_{seed}_max_tokens_{max_new_tokens}_samples_{num_samples}_generated_captions_refill.json",
+        f"{model_name}_{decoding_strategy}_{detector_type}_beams_{num_beams}_k_{k_candidate_num}_{dataset_name}_expand_ratio_{expand_ratio}_seed_{seed}_max_tokens_{max_new_tokens}_samples_{num_samples}_generated_captions.json",
     )
-
+    # print("generated_captions_path", generated_captions_path)
     with open(generated_captions_path, "a") as f:
         json.dump(img_save, f)
         f.write("\n")
+

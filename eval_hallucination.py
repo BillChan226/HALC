@@ -177,8 +177,8 @@ def main():
         print("chairi: ", chairi_sum)
         print("bleu: ", bleu_sum)
         print("hallucinate_sum: ", hallucinate_sum)
-        print("object_sum: ", object_sum)
-        print("words_sum: ", words_sum)
+        # print("object_sum: ", object_sum)
+        # print("words_sum: ", words_sum)
         
 
 

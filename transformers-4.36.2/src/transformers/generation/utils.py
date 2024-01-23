@@ -3531,6 +3531,9 @@ class GenerationMixin:
             # prepare model inputs
             model_inputs = self.prepare_inputs_for_generation(input_ids, **model_kwargs)
 
+            # print("model_inputs", model_inputs)
+            # input()
+
             # forward pass to get next token
             dict_outputs, outputs = self(
                 **model_inputs,
@@ -5907,6 +5910,9 @@ class GenerationMixin:
                 else:
                     model_inputs_cd = self.prepare_inputs_for_generation_cd(input_ids, images_cd=images_cd, **model_kwargs_cd)
 
+
+                # print("model_inputs_cd", model_inputs_cd)
+                # print("self", self)
                 outputs_cd = self(
                     **model_inputs_cd,
                     return_dict=True,
@@ -6259,6 +6265,9 @@ class GenerationMixin:
                 output_hidden_states=output_hidden_states,
             )
 
+            # print("outputs.attentions[-1]", outputs.attentions[-1].shape)
+            # input()
+
             # Load the previous self-attention weights
             if not "past_key_values" in model_kwargs.keys():
                 attn_previous = outputs.attentions[-1].clone() # [batch_size * num_beams, num_head, q, kv]
@@ -6268,6 +6277,8 @@ class GenerationMixin:
                 attn_previous = torch.cat([attn_previous[beam_idx], outputs.attentions[-1].clone()], -2) # [batch_size * num_beams, num_head, q, kv]
             current_state["attn_previous"] = attn_previous.data.cpu()
 
+            # print("attn_previous", attn_previous.shape)
+            # input()
 
             if synced_gpus and this_peer_finished:
                 cur_len = cur_len + 1

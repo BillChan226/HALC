@@ -22,7 +22,7 @@ from mplug_owl2.mm_utils import (
 
 exempt_word_list = ["image", "side", "background", "feature", "features", "center", 
                     "left", "right", "scene", "view", "s", "Birthday", "detail", "red",
-                    "white", "cat", "horse", "bus", "group", "dog"]
+                    "white", "cat", "horse", "bus", "group", "dog", "manner"]
 
 add_word_list = ["sink", "microwave", "toaster"]
 
@@ -295,8 +295,10 @@ class halc_assistant:
                 if self.debugger:
                     print("Detection: ", sample)
                 # Assuming the first detected bounding box is the one related to the entity
-
-                original_bbox = sample["entity_info"][entity]["bbox"]
+                try:
+                    original_bbox = sample["entity_info"][entity]["bbox"]
+                except:
+                    original_bbox = []
 
                 # print("original_bbox", original_bbox)
 

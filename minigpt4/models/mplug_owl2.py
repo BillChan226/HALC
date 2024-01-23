@@ -24,7 +24,7 @@ from mplug_owl2.model.builder import load_pretrained_model
 from mplug_owl2.mm_utils import process_images, tokenizer_image_token, get_model_name_from_path, KeywordsStoppingCriteria
 from mplug_owl2.model.modeling_llama2 import replace_llama_modality_adaptive
 
-NUM_IMAGE_TOKENS = 224
+NUM_IMAGE_TOKENS = 64
 
 @registry.register_model("mplug-owl2")
 class MPLUGOWL2(BaseModel):
@@ -180,6 +180,11 @@ class MPLUGOWL2(BaseModel):
             chunks_before.append(chunk_before)
             chunks_after.append(chunk_after)
 
+        # print("prompt", prompt)
+
+        # print("chunks_before", chunks_before)
+        # print("chunks_after", chunks_after)
+
         tokens_before = self.llm_tokenizer(
             chunks_before,
             return_tensors="pt",
@@ -187,9 +192,27 @@ class MPLUGOWL2(BaseModel):
             add_special_tokens=False
         ).to(image.device).input_ids
 
+        tokens_after = self.llm_tokenizer(
+            chunk_after,
+            return_tensors="pt",
+            padding="longest",
+            add_special_tokens=False
+        ).to(image.device).input_ids
+
+        # print("tokens_before", tokens_before.shape)
+        # print("tokens_after", (tokens_after.shape))
+        # print("input_ids", input_ids.shape)
+        # input()
+
         with torch.inference_mode():     
 
             if key_position is None:
+                # key_position = {
+                #     "image_start": tokens_before.shape[1]+1, 
+                #     "image_end": input_ids.shape[1]-tokens_after.shape[1], 
+                #     "response_start": input_ids.shape[1]+1,
+                # }
+                            
                 key_position = {
                     "image_start": tokens_before.shape[1]+1, 
                     "image_end": tokens_before.shape[1]+NUM_IMAGE_TOKENS, 

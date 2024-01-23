@@ -259,7 +259,8 @@ class LLaVa(BaseModel):
                 cd_beta=cd_beta,
                 LVLM_backbone=self,
             )
-
+            
+        output_ids = output_ids.to(input_ids.device)
         input_token_len = input_ids.shape[1]
         n_diff_input_output = (input_ids != output_ids[:, :input_token_len]).sum().item()
         if n_diff_input_output > 0:

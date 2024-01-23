@@ -373,13 +373,15 @@ halc_assistant_helper = halc_assistant(
 
 offlight = True
 
-for img_id in tqdm(range(len(img_files))):
+for idx, img_id in tqdm(enumerate(range(len(img_files))), total=len(img_files)):
     img_file = img_files[img_id]
     img_id = int(img_file.split(".jpg")[0][-6:])
     # print("img_id", img_id)
-    # if img_id != 392493 and offlight:
+    # if img_id != 64390 and offlight:
     #     continue
     # offlight = False
+    # if idx <= 202:
+    #     continue
 
     img_info = img_dict[img_id]
     assert img_info["name"] == img_file

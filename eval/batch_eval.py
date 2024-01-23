@@ -59,7 +59,7 @@ def run_eval(file_path):
     bleu_match = re.search(bleu_pattern, rest_of_stdout)
     log_cider_match = re.search(log_cider_pattern, rest_of_stdout)
 
-    print("log_cider_match", log_cider_match)
+    # print("log_cider_match", log_cider_match)
 
 
     # # Extracted values
@@ -90,7 +90,7 @@ def extract_info_from_filename(filename):
         # print(match.groups())
         return match.groups()
     else:
-        return "-", "-", -1, -1, -1, -1, -1, -1
+        return "-", "-", "-", -1, -1, -1, -1, -1, -1
 
 
 # Initialize the markdown table with headers

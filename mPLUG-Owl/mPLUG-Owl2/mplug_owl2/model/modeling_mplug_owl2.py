@@ -37,6 +37,9 @@ class MPLUGOwl2MetaModel:
         self.visual_abstractor = MplugOwlVisualAbstractorModel(
             MplugOwlVisualAbstractorConfig(**config.visual_config["visual_abstractor"]), config.hidden_size
         )
+
+        # print("self.visual_abstractor", self.visual_abstractor)
+        # input()
     
     def get_vision_tower(self):
         vision_model = getattr(self, 'vision_model', None)
@@ -221,6 +224,7 @@ class MPLUGOwl2LlamaForCausalLM(LlamaForCausalLM, MPLUGOwl2MetaForCausalLM):
         input_ids: torch.LongTensor = None,
         # modality_indicators: torch.LongTensor = None,
         attention_mask: Optional[torch.Tensor] = None,
+        position_ids: Optional[torch.LongTensor] = None,
         past_key_values: Optional[List[torch.FloatTensor]] = None,
         inputs_embeds: Optional[torch.FloatTensor] = None,
         labels: Optional[torch.LongTensor] = None,
@@ -239,11 +243,12 @@ class MPLUGOwl2LlamaForCausalLM(LlamaForCausalLM, MPLUGOwl2MetaForCausalLM):
         input_ids, modality_indicators, attention_mask, past_key_values, inputs_embeds, labels = \
             self.prepare_inputs_labels_for_multimodal(input_ids, attention_mask, past_key_values, labels, images)
 
-        # decoder outputs consists of (dec_features, layer_state, dec_hidden, dec_attn)
+
         outputs = self.model(
             input_ids=input_ids,
             modality_indicators=modality_indicators,
             attention_mask=attention_mask,
+            position_ids=position_ids,
             past_key_values=past_key_values,
             inputs_embeds=inputs_embeds,
             use_cache=use_cache,
@@ -251,6 +256,7 @@ class MPLUGOwl2LlamaForCausalLM(LlamaForCausalLM, MPLUGOwl2MetaForCausalLM):
             output_hidden_states=output_hidden_states or early_exit_layers is not None,
             return_dict=return_dict
         )
+
 
         if early_exit_layers is not None:
             logits_dict = {}
@@ -329,6 +335,28 @@ class MPLUGOwl2LlamaForCausalLM(LlamaForCausalLM, MPLUGOwl2MetaForCausalLM):
                 "use_cache": kwargs.get("use_cache"),
                 "attention_mask": attention_mask,
                 "images": kwargs.get("images", None),
+            }
+        )
+        return model_inputs
+
+    def prepare_inputs_for_generation_cd(
+        self, input_ids, past_key_values=None, attention_mask=None, inputs_embeds=None, images_cd=None, **kwargs
+    ):
+        if past_key_values:
+            input_ids = input_ids[:, -1:]
+
+        # if `inputs_embeds` are passed, we only want to use them in the 1st generation step
+        if inputs_embeds is not None and past_key_values is None:
+            model_inputs = {"inputs_embeds": inputs_embeds}
+        else:
+            model_inputs = {"input_ids": input_ids}
+
+        model_inputs.update(
+            {
+                "past_key_values": past_key_values,
+                "use_cache": kwargs.get("use_cache"),
+                "attention_mask": attention_mask,
+                "images": images_cd
             }
         )
         return model_inputs

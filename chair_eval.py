@@ -171,6 +171,20 @@ parser.add_argument(
     default=False,
     help="Whether to use debugger output.",
 )
+parser.add_argument("--box_threshold", type=float, default=0.5, help="Box threshold for DINO.")
+parser.add_argument(
+    "--gt_seg_path",
+    type=str,
+    default="pope_coco/coco_ground_truth_segmentation.json",
+    help="Input json file that contains ground truth objects in the image.",
+)
+parser.add_argument(
+    "--generate_pope",
+    action="store_true",
+    default=False,
+    help="Whether to generate POPE questions.",
+)
+parser.add_argument("--skip_num", type=int, default=0, help="Skip the first skip_num samples.")
 
 args = parser.parse_known_args()[0]
 
@@ -206,7 +220,11 @@ max_new_tokens = args.max_new_tokens
 expand_ratio = args.expand_ratio
 cd_alpha = args.cd_alpha
 cd_beta = args.cd_beta
+box_threshold = args.box_threshold
 debugger = args.debugger
+gt_seg_path = args.gt_seg_path
+generate_pope = args.generate_pope
+skip_num = args.skip_num
 
 
 # ========================================
@@ -321,10 +339,40 @@ coco_anns = json.loads(lines[0])
 coco = COCO(caption_file_path)
 
 img_ids = coco.getImgIds()
-# sample image ids
-sampled_img_ids = random.sample(img_ids, num_samples)
 
-# print("sampled_img_ids", sampled_img_ids)
+
+if generate_pope:
+
+    num_objects = 3
+    segment_results = [json.loads(q) for q in open(gt_seg_path, "r")]
+    if verbosity:
+        print(
+            f"\nGround truth segmentation results loaded successfully, contains {len(segment_results)} classes."
+        )
+
+    # process segmentation ground truth
+    processed_segment_results = []
+    # Sample images which contain more than sample_num objects
+    for cur_image in segment_results:
+        if len(cur_image["objects"]) >= num_objects:
+            processed_segment_results.append(cur_image)
+
+    assert (
+        len(processed_segment_results) >= num_samples
+    ), f"The number of images that contain more than {num_objects} objects is less than {num_samples}."
+
+    # Randomly sample num_samples images
+    processed_segment_results = random.sample(processed_segment_results, num_samples)
+    sampled_img_ids = [cur_image["image_id"] for cur_image in processed_segment_results]
+
+else:
+
+    # sample image ids
+    sampled_img_ids = random.sample(img_ids, num_samples)
+
+sampled_img_ids = sampled_img_ids[skip_num:]
+
+print("sampled_img_ids", len(sampled_img_ids))
 
 img_files = []
 for cur_img_id in sampled_img_ids:
@@ -361,6 +409,7 @@ halc_params = {
     "detector": detector_type,
     "score_type": "BLIP",
     "debugger": debugger,
+    "box_threshold": box_threshold,
 }
 
 halc_assistant_helper = halc_assistant(
@@ -527,10 +576,16 @@ for idx, img_id in tqdm(enumerate(range(len(img_files))), total=len(img_files)):
     # input()
 
     # dump metric file
-    generated_captions_path = os.path.join(
-        base_dir,
-        f"{model_name}_{decoding_strategy}_{detector_type}_beams_{num_beams}_k_{k_candidate_num}_{dataset_name}_expand_ratio_{expand_ratio}_seed_{seed}_max_tokens_{max_new_tokens}_samples_{num_samples}_generated_captions.json",
-    )
+    if skip_num == 0:
+        generated_captions_path = os.path.join(
+            base_dir,
+            f"{model_name}_{decoding_strategy}_{detector_type}_box_{box_threshold}_beams_{num_beams}_k_{k_candidate_num}_{dataset_name}_expand_ratio_{expand_ratio}_seed_{seed}_max_tokens_{max_new_tokens}_samples_{num_samples}_generated_captions.json",
+        )
+    else:
+        generated_captions_path = os.path.join(
+            base_dir,
+            f"{model_name}_{decoding_strategy}_{detector_type}_box_{box_threshold}_beams_{num_beams}_k_{k_candidate_num}_{dataset_name}_expand_ratio_{expand_ratio}_seed_{seed}_max_tokens_{max_new_tokens}_samples_{num_samples}_skip_{skip_num}_generated_captions.json",
+        )
     # print("generated_captions_path", generated_captions_path)
     with open(generated_captions_path, "a") as f:
         json.dump(img_save, f)

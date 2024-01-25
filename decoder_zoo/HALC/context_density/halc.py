@@ -22,9 +22,10 @@ from mplug_owl2.mm_utils import (
 
 exempt_word_list = ["image", "side", "background", "feature", "features", "center", 
                     "left", "right", "scene", "view", "s", "Birthday", "detail", "red",
-                    "white", "cat", "horse", "bus", "group", "dog", "manner"]
+                    "white", "cat", "horse", "bus", "group", "manner", "her", "birds", 
+                    "teddy", "stack", "cell", "toaster", "mirror", "toilet", "captures"]
 
-add_word_list = ["sink", "microwave", "toaster"]
+add_word_list = ["sink", "microwave", "toaster", "puppy", "bottle", "table", "oven", "toothbrush"]
 
 class halc_assistant:
     def __init__(
@@ -61,7 +62,7 @@ class halc_assistant:
         self.vis_processor = vis_processor
         self.model = model
 
-        
+        self.box_threshold = halc_params["box_threshold"]
         self.tagging = spacy.load("en_core_web_sm")
         # self.tagging_sm = spacy.load("en_core_web_sm")
         # self.tagging_md = spacy.load("en_core_web_md")
@@ -73,7 +74,7 @@ class halc_assistant:
         self.max_new_tokens = max_new_tokens
 
         self.max_handle_box = 3
-        self.skip_rate = 0
+        self.skip_rate = 0.3
 
         self.exempt_word_list = exempt_word_list
         self.add_word_list = add_word_list
@@ -240,7 +241,7 @@ class halc_assistant:
 
         expand_ratio = self.halc_params["expand_ratio"]
 
-        entity = entity.strip(".").strip(",")
+        entity = entity.strip(".").strip(",").strip("'").strip("]").strip("[").strip(")")
         # entity = "clock"
         doc = self.tagging(entity)
         # doc_sm = self.tagging_sm(entity)
@@ -268,6 +269,8 @@ class halc_assistant:
             detect_info["pos"] = "SKIP"
         if entity in self.exempt_word_list:
             detect_info["pos"] = "SKIP"
+        if random.random() < self.skip_rate:
+            detect_info["pos"] = "SKIP"
         #     detect_info["pos_sm"] = "SKIP"
         #     detect_info["pos_md"] = "SKIP"
         #     detect_info["pos_lg"] = "SKIP"
@@ -288,6 +291,7 @@ class halc_assistant:
         if detect_info["pos"] in valid_list:
             detect_info["status"] = "activated"
             self.detector_dict["named_entity"] = [entity]
+            self.detector_dict["box_threshold"] = self.box_threshold
 
             if self.halc_params["detector"] == "dino":
                 sample = self.detector.detect_objects(self.detector_dict)

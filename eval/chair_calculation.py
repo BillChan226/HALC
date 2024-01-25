@@ -7,8 +7,8 @@ import json
 from collections import defaultdict
 import os
 
-halc_chair_result_path = "/home/czr/HaLC/hallucination_results/chair/mplug-owl2_halc-beam_dino/coco/mplug-owl2_halc-beam_dino_coco_num_images_500_chair_results.json"
-halc_chair_caption_path = "/home/czr/HaLC/paper_result/chair/mplug-owl2/mplug-owl2_halc-beam_dino_beams_1_k_6_coco_expand_ratio_0.6_seed_4_max_tokens_64_samples_500_generated_captions.json"
+halc_chair_result_path = "/home/czr/HaLC/hallucination_results/chair/llava-1.5_halc-beam_dino/coco/llava-1.5_halc-beam_dino_coco_num_images_500_chair_results.json"
+# halc_chair_caption_path = "/home/czr/HaLC/paper_result/chair/1_24/llava-1.5_halc-beam_dino_beams_1_k_6_coco_expand_ratio_0.6_seed_1_max_tokens_64_samples_500_generated_captions.json"
 
 # load eval results
 with open(halc_chair_result_path) as f:
@@ -19,10 +19,10 @@ with open(halc_chair_result_path) as f:
 # with open(halc_chair_caption_path) as f:
 #     halc_generated_captions = json.load(f)
 halc_generated_captions = []
-with open(halc_chair_caption_path, "r") as f:
-    lines = f.readlines()
-    for line in lines:
-        halc_generated_captions.append(json.loads(line))
+# with open(halc_chair_caption_path, "r") as f:
+#     lines = f.readlines()
+#     for line in lines:
+#         halc_generated_captions.append(json.loads(line))
 
 halc_result = {}
 for i in halc_eval_results:
@@ -41,7 +41,7 @@ object_sum = 0
 meteor_sum = 0
 hallucinate_sum = 0
 
-hallucinate_sum_max = 3
+hallucinate_sum_max = 2
 hallucinate_index_list = []
 
 for i in halc_result:

@@ -618,9 +618,9 @@
             "caption": "The image shows a table with several pizzas on it. There are also some drinks and utensils on the table. The table is in a kitchen or dining area.\n\nThe image is in black and white.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
+                "dining table",
                 "pizza",
                 "bottle",
-                "dining table",
                 "oven"
             ],
             "mscoco_generated_words": [
@@ -759,8 +759,8 @@
                 ]
             ],
             "mscoco_gt_words": [
-                "person",
                 "chair",
+                "person",
                 "tennis racket"
             ],
             "mscoco_generated_words": [
@@ -1061,11 +1061,11 @@
             "caption": "The image is of a sailing court with a blue background and white lines on the court. There are two tennis players in the middle of the court, one wearing a red shirt and the other wearing a blue shirt. The players are holding rackets and are in the middle of a match.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
+                "tennis racket",
                 "couch",
-                "sports ball",
-                "person",
                 "chair",
-                "tennis racket"
+                "person",
+                "sports ball"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -1685,9 +1685,9 @@
             "caption": "The image shows a street with a few cars parked on the side of the road. There are buildings on either side of the street, with a few people walking on the sidewalk. The sky is cloudy and there are some trees in the background. The image is taken from a low angle, looking down",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
-                "traffic light",
                 "truck",
+                "traffic light",
+                "person",
                 "car"
             ],
             "mscoco_generated_words": [
@@ -2146,9 +2146,9 @@
             "caption": "The image shows a surfer riding a wave on a surfboard. The surfer is wearing a wetsuit and a helmet, and is standing on the board with his feet on the ground. The wave is crashing down on the surfer, and the surfer is jumping off",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
                 "laptop",
-                "surfboard"
+                "surfboard",
+                "person"
             ],
             "mscoco_generated_words": [
                 "surfboard"
@@ -2293,13 +2293,13 @@
                 ]
             ],
             "mscoco_gt_words": [
-                "book",
-                "couch",
-                "tv",
+                "remote",
                 "dining table",
                 "laptop",
+                "couch",
+                "tv",
                 "person",
-                "remote"
+                "book"
             ],
             "mscoco_generated_words": [
                 "couch",
@@ -2749,14 +2749,14 @@
             "caption": "The image shows a group of people standing around a table with a large screen in the background. The people are all wearing casual clothing and are looking at the screen. There are several chairs around the table and a whiteboard on the wall. atmosphere",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
+                "remote",
+                "dining table",
+                "bottle",
+                "tv",
+                "chair",
                 "person",
                 "potted plant",
-                "remote",
-                "cup",
-                "tv",
-                "dining table",
-                "chair",
-                "bottle"
+                "cup"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -2898,13 +2898,13 @@
             "caption": "The image shows a woman standing in front of a white wall with a red and blue striped shirt on. She is holding a white cane in her right hand and has a look of concentration on her face. There are several other people in the background, including a man sitting on a couch and another",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
+                "remote",
                 "couch",
-                "tv",
-                "person",
-                "chair",
                 "vase",
-                "potted plant",
-                "remote"
+                "tv",
+                "chair",
+                "person",
+                "potted plant"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -3056,9 +3056,9 @@
             "caption": "The image shows a blue and red train traveling along a track next to a building with a red roof and white walls\n\nThe train is traveling in the direction of the arrow, and the tracks are made of concrete. The building is a small, one story structure with a red roof and white walls.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
                 "train",
-                "bench"
+                "bench",
+                "person"
             ],
             "mscoco_generated_words": [
                 "train",
@@ -3221,8 +3221,8 @@
                 ]
             ],
             "mscoco_gt_words": [
-                "oven",
-                "clock"
+                "clock",
+                "oven"
             ],
             "mscoco_generated_words": [
                 "oven",
@@ -3373,16 +3373,16 @@
             "caption": "The image shows a street with tall buildings on either side. There are cars parked on the side of the street and people walking on the sidewalk. The buildings are made of brick and have large windows on the upper floors. There are also trees and plants in the area.\n\nThe image is taken",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "car",
-                "bicycle",
-                "person",
-                "fire hydrant",
-                "truck",
-                "potted plant",
                 "dining table",
                 "chair",
+                "parking meter",
+                "person",
+                "potted plant",
+                "truck",
+                "bicycle",
                 "vase",
-                "parking meter"
+                "car",
+                "fire hydrant"
             ],
             "mscoco_generated_words": [
                 "car",
@@ -3531,11 +3531,11 @@
             "caption": "The image shows a baseball game in progress on a field with a large crowd of people watching from the stands. The players are wearing uniforms with the names of their teams on the back. The umpire is standing behind home plate, ready to call the next pitch. The catcher is squatting behind",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "sports ball",
-                "person",
                 "baseball bat",
+                "baseball glove",
                 "chair",
-                "baseball glove"
+                "person",
+                "sports ball"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -3691,8 +3691,8 @@
                 ]
             ],
             "mscoco_gt_words": [
-                "person",
-                "toothbrush"
+                "toothbrush",
+                "person"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -3989,9 +3989,9 @@
             "caption": "The image shows a woman walking down the street with a large billboard on the side of a building. The billboard has a picture of a man on it, with the words \"the man on the moon\" written underneath. The woman is wearing a black jacket and jeans, and has",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
-                "truck",
                 "handbag",
+                "truck",
+                "person",
                 "car"
             ],
             "mscoco_generated_words": [
@@ -4141,8 +4141,8 @@
             "caption": "The image shows a surfer riding a wave on a surfboard. The surfer is wearing a black wetsuit and has his arms outstretched as he jumps off the wave. The wave is white and has a lot of foam on it. There are other surfers in",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
-                "surfboard"
+                "surfboard",
+                "person"
             ],
             "mscoco_generated_words": [
                 "surfboard"
@@ -4458,11 +4458,11 @@
                 ]
             ],
             "mscoco_gt_words": [
-                "tv",
-                "backpack",
-                "person",
                 "handbag",
-                "suitcase"
+                "backpack",
+                "tv",
+                "suitcase",
+                "person"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -4759,8 +4759,8 @@
             "caption": "The image shows a couple walking on the beach with surfboards. They are standing on the sand and looking out at the ocean. The sky is blue and there are some clouds in the distance. The beach is lined with palm trees and there are some rocks in the foreground. The water is calm",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
-                "surfboard"
+                "surfboard",
+                "person"
             ],
             "mscoco_generated_words": [
                 "surfboard"
@@ -4908,12 +4908,12 @@
             "caption": "The image shows a white frame with a black and white photo of a baby in it. The frame is sitting on a wooden table next to a white vase with some green plants in it. There is a white lamp on the table and a white wall in the background.\n\nThe image is well lit and",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "cell phone",
                 "dining table",
-                "person",
                 "vase",
                 "potted plant",
-                "cup"
+                "cup",
+                "person",
+                "cell phone"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -5066,8 +5066,8 @@
             "caption": "The woman is standing on the beach holding a surfboard. She is wearing a bikini and has her hair tied back in a ponytail. The waves are crashing against the shore in the background. The sky is blue and there are clouds in the distance. The woman is smiling and",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
-                "surfboard"
+                "surfboard",
+                "person"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -5510,10 +5510,10 @@
                 ]
             ],
             "mscoco_gt_words": [
-                "person",
                 "chair",
-                "cell phone",
-                "backpack"
+                "backpack",
+                "person",
+                "cell phone"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -5660,9 +5660,9 @@
             "caption": "The image shows a young boy sitting on the toilet, looking at his phone. He is wearing a pair of blue jeans and a white shirt. The bathroom is dimly lit, with only a small window providing light. The boy's face is obscured by the reflection of the",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
+                "toilet",
                 "person",
-                "cell phone",
-                "toilet"
+                "cell phone"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -5963,12 +5963,12 @@
                 ]
             ],
             "mscoco_gt_words": [
+                "dining table",
+                "laptop",
+                "tv",
                 "keyboard",
                 "mouse",
-                "tv",
-                "cell phone",
-                "dining table",
-                "laptop"
+                "cell phone"
             ],
             "mscoco_generated_words": [
                 "laptop",
@@ -6136,9 +6136,9 @@
                 ]
             ],
             "mscoco_gt_words": [
+                "backpack",
                 "person",
-                "cell phone",
-                "backpack"
+                "cell phone"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -6294,9 +6294,9 @@
             "caption": "The image shows a man holding a piece in his hand. The piece is a sandwich with a piece of bacon on top and a piece of cheese on the bottom. The man is wearing a white shirt and a pair of glasses. The background is a blue sky with some clouds.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
+                "hot dog",
                 "person",
-                "sandwich",
-                "hot dog"
+                "sandwich"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -6444,10 +6444,10 @@
             "caption": "The image shows a sandwich with a drink on the side. The sandwich has lettuce, tomato, and meat on it. The drink is a coffee with milk and sugar in it. There are two cups of coffee on the table. The background is a white paper tablecloth with a white",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "dining table",
-                "sandwich",
                 "cup",
-                "hot dog"
+                "dining table",
+                "hot dog",
+                "sandwich"
             ],
             "mscoco_generated_words": [
                 "sandwich",
@@ -6601,11 +6601,11 @@
                 ]
             ],
             "mscoco_gt_words": [
-                "pizza",
                 "refrigerator",
-                "person",
+                "pizza",
                 "oven",
-                "spoon"
+                "spoon",
+                "person"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -6757,8 +6757,8 @@
                 ]
             ],
             "mscoco_gt_words": [
-                "person",
-                "tie"
+                "tie",
+                "person"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -6916,10 +6916,10 @@
                 ]
             ],
             "mscoco_gt_words": [
-                "dining table",
-                "cake",
                 "cup",
-                "spoon"
+                "dining table",
+                "spoon",
+                "cake"
             ],
             "mscoco_generated_words": [
                 "cake",
@@ -7222,9 +7222,9 @@
                 ]
             ],
             "mscoco_gt_words": [
+                "chair",
                 "person",
                 "bottle",
-                "chair",
                 "tennis racket"
             ],
             "mscoco_generated_words": [
@@ -7525,8 +7525,8 @@
             "caption": "The image shows a man holding a baby in his arms while looking at a cell phone. The baby is lying in a crib with a blanket over it. The man is wearing a white shirt and pants, and the baby is wearing a white onesie. The background is a hospital room",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
                 "cell phone",
+                "person",
                 "bed"
             ],
             "mscoco_generated_words": [
@@ -7677,11 +7677,11 @@
             "caption": "The image shows a group of people walking down a street in a city. They are all wearing different types of clothing, including t shirts, jeans, and sneakers. Some of them are carrying bags or backpacks. The street is lined with tall buildings on either side, and",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "car",
+                "handbag",
                 "backpack",
                 "umbrella",
-                "person",
-                "handbag"
+                "car",
+                "person"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -7831,13 +7831,13 @@
                 ]
             ],
             "mscoco_gt_words": [
-                "bowl",
-                "cell phone",
+                "handbag",
+                "truck",
                 "airplane",
+                "bowl",
                 "suitcase",
                 "person",
-                "truck",
-                "handbag"
+                "cell phone"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -7985,8 +7985,8 @@
             "caption": "The image shows a person playing with a beach frisbee on a sandy beach. The person is wearing a black and white striped shirt and black shorts. The frisbee is made of plastic and has a white and black design on it. The background is a sandy beach with",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
-                "frisbee"
+                "frisbee",
+                "person"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -8131,8 +8131,8 @@
             "caption": "The image shows two women on horseback in the water. They are wearing bikinis and sunglasses. The horses are brown and white. The sky is blue and there are mountains in the background.\n\nThe image is taken from the perspective of the horses. The women are standing in",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "horse",
-                "person"
+                "person",
+                "horse"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -8444,9 +8444,9 @@
             "caption": "The image shows a person performing a trick on a snowboard in the snow. The person is wearing a black jacket and black pants, and has a black helmet on their head. The snowboard is black and has a red stripe on it. The background is a mountain with snow on it",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
+                "snowboard",
                 "person",
-                "skis",
-                "snowboard"
+                "skis"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -8596,8 +8596,8 @@
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
                 "person",
-                "bed",
-                "bench"
+                "bench",
+                "bed"
             ],
             "mscoco_generated_words": [
                 "bench",
@@ -8745,9 +8745,9 @@
             "caption": "The image is a cake with a zebra and a tree on it. The cake is brown and has a zebra on it. The zebra is black and white and has a tree on its back. The tree is brown and has a zebra on it. The z zebra",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
+                "giraffe",
                 "zebra",
-                "cake",
-                "giraffe"
+                "cake"
             ],
             "mscoco_generated_words": [
                 "cake",
@@ -9053,13 +9053,13 @@
             "caption": "The image shows a person standing in front of a fireplace, holding a remote control in their hand. The person is wearing a black shirt and jeans, and has a small tattoo on their left wrist. The fireplace has a large television mounted on the wall above it, and there",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "book",
-                "tv",
-                "person",
-                "bottle",
+                "remote",
                 "vase",
+                "bottle",
+                "tv",
                 "potted plant",
-                "remote"
+                "person",
+                "book"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -9207,8 +9207,8 @@
             "caption": "The image shows a refrigerator with a handle on the side. There is a small tattoo on the side of the refrigerator. The tattoo is a skull with a crown on top of it. The skull has a small tattoo on the side of it.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "refrigerator",
-                "remote"
+                "remote",
+                "refrigerator"
             ],
             "mscoco_generated_words": [
                 "refrigerator",
@@ -9348,8 +9348,8 @@
             "caption": "The image shows a group of people playing a game of frisbee on a green. They are wearing different colored shirts and shorts, and one of them is holding a frisbee. The grass is green and there are trees in the background.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
-                "frisbee"
+                "frisbee",
+                "person"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -9487,9 +9487,9 @@
             "caption": "The image shows a man and a woman standing outside, looking at something on the ground. The man is holding a small piece of food in his hand, while the woman is looking at him with a curious expression on her face. The background is a stone wall with a large window on the left side of the image",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
+                "donut",
                 "person",
-                "car",
-                "donut"
+                "car"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -9650,9 +9650,9 @@
                 ]
             ],
             "mscoco_gt_words": [
-                "person",
                 "traffic light",
-                "bird"
+                "bird",
+                "person"
             ],
             "mscoco_generated_words": [
                 "traffic light",
@@ -9802,14 +9802,14 @@
             "caption": "The image shows a plate of food with a piece of chicken and vegetables on it. There are also glasses of wine on the table.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
-                "spoon",
-                "fork",
-                "book",
                 "dining table",
+                "fork",
+                "wine glass",
+                "person",
+                "book",
                 "knife",
                 "carrot",
-                "wine glass"
+                "spoon"
             ],
             "mscoco_generated_words": [
                 "dining table"
@@ -10081,10 +10081,10 @@
             "caption": "The image shows a pizza on a wooden cutting board with a beer bottle next to it. The pizza has cheese, pepperoni, and onions on it. The beer bottle has a label that reads \"Bud Light.\" There is a coffee mug on the cutting board",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "pizza",
-                "bottle",
+                "cup",
                 "dining table",
-                "cup"
+                "pizza",
+                "bottle"
             ],
             "mscoco_generated_words": [
                 "pizza",
@@ -10229,9 +10229,9 @@
             "caption": "The image shows a group of people standing on the beach, holding kites. The kites are made of colorful fabric and have long tails that are attached to the ground. The people are wearing casual clothing and are standing in a line, looking out at the ocean. The sky is clear",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
+                "boat",
                 "kite",
-                "boat"
+                "person"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -10528,8 +10528,8 @@
                 ]
             ],
             "mscoco_gt_words": [
-                "person",
                 "pizza",
+                "person",
                 "cell phone"
             ],
             "mscoco_generated_words": [
@@ -10694,9 +10694,9 @@
             ],
             "mscoco_gt_words": [
                 "bowl",
+                "couch",
                 "book",
-                "tv",
-                "couch"
+                "tv"
             ],
             "mscoco_generated_words": [
                 "couch",
@@ -11009,9 +11009,9 @@
             "caption": "The image shows a group of people skateboarding on a concrete skate park. The skateboarders are wearing helmets and knee pads, and they are performing various tricks and stunts on the ramps. The skate park is surrounded by a fence, and",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
+                "skateboard",
                 "person",
-                "car",
-                "skateboard"
+                "car"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -11147,8 +11147,8 @@
             "caption": "The image shows a body of water with boats in the foreground and a sunset in the background. The sky is cloudy with a few stars visible. The water is calm and there are no waves. The boats are small and white. The sun is setting behind the boats, casting a warm glow over",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
-                "boat"
+                "boat",
+                "person"
             ],
             "mscoco_generated_words": [
                 "boat",
@@ -11299,12 +11299,12 @@
             "caption": "The image shows a small black and white horse standing in front of a wooden fence. The horse is wearing a halter and has a tag on its neck. There are several tables and chairs set up outside under a wooden awning. The atmosphere is peaceful and serene.\n\nThe image",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "horse",
                 "dining table",
                 "umbrella",
-                "person",
+                "potted plant",
                 "chair",
-                "potted plant"
+                "person",
+                "horse"
             ],
             "mscoco_generated_words": [
                 "horse",
@@ -11460,9 +11460,9 @@
                 ]
             ],
             "mscoco_gt_words": [
-                "person",
+                "toilet",
                 "orange",
-                "toilet"
+                "person"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -11614,10 +11614,10 @@
             "caption": "The image shows a group of people skiing down a snowy slope. There are several ski lifts in the background, and the trees are covered in snow. The sky is cloudy and there is a light snowfall.\n\nThe people in the image are wearing ski gear, including helmets,",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
-                "skis",
+                "snowboard",
                 "chair",
-                "snowboard"
+                "person",
+                "skis"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -11764,10 +11764,10 @@
             "caption": "The image shows a group of stuffed animals sitting on a blue table. They are all wearing pink dresses and have pink bows on their heads. They are all different sizes and shapes, but they are all the same color. The stuffed animals are all sitting in a row on the table",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "bear",
                 "teddy bear",
+                "dining table",
                 "tie",
-                "dining table"
+                "bear"
             ],
             "mscoco_generated_words": [
                 "dining table",
@@ -12058,8 +12058,8 @@
             "caption": "The image shows a tennis player hitting a ball on a tennis court. The player is wearing a white shirt and white shorts, and has a white tennis racket in his hand. The ball is flying through the air and the player is running to hit it. The background is a blue and white strip",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
                 "sports ball",
+                "person",
                 "tennis racket"
             ],
             "mscoco_generated_words": [
@@ -12219,10 +12219,10 @@
                 ]
             ],
             "mscoco_gt_words": [
+                "cup",
                 "cat",
                 "dog",
-                "vase",
-                "cup"
+                "vase"
             ],
             "mscoco_generated_words": [
                 "cat",
@@ -12373,10 +12373,10 @@
             "caption": "The image shows a baseball game in progress on a field with a fence surrounding it. There are several players on the field, including one who is holding a bat and another who is catching a ball. The crowd is watching from the stands. The sky is clear and blue.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
                 "baseball bat",
-                "sports ball",
-                "baseball glove"
+                "baseball glove",
+                "person",
+                "sports ball"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -12522,8 +12522,8 @@
             "caption": "The image shows a small plane flying over a body of water with a small boat in the foreground. The plane is white with a red tail and has a large propeller on the back. The boat is red and has a white cabin on top. There are several trees in the background and a small island in",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "airplane",
-                "boat"
+                "boat",
+                "airplane"
             ],
             "mscoco_generated_words": [
                 "airplane",
@@ -12847,8 +12847,8 @@
                 ]
             ],
             "mscoco_gt_words": [
-                "person",
-                "donut"
+                "donut",
+                "person"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -13163,14 +13163,14 @@
             "caption": "The image shows a group of people standing in front of a building. They are all wearing hats and some are holding flowers. There is a horse and carriage in the background. The building appears to be a hotel or restaurant. The sky is blue and there are trees in the background.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "horse",
-                "car",
-                "bicycle",
+                "handbag",
                 "person",
-                "truck",
+                "horse",
                 "potted plant",
-                "cell phone",
-                "handbag"
+                "truck",
+                "bicycle",
+                "car",
+                "cell phone"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -13318,8 +13318,8 @@
             "caption": "The image shows a group of giraffes standing in a fenced enclosure. They are all wearing collars and appear to be healthy. The fence is made of metal and has a gate that is open. There is a building in the background with a roof and windows. The building appears",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "zebra",
-                "giraffe"
+                "giraffe",
+                "zebra"
             ],
             "mscoco_generated_words": [
                 "giraffe"
@@ -13764,8 +13764,8 @@
             "caption": "The man in the image is wearing a black suit and tie, and is standing in front of a large window. He is smiling and looking down at the ground. The building behind him appears to be a large office complex with many windows and a high ceiling. The sky is blue and there are clouds",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
-                "tie"
+                "tie",
+                "person"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -13916,10 +13916,10 @@
             "caption": "The image shows a white Volkswagen Beetle parked in a parking lot with other cars nearby. The car has a black roof rack on top with a surfboard strapped to it. The car is parked next to a tree and there are other cars parked nearby. The image is",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
+                "suitcase",
                 "surfboard",
-                "car",
                 "skateboard",
-                "suitcase"
+                "car"
             ],
             "mscoco_generated_words": [
                 "car",
@@ -14065,9 +14065,9 @@
             "caption": "The image shows a city skyline at night with tall buildings and bright lights. There are cars and buses on the street, and people walking on the sidewalk. The sky is clear and there are no clouds. The image is taken from a high angle, looking down on city city",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
-                "traffic light",
                 "bus",
+                "traffic light",
+                "person",
                 "car"
             ],
             "mscoco_generated_words": [
@@ -14215,12 +14215,12 @@
             "caption": "The image shows a plate of pizza with mozzarella cheese and tomato sauce on top. There is a glass of red wine on the table next to the plate. The background is a white wall with a window on the left side.\n\nThe image shows a plate of pizza",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "fork",
-                "pizza",
                 "dining table",
+                "cup",
+                "pizza",
                 "knife",
-                "person",
-                "cup"
+                "fork",
+                "person"
             ],
             "mscoco_generated_words": [
                 "pizza",
@@ -14364,17 +14364,17 @@
             "caption": "The image is of a room with a desk, chair, and computer. There is a window on the wall with a view of the outside. The room is decorated with a leopard print blanket and a stuffed animal on the floor. The walls are painted a light blue color.\n\nThe image",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
+                "dining table",
+                "bottle",
+                "tv",
                 "keyboard",
+                "teddy bear",
+                "chair",
                 "mouse",
+                "suitcase",
                 "person",
                 "laptop",
-                "teddy bear",
-                "potted plant",
-                "tv",
-                "dining table",
-                "chair",
-                "bottle",
-                "suitcase"
+                "potted plant"
             ],
             "mscoco_generated_words": [
                 "dining table",
@@ -14677,9 +14677,9 @@
             "mscoco_gt_words": [
                 "dining table",
                 "hot dog",
+                "cup",
                 "person",
-                "sandwich",
-                "cup"
+                "sandwich"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -14982,9 +14982,9 @@
             "caption": "The image shows a woman playing tennis on a court. She is wearing a white shirt and shorts, and has a racket in her hand. The court is made of grass and there are trees in the background.\n\nThe image is in focus and the colors are bright and vivid. The",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
+                "tennis racket",
                 "person",
-                "sports ball",
-                "tennis racket"
+                "sports ball"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -15131,10 +15131,10 @@
             "caption": "The image shows a man standing in front of a building with a snowboard on his back. He is wearing a blue jacket and black pants. There are other people in the background, some of whom are also wearing blue jackets and black pants. The building in the background appears to be",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
+                "snowboard",
                 "backpack",
                 "bench",
-                "snowboard"
+                "person"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -15442,8 +15442,8 @@
             "caption": "The image shows a group of zebras grazing on the grass in the foreground, with a large giraffe in the background. The giraffe is standing on the edge of a body of water, with a small island in the distance. The sky is clear and blue, with a few clouds",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "zebra",
                 "giraffe",
+                "zebra",
                 "bird"
             ],
             "mscoco_generated_words": [
@@ -15596,10 +15596,10 @@
                 ]
             ],
             "mscoco_gt_words": [
-                "oven",
+                "spoon",
                 "clock",
                 "knife",
-                "spoon"
+                "oven"
             ],
             "mscoco_generated_words": [
                 "oven",
@@ -15743,9 +15743,9 @@
             "caption": "The image shows a mother goat and her baby in a pen. The mother goat is standing on the ground and the baby is standing on her back. The baby is suckling on the mother's teats. The mother goat is wearing a collar and the baby is wearing a",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
+                "boat",
                 "sheep",
-                "boat"
+                "person"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -16203,9 +16203,9 @@
             "caption": "The image is a bowl of broccoli with sauce on top. The sauce is made with caramelized onions and garlic. The broccoli is cooked until it is tender and slightly browned. The sauce is poured over the broccoli and the dish is served",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "bowl",
+                "broccoli",
                 "dining table",
-                "broccoli"
+                "bowl"
             ],
             "mscoco_generated_words": [
                 "bowl",
@@ -16499,8 +16499,8 @@
                 ]
             ],
             "mscoco_gt_words": [
-                "person",
                 "baseball bat",
+                "person",
                 "baseball glove"
             ],
             "mscoco_generated_words": [
@@ -16798,10 +16798,10 @@
             "caption": "The image shows a group of people skiing down a snowy slope. They are wearing ski gear and holding their skis. The snow is deep and there are trees in the background.\n\nThe person in the middle is wearing a black and white ski suit and has a helmet on their head.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
-                "skis",
+                "snowboard",
                 "stop sign",
-                "snowboard"
+                "person",
+                "skis"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -16951,16 +16951,16 @@
             "caption": "This is a collage of images showing a living room, kitchen, and bedroom. The living room has a black couch, a coffee table, and a TV. The kitchen has a black and white checkered floor, a black and white checkered table, and a black and white checkered cabinets",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "bowl",
-                "keyboard",
-                "couch",
-                "mouse",
-                "bicycle",
-                "book",
-                "tv",
-                "refrigerator",
                 "dining table",
-                "chair"
+                "refrigerator",
+                "couch",
+                "tv",
+                "keyboard",
+                "chair",
+                "mouse",
+                "book",
+                "bicycle",
+                "bowl"
             ],
             "mscoco_generated_words": [
                 "couch",
@@ -17412,10 +17412,10 @@
             "caption": "The image shows a person holding a smartphone with a camera on the back. The person is holding the phone in their hand and looking at the screen. The screen shows a picture of a cow in a field. The cow is standing in the middle of the field and looks like it is grazing. The sky",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
-                "cell phone",
                 "sports ball",
-                "cow"
+                "cow",
+                "person",
+                "cell phone"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -17869,13 +17869,13 @@
                 ]
             ],
             "mscoco_gt_words": [
-                "keyboard",
-                "book",
-                "tv",
                 "dining table",
                 "laptop",
+                "cup",
                 "bottle",
-                "cup"
+                "tv",
+                "keyboard",
+                "book"
             ],
             "mscoco_generated_words": [
                 "dining table",
@@ -18039,9 +18039,9 @@
                 ]
             ],
             "mscoco_gt_words": [
-                "person",
+                "remote",
                 "couch",
-                "remote"
+                "person"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -18196,9 +18196,9 @@
             "mscoco_gt_words": [
                 "dining table",
                 "cake",
-                "person",
+                "cup",
                 "chair",
-                "cup"
+                "person"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -18360,8 +18360,8 @@
                 ]
             ],
             "mscoco_gt_words": [
-                "cat",
-                "toilet"
+                "toilet",
+                "cat"
             ],
             "mscoco_generated_words": [
                 "cat",
@@ -18515,9 +18515,9 @@
             "caption": "The image shows a woman riding a brown horse on a grassy field. The horse is wearing a saddle and bridle, and the woman is wearing a riding helmet and boots. The background is a clear blue sky with fluffy white clouds.\n\nThe image is of",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "horse",
+                "car",
                 "person",
-                "car"
+                "horse"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -18660,8 +18660,8 @@
             "caption": "The image shows a sailboat on a frozen lake. The boat is white with a red sail and a blue hull. The sail is in the shape of a triangle and has a white sail. The hull is made of wood and has a blue bottom. The boat is on the ice and there",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
-                "boat"
+                "boat",
+                "person"
             ],
             "mscoco_generated_words": [
                 "boat",
@@ -18974,8 +18974,8 @@
             "caption": "The image shows a man walking on a wooden bridge over a stream in a forest. The man is wearing a black shirt and black pants, and he is carrying a black skateboard. The trees on either side of the bridge are tall and green, and there is a small stream running underneath the",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
-                "skateboard"
+                "skateboard",
+                "person"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -19130,8 +19130,8 @@
                 ]
             ],
             "mscoco_gt_words": [
-                "person",
-                "toothbrush"
+                "toothbrush",
+                "person"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -19281,10 +19281,10 @@
             "caption": "The image shows a group of people playing baseball on a field. There are two adults and two children playing the game. The adults are wearing baseball caps and the children are wearing baseball gloves. The adults are holding bats and the children are holding baseballs. The adults are standing",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
                 "baseball bat",
+                "baseball glove",
                 "clock",
-                "baseball glove"
+                "person"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -19449,15 +19449,15 @@
             ],
             "mscoco_gt_words": [
                 "scissors",
-                "microwave",
-                "toaster",
-                "oven",
-                "sink",
-                "cup",
-                "spoon",
-                "knife",
                 "bottle",
-                "vase"
+                "oven",
+                "spoon",
+                "toaster",
+                "sink",
+                "vase",
+                "knife",
+                "microwave",
+                "cup"
             ],
             "mscoco_generated_words": [
                 "oven",
@@ -19758,9 +19758,9 @@
             "caption": "The image shows a man standing in front of a bathroom mirror, holding a toilet brush in his hand. He is wearing a green t-shirt and has a beard. The mirror is clean and there is a towel on the floor. The man is smiling and appears to",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
+                "toilet",
                 "person",
-                "cell phone",
-                "toilet"
+                "cell phone"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -20342,9 +20342,9 @@
             "caption": "The image shows a woman in a white uniform standing in front of a large whiteboard with a blackboard on it. She is holding a pen and looking at the board with a serious expression. The background is a dark blue color.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
+                "boat",
                 "tie",
-                "boat"
+                "person"
             ],
             "mscoco_generated_words": [
                 "person"
@@ -20479,8 +20479,8 @@
             "caption": "The image shows a woman standing next to a brown and white horse in a barn. The woman is wearing a black coat and black pants, while the horse is wearing a brown and white saddle and bridle. The barn has wooden walls and a metal roof, and there are several other",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "horse",
-                "person"
+                "person",
+                "horse"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -20629,15 +20629,15 @@
             "caption": "The image shows a desk with a computer, speakers, and a lamp on it. The desk is made of wood and has a clear glass top. The computer is a black and silver laptop with a large screen and speakers on either side. The speakers are black and have a small LED display",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "keyboard",
-                "mouse",
-                "car",
-                "laptop",
                 "remote",
-                "tv",
-                "cell phone",
                 "dining table",
-                "chair"
+                "tv",
+                "keyboard",
+                "chair",
+                "mouse",
+                "laptop",
+                "car",
+                "cell phone"
             ],
             "mscoco_generated_words": [
                 "dining table",
@@ -20789,8 +20789,8 @@
             "caption": "The image shows a young girl standing on the beach holding a kite. The kite is made of colorful fabric and has a long tail. The girl is wearing a pink shirt and black pants. The sky is cloudy and there are some trees in the background.\n\nThe image",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
-                "kite"
+                "kite",
+                "person"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -20941,11 +20941,11 @@
                 ]
             ],
             "mscoco_gt_words": [
-                "book",
                 "dining table",
-                "person",
+                "bench",
                 "chair",
-                "bench"
+                "person",
+                "book"
             ],
             "mscoco_generated_words": [
                 "dining table",
@@ -21098,8 +21098,8 @@
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
                 "person",
-                "sports ball",
-                "elephant"
+                "elephant",
+                "sports ball"
             ],
             "mscoco_generated_words": [
                 "elephant",
@@ -21249,8 +21249,8 @@
                 ]
             ],
             "mscoco_gt_words": [
-                "person",
-                "frisbee"
+                "frisbee",
+                "person"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -21567,14 +21567,14 @@
             "caption": "The image shows a metal oven with a red handle on the side. There are several wires and cables attached to the oven, and a small table with a white board on it. There are also several people in the background, including a woman sitting at a desk and a man standing near the",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "microwave",
+                "handbag",
+                "dining table",
                 "couch",
+                "oven",
+                "chair",
                 "toaster",
                 "person",
-                "oven",
-                "dining table",
-                "chair",
-                "handbag"
+                "microwave"
             ],
             "mscoco_generated_words": [
                 "oven",
@@ -21729,9 +21729,9 @@
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
                 "person",
+                "vase",
                 "bottle",
-                "tv",
-                "vase"
+                "tv"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -21879,9 +21879,9 @@
             "caption": "The image shows a man standing on the shore of a body of water, with a group of seagulls flying overhead. The man is holding a fish in his hand and appears to be about to throw it into the water. The sky is blue and there are clouds in the distance. The water is calm",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
                 "donut",
-                "bird"
+                "bird",
+                "person"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -22046,9 +22046,9 @@
                 ]
             ],
             "mscoco_gt_words": [
+                "handbag",
                 "person",
-                "cell phone",
-                "handbag"
+                "cell phone"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -22337,8 +22337,8 @@
             "mscoco_gt_words": [
                 "person",
                 "truck",
-                "car",
-                "frisbee"
+                "frisbee",
+                "car"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -22490,10 +22490,10 @@
             "caption": "The image shows a group of people standing on a snowy slope at night. They are all wearing ski gear and holding their skis. The woman in the center is wearing a black jacket and black pants, while the man on the left is wearing a blue jacket and black pants.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
-                "skis",
+                "snowboard",
                 "backpack",
-                "snowboard"
+                "person",
+                "skis"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -22642,15 +22642,15 @@
             "caption": "The image shows a plate of food on a table with a glass of beer on the side. There are two people sitting at the table with a beer in front of them. The food on the plate includes a sausage, a bun, and a slice of cheese. The atmosphere is cozy",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "bowl",
-                "person",
-                "cup",
-                "spoon",
-                "fork",
                 "dining table",
-                "knife",
+                "fork",
+                "spoon",
                 "donut",
-                "sandwich"
+                "person",
+                "sandwich",
+                "knife",
+                "cup",
+                "bowl"
             ],
             "mscoco_generated_words": [
                 "dining table",
@@ -22799,8 +22799,8 @@
             "caption": "The image shows a baby lying on a bed in a nursery. The baby is wearing a onesie and has its hands up in the air. The baby's face is not visible. The background is a white wall with a window in the background.\n\nThe baby is lying on a bed",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
                 "teddy bear",
+                "person",
                 "bed"
             ],
             "mscoco_generated_words": [
@@ -23095,10 +23095,10 @@
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
                 "couch",
-                "person",
                 "teddy bear",
                 "chair",
-                "bear"
+                "bear",
+                "person"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -23703,12 +23703,12 @@
             "caption": "The image shows a person in blue ski gear standing on the snow with a child in red ski gear standing next to them. The person is holding a ski pole and the child is holding onto their ski pole. The snow is covered in tracks from skiers and snowmobiles. The sky is cloudy and",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "skis",
-                "car",
-                "backpack",
                 "snowboard",
+                "backpack",
+                "truck",
+                "car",
                 "person",
-                "truck"
+                "skis"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -23864,8 +23864,8 @@
             "caption": "The image shows a young woman in a red shirt and black pants performing a skateboard trick on a half pipe. She is wearing a helmet and knee pads, and her board is on a cone. The background is a blue sky with fluffy white clouds.\n\nThe",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
-                "skateboard"
+                "skateboard",
+                "person"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -24012,9 +24012,9 @@
                 ]
             ],
             "mscoco_gt_words": [
+                "tennis racket",
                 "person",
-                "potted plant",
-                "tennis racket"
+                "potted plant"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -24169,9 +24169,9 @@
             "caption": "The image shows a woman walking down the sidewalk in front of a building with a large window on the side. The woman is wearing black pants and a black shirt. She is holding a cell phone to her ear and looking down at the ground. The building has a large window on the side with",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
+                "handbag",
                 "person",
-                "cell phone",
-                "handbag"
+                "cell phone"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -24321,8 +24321,8 @@
             "caption": "The image shows a woman holding a baby while standing next to a giraffe in a zoo enclosure. The giraffe is standing on its hind legs and looking at the woman and the baby. The woman is wearing a black jacket and a white shirt, and the baby is wearing",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
-                "giraffe"
+                "giraffe",
+                "person"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -24477,10 +24477,10 @@
                 ]
             ],
             "mscoco_gt_words": [
-                "orange",
+                "broccoli",
                 "dining table",
-                "apple",
-                "broccoli"
+                "orange",
+                "apple"
             ],
             "mscoco_generated_words": [
                 "dining table",
@@ -24771,11 +24771,11 @@
             "caption": "The image shows a city street with a bus driving down the middle of the road. There are several cars parked on the side of the road and people walking on the sidewalk. The sky is clear and blue with some clouds in the distance. The buildings in the background are made of brick and have a lot",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "car",
-                "umbrella",
-                "person",
+                "bus",
                 "truck",
-                "bus"
+                "umbrella",
+                "car",
+                "person"
             ],
             "mscoco_generated_words": [
                 "car",
@@ -25230,9 +25230,9 @@
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
                 "person",
-                "sports ball",
                 "car",
-                "tennis racket"
+                "tennis racket",
+                "sports ball"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -25545,11 +25545,11 @@
             "caption": "The image shows a group of people standing on the steps of the capitol building in Washington, DC. They are dressed in suits and ties and are holding microphones. The building is visible in the background, with a large dome on top. There are people in the background, walking and standing",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "car",
                 "backpack",
-                "person",
                 "traffic light",
-                "truck"
+                "truck",
+                "car",
+                "person"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -25845,11 +25845,11 @@
             "caption": "The image shows a person sitting on a bench in a park surrounded by pigeons. The person is wearing a black shirt and black pants, and has a black backpack on their back. The pigeons are standing around the person, looking at them. The trees in the background are",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "cell phone",
                 "backpack",
-                "person",
+                "bird",
                 "bench",
-                "bird"
+                "person",
+                "cell phone"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -25999,8 +25999,8 @@
             "caption": "The image shows a man standing on the beach holding a surfboard. He is wearing a black and white striped shirt and black shorts. The surfboard has a yellow stripe on it. The sky is blue and there are palm trees in the background. The sandals are on",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
-                "surfboard"
+                "surfboard",
+                "person"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -26149,9 +26149,9 @@
                 ]
             ],
             "mscoco_gt_words": [
-                "person",
                 "baseball bat",
-                "baseball glove"
+                "baseball glove",
+                "person"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -26314,8 +26314,8 @@
                 ]
             ],
             "mscoco_gt_words": [
-                "person",
-                "teddy bear"
+                "teddy bear",
+                "person"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -26473,11 +26473,11 @@
                 ]
             ],
             "mscoco_gt_words": [
-                "keyboard",
-                "mouse",
-                "tv",
                 "dining table",
-                "laptop"
+                "laptop",
+                "tv",
+                "keyboard",
+                "mouse"
             ],
             "mscoco_generated_words": [
                 "laptop",
@@ -26638,8 +26638,8 @@
             "caption": "The image shows a herd of cows grazing in a field. The cows are standing in a line, with their heads down and their tails hanging behind them. They are wearing collars and are standing in a line, with their heads down and their tails hanging behind them.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "horse",
-                "cow"
+                "cow",
+                "horse"
             ],
             "mscoco_generated_words": [
                 "cow",
@@ -26783,9 +26783,9 @@
             "caption": "The image shows a large, white building with a red roof and a large, white gate in front of it. There are several zebras grazing in the grass in front of the building. The building appears to be a castle with a large, white gate in front of it. There are several zebras gra",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
                 "zebra",
                 "backpack",
+                "person",
                 "potted plant"
             ],
             "mscoco_generated_words": [
@@ -27099,13 +27099,13 @@
             "caption": "The image shows a desk with a computer, keyboard, and monitor. The computer has a black and white screen and a black keyboard. The mouse is on the desk next to the keyboard. The monitor is on the left side of the desk. The desk is made of wood and has a brown",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "keyboard",
-                "mouse",
-                "tv",
-                "cell phone",
+                "remote",
                 "dining table",
                 "laptop",
-                "remote"
+                "tv",
+                "keyboard",
+                "mouse",
+                "cell phone"
             ],
             "mscoco_generated_words": [
                 "dining table",
@@ -27428,9 +27428,9 @@
                 ]
             ],
             "mscoco_gt_words": [
+                "boat",
                 "person",
-                "car",
-                "boat"
+                "car"
             ],
             "mscoco_generated_words": [
                 "boat",
@@ -27584,10 +27584,10 @@
             "caption": "The image shows two men on motorcycles parked in front of a building. One man is wearing a military uniform and the other is wearing a civilian outfit. The building appears to be a hangar or airport terminal.\n\nThe image is in black and white and has a vintage",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "car",
                 "backpack",
-                "airplane",
                 "motorcycle",
+                "airplane",
+                "car",
                 "person"
             ],
             "mscoco_generated_words": [
@@ -27883,10 +27883,10 @@
                 ]
             ],
             "mscoco_gt_words": [
-                "person",
+                "baseball glove",
                 "dog",
-                "sports ball",
-                "baseball glove"
+                "person",
+                "sports ball"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -28041,8 +28041,8 @@
             "caption": "This is a wedding photo of a bride and groom. The bride is wearing a white wedding dress and the groom is wearing a tuxedo. They are standing in front of a fountain and smiling at each other.\n\nThe bride is wearing a",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
-                "tie"
+                "tie",
+                "person"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -28182,8 +28182,8 @@
             "caption": "The image shows a wooden wall with a mirror hanging on it. There are several leather straps hanging from the wall, and a pair of scissors on the ground. The image is taken in a dark room with a wooden floor and a wooden ceiling.\n\nThe image shows a wooden",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "scissors",
                 "dining table",
+                "scissors",
                 "horse"
             ],
             "mscoco_generated_words": [
@@ -28481,12 +28481,12 @@
                 ]
             ],
             "mscoco_gt_words": [
+                "laptop",
+                "clock",
                 "dog",
                 "keyboard",
-                "book",
                 "person",
-                "laptop",
-                "clock"
+                "book"
             ],
             "mscoco_generated_words": [
                 "dog",
@@ -28642,9 +28642,9 @@
             "caption": "The image shows a skateboarder performing a trick on a halfpipe at a skate park. The skateboarder is wearing a black and white striped shirt and black pants, and has a red and black striped helmet on his head. The halfpipe is made of concrete",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
+                "skateboard",
                 "person",
-                "car",
-                "skateboard"
+                "car"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -28801,9 +28801,9 @@
             ],
             "mscoco_gt_words": [
                 "laptop",
-                "bottle",
                 "dining table",
-                "remote"
+                "remote",
+                "bottle"
             ],
             "mscoco_generated_words": [
                 "laptop",
@@ -28966,9 +28966,9 @@
             "caption": "The image shows a woman standing in a bathroom, looking at her hair in the mirror. She is wearing a yellow towel around her neck and has a blue light shining on her head. The background is white and there is a towel on the floor.\n\nThe woman's hair is",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
+                "hair drier",
                 "person",
-                "bottle",
-                "hair drier"
+                "bottle"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -29114,8 +29114,8 @@
             "caption": "The image shows a burnt out bus that has been involved in an accident. The bus is on the side of the road and there are several other vehicles parked nearby. There are also several people standing around the bus, looking at it. The bus has been completely destroyed and there is debris scattered around",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
                 "bus",
+                "person",
                 "car"
             ],
             "mscoco_generated_words": [
@@ -29424,9 +29424,9 @@
             "caption": "The image shows a person skiing down a snowy slope. The person is wearing a black and white ski suit and a black helmet. The snow is white and there are trees in the background.\n\nThe image is taken from a high angle, looking down at the person skiing. The sun",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
+                "bench",
                 "person",
-                "skis",
-                "bench"
+                "skis"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -29575,13 +29575,13 @@
             "caption": "The image shows a table with a glass of beer on it. There is also a plate of food on the table. The food appears to be a sandwich with orange slices on top. There is a vase of flowers on the table as well. The background is a wooden floor with a white tablecloth",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "book",
                 "dining table",
-                "chair",
                 "orange",
                 "vase",
+                "cup",
                 "sandwich",
-                "cup"
+                "chair",
+                "book"
             ],
             "mscoco_generated_words": [
                 "dining table",
@@ -29735,9 +29735,9 @@
             "caption": "The image shows a plate with a sandwich on it. The sandwich has a fried egg on top of it and is served with a side of salad. There are two glasses of juice on the table next to the plate. The background is a wooden table with a white tablecloth.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "bowl",
-                "dining table",
                 "cup",
+                "dining table",
+                "bowl",
                 "sandwich"
             ],
             "mscoco_generated_words": [
@@ -29895,8 +29895,8 @@
                 ]
             ],
             "mscoco_gt_words": [
-                "person",
-                "train"
+                "train",
+                "person"
             ],
             "mscoco_generated_words": [
                 "train",
@@ -30208,8 +30208,8 @@
             "caption": "The image shows a train on the tracks in front of a building. The train is red and blue and has a white stripe on the front. There are people standing on the platform and watching the train go by. The sky is clear and there are no clouds in the sky.\n\nThe train is a",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
-                "train"
+                "train",
+                "person"
             ],
             "mscoco_generated_words": [
                 "train",
@@ -30372,9 +30372,9 @@
                 ]
             ],
             "mscoco_gt_words": [
+                "cell phone",
                 "person",
-                "tv",
-                "cell phone"
+                "tv"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -30539,8 +30539,8 @@
                 ]
             ],
             "mscoco_gt_words": [
-                "fire hydrant",
                 "clock",
+                "fire hydrant",
                 "car"
             ],
             "mscoco_generated_words": [
@@ -30694,9 +30694,9 @@
             "caption": "The image shows a red fire truck driving down the road with people walking on the sidewalk. The truck has a large red fire hydrant on the back and a ladder on the side. There are people standing on the sidewalk and watching the truck drive by. The sky is clear and blue",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
+                "truck",
                 "fire hydrant",
-                "truck"
+                "person"
             ],
             "mscoco_generated_words": [
                 "truck",
@@ -30846,8 +30846,8 @@
             "caption": "The image shows a group of people standing on a road next to a large construction site. They are wearing hard hats and safety vests, and one of them is holding a shovel. The road is covered in black tar, and there are large piles of dirt and gravel on either",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
-                "truck"
+                "truck",
+                "person"
             ],
             "mscoco_generated_words": [
                 "person"
@@ -31276,11 +31276,11 @@
             "caption": "The image shows a person skiing down a snowy slope. The person is wearing a red and black ski suit and holding a kite. The sky is blue and there are mountains in the background.\n\nThe person is skiing down the slope with the kite in the air. The kite",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "skis",
+                "snowboard",
                 "car",
                 "kite",
-                "snowboard",
-                "person"
+                "person",
+                "skis"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -31439,8 +31439,8 @@
                 ]
             ],
             "mscoco_gt_words": [
-                "sandwich",
-                "hot dog"
+                "hot dog",
+                "sandwich"
             ],
             "mscoco_generated_words": [
                 "hot dog",
@@ -31744,8 +31744,8 @@
             "caption": "The image shows a person skateboarding on a skateboard. The person is wearing a black shirt and black pants, and has a black helmet on their head. The skateboard is black and has four wheels. The background is a concrete skate park with a few trees",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
-                "skateboard"
+                "skateboard",
+                "person"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -31901,8 +31901,8 @@
                 ]
             ],
             "mscoco_gt_words": [
-                "oven",
-                "refrigerator"
+                "refrigerator",
+                "oven"
             ],
             "mscoco_generated_words": [
                 "microwave",
@@ -32205,10 +32205,10 @@
                 ]
             ],
             "mscoco_gt_words": [
-                "person",
                 "handbag",
-                "cell phone",
-                "kite"
+                "kite",
+                "person",
+                "cell phone"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -32498,9 +32498,9 @@
             "caption": "The image shows a woman in a white shirt and black pants standing on a tennis court. She is holding a racket and looking down at the ground. There are several other people on the court, including a man in a black shirt and white pants who is standing next to her. The court",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
+                "umbrella",
                 "chair",
                 "person",
-                "umbrella",
                 "tennis racket"
             ],
             "mscoco_generated_words": [
@@ -32661,9 +32661,9 @@
                 ]
             ],
             "mscoco_gt_words": [
-                "person",
+                "remote",
                 "couch",
-                "remote"
+                "person"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -32820,10 +32820,10 @@
             "caption": "The image shows a man standing on the deck of a boat, looking at his cell phone. The sky is blue and there are buildings in the background. The man is wearing a red shirt and has a beard. The water is calm and there are no other boats in sight. The sun is setting",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
+                "boat",
                 "cell phone",
-                "car",
-                "boat"
+                "person",
+                "car"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -32981,8 +32981,8 @@
                 ]
             ],
             "mscoco_gt_words": [
-                "person",
                 "handbag",
+                "person",
                 "cell phone"
             ],
             "mscoco_generated_words": [
@@ -33133,9 +33133,9 @@
             "caption": "The image shows a small stuffed animal sitting on a table next to a bowl of oranges. The stuffed animal is wearing a red scarf and has a white collar. The oranges are arranged in a circular shape in the bowl. The table has a wooden top and metal legs.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
+                "dining table",
                 "bowl",
-                "orange",
-                "dining table"
+                "orange"
             ],
             "mscoco_generated_words": [
                 "dining table",
@@ -33284,10 +33284,10 @@
             "caption": "The image shows a group of people standing under umbrellas in a parking lot. They are all wearing white shirts and black pants, and one of them is holding a small umbrella. The parking lot is made of asphalt and has several cars parked in it",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
                 "handbag",
-                "car",
-                "umbrella"
+                "person",
+                "umbrella",
+                "car"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -33442,10 +33442,10 @@
                 ]
             ],
             "mscoco_gt_words": [
-                "bowl",
+                "toilet",
                 "dining table",
-                "bench",
-                "toilet"
+                "bowl",
+                "bench"
             ],
             "mscoco_generated_words": [
                 "dining table",
@@ -33610,11 +33610,11 @@
                 ]
             ],
             "mscoco_gt_words": [
-                "car",
-                "person",
                 "handbag",
                 "bus",
-                "bench"
+                "bench",
+                "car",
+                "person"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -33941,9 +33941,9 @@
             "caption": "The image shows a couple in a canoe on a lake. They are wearing life jackets and paddling the canoe. The water is calm and there are no other boats or people in the image. The sky is blue and there are some trees in the background.\n\nThe image is taken",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
                 "boat",
-                "bird"
+                "bird",
+                "person"
             ],
             "mscoco_generated_words": [
                 "boat",
@@ -34096,9 +34096,9 @@
                 ]
             ],
             "mscoco_gt_words": [
+                "bench",
                 "person",
-                "skis",
-                "bench"
+                "skis"
             ],
             "mscoco_generated_words": [
                 "skis",
@@ -34403,9 +34403,9 @@
             "caption": "The image shows a group of sheep grazing in a green pasture with a white fence in the background. The sheep are standing in a line, looking at the camera. The image is taken from a distance, with the mountains in the background.\n\nThe image is in color, with the sheep in",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
+                "backpack",
                 "sheep",
-                "backpack"
+                "person"
             ],
             "mscoco_generated_words": [
                 "sheep",
@@ -34555,10 +34555,10 @@
             "caption": "The image shows a baseball game in progress. There are two players on the field, one is hitting the ball and the other is catching it. The crowd is cheering in the stands. The field is green and there are white lines on it. The sky is blue and there are clouds in it. The",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
                 "baseball bat",
-                "sports ball",
-                "baseball glove"
+                "baseball glove",
+                "person",
+                "sports ball"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -34710,9 +34710,9 @@
             "caption": "The image shows a group of people standing on the side of a street, looking at a parade float. The float has a large, colorful banner on the front that reads, \"Disneyland's 50th Anniversary Celebration.\" The people are dressed in various costumes,",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "horse",
                 "tie",
-                "person"
+                "person",
+                "horse"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -34863,8 +34863,8 @@
                 ]
             ],
             "mscoco_gt_words": [
-                "sink",
-                "knife"
+                "knife",
+                "sink"
             ],
             "mscoco_generated_words": [
                 "sink",
@@ -35016,12 +35016,12 @@
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
                 "backpack",
-                "person",
-                "bed",
-                "book",
-                "tv",
                 "bottle",
+                "bed",
+                "tv",
                 "suitcase",
+                "person",
+                "book",
                 "banana"
             ],
             "mscoco_generated_words": [
@@ -35175,11 +35175,11 @@
             "caption": "The image shows a view of the beach from a restaurant. There are several umbrellas on the sand, and people are sitting at tables on the beach. The water is clear and blue, and there are palm trees in the background.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "bowl",
                 "dining table",
+                "bowl",
                 "umbrella",
-                "person",
-                "chair"
+                "chair",
+                "person"
             ],
             "mscoco_generated_words": [
                 "umbrella",
@@ -35317,10 +35317,10 @@
             "caption": "The image shows a group of young men playing soccer on a field. They are wearing red and blue jerseys and white shorts. One player is kicking the ball with his right foot while another player is trying to block it with his left hand. The other players are watching the action and",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
-                "sports ball",
                 "handbag",
-                "chair"
+                "chair",
+                "person",
+                "sports ball"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -35627,11 +35627,11 @@
             "caption": "The image shows a living room with a white couch, a coffee table, and a large window with blinds. There is a white lamp on the coffee table and a white lamp on the wall. The walls are painted white and there is a large mirror on the wall. The floor is made of hardwood",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "couch",
                 "dining table",
-                "suitcase",
+                "clock",
+                "couch",
                 "chair",
-                "clock"
+                "suitcase"
             ],
             "mscoco_generated_words": [
                 "couch",
@@ -35933,9 +35933,9 @@
             "caption": "The image shows a young girl sitting on a bench in front of a stone wall. She is wearing a grey hoodie and has her arms around her knees. The wall is made of large stones and has a small opening in it. The girl is looking down at her feet.\n\nThe",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
                 "handbag",
-                "bench"
+                "bench",
+                "person"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -36230,10 +36230,10 @@
             "caption": "The image shows a group of people standing on a baseball field, watching a game. The crowd is standing on the sidelines, watching the game. The players are wearing baseball uniforms and are playing the game. The field is green and has a dirt infield. There are no spectators in",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
                 "baseball bat",
-                "sports ball",
-                "baseball glove"
+                "person",
+                "baseball glove",
+                "sports ball"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -36380,11 +36380,11 @@
             "caption": "The image shows a street with houses on either side. There are no cars on the road, and the sky is clear.\n\nThe houses are made of wood and have white trim around the windows and doors. There are no trees or other vegetation in the area. The street is lined with sidewalks and",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "car",
-                "person",
-                "fire hydrant",
                 "traffic light",
-                "stop sign"
+                "stop sign",
+                "car",
+                "fire hydrant",
+                "person"
             ],
             "mscoco_generated_words": [
                 "car"
@@ -36533,11 +36533,11 @@
             "caption": "The image shows a person playing baseball on a field. The person is wearing a white jersey and black pants. The field is green and there are people in the stands watching the game.\n\nThe image shows a person playing baseball on a field. The person is wearing a white jersey and",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "sports ball",
-                "person",
                 "baseball bat",
+                "baseball glove",
                 "chair",
-                "baseball glove"
+                "person",
+                "sports ball"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -36687,12 +36687,12 @@
             "caption": "The image shows a cat lying on a bed in a bedroom. The cat is wearing a collar and has a tag on its neck. The bed is made of wood and has a white blanket on it. There is a television on the wall and a bookshelf in the corner of the room",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
+                "remote",
                 "cat",
-                "book",
+                "bed",
                 "tv",
                 "chair",
-                "bed",
-                "remote"
+                "book"
             ],
             "mscoco_generated_words": [
                 "cat",
@@ -36848,8 +36848,8 @@
                 ]
             ],
             "mscoco_gt_words": [
-                "bear",
-                "teddy bear"
+                "teddy bear",
+                "bear"
             ],
             "mscoco_generated_words": [
                 "teddy bear",
@@ -37292,8 +37292,8 @@
             "caption": "The image shows two zebras standing in a barn. They are both wearing halters and are looking at each other. The barn has a wooden roof and walls, and there are hay bales in the corner. The zebras are standing on a concrete floor.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
-                "zebra"
+                "zebra",
+                "person"
             ],
             "mscoco_generated_words": [
                 "zebra",
@@ -37433,9 +37433,9 @@
             "caption": "The image shows a group of people riding horses on a dirt path in front of a mountain range. The horses are wearing saddles and the riders are wearing backpacks. The mountain range is covered in snow and there are rocks and trees in the foreground.\n\nThe image",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "horse",
+                "backpack",
                 "person",
-                "backpack"
+                "horse"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -37580,8 +37580,8 @@
             "caption": "The image shows a group of young men in black shirts and jeans standing on a skateboard ramp. They are all wearing sneakers and have their arms outstretched as they jump off the ramp. The ramp is made of concrete and has a red line down the",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
-                "skateboard"
+                "skateboard",
+                "person"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -37721,8 +37721,8 @@
             "caption": "The image shows a young boy wearing a green shirt and blue pants standing in front of a white bus. The bus has a logo on the side that reads'travel' in black letters. The boy is looking up at the camera with a serious expression on his face. The background is a desert",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
                 "bus",
+                "person",
                 "boat"
             ],
             "mscoco_generated_words": [
@@ -38038,8 +38038,8 @@
                 ]
             ],
             "mscoco_gt_words": [
-                "bear",
-                "teddy bear"
+                "teddy bear",
+                "bear"
             ],
             "mscoco_generated_words": [
                 "dining table"
@@ -38338,8 +38338,8 @@
             "caption": "The image shows a blue mailbox on the side of the road. The mailbox has a sign on it that says, \"Please do not park on the sidewalk.\" The image is taken from a low angle, looking down at the mailbox. The sky is cloudy and there are no other objects in",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "potted plant",
-                "parking meter"
+                "parking meter",
+                "potted plant"
             ],
             "mscoco_generated_words": [],
             "hallucination_idxs": [],
@@ -38486,8 +38486,8 @@
             "caption": "The image shows a group of stuffed animals dressed in traditional Japanese clothing, including a white bear and a black bear. The white bear is wearing a red and white kimono, while the black bear is wearing a blue and white kimono. The bears are standing in front of a",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "bear",
-                "teddy bear"
+                "teddy bear",
+                "bear"
             ],
             "mscoco_generated_words": [
                 "bear",
@@ -38784,11 +38784,11 @@
             "caption": "The building is a large, brick building with a red and yellow facade. It has a large clock tower on top and a green awning over the front door. There are several windows on the upper floors and a large window on the ground floor. The building is surrounded by trees and a sidewalk.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "bicycle",
-                "fire hydrant",
                 "clock",
-                "stop sign",
-                "bench"
+                "bicycle",
+                "bench",
+                "fire hydrant",
+                "stop sign"
             ],
             "mscoco_generated_words": [
                 "clock"
@@ -39085,11 +39085,11 @@
             "caption": "The image shows a group of people sitting on a bus, with soccer balls in their laps. They are all wearing soccer jerseys and have their arms around each other. The bus is parked in front of a building with a large window on the side. The sky is blue and",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "sports ball",
+                "handbag",
                 "cell phone",
-                "person",
                 "chair",
-                "handbag"
+                "person",
+                "sports ball"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -39235,10 +39235,10 @@
             "caption": "The image shows a group of people sitting on a couch in a living room. They are all wearing casual clothing and appear to be relaxing. The woman in the front is wearing a white tank top and shorts, while the man in the back is wearing a black t-shirt and",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
                 "chair",
-                "bed",
-                "couch"
+                "couch",
+                "person",
+                "bed"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -39385,8 +39385,8 @@
             "caption": "The image shows a yellow and blue bus driving down the street. The bus has a large windshield and a small window on the side. There are no other vehicles on the street. The sky is cloudy and there are no buildings in the background.\n\nThe bus is driving down the street with no other vehicles",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
-                "bus"
+                "bus",
+                "person"
             ],
             "mscoco_generated_words": [],
             "hallucination_idxs": [],
@@ -39834,15 +39834,15 @@
             "caption": "The image shows a desk with a computer monitor on it. The monitor is displaying a landscape image with mountains in the background. There is a can of soda on the desk and a pair of headphones next to the monitor. The desk is made of wood and has a light brown finish.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
+                "dining table",
                 "scissors",
+                "tv",
                 "keyboard",
                 "mouse",
+                "chair",
                 "laptop",
                 "clock",
-                "tv",
-                "cell phone",
-                "dining table",
-                "chair"
+                "cell phone"
             ],
             "mscoco_generated_words": [
                 "dining table",
@@ -40148,11 +40148,11 @@
                 ]
             ],
             "mscoco_gt_words": [
-                "car",
-                "bicycle",
-                "person",
                 "clock",
-                "elephant"
+                "bicycle",
+                "elephant",
+                "car",
+                "person"
             ],
             "mscoco_generated_words": [
                 "elephant",
@@ -40303,8 +40303,8 @@
             "caption": "The image shows a statue of a woman holding a watering can. She is standing in front of a tree with leaves and branches. The statue is made of bronze and has a green patina. The woman is wearing a long, flowing dress with a white apron over it. She has long, curly curly hair",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
-                "bicycle"
+                "bicycle",
+                "person"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -40461,11 +40461,11 @@
                 ]
             ],
             "mscoco_gt_words": [
-                "bowl",
                 "dining table",
                 "broccoli",
                 "carrot",
-                "spoon"
+                "spoon",
+                "bowl"
             ],
             "mscoco_generated_words": [
                 "oven",
@@ -41064,10 +41064,10 @@
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
                 "dining table",
-                "car",
-                "person",
                 "truck",
-                "banana"
+                "banana",
+                "car",
+                "person"
             ],
             "mscoco_generated_words": [
                 "banana",
@@ -41221,17 +41221,17 @@
             "caption": "The image shows a small kitchen with a stove, sink, and refrigerator. There is a table and chairs in the living room. The walls are painted white and the floor is made of hardwood. The room is well lit and there are windows on two sides. The furniture is minimalist and",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "bowl",
+                "dining table",
+                "handbag",
+                "refrigerator",
                 "couch",
+                "bottle",
                 "oven",
+                "chair",
+                "book",
                 "sink",
                 "cup",
-                "book",
-                "dining table",
-                "refrigerator",
-                "chair",
-                "bottle",
-                "handbag"
+                "bowl"
             ],
             "mscoco_generated_words": [
                 "oven",
@@ -41391,9 +41391,9 @@
                 ]
             ],
             "mscoco_gt_words": [
+                "broccoli",
                 "dining table",
-                "carrot",
-                "broccoli"
+                "carrot"
             ],
             "mscoco_generated_words": [
                 "carrot",
@@ -41536,8 +41536,8 @@
             "caption": "The image shows a man standing on the beach, looking out at the water. He is wearing a white shirt and blue shorts, and has a surfboard under his arm. The sky is blue and there are some clouds in the distance. The beach is covered in sand and there are some rocks",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
-                "surfboard"
+                "surfboard",
+                "person"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -41810,9 +41810,9 @@
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
                 "motorcycle",
-                "cell phone",
+                "bicycle",
                 "person",
-                "bicycle"
+                "cell phone"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -42115,11 +42115,11 @@
                 ]
             ],
             "mscoco_gt_words": [
-                "bowl",
                 "dining table",
-                "toilet",
                 "vase",
-                "potted plant"
+                "potted plant",
+                "toilet",
+                "bowl"
             ],
             "mscoco_generated_words": [
                 "toilet",
@@ -42270,8 +42270,8 @@
             "caption": "The image shows a man and a boy standing on a beach, with the man holding a surfboard and the boy holding a surfboard. The man is wearing a wetsuit and the boy is wearing a wetsuit and a helmet. The waves are crashing on the shore and",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
-                "surfboard"
+                "surfboard",
+                "person"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -42572,9 +42572,9 @@
             "caption": "The image shows a group of trucks parked on the side of a road. The trucks are painted in bright colors and have different designs on them. There are people standing around the trucks and some are walking in the background. The sky is cloudy and there are buildings in the distance",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
                 "truck",
                 "bus",
+                "person",
                 "car"
             ],
             "mscoco_generated_words": [
@@ -42728,11 +42728,11 @@
                 ]
             ],
             "mscoco_gt_words": [
+                "handbag",
                 "dining table",
                 "hot dog",
-                "person",
-                "handbag",
                 "carrot",
+                "person",
                 "sandwich"
             ],
             "mscoco_generated_words": [
@@ -43186,9 +43186,9 @@
             "caption": "The image shows two people skiing in the snow. They are wearing ski gear and standing on skis. The woman is wearing a green jacket and the man is wearing a black jacket. They are standing in a snowy forest with trees in the background.\n\nThe image is",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
+                "backpack",
                 "person",
-                "skis",
-                "backpack"
+                "skis"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -43339,8 +43339,8 @@
                 ]
             ],
             "mscoco_gt_words": [
-                "person",
                 "handbag",
+                "person",
                 "tennis racket"
             ],
             "mscoco_generated_words": [
@@ -43497,8 +43497,8 @@
             "caption": "The image shows a remote control sitting on top of a book. The book is open and has a page with writing on it. The remote control has buttons on it and a screen that displays a channel number. The image is taken in a bathroom.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "book",
-                "remote"
+                "remote",
+                "book"
             ],
             "mscoco_generated_words": [
                 "remote",
@@ -43641,11 +43641,11 @@
             "caption": "The image shows a view of a small town on the coast of a large body of water. There are several boats docked at the shore, and a few buildings can be seen in the background. The sky is clear and blue, with a few clouds scattered across it. The trees are green and lush,",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "car",
+                "orange",
                 "umbrella",
+                "car",
                 "boat",
-                "person",
-                "orange"
+                "person"
             ],
             "mscoco_generated_words": [
                 "boat"
@@ -43978,9 +43978,9 @@
                 ]
             ],
             "mscoco_gt_words": [
+                "remote",
                 "person",
-                "bed",
-                "remote"
+                "bed"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -44140,8 +44140,8 @@
                 ]
             ],
             "mscoco_gt_words": [
-                "person",
-                "surfboard"
+                "surfboard",
+                "person"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -44441,8 +44441,8 @@
             "caption": "The image shows a young boy playing with a tennis racket on the beach at sunset. The boy is standing in the water, holding the racket in his hand and looking out at the horizon. The sky is a deep blue and the sun is setting behind the horizon. The water is calm and there are",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
                 "sports ball",
+                "person",
                 "tennis racket"
             ],
             "mscoco_generated_words": [
@@ -44596,10 +44596,10 @@
             "caption": "The image shows a red double decker bus driving down the street in front of the Houses of Parliament. The bus is traveling in the direction of the camera, and there are other cars and pedestrians on the street. The sky is blue and there are some clouds in the background. The Houses of",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
                 "bus",
-                "car",
-                "clock"
+                "clock",
+                "person",
+                "car"
             ],
             "mscoco_generated_words": [
                 "car"
@@ -44747,8 +44747,8 @@
             "caption": "The image shows a surfer riding a wave on a surfboard. The surfer is wearing a black wetsuit and a helmet. The wave is large and the surfer is jumping off the top of it. The sky is blue and there are clouds in the background. The water",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
-                "surfboard"
+                "surfboard",
+                "person"
             ],
             "mscoco_generated_words": [
                 "surfboard"
@@ -44890,9 +44890,9 @@
             "caption": "The image shows a man playing tennis on a court. He is wearing a black shirt and white shorts, and has a tennis racket in his hand. The court is made of grass and there are trees in the background. The sun is shining down on the court and the man is wearing",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
+                "tennis racket",
                 "person",
-                "sports ball",
-                "tennis racket"
+                "sports ball"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -45041,12 +45041,12 @@
             "caption": "The image shows a group of people sitting at a table in a restaurant. They are all wearing casual clothing and are enjoying their meals. The table has a white tablecloth and there are several glasses of wine on the table. The restaurant has a modern decor with a large window that",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "fork",
                 "dining table",
                 "knife",
-                "person",
+                "fork",
+                "spoon",
                 "wine glass",
-                "spoon"
+                "person"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -45342,8 +45342,8 @@
             "caption": "The image shows a bicycle parked in front of a store with a sign that reads, \"Bicycle Rental\"\n\nThe bicycle is a pink and white one with a basket on the front. The handlebars are black and the tires are white. The bike is",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
-                "bicycle"
+                "bicycle",
+                "person"
             ],
             "mscoco_generated_words": [
                 "bicycle",
@@ -45494,10 +45494,10 @@
                 ]
             ],
             "mscoco_gt_words": [
-                "person",
                 "keyboard",
-                "cell phone",
-                "remote"
+                "remote",
+                "person",
+                "cell phone"
             ],
             "mscoco_generated_words": [
                 "cell phone",
@@ -45659,9 +45659,9 @@
                 ]
             ],
             "mscoco_gt_words": [
+                "refrigerator",
                 "bottle",
-                "oven",
-                "refrigerator"
+                "oven"
             ],
             "mscoco_generated_words": [
                 "oven",
@@ -45813,9 +45813,9 @@
             "caption": "The image shows a group of cyclists riding in a peloton on a road. They are all wearing yellow jerseys with blue shorts and white shoes. The riders are in a line, with the lead rider in the front. There are people watching from the side of",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
                 "handbag",
-                "bicycle"
+                "bicycle",
+                "person"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -45958,11 +45958,11 @@
             "caption": "The image shows a person riding a biker on the side of the road. The person is wearing a helmet and has a backpack on their back. There are other cars and trucks driving on the road in the background.\n\nThe image is in black and white and has a grainy texture",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "car",
                 "backpack",
+                "traffic light",
                 "motorcycle",
                 "truck",
-                "traffic light",
+                "car",
                 "person"
             ],
             "mscoco_generated_words": [
@@ -46113,10 +46113,10 @@
             "caption": "The image shows a young woman holding a kite in a field. The woman is wearing a pink and white striped shirt and blue jeans. She is standing in front of a colorful background with a carnival theme. The kite is made of lightweight material and has a long",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
+                "umbrella",
                 "backpack",
                 "kite",
-                "umbrella"
+                "person"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -46414,11 +46414,11 @@
             "caption": "The image shows a group of people standing in a line at an airport. They are all wearing black and white striped clothing and carrying suitcases. There is a large baggage claim area in the background.\n\nThe image is taken from a low angle, looking down at the people in",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "backpack",
-                "person",
-                "bottle",
                 "handbag",
-                "suitcase"
+                "backpack",
+                "bottle",
+                "suitcase",
+                "person"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -46564,11 +46564,11 @@
             "caption": "The image shows a group of people standing on a boat in a river. The boat is filled with various fruits and vegetables, including watermelons, pineapples, and bananas. There are also some baskets of fruit on the ground next to the boat. The people are wearing traditional",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
+                "banana",
+                "apple",
                 "bowl",
                 "boat",
-                "apple",
-                "person",
-                "banana"
+                "person"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -46721,9 +46721,9 @@
                 ]
             ],
             "mscoco_gt_words": [
+                "kite",
                 "person",
-                "car",
-                "kite"
+                "car"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -46877,9 +46877,9 @@
             "caption": "The image shows a woman standing in front of a white wall with a pink flower arrangement on the floor. She is wearing a white dress and has a bouquet of flowers in her hand. There are two white vases on the floor next to her. The wall has a white and gray pattern on it",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
                 "chair",
-                "vase"
+                "vase",
+                "person"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -47029,9 +47029,9 @@
             "caption": "The image shows a group of stuffed animals sitting on a table. They are all wearing black shirts with the word \"LOVE\" written on them.\n\nThe stuffed animals are all different sizes and shapes, and they are all sitting in a row on the table. They are all looking",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "bear",
+                "dining table",
                 "teddy bear",
-                "dining table"
+                "bear"
             ],
             "mscoco_generated_words": [
                 "dining table",
@@ -47177,9 +47177,9 @@
             "caption": "The train is traveling down the tracks, with people on board. The train is pulling into a station, with a sign that says `Welcome to the town of`, and a flag waving in the wind. The train is surrounded by trees and grass, with a small stream running alongside the tracks. The",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
                 "train",
                 "traffic light",
+                "person",
                 "car"
             ],
             "mscoco_generated_words": [
@@ -47810,14 +47810,14 @@
             "caption": "The image shows a close to the sidewalk. The bearer is wearing a helmet and riding on the back. The motor is parked in front of a building with a sign that reads \"country inn.\"\n\nThe image is in black and white. The motor is black and the building is",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "backpack",
-                "bicycle",
-                "motorcycle",
-                "potted plant",
                 "dining table",
-                "chair",
+                "backpack",
+                "motorcycle",
                 "teddy bear",
-                "bear"
+                "chair",
+                "bear",
+                "bicycle",
+                "potted plant"
             ],
             "mscoco_generated_words": [],
             "hallucination_idxs": [],
@@ -47961,8 +47961,8 @@
             "caption": "The image shows a white dog standing in the middle of a dirt path surrounded by trees and bushes. The dog is wearing a blue collar and is looking up at the camera with its tongue hanging out of its mouth. The background is a clear blue sky with some clouds.\n\nThe dog",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "bottle",
-                "dog"
+                "dog",
+                "bottle"
             ],
             "mscoco_generated_words": [
                 "dog",
@@ -48110,9 +48110,9 @@
             "caption": "The image shows a brown and white dog lying on a couch with its eyes closed. The dog is wearing a collar and tag. The background is a red and green plaid blanket.\n\nThe image is taken in a living room with a fireplace and a Christmas tree in the background.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
                 "dog",
-                "couch"
+                "couch",
+                "person"
             ],
             "mscoco_generated_words": [
                 "dog",
@@ -48259,10 +48259,10 @@
             "caption": "The image shows two people in yellow safety vests and hard hats standing in front of a building with a blue sky in the background. They are holding laptops and looking at something on the screen. The man is pointing to something on the screen with his finger. The woman is looking at the screen with",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
                 "laptop",
-                "cell phone",
-                "tie"
+                "tie",
+                "person",
+                "cell phone"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -48414,9 +48414,9 @@
             "caption": "The image shows a group of people standing in front of a bus. They are all wearing pink shirts and white pants. One woman is holding a purse and another woman is holding a bag. The bus is white and has a blue stripe on the side. There are no other people",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
                 "handbag",
                 "bus",
+                "person",
                 "car"
             ],
             "mscoco_generated_words": [
@@ -48568,9 +48568,9 @@
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
                 "chair",
-                "cell phone",
+                "airplane",
                 "person",
-                "airplane"
+                "cell phone"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -48724,18 +48724,18 @@
                 ]
             ],
             "mscoco_gt_words": [
+                "dining table",
+                "handbag",
                 "backpack",
+                "bench",
+                "bottle",
+                "fork",
+                "spoon",
                 "person",
+                "knife",
                 "potted plant",
                 "cup",
-                "spoon",
-                "bench",
-                "fork",
-                "dining table",
-                "cell phone",
-                "knife",
-                "bottle",
-                "handbag"
+                "cell phone"
             ],
             "mscoco_generated_words": [
                 "dining table",
@@ -49036,14 +49036,14 @@
             "caption": "The image shows a man sitting on the floor next to a suitcase. The man is petting a black cat that is sitting on the suitcase. The man is wearing a white shirt and black pants. The cat is wearing a red collar. The image is taken in a living room",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
+                "refrigerator",
+                "bottle",
+                "suitcase",
                 "person",
                 "sink",
-                "potted plant",
                 "cat",
-                "refrigerator",
-                "cell phone",
-                "bottle",
-                "suitcase"
+                "potted plant",
+                "cell phone"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -49346,8 +49346,8 @@
             "caption": "The image shows two horses running on a beach with the ocean in the background. The horses are wearing saddles and riding on the sand. The sky is cloudy and there are waves crashing on the shore.\n\nThe image is in black and white and has a vintage feel to",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "horse",
-                "person"
+                "person",
+                "horse"
             ],
             "mscoco_generated_words": [
                 "horse",
@@ -49806,10 +49806,10 @@
                 ]
             ],
             "mscoco_gt_words": [
-                "person",
                 "chair",
-                "sports ball",
-                "apple"
+                "apple",
+                "person",
+                "sports ball"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -50262,13 +50262,13 @@
                 ]
             ],
             "mscoco_gt_words": [
-                "bowl",
-                "fork",
                 "dining table",
-                "orange",
-                "sandwich",
                 "cup",
-                "spoon"
+                "orange",
+                "fork",
+                "bowl",
+                "spoon",
+                "sandwich"
             ],
             "mscoco_generated_words": [
                 "dining table",
@@ -50415,15 +50415,15 @@
             "caption": "The image shows a plate of food with a glass of beer on the side. The food appears to be a plate of fries with a piece of meat on top. There is a glass of beer on the side of the plate. The plate is on a wooden cutting board. The background is a dark",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "bowl",
-                "pizza",
-                "person",
-                "cup",
-                "spoon",
-                "fork",
                 "dining table",
+                "bottle",
+                "fork",
+                "spoon",
+                "person",
+                "pizza",
                 "knife",
-                "bottle"
+                "cup",
+                "bowl"
             ],
             "mscoco_generated_words": [],
             "hallucination_idxs": [],
@@ -50571,14 +50571,14 @@
             "caption": "The image shows a man riding a bicycle on the sidewalk. He is wearing a white shirt and black pants. The bicycle has a red frame and black tires. There are cars parked on the street in the background. The sky is blue and there are trees in",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "car",
-                "bicycle",
-                "person",
-                "truck",
                 "traffic light",
                 "bench",
-                "cell phone",
-                "orange"
+                "person",
+                "truck",
+                "bicycle",
+                "orange",
+                "car",
+                "cell phone"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -50723,9 +50723,9 @@
             "caption": "The image shows a person on a parachute in the air. The person is wearing a black and white wetsuit and has a parachute on their back. The sky is cloudy and there are waves in the water. The person is jumping off a cliff into the water.\n\nThe",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
                 "surfboard",
-                "kite"
+                "kite",
+                "person"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -50871,8 +50871,8 @@
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
                 "motorcycle",
-                "person",
-                "bicycle"
+                "bicycle",
+                "person"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -51157,9 +51157,9 @@
             "caption": "The image shows a plane taking off from an airport runway. The plane is a Boeing 737, a narrow body, twin engine jet airliner. The plane is painted in the colors of Delta Air Lines, with a blue tail and white wings. The plane is taking",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
                 "truck",
-                "airplane"
+                "airplane",
+                "person"
             ],
             "mscoco_generated_words": [
                 "airplane",
@@ -52043,8 +52043,8 @@
             "caption": "The image shows a white pizza with red pepperoni on top. There is a knife on the side of the plate. The pizza is on a wooden cutting board. The background is a dark brown color.\n\nThe image shows a white pizza with red pepperoni on top. There",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "pizza",
                 "dining table",
+                "pizza",
                 "knife"
             ],
             "mscoco_generated_words": [
@@ -52192,10 +52192,10 @@
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
                 "bottle",
-                "book",
                 "toilet",
                 "sink",
-                "toothbrush"
+                "toothbrush",
+                "book"
             ],
             "mscoco_generated_words": [
                 "toilet",
@@ -52341,8 +52341,8 @@
             "caption": "The image shows a man riding a lack on a bike path in the middle of a park. The trees are green and there are no other people in the image. The man is wearing a black shirt and black pants. The bike path is made of concrete and there are no other",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
-                "bicycle"
+                "bicycle",
+                "person"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -52492,9 +52492,9 @@
             "caption": "The image shows a man sitting at a desk in front of a computer. He is wearing a black shirt and black pants, and has a black beard. The desk has a black background with white text on it. The computer has a black screen with white text on it. The man",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "tv",
                 "dining table",
                 "laptop",
+                "tv",
                 "chair",
                 "person"
             ],
@@ -52648,9 +52648,9 @@
             "caption": "The image is a white shelf with three hooks on it. There are two white vases on the shelf, one with a red ribbon tied around it and the other with a blue ribbon tied around it. There is also a white bag on the shelf with a red ribbon tied around",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "horse",
                 "handbag",
-                "vase"
+                "vase",
+                "horse"
             ],
             "mscoco_generated_words": [
                 "vase"
@@ -52800,8 +52800,8 @@
                 ]
             ],
             "mscoco_gt_words": [
-                "person",
                 "cat",
+                "person",
                 "car"
             ],
             "mscoco_generated_words": [
@@ -52960,8 +52960,8 @@
                 ]
             ],
             "mscoco_gt_words": [
-                "pizza",
-                "dining table"
+                "dining table",
+                "pizza"
             ],
             "mscoco_generated_words": [
                 "pizza",
@@ -53116,8 +53116,8 @@
             "caption": "The image shows a small tugboat traveling across the water in the distance. The tugboat is white and has a yellow stripe on the side. There are trees and buildings visible in the background. The sky is cloudy and there is a light rain shower in the distance.\n\nThe",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
-                "boat"
+                "boat",
+                "person"
             ],
             "mscoco_generated_words": [
                 "boat",
@@ -53266,13 +53266,13 @@
                 ]
             ],
             "mscoco_gt_words": [
+                "remote",
                 "cat",
-                "book",
                 "couch",
+                "potted plant",
                 "chair",
                 "baseball glove",
-                "potted plant",
-                "remote"
+                "book"
             ],
             "mscoco_generated_words": [
                 "chair",
@@ -53425,15 +53425,15 @@
             "caption": "The image shows a group of people sitting at a table on a deck. They are eating and drinking. There is a large window behind them with a view of the woods. The table is made of wood and has a white tablecloth. The people are wearing casual clothing and are enjoying their",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "bowl",
-                "person",
-                "cup",
-                "fork",
                 "dining table",
-                "knife",
                 "bottle",
+                "fork",
                 "wine glass",
-                "sandwich"
+                "person",
+                "sandwich",
+                "knife",
+                "cup",
+                "bowl"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -53737,10 +53737,10 @@
             "caption": "The image shows a green and yellow train parked in a train station. The train has a large front end with a black and white striped engine and a small back end with a red and white striped engine. The train is parked in front of a large window with a view of the surrounding area.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
                 "train",
-                "handbag",
-                "backpack"
+                "backpack",
+                "person",
+                "handbag"
             ],
             "mscoco_generated_words": [
                 "train",
@@ -54061,9 +54061,9 @@
             "caption": "The image shows a man in a blue shirt and white shorts playing tennis on a clay court. He is holding a tennis racket in his right hand and is about to hit the ball with his left hand. The ball is flying through the air and is about to hit the ground. The man's left",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
+                "tennis racket",
                 "person",
-                "sports ball",
-                "tennis racket"
+                "sports ball"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -54380,12 +54380,12 @@
             "caption": "The image shows a man sitting at a desk in a library. He is wearing a red jacket and has a laptop on his lap. There are several books and papers on the desk, and the room has large windows with a view of the outside. The man appears to be working on his laptop",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "bottle",
-                "book",
                 "dining table",
-                "person",
                 "laptop",
-                "chair"
+                "bottle",
+                "chair",
+                "person",
+                "book"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -54554,8 +54554,8 @@
             ],
             "mscoco_gt_words": [
                 "bowl",
-                "person",
-                "banana"
+                "banana",
+                "person"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -54716,9 +54716,9 @@
             "caption": "The image shows a baseball player in a red jersey and black pants standing on the field, holding a bat in his right hand and looking at the umpire. The umpire is wearing a blue shirt and white pants and is standing behind the. player is at. The background",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
+                "baseball glove",
                 "person",
-                "sports ball",
-                "baseball glove"
+                "sports ball"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -54867,9 +54867,9 @@
                 ]
             ],
             "mscoco_gt_words": [
+                "bed",
                 "person",
-                "book",
-                "bed"
+                "book"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -55022,9 +55022,9 @@
             "caption": "The image shows a living room with a large rug on the floor and a couch and chairs in the corner. There is a coffee table in the center of the room and a window on the left side. The walls are painted a light blue color and there are two lamps on the table. The room",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
+                "dining table",
                 "bowl",
                 "couch",
-                "dining table",
                 "tv",
                 "chair"
             ],
@@ -55179,12 +55179,12 @@
             "caption": "The image shows a table set with various dishes, including tacos, salads, and other Mexican food. There are several bowls filled with different types of salsa, guacamole, and other toppings. The table is set with white plates, silverware, and napkins",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "bowl",
-                "fork",
                 "dining table",
+                "cup",
                 "bottle",
                 "carrot",
-                "cup",
+                "fork",
+                "bowl",
                 "spoon"
             ],
             "mscoco_generated_words": [
@@ -55326,10 +55326,10 @@
             "caption": "The image shows a large brick building with a fire truck parked in front of it. There are people standing on the sidewalk and in the street. The building has a large window on the front with a sign that reads, \"Old Town Hall.\"\n\nThe image is taken from a distance, showing",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
-                "truck",
                 "handbag",
-                "backpack"
+                "backpack",
+                "truck",
+                "person"
             ],
             "mscoco_generated_words": [
                 "truck",
@@ -55479,8 +55479,8 @@
             "caption": "The image shows a white truck with the words \"Bud Light\" written on the side. The truck is parked in front of a gas station with a sign that reads \"Bud Light\" on it. There are several cars parked in the parking lot, and people are standing outside the",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
                 "truck",
+                "person",
                 "car"
             ],
             "mscoco_generated_words": [
@@ -55635,10 +55635,10 @@
                 ]
             ],
             "mscoco_gt_words": [
+                "spoon",
                 "dining table",
                 "knife",
-                "cake",
-                "spoon"
+                "cake"
             ],
             "mscoco_generated_words": [
                 "cake",
@@ -55786,12 +55786,12 @@
             "caption": "This image shows a group of people on bicycles riding along a path next to a body of water. The sky is clear and blue, with some clouds in the distance. There are trees and buildings in the background.\n\nThe people on bicycles are wearing casual clothing, such",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "car",
+                "handbag",
                 "backpack",
-                "bicycle",
-                "person",
                 "traffic light",
-                "handbag"
+                "bicycle",
+                "car",
+                "person"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -55942,8 +55942,8 @@
                 ]
             ],
             "mscoco_gt_words": [
-                "person",
-                "bench"
+                "bench",
+                "person"
             ],
             "mscoco_generated_words": [
                 "bench",
@@ -56251,11 +56251,11 @@
             "caption": "The image shows a young girl sitting on the floor surrounded by presents and toys. She is wearing a red dress and has a stuffed animal in her lap. There are several other toys and presents scattered around the room.\n\nThe image is taken in a living room with a large window in the",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "couch",
-                "person",
                 "orange",
+                "couch",
                 "teddy bear",
-                "bear"
+                "bear",
+                "person"
             ],
             "mscoco_generated_words": [
                 "person"
@@ -56407,12 +56407,12 @@
                 ]
             ],
             "mscoco_gt_words": [
-                "book",
                 "dining table",
-                "apple",
-                "person",
                 "laptop",
-                "chair"
+                "apple",
+                "chair",
+                "person",
+                "book"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -56567,8 +56567,8 @@
             "caption": "The image shows a tennis player in action on a clay court. The player is wearing a white shirt and white shorts, and is holding a tennis racket in his right hand. The player is jumping up to hit the ball with his left foot. The ball is flying through the air and",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
                 "sports ball",
+                "person",
                 "tennis racket"
             ],
             "mscoco_generated_words": [
@@ -56726,9 +56726,9 @@
                 ]
             ],
             "mscoco_gt_words": [
-                "person",
                 "dining table",
                 "car",
+                "person",
                 "cake"
             ],
             "mscoco_generated_words": [
@@ -56882,12 +56882,12 @@
             "caption": "The image shows a man standing at a counter in a wine shop. He is wearing a green shirt and has a white apron on. There are several bottles of wine on the counter in front of him. The walls of the shop are painted a light blue color and there are several shelves",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "bowl",
-                "cell phone",
                 "dining table",
-                "person",
                 "bottle",
-                "wine glass"
+                "bowl",
+                "wine glass",
+                "person",
+                "cell phone"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -57035,10 +57035,10 @@
             "caption": "The image shows a view of an airport terminal from the outside. There are several planes parked on the tarmac, and a large window in the background shows a cloudy sky. The terminal has a large glass wall with a view of the runway and a few people standing outside. There are",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "chair",
                 "dining table",
-                "person",
-                "airplane"
+                "chair",
+                "airplane",
+                "person"
             ],
             "mscoco_generated_words": [
                 "airplane",
@@ -57198,14 +57198,14 @@
                 ]
             ],
             "mscoco_gt_words": [
-                "pizza",
                 "keyboard",
                 "mouse",
-                "bicycle",
-                "laptop",
+                "suitcase",
                 "cat",
-                "cell phone",
-                "suitcase"
+                "laptop",
+                "pizza",
+                "bicycle",
+                "cell phone"
             ],
             "mscoco_generated_words": [
                 "cat",
@@ -57373,9 +57373,9 @@
                 ]
             ],
             "mscoco_gt_words": [
-                "fork",
-                "dining table",
                 "cup",
+                "dining table",
+                "fork",
                 "cake"
             ],
             "mscoco_generated_words": [
@@ -57511,9 +57511,9 @@
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
                 "cat",
-                "couch",
                 "chair",
-                "remote"
+                "remote",
+                "couch"
             ],
             "mscoco_generated_words": [
                 "cat",
@@ -57662,8 +57662,8 @@
             "caption": "The image shows a man wearing a green shirt and tie. He is standing in front of a white wall with a blue square pattern on it. The man is holding a blue tie in his hand. The background is green.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
-                "tie"
+                "tie",
+                "person"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -57953,8 +57953,8 @@
             "caption": "The image shows a group of zebras grazing in a green field. There are several trees in the background, including a large oak tree. The sky is blue and there are clouds in the distance. The grass is green and the zebras are brown.\n\nThe image is taken from a",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "zebra",
-                "giraffe"
+                "giraffe",
+                "zebra"
             ],
             "mscoco_generated_words": [
                 "zebra",
@@ -58101,9 +58101,9 @@
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
                 "dining table",
+                "chair",
                 "donut",
                 "person",
-                "chair",
                 "sandwich"
             ],
             "mscoco_generated_words": [
@@ -58252,10 +58252,10 @@
             "caption": "The image shows a person holding a small, silver device in their hand. The device has a flat, rectangular shape and a small, black button on the top. There are two small, white buttons on the sides of the device. The person is holding the device in their right hand, with their left hand",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
-                "cell phone",
                 "cup",
-                "apple"
+                "apple",
+                "person",
+                "cell phone"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -58408,12 +58408,12 @@
             "caption": "The image shows a group of people standing around a large, circular enclosure with a circus tent in the background. The people are all wearing different types of clothing, including jeans, t shirts, and hats. The circus tent is decorated with colorful lights and has a",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "car",
-                "person",
-                "chair",
                 "handbag",
                 "bench",
-                "elephant"
+                "elephant",
+                "chair",
+                "car",
+                "person"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -58702,12 +58702,12 @@
                 ]
             ],
             "mscoco_gt_words": [
+                "remote",
                 "cat",
                 "dog",
                 "couch",
                 "tv",
-                "chair",
-                "remote"
+                "chair"
             ],
             "mscoco_generated_words": [
                 "couch",
@@ -58862,15 +58862,15 @@
             "caption": "The image shows a small, empty room with a table and chairs in the middle. There are several items on the table, including a bottle of water, a blanket, and a small stuffed animal. The room is surrounded by a dirt field with some small plants growing in it. The sky",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
+                "dining table",
                 "couch",
                 "umbrella",
-                "teddy bear",
-                "bed",
-                "cup",
-                "dining table",
-                "chair",
                 "bottle",
-                "vase"
+                "bed",
+                "teddy bear",
+                "chair",
+                "vase",
+                "cup"
             ],
             "mscoco_generated_words": [
                 "dining table",
@@ -59169,12 +59169,12 @@
             "caption": "The image shows a couple sitting at a table with a cake in front of them. The couple is wearing traditional Indian clothing and the cake has a decorated with flowers and other decorations. The background is a brightly colored wall with a large window in the background.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "couch",
                 "dining table",
+                "couch",
                 "knife",
-                "person",
+                "cake",
                 "chair",
-                "cake"
+                "person"
             ],
             "mscoco_generated_words": [
                 "dining table",
@@ -59317,11 +59317,11 @@
             "caption": "This image is a collection of various items related to baseball, including a baseball bat, a baseball glove, a baseball ball, and a baseball cap. The items are arranged in a collage style, with the baseball bat and glove on the left, the baseball ball in the middle, and the baseball cap",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "sports ball",
-                "person",
-                "bottle",
+                "baseball bat",
                 "baseball glove",
-                "baseball bat"
+                "bottle",
+                "person",
+                "sports ball"
             ],
             "mscoco_generated_words": [
                 "baseball bat",
@@ -59774,8 +59774,8 @@
             "caption": "The image shows a red and white fire hydrant in the grass in front of a parking lot. There are several cars parked in the lot, and the sky is cloudy.\n\nThe fire hydrant is a metal box with a handle on top and a spout on the bottom. It is",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "fire hydrant",
                 "truck",
+                "fire hydrant",
                 "car"
             ],
             "mscoco_generated_words": [
@@ -59926,8 +59926,8 @@
                 ]
             ],
             "mscoco_gt_words": [
-                "cell phone",
-                "stop sign"
+                "stop sign",
+                "cell phone"
             ],
             "mscoco_generated_words": [
                 "stop sign",
@@ -60231,8 +60231,8 @@
             "caption": "The image shows a skateboarder performing a trick on a ramp in front of a crowd of people. The skateboarder is wearing a white helmet and a black shirt, and is performing a trick on the ramp with his right foot. The crowd is watching the skateboarder with",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
-                "skateboard"
+                "skateboard",
+                "person"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -60376,10 +60376,10 @@
             "caption": "The image shows a man standing in front of a restaurant with a slice of pizza in his hand. The restaurant has a large sign on the front that reads \"cutler's\" and the man is wearing a black shirt and jeans. The sidewalk is empty and there are no other people",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
+                "handbag",
                 "person",
-                "bottle",
                 "pizza",
-                "handbag"
+                "bottle"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -60545,11 +60545,11 @@
                 ]
             ],
             "mscoco_gt_words": [
+                "cup",
                 "bottle",
-                "microwave",
                 "oven",
-                "sink",
-                "cup"
+                "microwave",
+                "sink"
             ],
             "mscoco_generated_words": [
                 "dining table",
@@ -60702,8 +60702,8 @@
             "caption": "The image shows a large truck with a trailer attached to it. The trailer has a large tank on the back of it. There are two people standing next to the truck, one of them is holding a sign. The truck is parked in a parking lot next to a building.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
-                "truck"
+                "truck",
+                "person"
             ],
             "mscoco_generated_words": [
                 "truck",
@@ -60857,8 +60857,8 @@
                 ]
             ],
             "mscoco_gt_words": [
-                "person",
-                "baseball glove"
+                "baseball glove",
+                "person"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -61007,9 +61007,9 @@
             "caption": "The image shows a group of people standing in front of a building. They are all wearing yellow robes and have their hands together in prayer. The building is made of wood and has a red roof. There are several windows on the building and a large door on the front. The people are standing in a line, with with",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
+                "backpack",
                 "person",
-                "cell phone",
-                "backpack"
+                "cell phone"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -61312,11 +61312,11 @@
             "caption": "The image shows a white dog sitting on a bench in the park. The dog is wearing a collar and leash. There are people walking by in the background. The bench is made of wood and has a backrest. The park is surrounded by trees and there are people walking on the sidewalk.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "dog",
-                "backpack",
-                "person",
                 "handbag",
-                "bench"
+                "backpack",
+                "dog",
+                "bench",
+                "person"
             ],
             "mscoco_generated_words": [
                 "dog",
@@ -61469,8 +61469,8 @@
             "caption": "The image shows a baseball player hitting a baseball with a bat. The player is wearing a red and white uniform and has a helmet on his head. The umpire is standing behind the player and watching him hit the ball. The crowd is cheering in the background.\n\nThe image is taken",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
                 "baseball bat",
+                "person",
                 "sports ball"
             ],
             "mscoco_generated_words": [
@@ -61625,8 +61625,8 @@
                 ]
             ],
             "mscoco_gt_words": [
-                "scissors",
                 "chair",
+                "scissors",
                 "person"
             ],
             "mscoco_generated_words": [
@@ -61783,8 +61783,8 @@
             ],
             "mscoco_gt_words": [
                 "traffic light",
-                "car",
-                "bicycle"
+                "bicycle",
+                "car"
             ],
             "mscoco_generated_words": [
                 "traffic light",
@@ -61940,8 +61940,8 @@
             "caption": "The image shows a giraffe eating from a feeding station in a zoo. The giraffe is standing on its hind legs and reaching up to eat from the feeding station. The feeding station is made of wood and has a metal roof. There are trees in the background and a fence surrounding",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
-                "giraffe"
+                "giraffe",
+                "person"
             ],
             "mscoco_generated_words": [
                 "giraffe",
@@ -62087,12 +62087,12 @@
             "caption": "The image shows a pizza on a plate with a knife and fork on the side. There is a glass of red wine on the table. The table is made of wood and has a white tablecloth. The lighting is dim and the atmosphere is cozy.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "fork",
-                "pizza",
                 "dining table",
+                "cup",
+                "pizza",
                 "knife",
-                "wine glass",
-                "cup"
+                "fork",
+                "wine glass"
             ],
             "mscoco_generated_words": [
                 "pizza",
@@ -62236,8 +62236,8 @@
             "caption": "The image shows a tennis player in white and black clothing, with a tennis racket in his hand, jumping to hit the ball on the court. The player is wearing white shoes and has a white shirt on. The background is a blue sky with white clouds.\n\nThe image shows",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
                 "sports ball",
+                "person",
                 "tennis racket"
             ],
             "mscoco_generated_words": [
@@ -62391,10 +62391,10 @@
                 ]
             ],
             "mscoco_gt_words": [
-                "bowl",
-                "orange",
                 "cup",
-                "spoon"
+                "bowl",
+                "spoon",
+                "orange"
             ],
             "mscoco_generated_words": [
                 "orange",
@@ -62556,9 +62556,9 @@
                 ]
             ],
             "mscoco_gt_words": [
-                "person",
+                "remote",
                 "chair",
-                "remote"
+                "person"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -62714,9 +62714,9 @@
             "caption": "The image shows a truck with a large pile of logs in the back. The logs are stacked on top of each other and appear to be quite heavy. The truck is parked in a dirt lot with trees in the background. The sky is clear and blue.\n\nThe image is",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "bear",
                 "teddy bear",
                 "truck",
+                "bear",
                 "bed"
             ],
             "mscoco_generated_words": [
@@ -62863,11 +62863,11 @@
             "caption": "The image shows a woman in a black dress standing at a kitchen counter, preparing a salad. She is wearing glasses and has long, curly brown hair. The counter has a blender on it, and there are several ingredients on the counter. The woman is using a knife",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "bowl",
                 "refrigerator",
                 "knife",
-                "person",
-                "cup"
+                "cup",
+                "bowl",
+                "person"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -63773,8 +63773,8 @@
             "caption": "The image shows a young boy sitting on the back of a horse. The horse is wearing a saddle and bridle, and the boy is wearing a hat and riding boots. The horse is standing in front of a brick building with a sign that reads \"stable\". The image is in black",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "horse",
-                "person"
+                "person",
+                "horse"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -63926,8 +63926,8 @@
             "caption": "The image shows a large, brown horse pulling a cart on the beach. The horse is wearing a saddle and bridle, and its mane is long and flowing. The cart is made of wood and has a large, round wheel in the back. The beach is covered in sand and there are",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "horse",
-                "person"
+                "person",
+                "horse"
             ],
             "mscoco_generated_words": [
                 "horse",
@@ -64076,8 +64076,8 @@
             "caption": "The image shows a black keyboard with a mouse on top of it. The keyboard has a few keys on it, including the enter, shift, and delete keys. The mouse has a black body with a white scroll wheel on top. There is a small pink heart on the left side of the mouse. The",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "laptop",
                 "keyboard",
+                "laptop",
                 "mouse",
                 "dining table"
             ],
@@ -64389,8 +64389,8 @@
             "caption": "The image shows a group of men in black and white uniforms standing on a rope line in a park. They are all wearing baseball caps and gloves, and some of them are holding bats. The men are standing in a line, with one man in the front holding a bat and the others",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
-                "baseball bat"
+                "baseball bat",
+                "person"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -64699,8 +64699,8 @@
             "caption": "The image shows a salad on a pizza plate with tomatoes, basil, and mozzarella cheese. The pizza is topped with a drizzle of olive oil and a sprinkle of parmesan cheese. The plate is on a wooden cutting with board",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "pizza",
                 "dining table",
+                "pizza",
                 "wine glass"
             ],
             "mscoco_generated_words": [
@@ -65295,9 +65295,9 @@
             "caption": "The image shows a horse jumping over a fence at a horse show. The horse is wearing a saddle and bridle and is jumping over a fence made of wood. The rider is wearing a helmet and is holding the reins of the horse. The background is a green",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "horse",
+                "car",
                 "person",
-                "car"
+                "horse"
             ],
             "mscoco_generated_words": [
                 "horse",
@@ -65443,9 +65443,9 @@
             "caption": "The image shows two people standing on the beach at sunset. One person is holding a surfboard and the other is holding a surfboard and looking out at the ocean. The sky is cloudy and there are waves crashing on the shore. The people are wearing wetsuits and sunglasses",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
+                "surfboard",
                 "person",
-                "skis",
-                "surfboard"
+                "skis"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -65591,12 +65591,12 @@
             "caption": "The image shows a bar with a wooden floor and a large wooden table in the center of the room. There are several chairs around the table and a large wooden bar with several taps on it. The walls are painted white and there are several windows on the sides of the room.\n\nThe image is",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "tv",
                 "dining table",
-                "person",
                 "bottle",
+                "tv",
+                "cup",
                 "chair",
-                "cup"
+                "person"
             ],
             "mscoco_generated_words": [
                 "dining table",
@@ -65747,9 +65747,9 @@
             "caption": "The image shows a woman standing in front of a wall of clocks. The clocks are all different shapes and sizes, and some of them have numbers on them. The woman is wearing a black dress and has a white apron on. She is holding a small clock in her hand and looking at it",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
                 "dining table",
-                "clock"
+                "clock",
+                "person"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -66048,8 +66048,8 @@
             "caption": "The image shows a group of people flying kites in a field. The sky is cloudy and there are trees in the background. The people are wearing casual clothing and are standing in a line, holding their kites. The kites are in various colors and shapes, and some of them have",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
-                "kite"
+                "kite",
+                "person"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -66355,8 +66355,8 @@
             "caption": "The image shows an elephant standing in a small pond with its trunk in the air. The elephant is wearing a collar with a tag on it. The water is calm and there are some plants and rocks in the background. The sky is blue and there are some clouds in the sky.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "sports ball",
-                "elephant"
+                "elephant",
+                "sports ball"
             ],
             "mscoco_generated_words": [
                 "elephant",
@@ -66504,9 +66504,9 @@
             "caption": "The image shows a man holding a small dog in his arms while walking on the sidewalk. The man is wearing a white shirt and black pants, and the dog is wearing a red collar. There are several people standing around the man and dog, looking on. The image is taken in",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
+                "bench",
                 "dog",
-                "bench"
+                "person"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -66815,13 +66815,13 @@
             "caption": "The image shows a group of people playing tennis on a court. The players are wearing white shirts and black shorts, and they are standing on the court with their rackets in hand. The crowd is watching from the stands, and there are several people in the stands holding up signs with the names",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
+                "handbag",
                 "backpack",
-                "person",
-                "tie",
+                "bottle",
                 "bench",
                 "chair",
-                "bottle",
-                "handbag",
+                "person",
+                "tie",
                 "tennis racket"
             ],
             "mscoco_generated_words": [
@@ -66978,13 +66978,13 @@
                 ]
             ],
             "mscoco_gt_words": [
-                "bowl",
-                "scissors",
                 "dining table",
+                "scissors",
                 "oven",
-                "sandwich",
+                "spoon",
+                "bowl",
                 "cake",
-                "spoon"
+                "sandwich"
             ],
             "mscoco_generated_words": [
                 "knife",
@@ -67132,11 +67132,11 @@
             "caption": "The image shows a woman riding a bicycle down a street in the city. She is wearing a green coat and carrying a small dog on her lap. The dog is wearing a pink collar and tag. The street is lined with tall buildings and there are people walking on the sidewalk.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
+                "handbag",
+                "clock",
                 "dog",
                 "bicycle",
-                "person",
-                "handbag",
-                "clock"
+                "person"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -67430,13 +67430,13 @@
             "caption": "The image shows a kitchen with wooden cabinets and a stove\n\nThe kitchen has a large wooden island in the center of the room. There are several pots and pans on the stove and countertops. The walls are painted yellow and there are several windows in the background.\n\nThe",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "bowl",
-                "bottle",
-                "broccoli",
-                "oven",
-                "clock",
                 "cup",
-                "spoon"
+                "clock",
+                "bottle",
+                "oven",
+                "spoon",
+                "broccoli",
+                "bowl"
             ],
             "mscoco_generated_words": [
                 "oven",
@@ -68047,12 +68047,12 @@
                 ]
             ],
             "mscoco_gt_words": [
-                "book",
+                "remote",
+                "clock",
                 "couch",
                 "tv",
                 "person",
-                "clock",
-                "remote"
+                "book"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -68207,11 +68207,11 @@
                 ]
             ],
             "mscoco_gt_words": [
-                "teddy bear",
                 "dining table",
-                "person",
                 "bottle",
-                "chair"
+                "teddy bear",
+                "chair",
+                "person"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -68369,12 +68369,12 @@
             "caption": "The image shows a red double helix bus parked on the side of a city street. The bus has a large number 12 on the side and is surrounded by pedestrians walking by. There are several street signs and advertisements on the buildings nearby.\n\nThe image is taken from",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "cell phone",
-                "person",
-                "chair",
+                "handbag",
                 "bus",
                 "bench",
-                "handbag"
+                "chair",
+                "person",
+                "cell phone"
             ],
             "mscoco_generated_words": [],
             "hallucination_idxs": [],
@@ -68662,8 +68662,8 @@
             "caption": "The image shows a group of people standing in front of a large enclosure with several animals inside. The enclosure is surrounded by trees and bushes. There are several people standing in front of the enclosure, looking at the animals. The people are wearing casual clothing and appear to be enjoying",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
-                "elephant"
+                "elephant",
+                "person"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -68810,11 +68810,11 @@
             "caption": "The image shows a woman and a child standing on a snowy slope. The woman is wearing a black jacket and pants, while the child is wearing a pink snow suit. They are both holding skis and poles. The background is a mountain range with snow covered peaks and trees",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "skis",
-                "backpack",
                 "snowboard",
+                "backpack",
+                "truck",
                 "person",
-                "truck"
+                "skis"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -68962,10 +68962,10 @@
             "caption": "The image shows a young girl holding a tennis racket and standing on a grassy field with other children in the background. The girl is wearing a orange and white striped shirt and white shorts, and has blonde curly hair. The other children are wearing tennis shoes and are standing",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
+                "tennis racket",
                 "orange",
-                "sports ball",
-                "tennis racket"
+                "person",
+                "sports ball"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -69421,10 +69421,10 @@
             "caption": "The image shows a small dog on a leash, walking on a grassy field with a woman and a child in the background\n\nThe dog is a small, fluffy breed with a red collar and a leash attached to its neck. The woman is wearing a white shirt and",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
-                "dog",
+                "frisbee",
                 "chair",
-                "frisbee"
+                "dog",
+                "person"
             ],
             "mscoco_generated_words": [
                 "dog",
@@ -69859,8 +69859,8 @@
             "caption": "The image shows a flag on the man's shirt.\n\nThe man is wearing a black suit and tie, and has his hands in his pockets. There are other people in the background, but they are not visible. The lighting is dim and the image is blurry.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
                 "tie",
+                "person",
                 "cell phone"
             ],
             "mscoco_generated_words": [
@@ -70017,8 +70017,8 @@
             ],
             "mscoco_gt_words": [
                 "orange",
-                "bed",
-                "frisbee"
+                "frisbee",
+                "bed"
             ],
             "mscoco_generated_words": [
                 "dining table",
@@ -70180,11 +70180,11 @@
                 ]
             ],
             "mscoco_gt_words": [
-                "bowl",
-                "orange",
                 "dining table",
-                "person",
-                "teddy bear"
+                "orange",
+                "teddy bear",
+                "bowl",
+                "person"
             ],
             "mscoco_generated_words": [
                 "bear",
@@ -70482,11 +70482,11 @@
             "caption": "The woman in the image is holding a plate of cupcakes. She is wearing a blue shirt and green shorts. The cupcakes are decorated with rainbow colors and have sprinkles on top. The woman is smiling and looks happy to be holding the cupcakes.\n\nThe",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "fork",
-                "cell phone",
-                "person",
                 "cake",
-                "spoon"
+                "fork",
+                "spoon",
+                "person",
+                "cell phone"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -70629,9 +70629,9 @@
             "caption": "The image shows a woman holding a banana in her hand. She is wearing a blue t and has a smile on her face. The background is a blue wall with white graffiti.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
                 "handbag",
-                "banana"
+                "banana",
+                "person"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -71089,8 +71089,8 @@
             "caption": "The image shows two old motorcycles parked on the side of the road. One is a black and silver motorcycle with a sidecar attached to the back. The other is a black motorcycle with a sidecar attached to the back. Both motorcycles have a flat tire on the front and",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "motorcycle",
                 "chair",
+                "motorcycle",
                 "bicycle"
             ],
             "mscoco_generated_words": [
@@ -71242,9 +71242,9 @@
                 ]
             ],
             "mscoco_gt_words": [
-                "person",
-                "truck",
                 "surfboard",
+                "truck",
+                "person",
                 "car"
             ],
             "mscoco_generated_words": [
@@ -71394,13 +71394,13 @@
             "caption": "The image shows a group of people sitting at a table in a restaurant. They are all wearing glasses and smiling. There is a large pizza on the table with various toppings. The background is a dark brown color with some lighting.",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "pizza",
                 "dining table",
-                "person",
+                "pizza",
                 "bottle",
+                "cup",
                 "chair",
                 "wine glass",
-                "cup"
+                "person"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -71544,10 +71544,10 @@
                 ]
             ],
             "mscoco_gt_words": [
-                "person",
                 "baseball bat",
-                "sports ball",
-                "baseball glove"
+                "baseball glove",
+                "person",
+                "sports ball"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -71699,8 +71699,8 @@
             "caption": "The image shows a bathroom with a toilet, sink, and mirror. The walls are painted white and the floor is made of tile. There is a window on the left side of the room and a door on the right side. The toilet is a standard size and the sink is a standard",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "sink",
-                "toilet"
+                "toilet",
+                "sink"
             ],
             "mscoco_generated_words": [
                 "toilet",
@@ -71851,8 +71851,8 @@
             "caption": "The image shows a man wearing a red tie and a white shirt, standing in front of a window. The man is looking down at his hands, which are clasped together in front of him. The window behind him is open, revealing a view of the sky outside. The man's",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
-                "tie"
+                "tie",
+                "person"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -72312,9 +72312,9 @@
             "caption": "The image shows a person skiing down a snowy mountain slope. The person is wearing a red and black pants, and has a backpack on their back. The sky is blue and there are mountains in the background.\n\nThe image is taken from a high angle, looking down at the person",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
+                "backpack",
                 "person",
-                "skis",
-                "backpack"
+                "skis"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -72621,9 +72621,9 @@
             "caption": "The image shows a person holding a small device in their hand, possibly a cell phone or smartphone. The person is wearing a black shirt and black pants, and has a black hat on their head. The background is a blurred image of a car window. The image is taken from the",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
+                "car",
                 "person",
-                "cell phone",
-                "car"
+                "cell phone"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -72926,9 +72926,9 @@
             "caption": "The image shows a boat in the water with a large building in the background\n\nThe boat is a red and white rescue boat with a large red and white stripe on the side. The building in the background is a large, modern building with a lot of windows and a flat roof. There are several smaller",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
+                "boat",
                 "airplane",
-                "boat"
+                "person"
             ],
             "mscoco_generated_words": [
                 "boat",
@@ -73223,8 +73223,8 @@
             "caption": "The image shows a person riding a black horse in the ocean. The person is wearing a black helmet and riding boots. The horse is wearing a saddle and bridle. The background is a clear blue sky with white clouds.\n\nThe image is taken from a low angle,",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "horse",
-                "person"
+                "person",
+                "horse"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -73531,11 +73531,11 @@
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
                 "dining table",
-                "cell phone",
-                "person",
                 "bottle",
                 "chair",
-                "wine glass"
+                "wine glass",
+                "person",
+                "cell phone"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -73827,8 +73827,8 @@
             "caption": "The image shows a group of people skateboarding on a concrete skate park. The skateboarders are wearing different types of clothing, including jeans, t-shirts, and hirts. They are all wearing helmets and knee pads. The skate park",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
-                "skateboard"
+                "skateboard",
+                "person"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -73967,13 +73967,13 @@
                 ]
             ],
             "mscoco_gt_words": [
-                "fork",
                 "dining table",
-                "person",
-                "chair",
                 "handbag",
                 "cake",
-                "spoon"
+                "fork",
+                "chair",
+                "spoon",
+                "person"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -74136,8 +74136,8 @@
                 ]
             ],
             "mscoco_gt_words": [
-                "person",
                 "refrigerator",
+                "person",
                 "car"
             ],
             "mscoco_generated_words": [
@@ -74289,9 +74289,9 @@
                 ]
             ],
             "mscoco_gt_words": [
-                "horse",
+                "car",
                 "person",
-                "car"
+                "horse"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -74612,8 +74612,8 @@
             "caption": "The image shows a bathroom with a large bathtub, sink, and toilet. The walls are painted white and there are wooden floors. The room has a large window with a view of the outdoors.\n\nThe image is taken from the perspective of someone standing in the bathroom",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "sink",
-                "toilet"
+                "toilet",
+                "sink"
             ],
             "mscoco_generated_words": [
                 "sink",
@@ -74757,10 +74757,10 @@
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
                 "dining table",
-                "chair",
                 "orange",
-                "suitcase",
-                "bench"
+                "bench",
+                "chair",
+                "suitcase"
             ],
             "mscoco_generated_words": [
                 "suitcase",
@@ -74906,8 +74906,8 @@
             "caption": "The image shows a group of people playing a game of fr on a grassy field. The people are wearing different colored shirts and pants, and they are all holding fr sticks. The image is in black and white.\n\nThe image shows a group of people playing a game of fr",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
-                "frisbee"
+                "frisbee",
+                "person"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -75055,10 +75055,10 @@
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
                 "refrigerator",
+                "vase",
                 "oven",
-                "sink",
                 "cup",
-                "vase"
+                "sink"
             ],
             "mscoco_generated_words": [
                 "oven",
@@ -75203,10 +75203,10 @@
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
                 "cat",
-                "toilet",
+                "cup",
                 "bottle",
-                "sink",
-                "cup"
+                "toilet",
+                "sink"
             ],
             "mscoco_generated_words": [
                 "cat",
@@ -75505,10 +75505,10 @@
             "caption": "The image shows a group of people standing on a sidewalk in front of a large building. They are holding kites and looking up at the sky. There are other people in the background, walking and standing on the sidewalk. The building in the background is a large, modern skyscraper with many",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
-                "car",
+                "bicycle",
                 "kite",
-                "bicycle"
+                "person",
+                "car"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -75657,9 +75657,9 @@
             "caption": "The image shows a yellow bus driving down the street. The bus is parked on the side of the road and there are buildings in the background. The sky is clear and there are no clouds.\n\nThe bus is a yellow school bus with a large grill on the front and a small window on the",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
                 "truck",
                 "bus",
+                "person",
                 "car"
             ],
             "mscoco_generated_words": [],
@@ -75807,9 +75807,9 @@
             "caption": "The image shows a group of people skiing down a snowy slope. They are wearing ski gear and have their skis pointed downwards. The snow is white and there are no trees or other obstacles in the way. The sky is blue and there are no clouds. The sun is shining",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
+                "snowboard",
                 "person",
-                "skis",
-                "snowboard"
+                "skis"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -75956,8 +75956,8 @@
             "caption": "The image shows a young boy standing on a skateboard, wearing a black shirt and jeans, and holding onto a red skateboard. He is standing on a sidewalk in front of a group of people, who are walking and standing around him. The sky is cloudy and there are",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "person",
-                "skateboard"
+                "skateboard",
+                "person"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -76262,11 +76262,11 @@
             "caption": "The image shows a group of people standing around a bar in a restaurant. They are all wearing casual clothing and smiling at each other. The bar has several bottles of wine on it, and there are glasses on the counter. The walls are made of wood and there are windows on the",
             "mscoco_hallucinated_words": [],
             "mscoco_gt_words": [
-                "bottle",
-                "person",
-                "sink",
                 "handbag",
-                "wine glass"
+                "bottle",
+                "wine glass",
+                "person",
+                "sink"
             ],
             "mscoco_generated_words": [
                 "person",
@@ -76423,8 +76423,8 @@
                 ]
             ],
             "mscoco_gt_words": [
-                "cat",
-                "toilet"
+                "toilet",
+                "cat"
             ],
             "mscoco_generated_words": [
                 "cat",

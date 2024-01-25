@@ -112,7 +112,7 @@ parser.add_argument("--threshold", type=int, default=15)
 parser.add_argument("--num_attn_candidates", type=int, default=5)
 parser.add_argument("--penalty_weights", type=float, default=1.0)
 parser.add_argument("--seed", type=int, default=0)
-parser.add_argument("-n", "--num_samples", type=int, default=100)
+parser.add_argument("-n", "--num_samples", type=int, default=500)
 parser.add_argument("-m", "--max_new_tokens", type=int, default=64)
 parser.add_argument(
     "-v",
@@ -321,7 +321,7 @@ coco_anns = json.loads(lines[0])
 
 coco = COCO(caption_file_path)
 
-replete_image_id = [573877, 196280, 524681, 528984, 43448, 437393, 170605, 445834, 497014, 162543, 165257]
+replete_image_id = [152340, 99428, 403078, 360101, 149550, 372756, 581717, 222467]
 
 img_ids = coco.getImgIds()
 # sample image ids

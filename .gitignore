@@ -1,5 +1,6 @@
 # folder systems
 
+log/
 cache_dir/
 generated_captions/
 paper_result/
@@ -8,6 +9,11 @@ MME_benchmark/
 model_checkpoints/
 decoder_zoo/HALC/cache_image/
 log/
+
+file_calculation.py
+get_model.py
+copy_lost_files.py
+chair_eval_replete.py
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

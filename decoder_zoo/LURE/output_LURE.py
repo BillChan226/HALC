@@ -69,8 +69,8 @@ with torch.no_grad():
                 # temp_caption = ""
                 qs = ""
                 for temp_caption_item in caption_data:
-                    if temp_caption_item["id"] == file_id:
-                        qs += temp_caption_item["answer"]
+                    if temp_caption_item["image_id"] == file_id:
+                        qs += temp_caption_item["caption"]
                 # caption_cc = ""
                 # for re_caption_item in re_caption:
                 #     if re_caption_item["image_id"] == file_id:
@@ -100,7 +100,7 @@ with torch.no_grad():
                 output = chat.answer(chat_state, img_list)
 
                 float_list = [tensor.item() for tensor in plist]
-                result = {"id": filename, "question": this_question, "caption": output, "model": "LURE"}
+                result = {"image_id": filename, "question": this_question, "caption": output, "model": "LURE"}
                 json.dump(result, f)
                 f.write('\n')
                 f.flush()

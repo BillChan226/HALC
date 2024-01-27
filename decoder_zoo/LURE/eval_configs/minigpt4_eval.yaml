@@ -6,9 +6,9 @@ model:
   max_txt_len: 128
   end_sym: "###"
   low_resource: True
-  prompt_path: "prompts/alignment.txt"
+  prompt_path: "decoder_zoo/LURE/prompts/alignment.txt"
   prompt_template: '###Human: {} ###Assistant: '
-  ckpt: 'The linear layer ckpt trained by yourself or by minigpt4.'
+  ckpt: 'decoder_zoo/LURE/checkpoints/rewriter_n.pth'
 
 
 datasets:

@@ -10,7 +10,7 @@ import json
 from typing import Dict
 
 from omegaconf import OmegaConf
-from minigpt4.common.registry import registry
+from decoder_zoo.LURE.minigpt4.common.registry import registry
 
 
 class Config:
@@ -68,8 +68,8 @@ class Config:
 
         assert model_type is not None, "Missing model_type."
 
-        model_config_path = model_cls.default_config_path(model_type=model_type)
-
+        # model_config_path = model_cls.default_config_path(model_type=model_type)
+        model_config_path = "decoder_zoo/LURE/minigpt4/configs/models/minigpt4.yaml"
         model_config = OmegaConf.create()
         # hierarchy override, customized config > default config
         model_config = OmegaConf.merge(
@@ -98,9 +98,10 @@ class Config:
             builder_cls = registry.get_builder_class(dataset_name)
 
             dataset_config_type = datasets[dataset_name].get("type", "default")
-            dataset_config_path = builder_cls.default_config_path(
-                type=dataset_config_type
-            )
+            # dataset_config_path = builder_cls.default_config_path(
+            #     type=dataset_config_type
+            # )
+            dataset_config_path = "decoder_zoo/LURE/minigpt4/configs/datasets/cc_sbu/align.yaml"
 
             # hierarchy override, customized config > default config
             dataset_config = OmegaConf.merge(

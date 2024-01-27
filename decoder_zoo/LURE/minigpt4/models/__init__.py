@@ -9,11 +9,11 @@ import logging
 import torch
 from omegaconf import OmegaConf
 
-from minigpt4.common.registry import registry
-from minigpt4.models.base_model import BaseModel
-from minigpt4.models.blip2 import Blip2Base
-from minigpt4.models.mini_gpt4 import MiniGPT4
-from minigpt4.processors.base_processor import BaseProcessor
+from decoder_zoo.LURE.minigpt4.common.registry import registry
+from decoder_zoo.LURE.minigpt4.models.base_model import BaseModel
+from decoder_zoo.LURE.minigpt4.models.blip2 import Blip2Base
+from decoder_zoo.LURE.minigpt4.models.mini_gpt4 import MiniGPT4
+from decoder_zoo.LURE.minigpt4.processors.base_processor import BaseProcessor
 
 
 __all__ = [

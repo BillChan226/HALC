@@ -1,0 +1,3 @@
+Backbone,Decoder,Detector,Box,Ratio,Beam,K,Seed,Accuracy,Precision,Recall,F1 score,Yes ratio,Max Tokens,Num of Samples,Skip Samples
+minigpt4,halc-beam,dino,0.05,0.6,1,6,0,66.5,98.058,33.666,50.124,17.166,64,100,0
+minigpt4,halc-beam,dino,0.05,0.6,1,6,0,65.833,97.029,32.666,48.877,16.833,64,200,100

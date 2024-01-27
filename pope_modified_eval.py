@@ -337,7 +337,7 @@ INSTRUCTION_TEMPLATE = {
 
 def parse_args():
     parser = argparse.ArgumentParser(description="POPE-Adv evaluation on LVLMs.")
-    parser.add_argument("--model", type=str, help="model")
+    parser.add_argument("--model", type=str, default="mplug-owl2", help="model")
     parser.add_argument("--pope_type", type=str, help="model")
     # parser.add_argument("--cfg-path", required=True, help="path to configuration file.")
     parser.add_argument(
@@ -897,6 +897,18 @@ def main():
         "Recall": recall,
         "F1 Score": f1,
     }
+
+    # print to a CSV
+    # csv_path = "/home/czr/HaLC/eval/eval_pope_results.csv"
+    # if not os.path.exists(csv_path):
+    #     with open(csv_path, "w") as f:
+    #         f.write("model,seed,accuracy,precision,recall,f1\n")
+    # with open(csv_path, "a") as f:
+    #     f.write(
+    #         f"{model_name},{seed},{acc},{precision},{recall},{f1}\n"
+    #     )
+    
+        
 
     # metrics_path = os.path.join(
     #     base_dir,

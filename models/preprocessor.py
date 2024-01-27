@@ -34,20 +34,18 @@ def get_output(text: str, max_tokens: int=1024):
     content = PROMPT_TEMPLATE.format(text=text)
     while True:
         try:
-            # response = openai.ChatCompletion.create(
-            #     model='gpt-3.5-turbo',
-            #     messages=[{
-            #         'role': 'system',
-            #         'content': 'You are a language assistant that helps to rewrite a passage according to instructions.'
-            #     }, {
-            #         'role': 'user',
-            #         'content': content,
-            #     }],
-            #     temperature=0.2,  
-            #     max_tokens=max_tokens,
-            # )
-            self.LLM_MODEL["model"].generate(input_ids=self.LLM_MODEL["tokenizer"].encode(content, return_tensors="pt").to(self.LLM_MODEL["model"].device), 
-            max_length=max_tokens, do_sample=True, top_p=0.95, top_k=60, temperature=0.2)
+            response = openai.ChatCompletion.create(
+                model='gpt-3.5-turbo',
+                messages=[{
+                    'role': 'system',
+                    'content': 'You are a language assistant that helps to rewrite a passage according to instructions.'
+                }, {
+                    'role': 'user',
+                    'content': content,
+                }],
+                temperature=0.2,  
+                max_tokens=max_tokens,
+            )
             break
         # except openai.error.RateLimitError:
         #     pass

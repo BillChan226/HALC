@@ -173,7 +173,7 @@ class Chat:
         output_text = (output_text.split('Assistant:')[-1]).split('\n')[0].strip()
         conv.messages[-1][1] = output_text
 
-        return output_text, output_token.cpu().numpy(), probs, u_wordlist, wordlist, p_list, p_all
+        return output_text #, output_token.cpu().numpy(), probs, u_wordlist, wordlist, p_list, p_all
 
     def upload_img(self, image, conv, img_list):
         if isinstance(image, str):  # is a image path

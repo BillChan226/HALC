@@ -26,7 +26,7 @@ import json
 
 from types import SimpleNamespace
 from decoder_zoo.Woodpecker.vis_corrector import Corrector
-from decoder_zoo.Woodpecker.config import woodpecker_args_dict
+# from decoder_zoo.Woodpecker.config import woodpecker_args_dict
 from decoder_zoo.HALC.context_density.halc import halc_assistant
 from decoder_zoo.VCD.vcd_utils.vcd_add_noise import add_diffusion_noise
 
@@ -576,16 +576,16 @@ for idx, img_id in tqdm(enumerate(range(len(img_files))), total=len(img_files)):
     # input()
 
     # dump metric file
-    if skip_num == 0:
-        generated_captions_path = os.path.join(
-            base_dir,
-            f"{model_name}_{decoding_strategy}_{detector_type}_box_{box_threshold}_beams_{num_beams}_k_{k_candidate_num}_{dataset_name}_expand_ratio_{expand_ratio}_seed_{seed}_max_tokens_{max_new_tokens}_samples_{num_samples}_generated_captions.json",
-        )
-    else:
-        generated_captions_path = os.path.join(
-            base_dir,
-            f"{model_name}_{decoding_strategy}_{detector_type}_box_{box_threshold}_beams_{num_beams}_k_{k_candidate_num}_{dataset_name}_expand_ratio_{expand_ratio}_seed_{seed}_max_tokens_{max_new_tokens}_samples_{num_samples}_skip_{skip_num}_generated_captions.json",
-        )
+    # if skip_num == 0:
+    #     generated_captions_path = os.path.join(
+    #         base_dir,
+    #         f"{model_name}_{decoding_strategy}_{detector_type}_box_{box_threshold}_beams_{num_beams}_k_{k_candidate_num}_{dataset_name}_expand_ratio_{expand_ratio}_seed_{seed}_max_tokens_{max_new_tokens}_samples_{num_samples}_generated_captions.json",
+    #     )
+    # else:
+    generated_captions_path = os.path.join(
+        base_dir,
+        f"{model_name}_{decoding_strategy}_{detector_type}_box_{box_threshold}_beams_{num_beams}_k_{k_candidate_num}_{dataset_name}_expand_ratio_{expand_ratio}_seed_{seed}_max_tokens_{max_new_tokens}_samples_{num_samples}_skip_{skip_num}_generated_captions.json",
+    )
     # print("generated_captions_path", generated_captions_path)
     with open(generated_captions_path, "a") as f:
         json.dump(img_save, f)

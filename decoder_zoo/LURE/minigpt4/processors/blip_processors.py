@@ -7,9 +7,9 @@
 
 import re
 
-from minigpt4.common.registry import registry
-from minigpt4.processors.base_processor import BaseProcessor
-from minigpt4.processors.randaugment import RandomAugment
+from decoder_zoo.LURE.minigpt4.common.registry import registry
+from decoder_zoo.LURE.minigpt4.processors.base_processor import BaseProcessor
+from decoder_zoo.LURE.minigpt4.processors.randaugment import RandomAugment
 from omegaconf import OmegaConf
 from torchvision import transforms
 from torchvision.transforms.functional import InterpolationMode
@@ -108,7 +108,6 @@ class Blip2ImageTrainProcessor(BlipImageBaseProcessor):
             min_scale=min_scale,
             max_scale=max_scale,
         )
-
 
 @registry.register_processor("blip2_image_eval")
 class Blip2ImageEvalProcessor(BlipImageBaseProcessor):

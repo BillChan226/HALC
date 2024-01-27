@@ -15,13 +15,13 @@ import torch.nn as nn
 import torch.distributed as dist
 import torch.nn.functional as F
 
-import minigpt4.common.dist_utils as dist_utils
-from minigpt4.common.dist_utils import download_cached_file
-from minigpt4.common.utils import is_url
-from minigpt4.common.logger import MetricLogger
-from minigpt4.models.base_model import BaseModel
-from minigpt4.models.Qformer import BertConfig, BertLMHeadModel
-from minigpt4.models.eva_vit import create_eva_vit_g
+import decoder_zoo.LURE.minigpt4.common.dist_utils as dist_utils
+from decoder_zoo.LURE.minigpt4.common.dist_utils import download_cached_file
+from decoder_zoo.LURE.minigpt4.common.utils import is_url
+from decoder_zoo.LURE.minigpt4.common.logger import MetricLogger
+from decoder_zoo.LURE.minigpt4.models.base_model import BaseModel
+from decoder_zoo.LURE.minigpt4.models.Qformer import BertConfig, BertLMHeadModel
+from decoder_zoo.LURE.minigpt4.models.eva_vit import create_eva_vit_g
 from transformers import BertTokenizer
 
 

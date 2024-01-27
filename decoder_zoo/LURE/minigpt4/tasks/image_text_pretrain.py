@@ -5,8 +5,8 @@
  For full license text, see the LICENSE_Lavis file in the repo root or https://opensource.org/licenses/BSD-3-Clause
 """
 
-from minigpt4.common.registry import registry
-from minigpt4.tasks.base_task import BaseTask
+from decoder_zoo.LURE.minigpt4.common.registry import registry
+from decoder_zoo.LURE.minigpt4.tasks.base_task import BaseTask
 
 
 @registry.register_task("image_text_pretrain")

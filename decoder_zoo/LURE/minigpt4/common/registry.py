@@ -32,7 +32,7 @@ class Registry:
         """
 
         def wrap(builder_cls):
-            from minigpt4.datasets.builders.base_dataset_builder import BaseDatasetBuilder
+            from decoder_zoo.LURE.minigpt4.datasets.builders.base_dataset_builder import BaseDatasetBuilder
 
             assert issubclass(
                 builder_cls, BaseDatasetBuilder
@@ -63,7 +63,7 @@ class Registry:
         """
 
         def wrap(task_cls):
-            from minigpt4.tasks.base_task import BaseTask
+            from decoder_zoo.LURE.minigpt4.tasks.base_task import BaseTask
 
             assert issubclass(
                 task_cls, BaseTask
@@ -92,7 +92,7 @@ class Registry:
         """
 
         def wrap(model_cls):
-            from minigpt4.models import BaseModel
+            from decoder_zoo.LURE.minigpt4.models import BaseModel
 
             assert issubclass(
                 model_cls, BaseModel
@@ -121,7 +121,7 @@ class Registry:
         """
 
         def wrap(processor_cls):
-            from minigpt4.processors import BaseProcessor
+            from decoder_zoo.LURE.minigpt4.processors import BaseProcessor
 
             assert issubclass(
                 processor_cls, BaseProcessor
@@ -132,6 +132,7 @@ class Registry:
                         name, cls.mapping["processor_name_mapping"][name]
                     )
                 )
+
             cls.mapping["processor_name_mapping"][name] = processor_cls
             return processor_cls
 

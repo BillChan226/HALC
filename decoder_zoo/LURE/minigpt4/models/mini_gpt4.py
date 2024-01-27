@@ -5,9 +5,9 @@ import torch
 from torch.cuda.amp import autocast as autocast
 import torch.nn as nn
 
-from minigpt4.common.registry import registry
-from minigpt4.models.blip2 import Blip2Base, disabled_train
-from minigpt4.models.modeling_llama import LlamaForCausalLM
+from decoder_zoo.LURE.minigpt4.common.registry import registry
+from decoder_zoo.LURE.minigpt4.models.blip2 import Blip2Base, disabled_train
+from decoder_zoo.LURE.minigpt4.models.modeling_llama import LlamaForCausalLM
 from transformers import LlamaTokenizer
 
 
@@ -18,7 +18,7 @@ class MiniGPT4(Blip2Base):
     """
 
     PRETRAINED_MODEL_CONFIG_DICT = {
-        "pretrain_vicuna": "configs/models/minigpt4.yaml",
+        "pretrain_vicuna": "decoder_zoo/LURE/minigpt4/configs/models/minigpt4.yaml",
     }
 
     def __init__(

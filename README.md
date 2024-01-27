@@ -172,7 +172,7 @@ python pope_eval.py --model [LVLM Backbone] --data_path [COCO_DIR] -d [Decoding 
 Under root directory, run
 
 ```
-python reviser_eval.py -m [woodpecker/lure] --data-path [COCO_DIR] --caption-path [PATH_TO_CAPTION] --output-path [PATH_TO_OUTPUT] --seed [SEED] --gpu-id [GPU_IDs] --output_dir ./generated_captions/
+python reviser_eval.py -r [woodpecker/lure] --data_path [COCO_DIR] --c [PATH_TO_CAPTION] --seed [SEED] --gpu-id [GPU_IDs] --output_dir ./log/
 ```
 
 ### Evaluation

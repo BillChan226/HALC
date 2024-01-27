@@ -186,7 +186,6 @@ jobs/logs/
 .ipynb_common
 logs/
 results/
-prompts/
 output/
 ckpt/
 divide_vqa.py

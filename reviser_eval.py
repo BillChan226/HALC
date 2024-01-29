@@ -122,6 +122,8 @@ if __name__ == '__main__':
 
     prefix = "COCO_val2014_"
     for idx, pair in tqdm(enumerate(caption_data), total=len(caption_data)):
+        # if idx < 487:
+        #     continue
         img_id = pair['image_id']
         caption = pair['caption']
         img_save = {}

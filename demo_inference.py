@@ -137,6 +137,7 @@ parser.add_argument(
     default="dino",
     help="Detector type. Default is 'groundingdino'.",
 )
+parser.add_argument("--box_threshold", type=float, default=0.5, help="Box threshold for DINO.")
 parser.add_argument(
     "-e",
     "--expand-ratio",
@@ -177,6 +178,7 @@ cd_beta = args.cd_beta
 detector_type = args.detector
 expand_ratio = args.expand_ratio
 debugger = args.debugger
+box_threshold = args.box_threshold
 
 # ========================================
 #             Model Initialization
@@ -262,7 +264,7 @@ if verbosity:
 # image_path = "/home/czr/contrast_decoding_LVLMs/eval_dataset/val2014/COCO_val2014_000000350132.jpg"
 # image_path = "/home/czr/contrast_decoding_LVLMs/eval_dataset/val2014/COCO_val2014_000000302222.jpg" 
 # image_path = "/home/czr/contrast_decoding_LVLMs/eval_dataset/val2014/COCO_val2014_000000444366.jpg" 
-image_path = "/home/czr/contrast_decoding_LVLMs/eval_dataset/val2014/COCO_val2014_000000222467.jpg" 
+image_path = "/home/czr/contrast_decoding_LVLMs/eval_dataset/val2014/COCO_val2014_000000437594.jpg" 
 # image_path = "/home/czr/contrast_decoding_LVLMs/eval_dataset/val2014/COCO_val2014_000000165257.jpg" # 162543
 raw_image = Image.open(image_path).convert("RGB")
 
@@ -298,6 +300,7 @@ halc_params = {
     "detector": detector_type,
     "score_type": "BLIP",
     "debugger": debugger,
+    "box_threshold": box_threshold,
 }
 
 halc_assistant_helper = halc_assistant(

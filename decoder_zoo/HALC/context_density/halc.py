@@ -25,7 +25,7 @@ exempt_word_list = ["image", "side", "background", "feature", "features", "cente
                     "white", "cat", "horse", "bus", "group", "manner", "her", "birds", 
                     "teddy", "stack", "cell", "toaster", "mirror", "toilet", "captures"]
 
-add_word_list = ["sink", "microwave", "toaster", "puppy", "bottle", "table", "oven", "toothbrush"]
+add_word_list = ["sink", "microwave", "toaster", "puppy", "bottle", "table", "oven", "toothbrush", "cars"]
 
 class halc_assistant:
     def __init__(

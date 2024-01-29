@@ -1,6 +1,0 @@
-Backbone,Decoder,Detector,Box,Ratio,Beam,K,Seed,SPICE,METEOR,CIDEr,CHAIRs,CHAIRi,BLEU,Log CIDEr,Max Tokens,Num of Samples
-llava-1.5,dola,dino,0.5,0.6,1,6,1,21.3,23.2,0.0,20.0,5.9,0.161,11.16,64,500
-llava-1.5,dola,dino,0.5,0.6,1,6,2,22.0,23.3,0.0,21.0,6.8,0.159,11.06,64,500
-llava-1.5,dola,dino,0.5,0.6,1,6,4,21.1,23.1,0.0,22.0,7.4,0.158,11.04,64,500
-llava-1.5,opera-beam,dino,0.5,0.6,3,6,0,21.2,23.3,0.2,16.4,5.4,0.160,11.59,64,500
-llava-1.5,opera-beam,dino,0.5,0.6,3,6,2,22.1,23.7,0.0,21.6,7.3,0.163,11.57,64,500

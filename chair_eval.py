@@ -478,7 +478,7 @@ for idx, img_id in tqdm(enumerate(range(len(img_files))), total=len(img_files)):
         26,
         28,
         30,
-        32,
+        31,
     ]
     # lm_early_exit_layers = [
     #     0,

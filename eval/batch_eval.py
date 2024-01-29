@@ -107,8 +107,10 @@ def run_eval_pope(file_path, pope_type):
 
     # Convert the matches to a dictionary
     metrics = {metric: float(value)*100 for metric, value in matches}
-
-    metrics = [str(metrics[metric])[:6] for metric in ["Accuracy", "Precision", "Recall", "F1 score", "Yes ratio"]]
+    try:
+        metrics = [str(metrics[metric])[:6] for metric in ["Accuracy", "Precision", "Recall", "F1 score", "Yes ratio"]]
+    except:
+        print("Error in metrics", metrics)
     return metrics
 
 

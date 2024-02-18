@@ -14,13 +14,13 @@
 This repository provides the official PyTorch implementation of the following paper:
 > [**HALC: Object Hallucination Reduction via Adaptive Focal-Contrast Decoding**]() <br>
 > [Zhaorun Chen](https://billchan226.github.io/)<sup>1,\*</sup>,
-> [Zhuokai Zhao](https://zhuokai-zhao.com/)<sup>2,\*</sup>,
-> [Lingyu Gao](https://lygao.me/)<sup>3</sup>,
-> [Hongyin Luo](https://luohongyin.github.io/) <sup>4</sup>,
-> [Huaxiu Yao](https://www.huaxiuyao.io/) <sup>1</sup>,
-> [Jiawei Zhou](https://sites.harvard.edu/jzhou/)<sup>3</sup>
+> [Zhuokai Zhao](https://zhuokai-zhao.com/)<sup>1,\*</sup>,
+> [Hongyin Luo](https://luohongyin.github.io/) <sup>2</sup>,
+> [Huaxiu Yao](https://www.huaxiuyao.io/) <sup>3</sup>,
+> [Bo Li](https://aisecure.github.io/)<sup>1,4</sup>,
+> [Jiawei Zhou](https://sites.harvard.edu/jzhou/)<sup>5</sup>
 >
-> <sup>1</sup>UNC-Chapel Hill, <sup>2</sup>University of Chicago, <sup>3</sup>Toyota Technological Institute at Chicago, <sup>4</sup>Massachusetts Institute of Technology <br>
+> <sup>1</sup>University of Chicago, <sup>2</sup>Massachusetts Institute of Technology, <sup>3</sup>UNC-Chapel Hill <br> <sup>4</sup>University of Illinois at Urbana-Champaingn, <sup>5</sup>Toyota Technological Institute at Chicago
 > <sub>*</sup> Equal contribution
 
 ## :partying_face: Features

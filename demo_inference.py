@@ -137,7 +137,7 @@ parser.add_argument(
     default="dino",
     help="Detector type. Default is 'groundingdino'.",
 )
-parser.add_argument("--box_threshold", type=float, default=0.5, help="Box threshold for DINO.")
+parser.add_argument("--box_threshold", type=float, default=0.08, help="Box threshold for DINO.")
 parser.add_argument(
     "-e",
     "--expand-ratio",
@@ -264,143 +264,159 @@ if verbosity:
 # image_path = "/home/czr/contrast_decoding_LVLMs/eval_dataset/val2014/COCO_val2014_000000350132.jpg"
 # image_path = "/home/czr/contrast_decoding_LVLMs/eval_dataset/val2014/COCO_val2014_000000302222.jpg" 
 # image_path = "/home/czr/contrast_decoding_LVLMs/eval_dataset/val2014/COCO_val2014_000000444366.jpg" 
-image_path = "/home/czr/contrast_decoding_LVLMs/eval_dataset/val2014/COCO_val2014_000000437594.jpg" 
+# image_path = "/home/czr/contrast_decoding_LVLMs/eval_dataset/val2014/COCO_val2014_000000085926.jpg" 
 # image_path = "/home/czr/contrast_decoding_LVLMs/eval_dataset/val2014/COCO_val2014_000000165257.jpg" # 162543
-raw_image = Image.open(image_path).convert("RGB")
+# image_path = "/home/czr/HaLC/LLaVA-Bench/001.jpg"
+img_path_dir = "/home/czr/HaLC/LLaVA-Bench/"
+img_path_list = os.listdir(img_path_dir)
+generated_captions_path = f"/home/czr/HaLC/final_result/llava-bench/{decoding_strategy}_llava-1.5.json"
 
-if model_name == "mplug-owl2":
-    max_edge = max(raw_image.size) # We recommand you to resize to squared image for BEST performance.
-    image = raw_image.resize((max_edge, max_edge))
-    image_tensor = process_images([image], model.image_processor)
-    image = image_tensor.to(device, dtype=torch.float16)
-else:
-    image = vis_processors["eval"](raw_image).unsqueeze(0)
-    image = image.to(device)
+print("img_path_list", img_path_list)
+for image_path in img_path_list:
+    img_save = {}
+    img_save["image_path"] = image_path
+    image_path = img_path_dir + image_path
+    raw_image = Image.open(image_path).convert("RGB")
 
-qu = "Please describe this image in detail."
-# qu = "Generate a one sentence caption of the image."
-# qu = "Generate a short caption of the image."
-# qu = "What is the man holding in his hand?"
-# qu = "generate a one sentence caption of the image"
+    if model_name == "mplug-owl2":
+        max_edge = max(raw_image.size) # We recommand you to resize to squared image for BEST performance.
+        image = raw_image.resize((max_edge, max_edge))
+        image_tensor = process_images([image], model.image_processor)
+        image = image_tensor.to(device, dtype=torch.float16)
+    else:
+        image = vis_processors["eval"](raw_image).unsqueeze(0)
+        image = image.to(device)
 
-
-template = INSTRUCTION_TEMPLATE[args.model]
-qu = template.replace("<question>", qu)
-
-
-# halc_params = {"context_domain": "upper", "contrast_weight": 0.05, "context_window": 4, "expand_ratio": 0.1, "beam_size": num_beams, "k_candidate_num": args.k_candidate_num, "LVLM_backbone": model_name, "detector": "groundingdino"}
-halc_params = {
-    "context_domain": "upper",
-    "contrast_weight": 0.05,
-    "context_window": 3,
-    "expand_ratio": expand_ratio,
-    "beam_size": num_beams,
-    "k_candidate_num": args.k_candidate_num,
-    "LVLM_backbone": model_name,
-    "detector": detector_type,
-    "score_type": "BLIP",
-    "debugger": debugger,
-    "box_threshold": box_threshold,
-}
-
-halc_assistant_helper = halc_assistant(
-    model, vis_processor=vis_processor, device=device, halc_params=halc_params
-)
-
-lm_early_exit_layers = [
-    0,
-    2,
-    4,
-    6,
-    8,
-    10,
-    12,
-    14,
-    16,
-    18,
-    20,
-    22,
-    24,
-    26,
-    28,
-    30,
-    32,
-]
-
-mature_layer = lm_early_exit_layers[-1]
-premature_layer = None
-candidate_premature_layers = lm_early_exit_layers[:-1]
-premature_layer_dist = {l: 0 for l in candidate_premature_layers}
-
-halc_assistant_helper.update_input(img_path=image_path, input_prompt=qu)
+    qu = "Please describe this image in detail."
+    # qu = "Generate a one sentence caption of the image."
+    # qu = "Generate a short caption of the image."
+    # qu = "What is the man holding in his hand?"
+    # qu = "generate a one sentence caption of the image"
 
 
-image_cd = None
-if decoding_strategy == "vcd":
-    image_tensor_cd = add_diffusion_noise(image, args.noise_step)
-    image_cd = (
-        image_tensor_cd.unsqueeze(0).half().cuda()
-        if image_tensor_cd is not None
-        else None
-    )
-    cd_alpha = cd_alpha
-    cd_beta = cd_beta
-    if model_name == "minigpt4":
-        image_cd = image_cd.squeeze(0)
+    template = INSTRUCTION_TEMPLATE[args.model]
+    qu = template.replace("<question>", qu)
 
 
-with torch.inference_mode():
-    with torch.no_grad():
-        out = model.generate(
-            {"image": norm(image), "prompt":qu, "img_path": image_path},
-            use_nucleus_sampling=args.sample, 
-            num_beams=num_beams,
-            max_new_tokens=64,
-            output_attentions=True,
-            premature_layer=premature_layer,
-            candidate_premature_layers=candidate_premature_layers,
-            mature_layer=mature_layer,
-            beam_search=beam_search,
-            dola_decoding=dola_decoding,
-            opera_decoding=opera_decoding,
-            vcd_decoding=vcd_decoding,
-            halc_decoding=halc_decoding,
-            # HALC
-            halc_assistant=halc_assistant_helper,
-            # OPERA
-            key_position=None,
-            scale_factor=args.scale_factor,
-            threshold=args.threshold,
-            num_attn_candidates=args.num_attn_candidates,
-            penalty_weights=args.penalty_weights,
-            # VCD
-            images_cd=image_cd,
-            cd_alpha=cd_alpha,
-            cd_beta=cd_beta,
-        )
-
-output_text = out[0]
-
-print("original output text", output_text)
-# sentence_list = output_text.replace('.', ',').split(',')
-# sentence_filter_list = []
-# for sentence in sentence_list:
-#     if "unk" not in sentence:
-#         sentence_filter_list.append(sentence)
-# output_text = ",".join(sentence_filter_list)
-
-# print("decoder output text", output_text)
-
-if post_correction == "woodpecker":
-    sample = {
-        "img_path": image_path,
-        "input_desc": output_text,
-        "query": "Generate a short caption of the image.",
+    # halc_params = {"context_domain": "upper", "contrast_weight": 0.05, "context_window": 4, "expand_ratio": 0.1, "beam_size": num_beams, "k_candidate_num": args.k_candidate_num, "LVLM_backbone": model_name, "detector": "groundingdino"}
+    halc_params = {
+        "context_domain": "upper",
+        "contrast_weight": 0.05,
+        "context_window": 3,
+        "expand_ratio": expand_ratio,
+        "beam_size": num_beams,
+        "k_candidate_num": args.k_candidate_num,
+        "LVLM_backbone": model_name,
+        "detector": detector_type,
+        "score_type": "BLIP",
+        "debugger": debugger,
+        "box_threshold": box_threshold,
     }
 
-    corrected_sample = corrector.correct(sample)
-    output_text = corrected_sample["output"]
-    print("corrected output_text", output_text)
+    halc_assistant_helper = halc_assistant(
+        model, vis_processor=vis_processor, device=device, halc_params=halc_params
+    )
+
+    lm_early_exit_layers = [
+        0,
+        2,
+        4,
+        6,
+        8,
+        10,
+        12,
+        14,
+        16,
+        18,
+        20,
+        22,
+        24,
+        26,
+        28,
+        30,
+        32,
+    ]
+
+    mature_layer = lm_early_exit_layers[-1]
+    premature_layer = None
+    candidate_premature_layers = lm_early_exit_layers[:-1]
+    premature_layer_dist = {l: 0 for l in candidate_premature_layers}
+
+    halc_assistant_helper.update_input(img_path=image_path, input_prompt=qu)
 
 
-print("caption: ", output_text)
+    image_cd = None
+    if decoding_strategy == "vcd":
+        image_tensor_cd = add_diffusion_noise(image, args.noise_step)
+        image_cd = (
+            image_tensor_cd.unsqueeze(0).half().cuda()
+            if image_tensor_cd is not None
+            else None
+        )
+        cd_alpha = cd_alpha
+        cd_beta = cd_beta
+        if model_name == "minigpt4":
+            image_cd = image_cd.squeeze(0)
+
+
+    with torch.inference_mode():
+        with torch.no_grad():
+            out = model.generate(
+                {"image": norm(image), "prompt":qu, "img_path": image_path},
+                use_nucleus_sampling=args.sample, 
+                num_beams=num_beams,
+                max_new_tokens=128,
+                output_attentions=True,
+                premature_layer=premature_layer,
+                candidate_premature_layers=candidate_premature_layers,
+                mature_layer=mature_layer,
+                beam_search=beam_search,
+                dola_decoding=dola_decoding,
+                opera_decoding=opera_decoding,
+                vcd_decoding=vcd_decoding,
+                halc_decoding=halc_decoding,
+                # HALC
+                halc_assistant=halc_assistant_helper,
+                # OPERA
+                key_position=None,
+                scale_factor=args.scale_factor,
+                threshold=args.threshold,
+                num_attn_candidates=args.num_attn_candidates,
+                penalty_weights=args.penalty_weights,
+                # VCD
+                images_cd=image_cd,
+                cd_alpha=cd_alpha,
+                cd_beta=cd_beta,
+            )
+
+    output_text = out[0]
+
+    print("original output text", output_text)
+    # sentence_list = output_text.replace('.', ',').split(',')
+    # sentence_filter_list = []
+    # for sentence in sentence_list:
+    #     if "unk" not in sentence:
+    #         sentence_filter_list.append(sentence)
+    # output_text = ",".join(sentence_filter_list)
+
+    # print("decoder output text", output_text)
+
+    if post_correction == "woodpecker":
+        sample = {
+            "img_path": image_path,
+            "input_desc": output_text,
+            "query": "Generate a short caption of the image.",
+        }
+
+        corrected_sample = corrector.correct(sample)
+        output_text = corrected_sample["output"]
+        print("corrected output_text", output_text)
+
+
+    print("caption: ", output_text)
+    img_save["caption"] = output_text
+
+    with open(generated_captions_path, "a") as f:
+        json.dump(img_save, f)
+        f.write("\n")
+

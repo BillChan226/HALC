@@ -1,3 +1,0 @@
-Backbone,Decoder,Detector,Box,Ratio,Beam,K,Seed,SPICE,METEOR,CIDEr,CHAIRs,CHAIRi,BLEU,Log CIDEr,Max Tokens,Num of Samples,Skip Samples
-llava-1.5,halc-beam,dino,0.5,0.6,1,6,1,16.7,21.2,4.6,16.4,8.0,0.163,13.77,64,500,
-llava-1.5,halc-beam,dino,0.5,0.6,1,6,1,16.7,21.2,4.6,16.4,8.0,0.163,13.77,64,500,

@@ -23,9 +23,11 @@ from mplug_owl2.mm_utils import (
 exempt_word_list = ["image", "side", "background", "feature", "features", "center", 
                     "left", "right", "scene", "view", "s", "Birthday", "detail", "red",
                     "white", "cat", "horse", "bus", "group", "manner", "her", "birds", 
-                    "teddy", "stack", "cell", "toaster", "mirror", "toilet", "captures"]
+                    "teddy", "stack", "cell", "toaster", "mirror", "toilet", "captures",
+                    "boat", "bench"]
 
-add_word_list = ["sink", "microwave", "toaster", "puppy", "bottle", "table", "oven", "toothbrush", "cars"]
+add_word_list = ["sink", "microwave", "toaster", "puppy", "bottle", "table", "oven", 
+                "orange", "toothbrush", "cars"]
 
 class halc_assistant:
     def __init__(
@@ -242,6 +244,9 @@ class halc_assistant:
         expand_ratio = self.halc_params["expand_ratio"]
 
         entity = entity.strip(".").strip(",").strip("'").strip("]").strip("[").strip(")")
+        if len(entity) > 0:
+            if entity[-1] == "s":
+                entity = entity[:-1]
         # entity = "clock"
         doc = self.tagging(entity)
         # doc_sm = self.tagging_sm(entity)

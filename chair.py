@@ -357,6 +357,8 @@ class CHAIR(object):
                                    }
  
             #count hallucinated words
+            print("node_words", node_words)
+            # input()
             coco_word_count += len(node_words) 
             hallucinated = False
             
@@ -401,12 +403,13 @@ class CHAIR(object):
         # add
         recall = num_recall_gt_objects / num_gt_objects
         avg_len = (0.01*len_caps/num_caps)
-    
+
         output['overall_metrics'] = {'CHAIRs': chair_s,
                                      'CHAIRi': chair_i,
                                      'Recall': recall,
-                                     'Len': avg_len,}
-    
+                                     'Len': avg_len,
+                                     'Object Num': coco_word_count/100}
+  
         return output 
 
 def load_generated_captions(cap_file, image_id_key:str, caption_key:str):
@@ -414,7 +417,9 @@ def load_generated_captions(cap_file, image_id_key:str, caption_key:str):
     # it should be list of dict
     ext = os.path.splitext(cap_file)[-1]
     if ext == '.json':
-        caps = json.load(open(cap_file))
+        # caps = json.load(open(cap_file))
+        caps = [json.loads(s) for s in open(cap_file)]
+
     elif ext == '.jsonl':
         caps = [json.loads(s) for s in open(cap_file)]
     else:

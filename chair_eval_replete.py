@@ -158,6 +158,7 @@ parser.add_argument(
 parser.add_argument("--cd_beta", type=float, default=0.1, help="Beta param for VCD.")
 parser.add_argument("--noise_step", type=int, default=3, help="Noise step for VCD.")
 parser.add_argument("--generated_caption", type=str, help="Generated caption.")
+parser.add_argument("--box_threshold", type=float, default=0.5, help="Box threshold for DINO.")
 parser.add_argument(
     "--segment",
     type=str,
@@ -208,6 +209,7 @@ cd_alpha = args.cd_alpha
 cd_beta = args.cd_beta
 debugger = args.debugger
 detector_type = args.detector
+box_threshold = args.box_threshold
 
 generated_caption_path = args.generated_caption
 segment = int(args.segment)
@@ -321,7 +323,7 @@ coco_anns = json.loads(lines[0])
 
 coco = COCO(caption_file_path)
 
-replete_image_id = [152340, 99428, 403078, 360101, 149550, 372756, 581717, 222467]
+replete_image_id = [14874, 85292, 437594, 37675, 484551, 538925, 183657, 552744, 337987, 461573, 404984, 502749, 190156, 522430, 244240, 85926]
 
 img_ids = coco.getImgIds()
 # sample image ids
@@ -364,6 +366,7 @@ halc_params = {
     "detector": detector_type,
     "score_type": "BLIP",
     "debugger": debugger,
+    "box_threshold": box_threshold,
 }
 
 halc_assistant_helper = halc_assistant(

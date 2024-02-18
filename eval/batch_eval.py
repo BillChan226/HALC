@@ -24,6 +24,12 @@ parser.add_argument(
     help="chair or pope",
 )
 parser.add_argument(
+    "-o",
+    "--chair_only",
+    action="store_true",
+    help="evaluate chair only",
+)
+parser.add_argument(
     "-p",
     "--pope_type",
     type=str,
@@ -36,59 +42,75 @@ args = parser.parse_known_args()[0]
 directory = args.chair_path
 evaluator = args.evaluator
 pope_type = args.pope_type
+chair_only = args.chair_only
 
 # Function to run the eval_hallucination command and parse the output
-def run_eval_chair(file_path):
+def run_eval_chair(file_path, chair_only=False):
     # Running the eval_hallucination command for the given file
-    result = subprocess.run(
-        ["python", "eval_hallucination.py", "--chair_input_path", file_path],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        text=True,
-    )
-    # print(result.stdout)
-    # input()
-    # Using regex to extract the metrics from the command output
-    # metrics = re.findall(r'SPICE\s*(\d+\.\d+)\s*METEOR\s*(\d+\.\d+)\s*CIDEr\s*(\d+\.\d+)\s*CHAIRs\s*(\d+\.\d+)\s*CHAIRi\s*(\d+\.\d+)',
-    #                      result.stdout)
-    metrics = re.findall(
-        r"\d+\.\d+",
-        result.stdout.split("ground truth captions")[-1].split("CHAIR results")[0],
-    )
+    if chair_only == True:
+        result = subprocess.run(
+            ["python", "chair.py", "--cap_file", file_path, "--coco_path", "/home/czr/contrast_decoding_LVLMs/eval_dataset/val2014/annotations"],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+        )
 
-    metrics = metrics if metrics else None
+        metrics = re.findall(
+            r"\d+\.\d+",
+            result.stdout.split("ground truth captions")[-1].split("CHAIR results")[0],
+        )
 
-    # Regex patterns to find hallucinate_sum and object_sum
-    hallucination_sum_pattern = r"hallucinate_sum:\s+(\d+)"
-    object_sum_pattern = r"object_sum:\s+(\d+)"
-    words_sum_pattern = r"words_sum:\s+(\d+)"
-    bleu_pattern = r"bleu:\s+(\d+\.\d+)"
-    log_cider_pattern = r"log_cider:\s+(\d+\.\d+)"
+        metrics = metrics if metrics else None
 
-    rest_of_stdout = result.stdout.split("meteor")[-1]
-    # print("rest_of_stdout", rest_of_stdout)
-    # Extracting values using regex
-    hallucination_sum_match = re.search(hallucination_sum_pattern, rest_of_stdout)
-    object_sum_match = re.search(object_sum_pattern, rest_of_stdout)
-    words_sum_match = re.search(words_sum_pattern, rest_of_stdout)
-    bleu_match = re.search(bleu_pattern, rest_of_stdout)
-    log_cider_match = re.search(log_cider_pattern, rest_of_stdout)
+        print("metrics", metrics)
+        input()
+    
+    else:
+        result = subprocess.run(
+            ["python", "eval_hallucination.py", "--chair_input_path", file_path],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+        )
 
-    # # Extracted values
-    # hallucination_sum = int(hallucination_sum_match.group(1)) if hallucination_sum_match else None
-    # metrics.append(str(hallucination_sum))
-    # object_sum = int(object_sum_match.group(1)) if object_sum_match else None
-    # metrics.append(str(object_sum))
-    # words_sum = int(words_sum_match.group(1)) if words_sum_match else None
-    # metrics.append(str(words_sum))
-    bleu = float(bleu_match.group(1)) if bleu_match else None
-    metrics.append(str(bleu)[:5])
-    log_cider = float(log_cider_match.group(1)) if log_cider_match else None
-    metrics.append(str(log_cider)[:5])
+        metrics = re.findall(
+            r"\d+\.\d+",
+            result.stdout.split("ground truth captions")[-1].split("CHAIR results")[0],
+        )
 
-    # print("metrics", metrics)
+        metrics = metrics if metrics else None
 
-    # Returning the extracted metrics
+        # Regex patterns to find hallucinate_sum and object_sum
+        hallucination_sum_pattern = r"hallucinate_sum:\s+(\d+)"
+        object_sum_pattern = r"object_sum:\s+(\d+)"
+        words_sum_pattern = r"words_sum:\s+(\d+)"
+        bleu_pattern = r"bleu:\s+(\d+\.\d+)"
+        log_cider_pattern = r"log_cider:\s+(\d+\.\d+)"
+
+        rest_of_stdout = result.stdout.split("meteor")[-1]
+        # print("rest_of_stdout", rest_of_stdout)
+        # Extracting values using regex
+        hallucination_sum_match = re.search(hallucination_sum_pattern, rest_of_stdout)
+        object_sum_match = re.search(object_sum_pattern, rest_of_stdout)
+        words_sum_match = re.search(words_sum_pattern, rest_of_stdout)
+        bleu_match = re.search(bleu_pattern, rest_of_stdout)
+        log_cider_match = re.search(log_cider_pattern, rest_of_stdout)
+
+        # # Extracted values
+        # hallucination_sum = int(hallucination_sum_match.group(1)) if hallucination_sum_match else None
+        # metrics.append(str(hallucination_sum))
+        # object_sum = int(object_sum_match.group(1)) if object_sum_match else None
+        # metrics.append(str(object_sum))
+        # words_sum = int(words_sum_match.group(1)) if words_sum_match else None
+        # metrics.append(str(words_sum))
+        bleu = float(bleu_match.group(1)) if bleu_match else None
+        metrics.append(str(bleu)[:5])
+        log_cider = float(log_cider_match.group(1)) if log_cider_match else None
+        metrics.append(str(log_cider)[:5])
+
+        # print("metrics", metrics)
+
+        # Returning the extracted metrics
     return metrics
 
 def run_eval_pope(file_path, pope_type):
@@ -158,7 +180,7 @@ if evaluator == "chair":
         "Log CIDEr",
         "Max Tokens",
         "Num of Samples",
-        "Skip Samples"
+        # "Skip Samples"
     ]
 elif evaluator == "pope":
     # Initialize the markdown table with headers
@@ -197,10 +219,10 @@ with open(csv_file_path, "w", newline="") as csvfile:
         file_names, key=lambda name: extract_info_from_filename(name)[1:]
     )
 
-
+    
     # Loop through each file in the directory and process it
     for file_name in sorted_file_names:
-        if evaluator == "chair":
+        if evaluator == "chair" and chair_only == False:
             if file_name.endswith("_chair.json"):
                 file_path = os.path.join(directory, file_name)
                 print(file_path)
@@ -217,14 +239,44 @@ with open(csv_file_path, "w", newline="") as csvfile:
                     seed_number,
                     max_tokens,
                     num_samples,
+                    # skip_samples
                 ) = extract_info_from_filename(file_name)
-            
+        
                 metrics = run_eval_chair(file_path)
 
                 print(
                 f"| {backbone} | {decoder} | {detector} | {box} | {expand_ratio} | {beam_size} | {k_number} | {seed_number} | {' | '.join(metrics)} | {max_tokens} | {num_samples} |\n"
                 )
+            else:
+                continue
+        elif evaluator == "chair" and chair_only == True:
+            if file_name.endswith("_generated_captions.json"):
+                file_path = os.path.join(directory, file_name)
+                print(file_path)
+                # Extract information from filename
+                # decoder,  beam_size, k_number, expand_ratio, seed_number = extract_info_from_filename(file_name)
+                (
+                    backbone,
+                    decoder,
+                    detector,
+                    box,
+                    beam_size,
+                    k_number,
+                    expand_ratio,
+                    seed_number,
+                    max_tokens,
+                    num_samples,
+                    skip_samples
+                ) = extract_info_from_filename(file_name)
         
+                metrics = run_eval_chair(file_path, True)
+
+                print(
+                f"| {backbone} | {decoder} | {detector} | {box} | {expand_ratio} | {beam_size} | {k_number} | {seed_number} | {' | '.join(metrics)} | {max_tokens} | {num_samples} |\n"
+                )
+            else:
+                continue
+
         elif evaluator == "pope":
             
             if file_name.endswith("_generated_captions.json"):
@@ -245,12 +297,15 @@ with open(csv_file_path, "w", newline="") as csvfile:
                     num_samples,
                     skip_samples,
                 ) = extract_info_from_filename(file_name)
-            
+
                 metrics = run_eval_pope(file_path, pope_type)
 
                 print(
                     f"| {backbone} | {decoder} | {detector} | {box} | {expand_ratio} | {beam_size} | {k_number} | {seed_number} | {' | '.join(metrics)} | {max_tokens} | {num_samples} | {skip_samples} |\n"
                 )
+
+            else:
+                continue
 
         if metrics:
             

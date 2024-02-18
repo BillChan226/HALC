@@ -7,8 +7,8 @@ from huggingface_hub import hf_hub_download, snapshot_download
 # snapshot_download(repo_id="lmsys/vicuna-7b-v1.1", local_dir="/root/autodl-tmp/model_checkpoints")
 
 
-repo_id = "Vision-CAIR/vicuna"
-local_dir = "/home/czr/.cache/huggingface/hub/models--Vision-CAIR/vicuna"
+repo_id = "meta-llama/Llama-2-7b-hf"
+local_dir = "/home/czr/.cache/huggingface/hub/meta-llama/Llama-2-7b-hf"
 cache_dir = local_dir + "/cache"
 # while True:
 if True:

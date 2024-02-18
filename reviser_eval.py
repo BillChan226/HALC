@@ -66,6 +66,8 @@ if __name__ == '__main__':
     parser.add_argument("-m", "--max_new_tokens", type=int, default=64, help="max new tokens to generate for LURE")
     parser.add_argument('-r', '--reviser', type=str, help="which post-hoc corrector to use.")
 
+    parser.add_argument("--continued_generation", type=str, default=None, help="path to continued caption generation.")
+
     args = parser.parse_args()
     reviser = args.reviser
     caption_path = args.caption_path
@@ -109,6 +111,17 @@ if __name__ == '__main__':
     input_captions_path = args.caption_path
     base_dir = output_dir + reviser
 
+    continued_generation = args.continued_generation
+    generated_caption = []
+    generated_img_ids = []
+    if continued_generation != None:
+        
+        with open(continued_generation, "r") as f:
+            lines = f.readlines()
+            for idx, line in enumerate(lines):
+                generated_caption.append(json.loads(line))
+                generated_img_ids.append(json.loads(line)["image_id"])
+
     if not os.path.exists(base_dir):
         os.makedirs(base_dir)
 
@@ -122,12 +135,21 @@ if __name__ == '__main__':
 
     prefix = "COCO_val2014_"
     for idx, pair in tqdm(enumerate(caption_data), total=len(caption_data)):
-        # if idx < 487:
+        # if idx < 300:
         #     continue
         img_id = pair['image_id']
         caption = pair['caption']
         img_save = {}
         img_save["image_id"] = img_id
+
+        if img_id in generated_img_ids:
+            print("found existing img_id", img_id)
+            img_save["caption"] = generated_caption[generated_img_ids.index(img_id)]["caption"]
+            print("img_save", img_save)
+            with open(corrected_caption_path, "a") as file:
+                json.dump(img_save, file)
+                file.write('\n')
+            continue
 
         img_id = str(img_id).zfill(12)
         image_path = data_path + prefix + img_id + '.jpg'

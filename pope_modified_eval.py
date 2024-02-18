@@ -594,7 +594,8 @@ def main():
     loaded_dict = {}
     with open(generated_caption_path, "r") as f:
         lines = f.readlines()
-        for line in lines:
+        for idx, line in enumerate(lines):
+            # print("idx", idx)
             pair = json.loads(line)
             loaded_json.append(pair)
             loaded_dict[pair["image_id"]] = pair["caption"]

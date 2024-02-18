@@ -3,7 +3,7 @@ import json
 import argparse
 import sys
 import copy
-
+import re
 sys.path.append(".")
 import numpy as np
 from tqdm import tqdm
@@ -75,6 +75,8 @@ for file_name in caption_files:
     # Construct the full file path
     file_path = os.path.join(directory_path, file_name)
 
+    if "generated" not in file_path:
+        continue
     # Process the file (you would insert your processing code here)
     # For example, load the JSON, perform operations, and then save the output
 
@@ -82,12 +84,25 @@ for file_name in caption_files:
 
     loaded_json = []
     with open(file_path, "r") as f:
-        try:
-            lines = f.readlines()
-            for line in lines:
-                loaded_json.append(json.loads(line))
-        except:
-            continue
+        # try:
+        lines = f.readlines()
+        for idx, line in enumerate(lines):
+            # print("idx", idx)
+            caption_line = json.loads(line)
+            if "woodpecker" in file_path:
+                # print("caption_line", caption_line)
+                pattern_1 = r"\(\[.*?\]\)"
+                pattern_2 = r"\(\[.*?\]\;"
+                pattern_3 = r"\[.*?\]\;"
+                caption_line["caption"] = re.sub(pattern_1, '', caption_line["caption"])
+                caption_line["caption"] = re.sub(pattern_2, '', caption_line["caption"])
+                caption_line["caption"] = re.sub(pattern_3, '', caption_line["caption"])
+                # print("caption_line", caption_line)
+                # input()
+            loaded_json.append(caption_line)
+        # except:
+        #     continue
+
 
     # eliminate the items in loaded_json with the same key:
     for i in range(len(loaded_json)):
@@ -95,6 +110,10 @@ for file_name in caption_files:
             if loaded_json[i]["image_id"] == loaded_json[j]["image_id"]:
                 loaded_json.pop(j)
                 break
+        if "[" in loaded_json[i]["caption"]:
+            print("i", loaded_json[i])
+            input()
+
 
     # # save loaded json
 
@@ -104,7 +123,7 @@ for file_name in caption_files:
     #     json.dump(img_save, f)
     #     f.write('\n')
 
-    print("loaded_json: ", len(loaded_json))
+    # print("loaded_json: ", len(loaded_json))
     # construct output file as input to CHAIR evaluation
     # output format follows https://github.com/ruotianluo/self-critical.pytorch
     formulated_output_dict = {}
@@ -127,8 +146,10 @@ for file_name in caption_files:
 
         coco_eval = COCOEvalCap(coco, coco_res)
         coco_eval.params["image_id"] = coco_res.getImgIds()
+
         coco_eval.evaluate()
 
+        # coco_eval.eval = {}
         # keep track of the overall scores
         for metric, score in coco_eval.eval.items():
             all_overall_scores[metric].append(score)

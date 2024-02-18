@@ -4909,7 +4909,7 @@ class GenerationMixin:
                         print("CONTRAST WORD: ", last_word)
                     
                     # print("eos_token_id", eos_token_id)
-                    if last_word == beam_current_word[bs] and beam_not_detected[bs] == True and min_length <= len(beam_intermediate_token_lists[bs][0]) and last_word not in self.halc_assistant.exempt_word_list:
+                    if (last_word == beam_current_word[bs] or last_word in beam_current_word[bs] or beam_current_word[bs] in last_word) and beam_not_detected[bs] == True and min_length <= len(beam_intermediate_token_lists[bs][0]) and last_word not in self.halc_assistant.exempt_word_list:
                         t = 1
                         if self.halc_assistant.check_word_complete([beam_token_to_append[bs][0].cpu().tolist()]) == False:
                             # entity = beam_intermediate_token_lists[bs][:, -1] and beam_last_tokens[bs]

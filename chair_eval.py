@@ -171,7 +171,7 @@ parser.add_argument(
     default=False,
     help="Whether to use debugger output.",
 )
-parser.add_argument("--box_threshold", type=float, default=0.5, help="Box threshold for DINO.")
+parser.add_argument("--box_threshold", type=float, default=0.55, help="Box threshold for DINO.")
 parser.add_argument(
     "--gt_seg_path",
     type=str,
@@ -429,8 +429,8 @@ for idx, img_id in tqdm(enumerate(range(len(img_files))), total=len(img_files)):
     # if img_id != 64390 and offlight:
     #     continue
     # offlight = False
-    # if idx <= 202:
-    #     continue
+    if idx < 14:
+        continue
 
     img_info = img_dict[img_id]
     assert img_info["name"] == img_file
@@ -478,7 +478,7 @@ for idx, img_id in tqdm(enumerate(range(len(img_files))), total=len(img_files)):
         26,
         28,
         30,
-        31,
+        32,
     ]
     # lm_early_exit_layers = [
     #     0,

@@ -267,9 +267,9 @@ if verbosity:
 # image_path = "/home/czr/contrast_decoding_LVLMs/eval_dataset/val2014/COCO_val2014_000000085926.jpg" 
 # image_path = "/home/czr/contrast_decoding_LVLMs/eval_dataset/val2014/COCO_val2014_000000165257.jpg" # 162543
 # image_path = "/home/czr/HaLC/LLaVA-Bench/001.jpg"
-img_path_dir = "/home/czr/HaLC/LLaVA-Bench/"
+img_path_dir = "LLaVA-Bench/"
 img_path_list = os.listdir(img_path_dir)
-generated_captions_path = f"/home/czr/HaLC/final_result/llava-bench/{decoding_strategy}_llava-1.5.json"
+generated_captions_path = f"llava-bench/{decoding_strategy}_llava-1.5.json"
 
 print("img_path_list", img_path_list)
 for image_path in img_path_list:

@@ -37,7 +37,7 @@ from pycocotools.coco import COCO
 from pycocoevalcap.eval import COCOEvalCap
 from collections import defaultdict
 
-from pope_metrics.utils import generate_ground_truth_objects, pope
+from eval.pope_metrics.utils import generate_ground_truth_objects, pope
 
 MODEL_EVAL_CONFIG_PATH = {
     "minigpt4": "eval_configs/minigpt4_eval.yaml",

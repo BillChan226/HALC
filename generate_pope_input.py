@@ -6,7 +6,7 @@ import numpy as np
 import random
 from tqdm import tqdm
 import json
-from pope_metrics.utils import generate_ground_truth_objects, pope
+from eval.pope_metrics.utils import generate_ground_truth_objects, pope
 
 
 def initialize_mini_gpt_4(parser):

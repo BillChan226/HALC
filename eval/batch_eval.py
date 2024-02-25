@@ -57,7 +57,7 @@ def run_eval_chair(file_path, chair_only=False):
     # Running the eval_hallucination command for the given file
     if chair_only == True:
         result = subprocess.run(
-            ["python", "chair.py", "--cap_file", file_path, "--coco_path", coco_path],
+            ["python", "eval/chair.py", "--cap_file", file_path, "--coco_path", coco_path],
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             text=True,
@@ -75,7 +75,7 @@ def run_eval_chair(file_path, chair_only=False):
     
     else:
         result = subprocess.run(
-            ["python", "eval_hallucination.py", "--chair_input_path", file_path],
+            ["python", "eval/eval_hallucination.py", "--chair_input_path", file_path],
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             text=True,

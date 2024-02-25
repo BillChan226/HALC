@@ -102,7 +102,7 @@ parser.add_argument(
 parser.add_argument(
     "--data_path",
     type=str,
-    default="/home/czr/contrast_decoding_LVLMs/eval_dataset/val2014/",
+    default="eval_dataset/val2014/",
     help="data path",
 )
 parser.add_argument("--batch_size", type=int, default=1, help="batch size")

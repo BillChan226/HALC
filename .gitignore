@@ -17,6 +17,7 @@ chair_eval_replete.py/
 final_result/
 hallucination_results/
 hallucinatory_image/
+pope_coco/
 
 file_calculation.py
 get_model.py

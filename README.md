@@ -129,27 +129,32 @@ Besides, it needs you to prepare the following checkpoints of 7B base models:
 
 ## :hourglass: Benchmarking OH
 
-### :chair: CHAIR Evaluation of LVLMs Object Hallucination
-
-#### Running LVLM to generate captions and result file format-ready for CHAIR
+#### :chair: Running CHAIR evaluation for LVLMs object hallucination
 
 Following [Evaluating Object Hallucination in Large Vision-Language Models](https://arxiv.org/pdf/2305.10355.pdf), we used "Please describe this image in detail." as the prompt to query LVLM for captions of the `2,000` images randomly sampled from [COCO 2014 Val](https://cocodataset.org/#download) datast. Under root directory, run
 
 ```
-python chair_eval.py --model [LVLM Backbone] --data-path [COCO_DIR] -d [Decoding Strategy] --num_samples 500 --seed [SEED] --gpu-id [GPU_IDs] --output_dir ./generated_captions/
+python chair_eval.py --model [LVLM Backbone] --data_path [COCO_DIR] -d [Decoding Strategy] --num_samples 500 --seed [SEED] --gpu-id [GPU_IDs] --output_dir ./generated_captions/
 ```
 
-### :man_in_tuxedo: POPE Evaluation of LVLMs Object Hallucination
-
-#### Running LVLM to generate captions and result file format-ready for POPE
+#### :man_in_tuxedo: Running (O)POPE evaluation for LVLMs object hallucination
 
 Under root directory, run
 
 ```
-python pope_eval.py --model [LVLM Backbone] --data_path [COCO_DIR] -d [Decoding Strategy] --pope_type [random/popular/adversarial] --num_images 100 --seed [SEED] --gpu_id [GPU_IDs] --output_dir ./generated_captions/
+python opope_eval.py --model [LVLM Backbone] --data_path [COCO_DIR] -d [Decoding Strategy] --pope_type [random/popular/adversarial] --num_images 100 --seed [SEED] --gpu_id [GPU_IDs] --output_dir ./generated_captions/
 ```
 
-### :hospital: Running post-hoc methods to revise captions for CHAIR
+#### :woman_juggling: Running MME Benchmark to evaluate LVLMs object hallucination
+
+Under root directory, run
+
+```
+python mme_eval.py --model [LVLM Backbone] --data_path [MME_DIR] -d [Decoding Strategy] --num_samples 30 --seed [SEED] --gpu-id [GPU_IDs] --output_dir ./generated_captions/
+```
+
+
+#### :hospital: Running post-hoc methods to revise generated captions
 
 Under root directory, run
 
@@ -159,12 +164,12 @@ python reviser_eval.py -r [woodpecker/lure] --data_path [COCO_DIR] --c [PATH_TO_
 
 ### Evaluation
 
-#### CHAIR Evaluation
+#### CHAIR Scores
 
 After preparing your caption files using the above commands, you can either choose to evaluate the captions in an **one-shot mode** (single caption) or **batch mode** (all the caption files in a folder). To evaluate a single caption file,
 
 ```
-python eval_hallucination.py --metric chair --chair_input_path [PATH_TO_CAPTION_DIR] -v
+python eval/eval_hallucination.py --metric chair --chair_input_path [PATH_TO_CAPTION_DIR] -v
 ```
 
 To evaluate a batch of caption files, run
@@ -194,7 +199,7 @@ COCO_DIR (val2014 for example)
   ...
 ```
 
-#### POPE Evaluation
+#### POPE Scores
 
 Similarly, you can also evaluate POPE in both modes. To evaluate a single caption file,
 ```shell
@@ -207,6 +212,15 @@ python eval/batch_eval.py -c [PATH_TO_CAPTION_FOLDER_DIR] --evaluator pope --pop
 ```
 
 The evaluation results will be saved in the same directory.
+
+
+#### MME Scores
+
+
+To evaluate the MME scores on each chosen subset, modify the `subset_dir` variable to include the list of directories of your target directories and run
+```shell
+python eval/MME_eval.py
+```
 
 
 <details>

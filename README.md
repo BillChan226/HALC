@@ -127,19 +127,58 @@ Besides, it needs you to prepare the following checkpoints of 7B base models:
 | `--cd-beta`   | `0.1` | Truncation factor for adaptive plausibility constraint. Default: 0.1. |
 | `--noise-step`| `500` | Number of steps to add diffusion noise. Default: 500.  |
 
-## :hourglass: Benchmarks Evaluation
+## :hourglass: Benchmarking OH
 
 ### :chair: CHAIR Evaluation of LVLMs Object Hallucination
 
 #### Running LVLM to generate captions and result file format-ready for CHAIR
 
-Following [Evaluating Object Hallucination in Large Vision-Language Models](https://arxiv.org/pdf/2305.10355.pdf), we used "Generate a short caption of the image" as the prompt to query LVLM for captions of the `2,000` images randomly sampled from [COCO 2014 Val](https://cocodataset.org/#download) datast. Under root directory, run
+Following [Evaluating Object Hallucination in Large Vision-Language Models](https://arxiv.org/pdf/2305.10355.pdf), we used "Please describe this image in detail." as the prompt to query LVLM for captions of the `2,000` images randomly sampled from [COCO 2014 Val](https://cocodataset.org/#download) datast. Under root directory, run
 
 ```
 python chair_eval.py --model [LVLM Backbone] --data-path [COCO_DIR] -d [Decoding Strategy] --num_samples 500 --seed [SEED] --gpu-id [GPU_IDs] --output_dir ./generated_captions/
 ```
 
-For a full list of command line input, run `python generate_chair_input.py -h`. Note that `[COCO_DIR]` is expected to contain both images and annotation files within the `annotations` subfolder. In other words, `[COCO_DIR]` should the the following structure:
+### :man_in_tuxedo: POPE Evaluation of LVLMs Object Hallucination
+
+#### Running LVLM to generate captions and result file format-ready for POPE
+
+Under root directory, run
+
+```
+python pope_eval.py --model [LVLM Backbone] --data_path [COCO_DIR] -d [Decoding Strategy] --pope_type [random/popular/adversarial] --num_images 100 --seed [SEED] --gpu_id [GPU_IDs] --output_dir ./generated_captions/
+```
+
+### :hospital: Running post-hoc methods to revise captions for CHAIR
+
+Under root directory, run
+
+```
+python reviser_eval.py -r [woodpecker/lure] --data_path [COCO_DIR] --c [PATH_TO_CAPTION] --seed [SEED] --gpu-id [GPU_IDs] --output_dir ./log/
+```
+
+### Evaluation
+
+#### CHAIR Evaluation
+
+After preparing your caption files using the above commands, you can either choose to evaluate the captions in an **one-shot mode** (single caption) or **batch mode** (all the caption files in a folder). To evaluate a single caption file,
+
+```
+python eval_hallucination.py --metric chair --chair_input_path [PATH_TO_CAPTION_DIR] -v
+```
+
+To evaluate a batch of caption files, run
+
+```
+python eval/caption_to_chair.py -c [PATH_TO_CAPTION_FOLDER_DIR]
+```
+
+to convert the caption files to the format ready for CHAIR evaluation in the same directory first. Then a `_chair.json` file will be produced under this folder. To further evaluate the CHAIR score as well as the generation quality scores, run
+```shell
+python eval/batch_eval.py -c [PATH_TO_CAPTION_FOLDER_DIR] --evaluator chair --coco_path [COCO_DIR]
+```
+
+Note that `[COCO_DIR]` is expected to contain both images and annotation files within the `annotations` subfolder. In other words, `[COCO_DIR]` should the the following structure:
 
 ```
 COCO_DIR (val2014 for example)
@@ -155,85 +194,67 @@ COCO_DIR (val2014 for example)
   ...
 ```
 
-Upon completion, two files, `minigpt4_pretrain-llama2_coco_2000_generated_captions.json` and `minigpt4_pretrain-llama2_coco_2000_chair.json` should be generated under `generated_captions/minigpt4_pretrain-llama2/coco/` if `llama2` is the `model_type` used for `minigpt4`.
-
-### :man_in_tuxedo: POPE Evaluation of LVLMs Object Hallucination
-
-#### Running LVLM to generate captions and result file format-ready for POPE
-
-Under root directory, run
-
-```
-python pope_eval.py --model [LVLM Backbone] --data_path [COCO_DIR] -d [Decoding Strategy] --pope_type [random/popular/adversarial] --num_images 100 --seed [SEED] --gpu_id [GPU_IDs] --output_dir ./generated_captions/
-```
-
-### :hospital: Running Post-hoc methods to revise captions for CHAIR
-
-Under root directory, run
-
-```
-python reviser_eval.py -r [woodpecker/lure] --data_path [COCO_DIR] --c [PATH_TO_CAPTION] --seed [SEED] --gpu-id [GPU_IDs] --output_dir ./log/
-```
-
-### Evaluation
-
-#### CHAIR Evaluation
-
-We use the generated `_chair.json` file, for example, `minigpt4_pretrain-llama2_coco_2000_chair.json` for the CHAIR evaluation. Under root directory, run
-
-```
-python eval_hallucination.py --metric chair --chair_input_path [PATH_TO_.JSON_FILE] -v
-```
-
 #### POPE Evaluation
 
-```
-python eval_hallucination.py --metric pope --pope_answer_path [PATH_TO_MODEL_OUTPUT] --pope_question_path [PATH_TO_.POPE_QUESTION] -v
-```
-
-The evaluation results will be printed in terminal.
-
-## :roller_coaster: Demo Playgrounds
-
-### :eagle: HALC Demo
-
-Run CDL demo on a [toy example](hallucinatory_image/beach_on_a_clock.png):
-
-```
-python context_density/context_decoding.py --cfg-path eval_configs/minigpt4_llama2_eval.yaml  --gpu-id 0
+Similarly, you can also evaluate POPE in both modes. To evaluate a single caption file,
+```shell
+python eval_hallucination.py --metric pope --pope_answer_path [PATH_TO_CAPTION_DIR] --pope_question_path [PATH_TO_POPE_QUESTION] -v
 ```
 
-### ViT Early Exit Layers Demo
-
-Specify early_exit_layer_idx then run ViT early exit layers contrastive decoding:
-
-```
-python vit_early_exit_contrast.py --cfg-path eval_configs/minigpt4_llama2_eval.yaml  --gpu-id 0
+To evaluate a batch of caption files, run
+```shell
+python eval/batch_eval.py -c [PATH_TO_CAPTION_FOLDER_DIR] --evaluator pope --pope_type [random/popular/adversarial]
 ```
 
-### DoLA Demo
+The evaluation results will be saved in the same directory.
 
-#### Test DoLa with their textual input
 
-run
+<details>
+  <summary>Click to view how to run some interesting demo!</summary>
 
-```
-python toy_dola_eval.py --model-name ./models/models--meta-llama--Llama-2-7b-chat-hf/snapshots/94b07a6e30c3292b8265ed32ffdeccfdadf434a8 --output-path output-path.json --num-gpus 1 --early-exit-layers 0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32
-```
+  ## :roller_coaster: Demo Playgrounds
 
-Note: adding 32 in the early-exit-layers is crucial for reasonable output.
+  ### :eagle: HALC Demo
 
-JSD for each candidate layer is printed and input at line 2720 of file ```DoLa/transformers-4.28.1/src/transformers/generation/utils.py```
+  Run CDL demo on a [toy example](hallucinatory_image/beach_on_a_clock.png):
 
-#### Test DoLA with visual-textual input
+  ```
+  python context_density/context_decoding.py --cfg-path eval_configs/minigpt4_llama2_eval.yaml  --gpu-id 0
+  ```
 
-run a toy example:
+  ### ViT Early Exit Layers Demo
 
-```
-python contrast_decoding.py --cfg-path eval_configs/minigpt4_llama2_eval.yaml  --gpu-id 0
-```
+  Specify early_exit_layer_idx then run ViT early exit layers contrastive decoding:
 
-The [toy example](hallucinatory_image/beach_on_a_clock.png) is projected into the prefix of the language model as a context.
+  ```
+  python vit_early_exit_contrast.py --cfg-path eval_configs/minigpt4_llama2_eval.yaml  --gpu-id 0
+  ```
+
+  ### DoLa Demo
+
+  #### Test DoLa with their textual input
+
+  run
+
+  ```
+  python toy_dola_eval.py --model-name ./models/models--meta-llama--Llama-2-7b-chat-hf/snapshots/94b07a6e30c3292b8265ed32ffdeccfdadf434a8 --output-path output-path.json --num-gpus 1 --early-exit-layers 0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32
+  ```
+
+  Note: adding 32 in the early-exit-layers is crucial for reasonable output.
+
+  JSD for each candidate layer is printed and input at line 2720 of file ```DoLa/transformers-4.28.1/src/transformers/generation/utils.py```
+
+  #### Test DoLA with visual-textual input
+
+  run a toy example:
+
+  ```
+  python contrast_decoding.py --cfg-path eval_configs/minigpt4_llama2_eval.yaml  --gpu-id 0
+  ```
+
+  The [toy example](hallucinatory_image/beach_on_a_clock.png) is projected into the prefix of the language model as a context.
+
+</details>
 
 ## :wrench: Troubleshooting
 
@@ -261,6 +282,20 @@ simply reinstall torch==2.0.0 will most likely solve the issue
 pip uninstall torch
 pip install torch==2.0.0
 ```
+
+## :book: Acknowledgement
+Please cite the paper as follows if you use the data or code from HALC:
+```
+@article{wang2023decodingtrust,
+  title={DecodingTrust: A Comprehensive Assessment of Trustworthiness in GPT Models},
+  author={Wang, Boxin and Chen, Weixin and Pei, Hengzhi and Xie, Chulin and Kang, Mintong and Zhang, Chenhui and Xu, Chejian and Xiong, Zidi and Dutta, Ritik and Schaeffer, Rylan and others},
+  booktitle={Thirty-seventh Conference on Neural Information Processing Systems Datasets and Benchmarks Track},
+  year={2023}
+}
+```
+
+## :book: Contact
+Please reach out to us if you have any suggestions or need any help in reproducing the results. You can submit an issue or pull request, or send an email to zhaorun@uchicago.edu.
 
 ## :key: License
 

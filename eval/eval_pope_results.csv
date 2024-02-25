@@ -1,8 +1,0 @@
-Backbone,Decoder,Detector,Box,Ratio,Beam,K,Seed,Accuracy,Precision,Recall,F1 score,Yes ratio,Max Tokens,Num of Samples,Skip Samples
-minigpt4,dolalure,dino,0.1,0.6,1,6,0,68.133,91.717,39.866,55.576,21.733,64,500,0
-minigpt4,greedylure,dino,0.1,0.6,3,6,0,67.800,89.380,40.400,55.647,22.6,64,500,0
-llava-1.5,lure,dino,0.1,0.6,1,6,0,69.633,89.319,44.6,59.493,24.966,64,500,0
-mplug-owl2,lure,dino,0.1,0.6,1,6,0,69.166,89.986,43.133,58.314,23.966,64,500,0
-minigpt4,lure,dino,0.1,0.6,1,6,0,68.133,91.590,39.933,55.617,21.8,64,500,0
-minigpt4,opera-beamlure,dino,0.1,0.6,3,6,0,67.966,90.044,40.400,55.775,22.433,64,500,0
-minigpt4,vcdlure,dino,0.1,0.6,1,6,0,67.566,90.476,39.266,54.765,21.7,64,500,0

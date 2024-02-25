@@ -27,7 +27,7 @@ parser.add_argument(
     "-o",
     "--chair_only",
     action="store_true",
-    help="evaluate chair only",
+    help="evaluate chair only (not the generation quality scores)",
 )
 parser.add_argument(
     "-p",
@@ -36,6 +36,13 @@ parser.add_argument(
     required=False,
     help="pope type",
 )
+parser.add_argument(
+    "--coco_path",
+    type=str,
+    default="eval_dataset/val2014/annotations",
+    required=False,
+    help="path to coco dataset",
+)
 
 args = parser.parse_known_args()[0]
 
@@ -43,13 +50,14 @@ directory = args.chair_path
 evaluator = args.evaluator
 pope_type = args.pope_type
 chair_only = args.chair_only
+coco_path = args.coco_path
 
 # Function to run the eval_hallucination command and parse the output
 def run_eval_chair(file_path, chair_only=False):
     # Running the eval_hallucination command for the given file
     if chair_only == True:
         result = subprocess.run(
-            ["python", "chair.py", "--cap_file", file_path, "--coco_path", "/home/czr/contrast_decoding_LVLMs/eval_dataset/val2014/annotations"],
+            ["python", "chair.py", "--cap_file", file_path, "--coco_path", coco_path],
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             text=True,

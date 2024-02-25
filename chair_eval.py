@@ -425,12 +425,6 @@ offlight = True
 for idx, img_id in tqdm(enumerate(range(len(img_files))), total=len(img_files)):
     img_file = img_files[img_id]
     img_id = int(img_file.split(".jpg")[0][-6:])
-    # print("img_id", img_id)
-    # if img_id != 64390 and offlight:
-    #     continue
-    # offlight = False
-    if idx < 14:
-        continue
 
     img_info = img_dict[img_id]
     assert img_info["name"] == img_file
@@ -450,7 +444,6 @@ for idx, img_id in tqdm(enumerate(range(len(img_files))), total=len(img_files)):
         image = vis_processors["eval"](raw_image).unsqueeze(0)
         image = image.to(device)
 
-    # print("image device", norm(image).device)
 
     qu = "Please describe this image in detail."
     # qu = "Please provide a very detailed description of the image."
@@ -480,17 +473,6 @@ for idx, img_id in tqdm(enumerate(range(len(img_files))), total=len(img_files)):
         30,
         32,
     ]
-    # lm_early_exit_layers = [
-    #     0,
-    #     2,
-    #     4,
-    #     6,
-    #     8,
-    #     10,
-    #     12,
-    #     14,
-    #     32,
-    # ]
 
     mature_layer = lm_early_exit_layers[-1]
     premature_layer = None
@@ -570,18 +552,9 @@ for idx, img_id in tqdm(enumerate(range(len(img_files))), total=len(img_files)):
 
     img_save["caption"] = output_text
 
-    # print("img_id: ", img_id)
     print("image_path: ", image_path)
     print("caption: ", output_text)
-    # input()
 
-    # dump metric file
-    # if skip_num == 0:
-    #     generated_captions_path = os.path.join(
-    #         base_dir,
-    #         f"{model_name}_{decoding_strategy}_{detector_type}_box_{box_threshold}_beams_{num_beams}_k_{k_candidate_num}_{dataset_name}_expand_ratio_{expand_ratio}_seed_{seed}_max_tokens_{max_new_tokens}_samples_{num_samples}_generated_captions.json",
-    #     )
-    # else:
     generated_captions_path = os.path.join(
         base_dir,
         f"{model_name}_{decoding_strategy}_{detector_type}_box_{box_threshold}_beams_{num_beams}_k_{k_candidate_num}_{dataset_name}_expand_ratio_{expand_ratio}_seed_{seed}_max_tokens_{max_new_tokens}_samples_{num_samples}_skip_{skip_num}_generated_captions.json",

@@ -1,5 +1,8 @@
 # the script generates captions for the images in the test set and save the captions
 import os
+import sys
+sys.path.append("mPLUG-Owl/mPLUG-Owl2")
+sys.path.append("./")
 import torch
 import argparse
 import numpy as np

@@ -134,7 +134,7 @@ Besides, it needs you to prepare the following checkpoints of 7B base models:
 Following [Evaluating Object Hallucination in Large Vision-Language Models](https://arxiv.org/pdf/2305.10355.pdf), we used "Please describe this image in detail." as the prompt to query LVLM for captions of the `2,000` images randomly sampled from [COCO 2014 Val](https://cocodataset.org/#download) datast. Under root directory, run
 
 ```
-python chair_eval.py --model [LVLM Backbone] --data_path [COCO_DIR] -d [Decoding Strategy] --num_samples 500 --seed [SEED] --gpu-id [GPU_IDs] --output_dir ./generated_captions/
+python run_scripts/chair_eval.py --model [LVLM Backbone] --data_path [COCO_DIR] -d [Decoding Strategy] --num_samples 500 --seed [SEED] --gpu-id [GPU_IDs] --output_dir ./generated_captions/
 ```
 
 #### :man_in_tuxedo: Running (O)POPE evaluation for LVLMs object hallucination
@@ -142,7 +142,7 @@ python chair_eval.py --model [LVLM Backbone] --data_path [COCO_DIR] -d [Decoding
 Under root directory, run
 
 ```
-python opope_eval.py --model [LVLM Backbone] --data_path [COCO_DIR] -d [Decoding Strategy] --pope_type [random/popular/adversarial] --num_images 100 --seed [SEED] --gpu_id [GPU_IDs] --output_dir ./generated_captions/
+python run_scripts/opope_eval.py --model [LVLM Backbone] --data_path [COCO_DIR] -d [Decoding Strategy] --pope_type [random/popular/adversarial] --num_images 100 --seed [SEED] --gpu_id [GPU_IDs] --output_dir ./generated_captions/
 ```
 
 #### :woman_juggling: Running MME Benchmark to evaluate LVLMs object hallucination
@@ -150,7 +150,7 @@ python opope_eval.py --model [LVLM Backbone] --data_path [COCO_DIR] -d [Decoding
 Under root directory, run
 
 ```
-python mme_eval.py --model [LVLM Backbone] --data_path [MME_DIR] -d [Decoding Strategy] --num_samples 30 --seed [SEED] --gpu-id [GPU_IDs] --output_dir ./generated_captions/
+python run_scripts/mme_eval.py --model [LVLM Backbone] --data_path [MME_DIR] -d [Decoding Strategy] --num_samples 30 --seed [SEED] --gpu-id [GPU_IDs] --output_dir ./generated_captions/
 ```
 
 
@@ -159,7 +159,7 @@ python mme_eval.py --model [LVLM Backbone] --data_path [MME_DIR] -d [Decoding St
 Under root directory, run
 
 ```
-python reviser_eval.py -r [woodpecker/lure] --data_path [COCO_DIR] --c [PATH_TO_CAPTION] --seed [SEED] --gpu-id [GPU_IDs] --output_dir ./log/
+python run_scripts/reviser_eval.py -r [woodpecker/lure] --data_path [COCO_DIR] --c [PATH_TO_CAPTION] --seed [SEED] --gpu-id [GPU_IDs] --output_dir ./log/
 ```
 
 ### Evaluation
@@ -217,7 +217,7 @@ The evaluation results will be saved in the same directory.
 #### MME Scores
 
 
-To evaluate the MME scores on each chosen subset, modify the `subset_dir` variable to include the list of directories of your target directories and run
+To evaluate the MME scores on each chosen subset, modify the `subset_dir` variable on line  to include the list of directories of your target directories and run
 ```shell
 python eval/MME_eval.py
 ```

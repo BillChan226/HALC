@@ -1,6 +1,9 @@
 import argparse
 import os
 import random
+import sys
+sys.path.append("mPLUG-Owl/mPLUG-Owl2")
+sys.path.append("./")
 
 import numpy as np
 import torch

@@ -4,6 +4,9 @@ import os, sys
 # delete path
 sys.path.append("decoder_zoo/Woodpecker")
 sys.path.append("decoder_zoo/LURE")
+sys.path.append("mPLUG-Owl/mPLUG-Owl2")
+sys.path.append("./")
+
 from vis_corrector import Corrector
 from types import SimpleNamespace
 

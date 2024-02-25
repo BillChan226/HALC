@@ -1,6 +1,9 @@
 import argparse
 import os
 import random
+import sys
+sys.path.append("mPLUG-Owl/mPLUG-Owl2")
+sys.path.append("./")
 
 import numpy as np
 import torch
@@ -37,8 +40,6 @@ from collections import defaultdict
 import torch
 from PIL import Image
 from transformers import TextStreamer
-import sys
-sys.path.append("mPLUG-Owl/mPLUG-Owl2")
 from mplug_owl2.constants import IMAGE_TOKEN_INDEX, DEFAULT_IMAGE_TOKEN
 from mplug_owl2.conversation import conv_templates, SeparatorStyle
 from mplug_owl2.model.builder import load_pretrained_model

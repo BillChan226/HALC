@@ -217,7 +217,7 @@ The evaluation results will be saved in the same directory.
 #### MME Scores
 
 
-To evaluate the MME scores on each chosen subset, modify the `subset_dir` variable on line  to include the list of directories of your target directories and run
+To evaluate the MME scores on each chosen subset, modify the `subset_dir` variable [here](https://github.com/BillChan226/HALC/blob/fc32840be64a4f63863a87fbc1beedef47805955/eval/MME_score.py#L195) to include the list of directories of your target directories and run
 ```shell
 python eval/MME_eval.py
 ```

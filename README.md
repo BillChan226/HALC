@@ -300,11 +300,13 @@ pip install torch==2.0.0
 ## :book: Acknowledgement
 Please cite the paper as follows if you use the data or code from HALC:
 ```
-@article{wang2023decodingtrust,
-  title={DecodingTrust: A Comprehensive Assessment of Trustworthiness in GPT Models},
-  author={Wang, Boxin and Chen, Weixin and Pei, Hengzhi and Xie, Chulin and Kang, Mintong and Zhang, Chenhui and Xu, Chejian and Xiong, Zidi and Dutta, Ritik and Schaeffer, Rylan and others},
-  booktitle={Thirty-seventh Conference on Neural Information Processing Systems Datasets and Benchmarks Track},
-  year={2023}
+@misc{chen2024halc,
+      title={HALC: Object Hallucination Reduction via Adaptive Focal-Contrast Decoding}, 
+      author={Zhaorun Chen and Zhuokai Zhao and Hongyin Luo and Huaxiu Yao and Bo Li and Jiawei Zhou},
+      year={2024},
+      eprint={2403.00425},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV}
 }
 ```
 

@@ -6,7 +6,7 @@
 </div>
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-g.svg)](https://opensource.org/licenses/MIT)
-[![Arxiv]()](https://arxiv.org/pdf/2311.17911.pdf)
+[![Arxiv](https://img.shields.io/badge/Paper-Arxiv-red)](https://arxiv.org/pdf/2403.00425.pdf)
 [![Hugging Face Transformers](https://img.shields.io/badge/%F0%9F%A4%97-Transformers-blue)](https://github.com/huggingface/transformers)
 [![Project Page](https://img.shields.io/badge/Project-Page-Green)](https://billchan226.github.io/HALC.html)
 [![GitHub Stars](https://img.shields.io/github/stars/BillChan226/HALC?style=social)](https://github.com/BillChan226/HALC/stargazers)

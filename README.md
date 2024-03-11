@@ -300,13 +300,11 @@ pip install torch==2.0.0
 ## :book: Acknowledgement
 Please cite the paper as follows if you use the data or code from HALC:
 ```
-@misc{chen2024halc,
-      title={HALC: Object Hallucination Reduction via Adaptive Focal-Contrast Decoding}, 
-      author={Zhaorun Chen and Zhuokai Zhao and Hongyin Luo and Huaxiu Yao and Bo Li and Jiawei Zhou},
-      year={2024},
-      eprint={2403.00425},
-      archivePrefix={arXiv},
-      primaryClass={cs.CV}
+@article{chen2024halc,
+  title={HALC: Object Hallucination Reduction via Adaptive Focal-Contrast Decoding},
+  author={Chen, Zhaorun and Zhao, Zhuokai and Luo, Hongyin and Yao, Huaxiu and Li, Bo and Zhou, Jiawei},
+  journal={arXiv preprint arXiv:2403.00425},
+  year={2024}
 }
 ```
 

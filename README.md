@@ -29,9 +29,9 @@ This repository provides the official PyTorch implementation of the following pa
 
 |  Decoder |  [Minigpt4-v2](https://arxiv.org/abs/2304.10592) | [Instructblip](https://arxiv.org/abs/2305.06500) | [LLaVA-1.5](https://arxiv.org/abs/2310.03744) | [mPLUG-OWL2](https://arxiv.org/abs/2311.04257) |
 |----------|-----------|-------------|-----|-----|
-| Greedy*    | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
-| HALC*   | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
-| [OPERA-Beam](https://arxiv.org/abs/2311.17911)     | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+| [Greedy*](https://github.com/huggingface/transformers)    | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+| [HALC*](https://arxiv.org/pdf/2403.00425.pdf)   | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+| [OPERA-Beam*](https://arxiv.org/abs/2311.17911)     | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
 | [VCD](https://arxiv.org/abs/2311.16922)      | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
 | [DoLa](https://arxiv.org/abs/2309.03883)*     | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
 
@@ -55,7 +55,7 @@ conda env create -f environment.yml
 conda activate halc
 ```
 
-We employ [Grounding DINO](https://github.com/IDEA-Research/GroundingDINO) as the external detector to bound hallucinatory objects. To install GroundingDINO with CUDA, we simplify the installation process, where you can:
+We employ [Grounding DINO](https://github.com/IDEA-Research/GroundingDINO) as the external detector to ground hallucinatory objects. To install GroundingDINO with CUDA, we simplify the installation process, where you can:
 
 ```
 # set CUDA_HOME to the virtual environment halc
@@ -83,7 +83,7 @@ cd ..
 
 The following evaluation requires for MSCOCO 2014 dataset. Please download [here](https://cocodataset.org/#home) and extract it in your data path.
 
-Besides, it needs you to prepare the following checkpoints of 7B base models:
+Besides, you need to prepare the following checkpoints of 7B base models:
 
 - Download [LLaVA-1.5 merged 7B model](https://huggingface.co/liuhaotian/llava-v1.5-7b) and specify it at [Line 14](https://github.com/BillChan226/HALC/blob/924cdc09310df8826fe2f8e2e16c25a6312a48b7/eval_configs/llava-1.5_eval.yaml#L14) of `eval_configs/llava-1.5_eval.yaml`.
 - Download [LLaMA-2 7B model](https://huggingface.co/meta-llama/Llama-2-7b-chat-hf/tree/main) and specify it at [Line 15](https://github.com/BillChan226/HALC/blob/924cdc09310df8826fe2f8e2e16c25a6312a48b7/minigpt4/configs/models/minigpt4_llama2.yaml#L15) of `minigpt4/configs/models/minigpt4_llama2.yaml`.

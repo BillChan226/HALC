@@ -276,17 +276,20 @@ if decoding_strategy == "greedy":
     pass
 elif decoding_strategy == "dola":
     dola_decoding = True
-
-elif decoding_strategy == "halc-dola":
-    dola_decoding = True
-    halc_decoding = True
-elif decoding_strategy == "halc-greedy":
-    halc_decoding = True
-elif decoding_strategy == "halc-beam":
+# elif decoding_strategy == "halc-dola":
+#     dola_decoding = True
+#     halc_decoding = True
+# elif decoding_strategy == "halc-greedy":
+#     halc_decoding = True
+# elif decoding_strategy == "halc-beam":
+#     halc_decoding = True
+#     dola_decoding = True
+#     beam_search = True
+elif decoding_strategy == "halc":
     halc_decoding = True
     dola_decoding = True
     beam_search = True
-elif decoding_strategy == "opera-beam":
+elif decoding_strategy == "opera":
     beam_search = True
     opera_decoding = True
 elif decoding_strategy == "vcd":

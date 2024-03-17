@@ -164,11 +164,11 @@ def parse_args():
         help="Detector type. Default is 'groundingdino'.",
     )
     parser.add_argument(
-    "--debugger",
-    action="store_true",
-    default=False,
-    help="Whether to use debugger output.",
-)
+        "--debugger",
+        type=int,
+        default=0,
+        help="0 print no debugging output; 1 only print hallucination correction; 2 print all the debugging output.",
+    )
     parser.add_argument("--box_threshold", type=float, default=0.45, help="Box threshold for DINO.")
     parser.add_argument(
         "--gt_seg_path",
@@ -321,10 +321,11 @@ def main():
     valid_decoding_strategies = [
         "greedy",
         "dola",
-        "halc-dola",
-        "halc-greedy",
-        "halc-beam",
-        "opera-beam",
+        # "halc-dola",
+        # "halc-greedy",
+        # "halc-beam",
+        "halc",
+        "opera",
         "vcd",
     ]
     valid_post_editing_strategies = ["lure", "woodpecker"]
@@ -349,16 +350,20 @@ def main():
     elif decoding_strategy == "dola":
         dola_decoding = True
 
-    elif decoding_strategy == "halc-dola":
-        dola_decoding = True
-        halc_decoding = True
-    elif decoding_strategy == "halc-greedy":
-        halc_decoding = True
-    elif decoding_strategy == "halc-beam":
+    # elif decoding_strategy == "halc-dola":
+    #     dola_decoding = True
+    #     halc_decoding = True
+    # elif decoding_strategy == "halc-greedy":
+    #     halc_decoding = True
+    # elif decoding_strategy == "halc-beam":
+    #     halc_decoding = True
+    #     dola_decoding = True
+    #     beam_search = True
+    elif decoding_strategy == "halc":
         halc_decoding = True
         dola_decoding = True
         beam_search = True
-    elif decoding_strategy == "opera-beam":
+    elif decoding_strategy == "opera":
         beam_search = True
         opera_decoding = True
     elif decoding_strategy == "vcd":

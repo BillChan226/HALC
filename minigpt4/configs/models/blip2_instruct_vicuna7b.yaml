@@ -22,7 +22,7 @@ model:
   num_query_token: 32
 
   # path to Vicuna checkpoint
-  llm_model: ""
+  llm_model: "/home/czr/.cache/huggingface/hub/vicuna-7b-v1.1/snapshots/694d39416b1744d939760f5257c4bb08b2fae400"
 
   # generation configs
   prompt: ""

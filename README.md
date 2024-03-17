@@ -109,6 +109,7 @@ Besides, you need to prepare the following checkpoints of 7B base models:
 | `--k-candidate-num`      | `4` | Number of generative focal fields for local search. Default: 4. |
 | `--expand-ratio`      | `0.6` | The growing factor of focal fields. Default: 0.6. |
 | `--detector`      | `dino` | Detector to use in [dino, owlv2]. Default: dino. |
+| `--box_threshold`      | `0.4` | The threshold for bounding box in GroundingDino. Default: 0.4. |
 
 #### Arguments for OPERA
 
@@ -134,8 +135,10 @@ Besides, you need to prepare the following checkpoints of 7B base models:
 Following [Evaluating Object Hallucination in Large Vision-Language Models](https://arxiv.org/pdf/2305.10355.pdf), we used "Please describe this image in detail." as the prompt to query LVLM for captions of the `500` images randomly sampled from [COCO 2014 Val](https://cocodataset.org/#download) datast. Under root directory, run
 
 ```
-python run_scripts/caption_generation.py --model [LVLM Backbone] --data_path [COCO_DIR] -d [Decoding Strategy] --num_samples 500 --seed [SEED] --gpu-id [GPU_IDs] --output_dir ./generated_captions/
+python run_scripts/caption_generation.py --model [LVLM Backbone] --data_path [COCO_DIR] -d [Decoding Strategy] --num_samples 500 --seed [SEED] --gpu-id [GPU_IDs] --output_dir ./generated_captions/ --debugging 1
 ```
+
+`--debugging 1` will print the intermediate hallucination correction process of HALC.
 
 #### :man_in_tuxedo: Running POPE evaluation for LVLMs object hallucination
 
@@ -271,6 +274,14 @@ python eval/MME_eval.py
 </details>
 
 ## :wrench: Troubleshooting
+
+#### Debugging HALC
+
+Add `--debugger` argument to the command line to print the debugging output for HALC. Specifically, use `--debugger 1` to print the intermediate hallucination correction with HALC, and `--debugger 2` to print all the debugging output. For example:
+```
+python run_scripts/caption_generation.py --debugger 1
+```
+
 
 #### Error installing `GroundingDINO`
 

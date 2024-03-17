@@ -4904,7 +4904,7 @@ class GenerationMixin:
                     # beam_input_ids[bs] = beam_intermediate_token_lists[bs]
                     beam_input_ids[bs] = deep_copy_tensor_structure(beam_intermediate_token_lists[bs])
                     last_word = self.halc_assistant.get_last_word(beam_token_to_append[bs][0])
-                    if self.halc_assistant.debugger:
+                    if self.halc_assistant.debugger == 2:
                         print("CURRENT WORD", beam_current_word)
                         print("CONTRAST WORD: ", last_word)
                     
@@ -4925,7 +4925,7 @@ class GenerationMixin:
                                     break
                                 t += 1
 
-                            if self.halc_assistant.debugger:
+                            if self.halc_assistant.debugger == 2:
                                 print("t", t)
                         beam_intermediate_token_lists[bs] = beam_intermediate_token_lists[bs][:, :-1*t]
 
@@ -4950,7 +4950,8 @@ class GenerationMixin:
                         last_word = "EOS"
 
                     if last_word != beam_current_word[bs]:
-                        print(f"\033[41mCorrected Hallucination from {beam_current_word[bs]} to {last_word}\033[0m")
+                        if self.halc_assistant.debugger == 1:
+                            print(f"\033[41mCorrected Hallucination from {beam_current_word[bs]} to {last_word}\033[0m")
                         # input("hold")
                         # which means hallucination has been corrected, then resample a last token
 

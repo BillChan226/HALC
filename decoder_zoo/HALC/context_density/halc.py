@@ -300,7 +300,7 @@ class halc_assistant:
             if self.halc_params["detector"] == "dino":
                 sample = self.detector.detect_objects(self.detector_dict)
 
-                if self.debugger:
+                if self.debugger == 2:
                     print("Detection: ", sample)
                 # Assuming the first detected bounding box is the one related to the entity
                 try:

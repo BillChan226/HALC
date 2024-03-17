@@ -12,7 +12,7 @@ model:
   # generation configs
   prompt: ""
 
-  llama_model: ""
+  llama_model: "/home/czr/.cache/huggingface/hub/mplug_owl2/snapshots/200342bbdd0eef019b02b4d7c9b17df235bba4ad"
   # llama_model: "meta-llama/Llama-2-7b-chat-hf"
 preprocess:
     vis_processor:

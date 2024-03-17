@@ -172,7 +172,7 @@ parser.add_argument(
     default=False,
     help="Whether to use debugger output.",
 )
-parser.add_argument("--box_threshold", type=float, default=0.55, help="Box threshold for DINO.")
+parser.add_argument("--box_threshold", type=float, default=0.45, help="Box threshold for DINO.")
 parser.add_argument(
     "--gt_seg_path",
     type=str,

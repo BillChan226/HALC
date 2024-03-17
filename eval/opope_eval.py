@@ -806,10 +806,14 @@ def main():
     #     "context_window": 4,
     #     "expand_ratio": expand_ratio,
     #     "beam_size": num_beams,
-    #     "k_candidate_num": args.k_candidate_num,
+    #     "k_candidate_num": k_candidate_num,
     #     "LVLM_backbone": model_name,
     #     "detector": detector_type,
+    #     "score_type": "BLIP",
+    #     "debugger": debugger,
+    #     "box_threshold": box_threshold,
     # }
+
     # halc_assistant_helper = halc_assistant(
     #     model,
     #     vis_processor=vis_processor,

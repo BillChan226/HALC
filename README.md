@@ -131,23 +131,23 @@ Besides, you need to prepare the following checkpoints of 7B base models:
 
 #### :chair: Running CHAIR evaluation for LVLMs object hallucination
 
-Following [Evaluating Object Hallucination in Large Vision-Language Models](https://arxiv.org/pdf/2305.10355.pdf), we used "Please describe this image in detail." as the prompt to query LVLM for captions of the `2,000` images randomly sampled from [COCO 2014 Val](https://cocodataset.org/#download) datast. Under root directory, run
+Following [Evaluating Object Hallucination in Large Vision-Language Models](https://arxiv.org/pdf/2305.10355.pdf), we used "Please describe this image in detail." as the prompt to query LVLM for captions of the `500` images randomly sampled from [COCO 2014 Val](https://cocodataset.org/#download) datast. Under root directory, run
 
 ```
-python run_scripts/chair_eval.py --model [LVLM Backbone] --data_path [COCO_DIR] -d [Decoding Strategy] --num_samples 500 --seed [SEED] --gpu-id [GPU_IDs] --output_dir ./generated_captions/
+python run_scripts/caption_generation.py --model [LVLM Backbone] --data_path [COCO_DIR] -d [Decoding Strategy] --num_samples 500 --seed [SEED] --gpu-id [GPU_IDs] --output_dir ./generated_captions/
 ```
 
-#### :man_in_tuxedo: Running (O)POPE evaluation for LVLMs object hallucination
+#### :man_in_tuxedo: Running POPE evaluation for LVLMs object hallucination
 
-Under root directory, run
+Since OPOPE evaluates directly based on the caption generated for each image, it follows the caption generation procedure for CHAIR and differs in the subsequent metric calculation. To collect samples for the conventional POPE evaluation, under root directory, run
 
 ```
-python run_scripts/opope_eval.py --model [LVLM Backbone] --data_path [COCO_DIR] -d [Decoding Strategy] --pope_type [random/popular/adversarial] --num_images 100 --seed [SEED] --gpu_id [GPU_IDs] --output_dir ./generated_captions/
+python run_scripts/pope_eval.py --model [LVLM Backbone] --data_path [COCO_DIR] -d [Decoding Strategy] --pope_type [random/popular/adversarial] --num_images 100 --seed [SEED] --gpu_id [GPU_IDs] --output_dir ./generated_captions/
 ```
 
 #### :woman_juggling: Running MME Benchmark to evaluate LVLMs object hallucination
 
-Under root directory, run
+MME also follows the same procedure as CHAIR and OPOPE to collect samples. Alternatively, under root directory, run
 
 ```
 python run_scripts/mme_eval.py --model [LVLM Backbone] --data_path [MME_DIR] -d [Decoding Strategy] --num_samples 30 --seed [SEED] --gpu-id [GPU_IDs] --output_dir ./generated_captions/

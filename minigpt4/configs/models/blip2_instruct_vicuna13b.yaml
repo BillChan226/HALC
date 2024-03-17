@@ -22,7 +22,7 @@ model:
   num_query_token: 32
 
   # path to Vicuna checkpoint
-  llm_model: "/mnt/petrelfs/share_data/wangbin/mllm/minigpt4/vicuna-13b-v1-1"
+  llm_model: ""
 
   # generation configs
   prompt: ""

@@ -124,7 +124,7 @@ def run_eval_chair(file_path, chair_only=False):
 def run_eval_pope(file_path, pope_type):
 
     result = subprocess.run(
-        ["python", "pope_modified_eval.py", "-c", file_path, "--pope_type", pope_type],
+        ["python", "eval/opope_eval.py", "-c", file_path, "--pope_type", pope_type],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         text=True,

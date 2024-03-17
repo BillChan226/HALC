@@ -240,14 +240,13 @@ class halc_assistant:
         # context_window specifies the number of context windows
 
         context_window = self.halc_params["context_window"]
-
         expand_ratio = self.halc_params["expand_ratio"]
 
         entity = entity.strip(".").strip(",").strip("'").strip("]").strip("[").strip(")")
         if len(entity) > 0:
             if entity[-1] == "s":
                 entity = entity[:-1]
-        # entity = "clock"
+
         doc = self.tagging(entity)
         # doc_sm = self.tagging_sm(entity)
         # doc_md = self.tagging_md(entity)

@@ -164,6 +164,13 @@ def parse_args():
         help="Detector type. Default is 'groundingdino'.",
     )
     parser.add_argument(
+    "--debugger",
+    action="store_true",
+    default=False,
+    help="Whether to use debugger output.",
+)
+    parser.add_argument("--box_threshold", type=float, default=0.45, help="Box threshold for DINO.")
+    parser.add_argument(
         "--gt_seg_path",
         type=str,
         default="pope_coco/coco_ground_truth_segmentation.json",
@@ -285,6 +292,8 @@ def main():
     post_correction = args.post_correction
     max_new_tokens = args.max_new_tokens
     expand_ratio = args.expand_ratio
+    debugger = args.debugger
+    box_threshold = args.box_threshold
     cd_alpha = args.cd_alpha
     cd_beta = args.cd_beta
     gt_seg_path = args.gt_seg_path
@@ -483,10 +492,14 @@ def main():
         "context_window": 4,
         "expand_ratio": expand_ratio,
         "beam_size": num_beams,
-        "k_candidate_num": args.k_candidate_num,
+        "k_candidate_num": k_candidate_num,
         "LVLM_backbone": model_name,
         "detector": detector_type,
+        "score_type": "BLIP",
+        "debugger": debugger,
+        "box_threshold": box_threshold,
     }
+
     halc_assistant_helper = halc_assistant(
         model,
         vis_processor=vis_processor,

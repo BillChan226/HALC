@@ -1,4 +1,5 @@
-arch: blip2_vicuna_instruct
+model:
+  arch: blip2_vicuna_instruct
   model_type: vicuna7b
   max_txt_len: 128
   # end_sym: "###"
